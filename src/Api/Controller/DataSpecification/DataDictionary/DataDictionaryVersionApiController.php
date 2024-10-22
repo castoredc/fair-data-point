@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -43,7 +42,6 @@ class DataDictionaryVersionApiController extends ApiController
     public function createDataDictionaryVersion(
         DataDictionary $dataDictionary,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
 
@@ -51,7 +49,7 @@ class DataDictionaryVersionApiController extends ApiController
             $parsed = $this->parseRequest(DataDictionaryVersionTypeApiRequest::class, $request);
             assert($parsed instanceof DataDictionaryVersionTypeApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new CreateDataDictionaryVersionCommand($dataDictionary, $parsed->getVersionType())
             );
 
@@ -78,7 +76,6 @@ class DataDictionaryVersionApiController extends ApiController
     public function exportDataDictionaryVersion(
         #[MapEntity(mapping: ['dataDictionary' => 'data_dictionary', 'version' => 'id'])]
         DataDictionaryVersion $dataDictionaryVersion,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionaryVersion->getDataDictionary());
 

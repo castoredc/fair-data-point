@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -36,7 +35,6 @@ class CatalogStudiesApiController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
@@ -44,7 +42,7 @@ class CatalogStudiesApiController extends ApiController
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedStudiesCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
@@ -85,7 +83,6 @@ class CatalogStudiesApiController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
@@ -93,7 +90,7 @@ class CatalogStudiesApiController extends ApiController
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);
             assert($parsed instanceof AddStudyToCatalogApiRequest);
 
-            $envelope = $bus->dispatch(new GetStudyCommand($parsed->getStudyId()));
+            $envelope = $this->bus->dispatch(new GetStudyCommand($parsed->getStudyId()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -103,7 +100,7 @@ class CatalogStudiesApiController extends ApiController
 
             $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
-            $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
+            $this->bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
 
             return new JsonResponse((new StudyApiResource($study))->toArray());
         } catch (ApiRequestParseError $e) {
@@ -137,7 +134,6 @@ class CatalogStudiesApiController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
@@ -145,7 +141,7 @@ class CatalogStudiesApiController extends ApiController
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);
             assert($parsed instanceof AddStudyToCatalogApiRequest);
 
-            $envelope = $bus->dispatch(new ImportStudyCommand($parsed->getStudyId()));
+            $envelope = $this->bus->dispatch(new ImportStudyCommand($parsed->getStudyId()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -155,7 +151,7 @@ class CatalogStudiesApiController extends ApiController
 
             $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
-            $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
+            $this->bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
 
             return new JsonResponse((new StudyApiResource($study))->toArray());
         } catch (ApiRequestParseError $e) {

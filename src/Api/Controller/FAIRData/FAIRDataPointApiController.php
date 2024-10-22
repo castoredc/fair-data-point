@@ -18,7 +18,7 @@ class FAIRDataPointApiController extends ApiController
     #[Route(path: '/api/fdp', name: 'api_fdp')]
     public function fdp(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetFAIRDataPointCommand());
+        $envelope = $this->bus->dispatch(new GetFAIRDataPointCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);

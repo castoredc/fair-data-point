@@ -7,7 +7,6 @@ use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -15,9 +14,9 @@ use function assert;
 class FAIRDataPointController extends FAIRDataController
 {
     #[Route(path: '/fdp', name: 'fdp')]
-    public function index(Request $request, MessageBusInterface $bus): Response
+    public function index(Request $request): Response
     {
-        $envelope = $bus->dispatch(new GetFAIRDataPointCommand());
+        $envelope = $this->bus->dispatch(new GetFAIRDataPointCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
@@ -27,8 +26,7 @@ class FAIRDataPointController extends FAIRDataController
 
         return $this->renderResource(
             $request,
-            $fdp,
-            $bus
+            $fdp
         );
     }
 }

@@ -7,7 +7,6 @@ use App\Entity\Study;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StudyController extends FAIRDataController
@@ -17,14 +16,12 @@ class StudyController extends FAIRDataController
         #[MapEntity(mapping: ['study' => 'slug'])]
         Study $study,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
         return $this->renderResource(
             $request,
-            $study,
-            $bus
+            $study
         );
     }
 }

@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -55,7 +54,6 @@ class StudyApiController extends ApiController
         #[MapEntity(mapping: ['study' => 'id'])]
         Study $study,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
@@ -63,7 +61,7 @@ class StudyApiController extends ApiController
             $parsed = $this->parseRequest(StudyApiRequest::class, $request);
             assert($parsed instanceof StudyApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateStudyCommand(
                     $study,
                     $parsed->getSlug(),

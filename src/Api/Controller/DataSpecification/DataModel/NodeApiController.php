@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -57,7 +56,6 @@ class NodeApiController extends ApiController
         DataModelVersion $dataModelVersion,
         string $type,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -67,7 +65,7 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateNodeCommand(
                     $dataModelVersion,
                     $nodeType,
@@ -103,7 +101,6 @@ class NodeApiController extends ApiController
         #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
         Node $node,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -115,7 +112,7 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new EditNodeCommand(
                     $node,
                     $parsed->getTitle(),
@@ -152,7 +149,6 @@ class NodeApiController extends ApiController
         string $type,
         #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
         Node $node,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -161,7 +157,7 @@ class NodeApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new RemoveNodeCommand($node));
+            $this->bus->dispatch(new RemoveNodeCommand($node));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

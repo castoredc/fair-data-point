@@ -14,7 +14,6 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -26,11 +25,10 @@ class StudyDatasetApiController extends ApiController
     public function datasets(
         #[MapEntity(mapping: ['study' => 'id'])]
         Study $study,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
-        $envelope = $bus->dispatch(new GetDatasetsByStudyCommand($study));
+        $envelope = $this->bus->dispatch(new GetDatasetsByStudyCommand($study));
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
@@ -48,12 +46,11 @@ class StudyDatasetApiController extends ApiController
     public function createDataset(
         #[MapEntity(mapping: ['study' => 'id'])]
         Study $study,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
-            $envelope = $bus->dispatch(new CreateDatasetForStudyCommand($study));
+            $envelope = $this->bus->dispatch(new CreateDatasetForStudyCommand($study));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

@@ -48,7 +48,7 @@ use const JSON_PRETTY_PRINT;
 class MetadataModelApiController extends ApiController
 {
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_add')]
-    public function addMetadataModel(Request $request, MessageBusInterface $bus): Response
+    public function addMetadataModel(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -56,7 +56,7 @@ class MetadataModelApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelApiRequest::class, $request);
             assert($parsed instanceof MetadataModelApiRequest);
 
-            $envelope = $bus->dispatch(new CreateMetadataModelCommand($parsed->getTitle(), $parsed->getDescription()));
+            $envelope = $this->bus->dispatch(new CreateMetadataModelCommand($parsed->getTitle(), $parsed->getDescription()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -80,7 +80,7 @@ class MetadataModelApiController extends ApiController
         assert($user instanceof User);
 
         try {
-            $envelope = $bus->dispatch(new FindMetadataModelsByUserCommand($user));
+            $envelope = $this->bus->dispatch(new FindMetadataModelsByUserCommand($user));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -129,7 +129,6 @@ class MetadataModelApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'id'])]
         MetadataModel $metadataModel,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -137,7 +136,7 @@ class MetadataModelApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelApiRequest::class, $request);
             assert($parsed instanceof MetadataModelApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateMetadataModelCommand($metadataModel, $parsed->getTitle(), $parsed->getDescription())
             );
 
@@ -166,7 +165,6 @@ class MetadataModelApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'id'])]
         MetadataModel $metadataModel,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -174,7 +172,7 @@ class MetadataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationVersionTypeApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationVersionTypeApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new CreateMetadataModelVersionCommand($metadataModel, $parsed->getVersionType())
             );
 
@@ -202,7 +200,6 @@ class MetadataModelApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'id'])]
         MetadataModel $metadataModel,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -217,7 +214,7 @@ class MetadataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationVersionApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationVersionApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new ImportMetadataModelVersionCommand($metadataModel, $file, $parsed->getVersion())
             );
 
@@ -252,7 +249,6 @@ class MetadataModelApiController extends ApiController
     public function exportMetadataModelVersion(
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -276,11 +272,10 @@ class MetadataModelApiController extends ApiController
     public function dataModelRDFPreview(
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
-        $envelope = $bus->dispatch(new GetMetadataModelRDFPreviewCommand($metadataModelVersion));
+        $envelope = $this->bus->dispatch(new GetMetadataModelRDFPreviewCommand($metadataModelVersion));
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);

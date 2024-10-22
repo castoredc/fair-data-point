@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -48,14 +47,13 @@ class DatasetApiController extends ApiController
         #[MapEntity(mapping: ['dataset' => 'slug'])]
         Dataset $dataset,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(DatasetApiRequest::class, $request, $dataset);
             assert($parsed instanceof DatasetApiRequest);
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateDatasetCommand(
                     $dataset,
                     $parsed->getSlug(),
@@ -86,7 +84,6 @@ class DatasetApiController extends ApiController
         #[MapEntity(mapping: ['dataset' => 'slug'])]
         Dataset $dataset,
         Request $request,
-        MessageBusInterface $bus,
         UriHelper $uriHelper,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
@@ -97,7 +94,7 @@ class DatasetApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedDistributionsCommand(
                     null,
                     $dataset,

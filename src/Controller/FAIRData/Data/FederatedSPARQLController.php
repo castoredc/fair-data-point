@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -20,13 +19,13 @@ use function assert;
 class FederatedSPARQLController extends ApiController
 {
     #[Route(path: '/fdp/distributions/sparql', name: 'federated_sparql')]
-    public function rdfDistributionSparql(Request $request, MessageBusInterface $bus): Response
+    public function rdfDistributionSparql(Request $request): Response
     {
         try {
             $parsed = $this->parseRequest(FederatedSparqlQueryRequest::class, $request);
             assert($parsed instanceof FederatedSparqlQueryRequest);
 
-            $handledStamp = $bus->dispatch(
+            $handledStamp = $this->bus->dispatch(
                 new RunFederatedQueryAgainstDistributionSparqlEndpointsCommand(
                     $parsed->getDistributionIds(),
                     $parsed->getSparqlQuery()

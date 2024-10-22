@@ -20,7 +20,7 @@ class LicensesApiController extends ApiController
     #[Route(path: '/api/licenses', name: 'api_licenses')]
     public function countries(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetLicensesCommand());
+        $envelope = $this->bus->dispatch(new GetLicensesCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);

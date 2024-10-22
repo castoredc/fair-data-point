@@ -20,7 +20,7 @@ class CountriesApiController extends ApiController
     #[Route(path: '/api/countries', name: 'api_countries')]
     public function countries(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetCountriesCommand());
+        $envelope = $this->bus->dispatch(new GetCountriesCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);

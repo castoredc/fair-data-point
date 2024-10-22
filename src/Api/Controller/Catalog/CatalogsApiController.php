@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -26,13 +25,13 @@ use function assert;
 class CatalogsApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_catalogs')]
-    public function catalogs(Request $request, MessageBusInterface $bus): Response
+    public function catalogs(Request $request): Response
     {
         try {
             $parsed = $this->parseRequest(CatalogMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof CatalogMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedCatalogsCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
@@ -63,7 +62,7 @@ class CatalogsApiController extends ApiController
     }
 
     #[Route(path: '/my', methods: ['GET'], name: 'api_my_catalogs')]
-    public function myCatalogs(Request $request, MessageBusInterface $bus): Response
+    public function myCatalogs(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -74,7 +73,7 @@ class CatalogsApiController extends ApiController
             $parsed = $this->parseRequest(CatalogMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof CatalogMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedCatalogsCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
@@ -103,7 +102,7 @@ class CatalogsApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_catalog_add')]
-    public function addCatalog(Request $request, MessageBusInterface $bus): Response
+    public function addCatalog(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -111,7 +110,7 @@ class CatalogsApiController extends ApiController
             $parsed = $this->parseRequest(CatalogApiRequest::class, $request);
             assert($parsed instanceof CatalogApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new CreateCatalogCommand(
                     $parsed->getSlug(),
                     $parsed->isAcceptSubmissions(),

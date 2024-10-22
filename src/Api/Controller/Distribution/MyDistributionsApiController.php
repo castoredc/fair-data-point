@@ -25,7 +25,7 @@ class MyDistributionsApiController extends ApiController
         assert($user instanceof User);
 
         try {
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new FindDistributionsByUserCommand(
                     $user
                 )

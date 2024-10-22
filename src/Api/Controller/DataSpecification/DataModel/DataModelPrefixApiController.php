@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class DataModelPrefixApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -48,7 +46,7 @@ class DataModelPrefixApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri())
             );
 
@@ -69,7 +67,6 @@ class DataModelPrefixApiController extends ApiController
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -81,7 +78,7 @@ class DataModelPrefixApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
-            $bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
+            $this->bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -105,7 +102,6 @@ class DataModelPrefixApiController extends ApiController
         DataModelVersion $dataModelVersion,
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -114,7 +110,7 @@ class DataModelPrefixApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteDataModelPrefixCommand($prefix));
+            $this->bus->dispatch(new DeleteDataModelPrefixCommand($prefix));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

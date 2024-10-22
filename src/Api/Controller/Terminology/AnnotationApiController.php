@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -36,7 +35,6 @@ class AnnotationApiController extends ApiController
         #[MapEntity(mapping: ['study' => 'id'])]
         Study $study,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
@@ -46,7 +44,7 @@ class AnnotationApiController extends ApiController
 
             assert($study instanceof CastorStudy);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetCastorEntityCommand(
                     $study,
                     $parsed->getEntityType(),
@@ -61,7 +59,7 @@ class AnnotationApiController extends ApiController
             $entity = $handledStamp->getResult();
             assert($entity instanceof CastorEntity);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new AddAnnotationCommand(
                     $study,
                     $entity,
@@ -108,7 +106,6 @@ class AnnotationApiController extends ApiController
         Annotation $annotation,
         #[MapEntity(mapping: ['study' => 'id'])]
         Study $study,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
@@ -117,7 +114,7 @@ class AnnotationApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteAnnotationCommand($annotation));
+            $this->bus->dispatch(new DeleteAnnotationCommand($annotation));
 
             return new JsonResponse([], Response::HTTP_OK);
         } catch (HandlerFailedException $e) {

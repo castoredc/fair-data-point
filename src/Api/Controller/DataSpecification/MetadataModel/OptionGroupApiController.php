@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class OptionGroupApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -48,7 +46,7 @@ class OptionGroupApiController extends ApiController
             $parsed = $this->parseRequest(OptionGroupApiRequest::class, $request);
             assert($parsed instanceof OptionGroupApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateMetadataModelOptionGroupCommand(
                     $metadataModelVersion,
                     $parsed->getTitle(),
@@ -74,7 +72,6 @@ class OptionGroupApiController extends ApiController
         #[MapEntity(mapping: ['optionGroup' => 'id'])]
         MetadataModelOptionGroup $optionGroup,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -86,7 +83,7 @@ class OptionGroupApiController extends ApiController
             $parsed = $this->parseRequest(OptionGroupApiRequest::class, $request);
             assert($parsed instanceof OptionGroupApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateMetadataModelOptionGroupCommand(
                     $optionGroup,
                     $parsed->getTitle(),
@@ -117,7 +114,6 @@ class OptionGroupApiController extends ApiController
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['optionGroup' => 'id'])]
         MetadataModelOptionGroup $optionGroup,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -126,7 +122,7 @@ class OptionGroupApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteMetadataModelOptionGroupCommand($optionGroup));
+            $this->bus->dispatch(new DeleteMetadataModelOptionGroupCommand($optionGroup));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

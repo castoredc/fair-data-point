@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class DataModelModuleApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -48,7 +46,7 @@ class DataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
             assert($parsed instanceof DataModelModuleApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateDataModelModuleCommand(
                     $dataModelVersion,
                     $parsed->getTitle(),
@@ -76,7 +74,6 @@ class DataModelModuleApiController extends ApiController
         #[MapEntity(mapping: ['module' => 'id'])]
         DataModelGroup $module,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -88,7 +85,7 @@ class DataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
             assert($parsed instanceof DataModelModuleApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateDataModelModuleCommand(
                     $module,
                     $parsed->getTitle(),
@@ -121,7 +118,6 @@ class DataModelModuleApiController extends ApiController
         DataModelVersion $dataModelVersion,
         #[MapEntity(mapping: ['module' => 'id'])]
         DataModelGroup $module,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -130,7 +126,7 @@ class DataModelModuleApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteDataModelModuleCommand($module));
+            $this->bus->dispatch(new DeleteDataModelModuleCommand($module));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

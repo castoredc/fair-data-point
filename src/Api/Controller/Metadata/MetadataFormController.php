@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -28,7 +27,6 @@ class MetadataFormController extends ApiController
     public function getMetadataForm(
         #[MapEntity(mapping: ['metadata' => 'id'])]
         Metadata $metadata,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('edit', $metadata->getEntity());
 
@@ -40,7 +38,6 @@ class MetadataFormController extends ApiController
         #[MapEntity(mapping: ['metadata' => 'id'])]
         Metadata $metadata,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('edit', $metadata->getEntity());
 
@@ -48,7 +45,7 @@ class MetadataFormController extends ApiController
             $parsed = $this->parseDynamicRequest(MetadataValuesApiRequest::class, $request, $metadata);
             assert($parsed instanceof MetadataValuesApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateMetadataCommand(
                     $metadata,
                     $parsed->getValues(),

@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -44,10 +43,9 @@ class AgentApiController extends ApiController
     public function agentDetails(
         #[MapEntity(mapping: ['agent' => 'slug'])]
         Agent $agent,
-        MessageBusInterface $bus,
     ): Response {
         try {
-            $envelope = $bus->dispatch(new GetAgentAssociatedMetadataCountCommand($agent));
+            $envelope = $this->bus->dispatch(new GetAgentAssociatedMetadataCountCommand($agent));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -84,13 +82,12 @@ class AgentApiController extends ApiController
         #[MapEntity(mapping: ['agent' => 'slug'])]
         Agent $agent,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         try {
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedStudiesCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
@@ -131,7 +128,6 @@ class AgentApiController extends ApiController
         #[MapEntity(mapping: ['agent' => 'slug'])]
         Agent $agent,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
@@ -140,7 +136,7 @@ class AgentApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedDatasetsCommand(
                     null,
                     $agent,
@@ -183,13 +179,12 @@ class AgentApiController extends ApiController
         #[MapEntity(mapping: ['agent' => 'slug'])]
         Agent $agent,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedCatalogsCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
@@ -231,7 +226,6 @@ class AgentApiController extends ApiController
         #[MapEntity(mapping: ['agent' => 'slug'])]
         Agent $agent,
         Request $request,
-        MessageBusInterface $bus,
         UriHelper $uriHelper,
     ): Response {
         $user = $this->getUser();
@@ -241,7 +235,7 @@ class AgentApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedDistributionsCommand(
                     null,
                     null,

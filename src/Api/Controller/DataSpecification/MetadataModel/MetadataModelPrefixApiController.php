@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class MetadataModelPrefixApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -48,7 +46,7 @@ class MetadataModelPrefixApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateMetadataModelPrefixCommand($metadataModelVersion, $parsed->getPrefix(), $parsed->getUri())
             );
 
@@ -69,7 +67,6 @@ class MetadataModelPrefixApiController extends ApiController
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -81,7 +78,7 @@ class MetadataModelPrefixApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
-            $bus->dispatch(new UpdateMetadataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
+            $this->bus->dispatch(new UpdateMetadataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -105,7 +102,6 @@ class MetadataModelPrefixApiController extends ApiController
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -114,7 +110,7 @@ class MetadataModelPrefixApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteMetadataModelPrefixCommand($prefix));
+            $this->bus->dispatch(new DeleteMetadataModelPrefixCommand($prefix));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

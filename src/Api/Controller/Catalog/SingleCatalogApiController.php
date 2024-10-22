@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -47,7 +46,6 @@ class SingleCatalogApiController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
@@ -55,7 +53,7 @@ class SingleCatalogApiController extends ApiController
             $parsed = $this->parseRequest(CatalogApiRequest::class, $request, $catalog);
             assert($parsed instanceof CatalogApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateCatalogCommand(
                     $catalog,
                     $parsed->getSlug(),
@@ -87,7 +85,6 @@ class SingleCatalogApiController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
         $user = $this->getUser();
@@ -97,7 +94,7 @@ class SingleCatalogApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedDatasetsCommand(
                     $catalog,
                     null,

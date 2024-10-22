@@ -23,7 +23,6 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -35,12 +34,11 @@ class CastorStudyStructureApiController extends ApiController
     public function studyStructure(
         #[MapEntity(mapping: ['study' => 'id'])]
         CastorStudy $study,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
-            $envelope = $bus->dispatch(new GetStudyStructureCommand($study));
+            $envelope = $this->bus->dispatch(new GetStudyStructureCommand($study));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -83,12 +81,11 @@ class CastorStudyStructureApiController extends ApiController
         #[MapEntity(mapping: ['study' => 'id'])]
         CastorStudy $study,
         string $step,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
-            $envelope = $bus->dispatch(new GetFieldsForStepCommand($study, $step));
+            $envelope = $this->bus->dispatch(new GetFieldsForStepCommand($study, $step));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -131,7 +128,6 @@ class CastorStudyStructureApiController extends ApiController
     public function optionGroups(
         #[MapEntity(mapping: ['study' => 'id'])]
         CastorStudy $study,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
@@ -139,7 +135,7 @@ class CastorStudyStructureApiController extends ApiController
         assert($user instanceof User || $user === null);
 
         try {
-            $envelope = $bus->dispatch(new GetOptionGroupsForStudyCommand($study));
+            $envelope = $this->bus->dispatch(new GetOptionGroupsForStudyCommand($study));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -181,7 +177,6 @@ class CastorStudyStructureApiController extends ApiController
     public function institutes(
         #[MapEntity(mapping: ['study' => 'id'])]
         CastorStudy $study,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
@@ -189,7 +184,7 @@ class CastorStudyStructureApiController extends ApiController
         assert($user instanceof User || $user === null);
 
         try {
-            $envelope = $bus->dispatch(new GetInstitutesForStudyCommand($study));
+            $envelope = $this->bus->dispatch(new GetInstitutesForStudyCommand($study));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

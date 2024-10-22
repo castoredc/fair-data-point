@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -35,7 +34,6 @@ class CSVDistributionController extends FAIRDataController
         Dataset $dataset,
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
@@ -52,13 +50,13 @@ class CSVDistributionController extends FAIRDataController
         assert($study instanceof CastorStudy);
 
         try {
-            $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
+            $handledStamp = $this->bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
 
             /** @var Record[] $records */
             $records = $handledStamp->getResult();
 
-            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(
+            $handledStamp = $this->bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(
                 HandledStamp::class
             );
             assert($handledStamp instanceof HandledStamp);

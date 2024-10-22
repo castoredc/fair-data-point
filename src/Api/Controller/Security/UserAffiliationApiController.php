@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -21,7 +20,7 @@ use function assert;
 class UserAffiliationApiController extends ApiController
 {
     #[Route(path: '/affiliations', methods: ['POST'], name: 'api_user_affiliations_update')]
-    public function updateAffiliations(Request $request, MessageBusInterface $bus): Response
+    public function updateAffiliations(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -39,7 +38,7 @@ class UserAffiliationApiController extends ApiController
             $user->getPerson()->clearAffiliations();
 
             foreach ($parsed as $item) {
-                $bus->dispatch(
+                $this->bus->dispatch(
                     new CreateAffiliationCommand(
                         $user->getPerson(),
                         $item->getOrganizationSource(),

@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class MetadataModelModuleApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -48,7 +46,7 @@ class MetadataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelModuleApiRequest::class, $request);
             assert($parsed instanceof MetadataModelModuleApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateMetadataModelModuleCommand(
                     $metadataModelVersion,
                     $parsed->getTitle(),
@@ -74,7 +72,6 @@ class MetadataModelModuleApiController extends ApiController
         #[MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -86,7 +83,7 @@ class MetadataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelModuleApiRequest::class, $request);
             assert($parsed instanceof MetadataModelModuleApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateMetadataModelModuleCommand(
                     $module,
                     $parsed->getTitle(),
@@ -117,7 +114,6 @@ class MetadataModelModuleApiController extends ApiController
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -126,7 +122,7 @@ class MetadataModelModuleApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteMetadataModelModuleCommand($module));
+            $this->bus->dispatch(new DeleteMetadataModelModuleCommand($module));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

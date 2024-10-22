@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -48,7 +47,7 @@ class PermissionsApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_permissions_add')]
-    public function addPermissions(string $type, string $objectId, Request $request, MessageBusInterface $bus): Response
+    public function addPermissions(string $type, string $objectId, Request $request): Response
     {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
@@ -57,7 +56,7 @@ class PermissionsApiController extends ApiController
             $parsed = $this->parseRequest(PermissionApiRequest::class, $request);
             assert($parsed instanceof PermissionApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new AddPermissionToEntityCommand($object, $parsed->getEmail(), $parsed->getType())
             );
 
@@ -98,7 +97,6 @@ class PermissionsApiController extends ApiController
         #[MapEntity(mapping: ['user' => 'id'])]
         User $user,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
@@ -107,7 +105,7 @@ class PermissionsApiController extends ApiController
             $parsed = $this->parseRequest(EditPermissionApiRequest::class, $request);
             assert($parsed instanceof EditPermissionApiRequest);
 
-            $envelope = $bus->dispatch(new EditPermissionToEntityCommand($object, $user, $parsed->getType()));
+            $envelope = $this->bus->dispatch(new EditPermissionToEntityCommand($object, $user, $parsed->getType()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -140,13 +138,12 @@ class PermissionsApiController extends ApiController
         string $objectId,
         #[MapEntity(mapping: ['user' => 'id'])]
         User $user,
-        MessageBusInterface $bus,
     ): Response {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
 
         try {
-            $bus->dispatch(new RemovePermissionToEntityCommand($object, $user));
+            $this->bus->dispatch(new RemovePermissionToEntityCommand($object, $user));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

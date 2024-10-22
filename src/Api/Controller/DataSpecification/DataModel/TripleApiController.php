@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class TripleApiController extends ApiController
         #[MapEntity(mapping: ['module' => 'id', 'version' => 'version'])]
         DataModelGroup $module,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -48,7 +46,7 @@ class TripleApiController extends ApiController
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
             assert($parsed instanceof TripleApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateTripleCommand(
                     $module,
                     $parsed->getObjectType(),
@@ -76,7 +74,6 @@ class TripleApiController extends ApiController
         #[MapEntity(mapping: ['triple' => 'id'])]
         Triple $triple,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -88,7 +85,7 @@ class TripleApiController extends ApiController
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
             assert($parsed instanceof TripleApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateTripleCommand(
                     $triple,
                     $parsed->getObjectType(),
@@ -121,7 +118,6 @@ class TripleApiController extends ApiController
         DataModelGroup $module,
         #[MapEntity(mapping: ['triple' => 'id'])]
         Triple $triple,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -130,7 +126,7 @@ class TripleApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteTripleCommand($triple));
+            $this->bus->dispatch(new DeleteTripleCommand($triple));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
