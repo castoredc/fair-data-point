@@ -8,6 +8,9 @@ use App\Api\Request\DynamicApiRequest;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\RoleBasedApiResource;
 use App\Api\Resource\Security\PermissionsApiResource;
+use App\Command\FAIRData\GetAssociatedItemCountCommand;
+use App\Entity\FAIRData\AccessibleEntity;
+use App\Entity\FAIRData\AssociatedItemCount;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
@@ -18,6 +21,10 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function array_merge;
 use function assert;
@@ -31,6 +38,7 @@ abstract class ApiController extends AbstractController
         protected ValidatorInterface $validator,
         protected LoggerInterface $logger,
         protected EntityManagerInterface $em,
+        protected MessageBusInterface $bus,
     ) {
     }
 
@@ -169,5 +177,33 @@ abstract class ApiController extends AbstractController
         }
 
         return (new PermissionsApiResource($permissions))->toArray();
+    }
+
+    /** @param string[]|null $attributes */
+    protected function getResponseWithAssociatedItemCount(ApiResource $resource, AccessibleEntity $object, ?array $attributes): JsonResponse
+    {
+        try {
+            $envelope = $this->bus->dispatch(
+                new GetAssociatedItemCountCommand($object)
+            );
+
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            $results = $handledStamp->getResult();
+            assert($results instanceof AssociatedItemCount);
+
+            $array = array_merge($resource->toArray(), $this->getPermissionArray($object, $attributes));
+            $array['count'] = $results->getCounts();
+
+            return new JsonResponse($array);
+        } catch (HandlerFailedException $e) {
+            $this->logger->critical(
+                'An error occurred while getting the associated items',
+                ['exception' => $e]
+            );
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

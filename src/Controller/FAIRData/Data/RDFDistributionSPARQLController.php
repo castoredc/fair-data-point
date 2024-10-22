@@ -35,9 +35,10 @@ class RDFDistributionSPARQLController extends ApiController
         ValidatorInterface $validator,
         LoggerInterface $logger,
         EntityManagerInterface $em,
+        MessageBusInterface $bus,
         private EventDispatcherInterface $eventDispatcher,
     ) {
-        parent::__construct($apiClient, $validator, $logger, $em);
+        parent::__construct($apiClient, $validator, $logger, $em, $bus);
     }
 
     #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/sparql', name: 'distribution_sparql')]

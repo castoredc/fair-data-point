@@ -35,7 +35,7 @@ class SingleCatalogApiController extends ApiController
     ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
-        return $this->getResponse(
+        return $this->getResponseWithAssociatedItemCount(
             new CatalogApiResource($catalog),
             $catalog,
             [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]

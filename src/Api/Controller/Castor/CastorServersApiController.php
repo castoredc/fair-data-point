@@ -32,9 +32,10 @@ final class CastorServersApiController extends ApiController
         ValidatorInterface $validator,
         LoggerInterface $logger,
         EntityManagerInterface $em,
+        MessageBusInterface $bus,
         private EncryptionService $encryptionService,
     ) {
-        parent::__construct($apiClient, $validator, $logger, $em);
+        parent::__construct($apiClient, $validator, $logger, $em, $bus);
     }
 
     #[Route(path: '/api/castor/servers', methods: ['GET'], name: 'api_servers')]

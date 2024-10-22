@@ -22,6 +22,7 @@ class GetPaginatedDatasetsCommandHandler
 
         $count = $datasetRepository->countDatasets(
             $command->getCatalog(),
+            null,
             $command->getAgent(),
             $command->getHideCatalogs(),
             $command->getUser()
@@ -29,6 +30,7 @@ class GetPaginatedDatasetsCommandHandler
 
         $datasets = $datasetRepository->findDatasets(
             $command->getCatalog(),
+            null,
             $command->getAgent(),
             $command->getHideCatalogs(),
             $command->getPerPage(),

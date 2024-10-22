@@ -26,12 +26,12 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
      *
      * @return Dataset[]
      */
-    public function findDatasets(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, ?int $perPage, ?int $page, ?User $user): array
+    public function findDatasets(?Catalog $catalog, ?Study $study, ?Agent $agent, ?array $hideCatalogs, ?int $perPage, ?int $page, ?User $user): array
     {
         $qb = $this->createQueryBuilder('dataset')
                    ->select('dataset');
 
-        $qb = $this->getDatasetQuery($qb, $catalog, $agent, $hideCatalogs, $user);
+        $qb = $this->getDatasetQuery($qb, $catalog, $study, $agent, $hideCatalogs, $user);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -44,12 +44,12 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
     }
 
     /** @param string[]|null $hideCatalogs */
-    public function countDatasets(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, ?User $user): int
+    public function countDatasets(?Catalog $catalog, ?Study $study, ?Agent $agent, ?array $hideCatalogs, ?User $user): int
     {
         $qb = $this->createQueryBuilder('dataset')
                       ->select('count(DISTINCT dataset.id)');
 
-        $qb = $this->getDatasetQuery($qb, $catalog, $agent, $hideCatalogs, $user);
+        $qb = $this->getDatasetQuery($qb, $catalog, $study, $agent, $hideCatalogs, $user);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -61,7 +61,7 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
     }
 
     /** @param string[]|null $hideCatalogs */
-    private function getDatasetQuery(QueryBuilder $qb, ?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, ?User $user): QueryBuilder
+    private function getDatasetQuery(QueryBuilder $qb, ?Catalog $catalog, ?Study $study, ?Agent $agent, ?array $hideCatalogs, ?User $user): QueryBuilder
     {
         $qb = $this->getQuery($qb);
 
@@ -84,6 +84,10 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
             $qb->leftJoin('study.catalogs', 'catalog_study', Join::WITH, 'catalog_study MEMBER OF study.catalogs');
         }
 
+        if ($study !== null) {
+            $qb->leftJoin(Study::class, 'study', Join::WITH, 'study.id = dataset.study');
+        }
+
         if ($hideCatalogs !== null) {
             $qb->andWhere(':catalog_ids NOT MEMBER OF dataset.catalogs')
                 ->setParameter('catalog_ids', $hideCatalogs);
@@ -95,6 +99,11 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
                 $qb->expr()->eq('catalog_study.id', ':catalog_id')
             ));
             $qb->setParameter('catalog_id', $catalog->getId());
+        }
+
+        if ($study !== null) {
+            $qb->andWhere('study.id = :study_id')
+                ->setParameter('study_id', $study->getId());
         }
 
         if ($agent !== null) {
@@ -118,7 +127,7 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
         $qb = $this->createQueryBuilder('dataset')
             ->select('dataset');
 
-        $qb = $this->getDatasetQuery($qb, null, null, null, $user);
+        $qb = $this->getDatasetQuery($qb, null, null, null, null, $user);
 
         return $qb->getQuery()->getResult();
     }

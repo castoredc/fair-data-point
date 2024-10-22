@@ -6,7 +6,7 @@ namespace App\Api\Controller\FAIRData;
 use App\Api\Controller\ApiController;
 use App\Api\Resource\FAIRDataPoint\FAIRDataPointApiResource;
 use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Security\Authorization\Voter\FAIRDataPointVoter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -22,7 +22,12 @@ class FAIRDataPointApiController extends ApiController
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
+        $fdp = $handledStamp->getResult();
 
-        return new JsonResponse((new FAIRDataPointApiResource($handledStamp->getResult()))->toArray());
+        return $this->getResponseWithAssociatedItemCount(
+            new FAIRDataPointApiResource($fdp),
+            $fdp,
+            [FAIRDataPointVoter::VIEW, FAIRDataPointVoter::EDIT]
+        );
     }
 }

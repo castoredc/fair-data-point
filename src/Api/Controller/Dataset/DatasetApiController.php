@@ -36,7 +36,7 @@ class DatasetApiController extends ApiController
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
 
-        return $this->getResponse(
+        return $this->getResponseWithAssociatedItemCount(
             new DatasetApiResource($dataset),
             $dataset,
             [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]

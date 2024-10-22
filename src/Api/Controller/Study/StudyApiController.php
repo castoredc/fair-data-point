@@ -29,7 +29,7 @@ class StudyApiController extends ApiController
     ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
-        return $this->getResponse(
+        return $this->getResponseWithAssociatedItemCount(
             new StudyApiResource($study),
             $study,
             [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
