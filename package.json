@@ -26,7 +26,8 @@
     "upmatter": "yarn upgrade --latest --pattern matter",
     "build-docker": "docker-compose up --build -d",
     "stop-docker": "docker-compose stop",
-    "destroy-docker": "docker-compose down"
+    "destroy-docker": "docker-compose down",
+    "format": "prettier --write 'src/js/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
     "@castoredc/matter": "^30.26.0",
