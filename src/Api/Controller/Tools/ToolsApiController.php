@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -21,7 +20,7 @@ use function file_get_contents;
 class ToolsApiController extends ApiController
 {
     #[Route(path: '/api/tools/metadata-xml-parse', name: 'api_tools_metadata_xml_to_csv')]
-    public function metadataXmlParse(Request $request, MessageBusInterface $bus): Response
+    public function metadataXmlParse(Request $request): Response
     {
         $file = $request->files->get('xml');
         assert($file instanceof UploadedFile || $file === null);
@@ -46,7 +45,7 @@ class ToolsApiController extends ApiController
         }
 
         try {
-            $envelope = $bus->dispatch(new MetadataXmlParseCommand($xml));
+            $envelope = $this->bus->dispatch(new MetadataXmlParseCommand($xml));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

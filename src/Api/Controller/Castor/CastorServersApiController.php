@@ -32,15 +32,16 @@ final class CastorServersApiController extends ApiController
         ValidatorInterface $validator,
         LoggerInterface $logger,
         EntityManagerInterface $em,
+        MessageBusInterface $bus,
         private EncryptionService $encryptionService,
     ) {
-        parent::__construct($apiClient, $validator, $logger, $em);
+        parent::__construct($apiClient, $validator, $logger, $em, $bus);
     }
 
     #[Route(path: '/api/castor/servers', methods: ['GET'], name: 'api_servers')]
     public function servers(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetCastorServersCommand());
+        $envelope = $this->bus->dispatch(new GetCastorServersCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
@@ -55,7 +56,7 @@ final class CastorServersApiController extends ApiController
     }
 
     #[Route(path: '/api/castor/servers', methods: ['POST', 'PUT'], name: 'api_add_server')]
-    public function addServer(Request $request, MessageBusInterface $bus): Response
+    public function addServer(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -63,7 +64,7 @@ final class CastorServersApiController extends ApiController
             $parsed = $this->parseRequest(CastorServerApiRequest::class, $request);
             assert($parsed instanceof CastorServerApiRequest);
 
-            $envelope = $bus->dispatch($parsed->toCommand());
+            $envelope = $this->bus->dispatch($parsed->toCommand());
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
 
@@ -80,12 +81,12 @@ final class CastorServersApiController extends ApiController
     }
 
     #[Route(path: '/api/castor/servers/{id}', methods: ['DELETE'], name: 'delete_add_server')]
-    public function deleteServer(int $id, MessageBusInterface $bus): Response
+    public function deleteServer(int $id): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            $bus->dispatch(new DeleteCastorServerCommand($id));
+            $this->bus->dispatch(new DeleteCastorServerCommand($id));
 
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         } catch (CastorServerNotFound) {

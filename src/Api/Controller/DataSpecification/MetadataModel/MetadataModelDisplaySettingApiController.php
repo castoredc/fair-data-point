@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -40,7 +39,6 @@ class MetadataModelDisplaySettingApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -48,7 +46,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelDisplaySettingApiRequest::class, $request);
             assert($parsed instanceof MetadataModelDisplaySettingApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateMetadataModelDisplaySettingCommand(
                     $metadataModelVersion,
                     $parsed->getTitle(),
@@ -77,7 +75,6 @@ class MetadataModelDisplaySettingApiController extends ApiController
         #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(
             DataSpecificationVoter::EDIT,
@@ -92,7 +89,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelDisplaySettingApiRequest::class, $request);
             assert($parsed instanceof MetadataModelDisplaySettingApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateMetadataModelDisplaySettingCommand(
                     $displaySetting,
                     $parsed->getTitle(),
@@ -125,7 +122,6 @@ class MetadataModelDisplaySettingApiController extends ApiController
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(
             DataSpecificationVoter::EDIT,
@@ -137,7 +133,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
         }
 
         try {
-            $bus->dispatch(new DeleteMetadataModelDisplaySettingCommand($displaySetting));
+            $this->bus->dispatch(new DeleteMetadataModelDisplaySettingCommand($displaySetting));
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {

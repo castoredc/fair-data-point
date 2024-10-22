@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -47,7 +46,6 @@ class RdfDistributionApiController extends ApiController
         Dataset $dataset,
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
@@ -63,7 +61,7 @@ class RdfDistributionApiController extends ApiController
 
         $type = DataModelMappingType::fromString($type);
 
-        $envelope = $bus->dispatch(new GetDataModelMappingCommand($contents, $dataModelVersion, $type));
+        $envelope = $this->bus->dispatch(new GetDataModelMappingCommand($contents, $dataModelVersion, $type));
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
@@ -84,7 +82,6 @@ class RdfDistributionApiController extends ApiController
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
@@ -105,7 +102,7 @@ class RdfDistributionApiController extends ApiController
             assert($parsed instanceof DataModelMappingApiRequest);
 
             if ($type->isNode()) {
-                $envelope = $bus->dispatch(
+                $envelope = $this->bus->dispatch(
                     new CreateDataModelNodeMappingCommand(
                         $contents,
                         $parsed->getNode(),
@@ -116,7 +113,7 @@ class RdfDistributionApiController extends ApiController
                     )
                 );
             } elseif ($type->isModule()) {
-                $envelope = $bus->dispatch(
+                $envelope = $this->bus->dispatch(
                     new CreateDataModelModuleMappingCommand(
                         $contents,
                         $parsed->getModule(),

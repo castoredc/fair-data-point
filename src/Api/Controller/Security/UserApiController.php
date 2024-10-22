@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -35,7 +34,7 @@ class UserApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_user_update')]
-    public function updateUser(Request $request, MessageBusInterface $bus): Response
+    public function updateUser(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -53,7 +52,7 @@ class UserApiController extends ApiController
         try {
             $parsed = $this->parseRequest(UserApiRequest::class, $request);
             assert($parsed instanceof UserApiRequest);
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateUserCommand(
                     $parsed->getFirstName(),
                     $parsed->getLastName(),

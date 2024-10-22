@@ -7,7 +7,6 @@ use App\Entity\FAIRData\Dataset;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DatasetController extends FAIRDataController
@@ -17,14 +16,12 @@ class DatasetController extends FAIRDataController
         #[MapEntity(mapping: ['dataset' => 'slug'])]
         Dataset $dataset,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
 
         return $this->renderResource(
             $request,
-            $dataset,
-            $bus
+            $dataset
         );
     }
 }

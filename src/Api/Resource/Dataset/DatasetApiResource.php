@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Dataset;
 
-use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Dataset;
-use const DATE_ATOM;
 
 class DatasetApiResource implements ApiResource
 {
@@ -20,7 +17,7 @@ class DatasetApiResource implements ApiResource
     /** @return array<mixed> */
     public function toArray(): array
     {
-        $dataset = [
+        return [
             'relativeUrl' => $this->dataset->getRelativeUrl(),
             'id' => $this->dataset->getId(),
             'slug' => $this->dataset->getSlug(),
@@ -29,31 +26,6 @@ class DatasetApiResource implements ApiResource
             'metadata' => $this->dataset->hasMetadata() ? (new MetadataApiResource($this->dataset->getLatestMetadata()))->toArray() : null,
             'published' => $this->dataset->isPublished(),
             'study' => $this->dataset->getStudy() !== null ? (new StudyApiResource($this->dataset->getStudy()))->toArray() : null,
-            'count' => [
-                'distribution' => $this->dataset->getDistributions()->count(),
-            ],
         ];
-
-        if ($this->dataset->hasMetadata() && $this->dataset->getLatestMetadata()->getMetadataModelVersion() === null) {
-            $first = $this->dataset->getFirstMetadata();
-            $metadata = $this->dataset->getLatestMetadata();
-
-            $dataset['legacy']['metadata'] = [
-                'title' => $metadata->getLegacyTitle()->toArray(),
-                'version' => [
-                    'metadata' => $metadata->getVersion()->getValue(),
-                ],
-                'description' => $metadata->getDescription()->toArray(),
-                'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage()?->getCode(),
-                'license' => $metadata->getLicense()?->getSlug(),
-                'theme' => (new OntologyConceptsApiResource($metadata->getThemes()->toArray()))->toArray(),
-                'keyword' => $metadata->getKeyword()?->toArray(),
-                'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
-            ];
-        }
-
-        return $dataset;
     }
 }

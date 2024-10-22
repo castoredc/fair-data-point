@@ -25,7 +25,7 @@ class TerminologyApiController extends ApiController
     #[Route(path: '/ontologies', name: 'api_terminology_ontologies')]
     public function ontologies(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetOntologiesCommand());
+        $envelope = $this->bus->dispatch(new GetOntologiesCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
@@ -34,12 +34,12 @@ class TerminologyApiController extends ApiController
     }
 
     #[Route(path: '/concepts', name: 'api_terminology_concepts')]
-    public function concepts(Request $request, MessageBusInterface $bus): Response
+    public function concepts(Request $request): Response
     {
         try {
             $parsed = $this->parseRequest(OntologyConceptApiRequest::class, $request);
             assert($parsed instanceof OntologyConceptApiRequest);
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new FindOntologyConceptsCommand(
                     $parsed->getOntology(),
                     $parsed->getSearch(),

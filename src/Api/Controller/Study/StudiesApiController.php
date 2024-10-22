@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -33,13 +32,13 @@ use function assert;
 class StudiesApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_studies')]
-    public function studies(Request $request, MessageBusInterface $bus): Response
+    public function studies(Request $request): Response
     {
         try {
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedStudiesCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
@@ -69,7 +68,7 @@ class StudiesApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_add_study')]
-    public function addStudy(Request $request, MessageBusInterface $bus): Response
+    public function addStudy(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -80,7 +79,7 @@ class StudiesApiController extends ApiController
             $catalog = null;
 
             if ($parsed->getCatalog() !== null) {
-                $envelope = $bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
+                $envelope = $this->bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
 
                 $handledStamp = $envelope->last(HandledStamp::class);
                 assert($handledStamp instanceof HandledStamp);
@@ -91,7 +90,7 @@ class StudiesApiController extends ApiController
                 $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
             }
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new CreateStudyCommand(
                     $parsed->getSource(),
                     true,
@@ -108,7 +107,7 @@ class StudiesApiController extends ApiController
             assert($study instanceof Study);
 
             if ($catalog !== null) {
-                $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
+                $this->bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
             }
 
             return new JsonResponse((new StudyApiResource($study))->toArray());

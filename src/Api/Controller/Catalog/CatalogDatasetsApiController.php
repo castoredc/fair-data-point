@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -33,7 +32,6 @@ class CatalogDatasetsApiController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
@@ -41,7 +39,7 @@ class CatalogDatasetsApiController extends ApiController
             $parsed = $this->parseRequest(AddDatasetToCatalogApiRequest::class, $request);
             assert($parsed instanceof AddDatasetToCatalogApiRequest);
 
-            $envelope = $bus->dispatch(new GetDatasetCommand($parsed->getDatasetId()));
+            $envelope = $this->bus->dispatch(new GetDatasetCommand($parsed->getDatasetId()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -51,7 +49,7 @@ class CatalogDatasetsApiController extends ApiController
 
             $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
-            $bus->dispatch(new AddDatasetToCatalogCommand($dataset, $catalog));
+            $this->bus->dispatch(new AddDatasetToCatalogCommand($dataset, $catalog));
 
             return new JsonResponse((new DatasetApiResource($dataset))->toArray());
         } catch (ApiRequestParseError $e) {

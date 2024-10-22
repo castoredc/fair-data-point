@@ -8,7 +8,6 @@ use App\Entity\FAIRData\Distribution;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DistributionController extends FAIRDataController
@@ -20,7 +19,6 @@ class DistributionController extends FAIRDataController
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
@@ -30,8 +28,7 @@ class DistributionController extends FAIRDataController
 
         return $this->renderResource(
             $request,
-            $distribution,
-            $bus
+            $distribution
         );
     }
 }

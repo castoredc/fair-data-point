@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -23,7 +22,7 @@ use function assert;
 class DatasetsApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_datasets')]
-    public function datasets(Request $request, MessageBusInterface $bus): Response
+    public function datasets(Request $request): Response
     {
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
@@ -32,7 +31,7 @@ class DatasetsApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetPaginatedDatasetsCommand(
                     null,
                     null,

@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -22,14 +21,14 @@ use function assert;
 class PersonApiController extends ApiController
 {
     #[Route(path: '/email', methods: ['GET'], name: 'api_agent_person')]
-    public function getPersonByEmail(Request $request, MessageBusInterface $bus): Response
+    public function getPersonByEmail(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         try {
             $parsed = $this->parseRequest(PersonApiRequest::class, $request);
             assert($parsed instanceof PersonApiRequest);
-            $envelope = $bus->dispatch(new GetPersonByEmailCommand($parsed->getEmail()));
+            $envelope = $this->bus->dispatch(new GetPersonByEmailCommand($parsed->getEmail()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

@@ -35,9 +35,10 @@ class RDFDistributionSPARQLController extends ApiController
         ValidatorInterface $validator,
         LoggerInterface $logger,
         EntityManagerInterface $em,
+        MessageBusInterface $bus,
         private EventDispatcherInterface $eventDispatcher,
     ) {
-        parent::__construct($apiClient, $validator, $logger, $em);
+        parent::__construct($apiClient, $validator, $logger, $em, $bus);
     }
 
     #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/sparql', name: 'distribution_sparql')]
@@ -47,7 +48,6 @@ class RDFDistributionSPARQLController extends ApiController
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
@@ -63,7 +63,7 @@ class RDFDistributionSPARQLController extends ApiController
             $parsed = $this->parseRequest(SparqlQueryRequest::class, $request);
             assert($parsed instanceof SparqlQueryRequest);
 
-            $handledStamp = $bus->dispatch(
+            $handledStamp = $this->bus->dispatch(
                 new RunQueryAgainstDistributionSparqlEndpointCommand(
                     $contents,
                     $parsed->getSparqlQuery()
@@ -125,7 +125,6 @@ class RDFDistributionSPARQLController extends ApiController
         Dataset $dataset,
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();

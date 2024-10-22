@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -21,7 +20,7 @@ use function assert;
 class CastorStudyApiController extends ApiController
 {
     #[Route(path: '/api/castor/studies', name: 'api_castor_studies')]
-    public function castorStudies(Request $request, MessageBusInterface $bus): Response
+    public function castorStudies(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -29,7 +28,7 @@ class CastorStudyApiController extends ApiController
         assert($user instanceof User);
 
         try {
-            $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, true, $request->get('hide') !== null));
+            $envelope = $this->bus->dispatch(new FindStudiesByUserCommand($user, true, $request->get('hide') !== null));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

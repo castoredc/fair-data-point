@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -38,7 +37,6 @@ class RDFDistributionController extends FAIRDataController
         Distribution $distribution,
         ?string $record,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
 
@@ -51,7 +49,7 @@ class RDFDistributionController extends FAIRDataController
 
         try {
             if ($contents->isCached()) {
-                $handledStamp = $bus->dispatch(new GetRDFFromStoreCommand($contents, $record))->last(
+                $handledStamp = $this->bus->dispatch(new GetRDFFromStoreCommand($contents, $record))->last(
                     HandledStamp::class
                 );
                 assert($handledStamp instanceof HandledStamp);
@@ -59,18 +57,18 @@ class RDFDistributionController extends FAIRDataController
                 $turtle = $handledStamp->getResult();
             } else {
                 if ($record !== null) {
-                    $handledStamp = $bus->dispatch(new GetRecordCommand($distribution, $record))->last(
+                    $handledStamp = $this->bus->dispatch(new GetRecordCommand($distribution, $record))->last(
                         HandledStamp::class
                     );
                     assert($handledStamp instanceof HandledStamp);
                     $records = [$handledStamp->getResult()];
                 } else {
-                    $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
+                    $handledStamp = $this->bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
                     assert($handledStamp instanceof HandledStamp);
                     $records = $handledStamp->getResult();
                 }
 
-                $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents))->last(
+                $handledStamp = $this->bus->dispatch(new RenderRDFDistributionCommand($records, $contents))->last(
                     HandledStamp::class
                 );
                 assert($handledStamp instanceof HandledStamp);

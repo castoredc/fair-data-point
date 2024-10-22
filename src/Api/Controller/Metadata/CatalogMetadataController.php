@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
@@ -26,7 +25,6 @@ class CatalogMetadataController extends ApiController
         #[MapEntity(mapping: ['catalog' => 'id'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
@@ -34,7 +32,7 @@ class CatalogMetadataController extends ApiController
             $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);
             assert($parsed instanceof CreateMetadataVersionApiRequest);
 
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new CreateCatalogMetadataCommand(
                     $catalog,
                     $parsed->getVersionType(),

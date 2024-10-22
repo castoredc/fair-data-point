@@ -42,9 +42,6 @@ class StudyApiResource extends RoleBasedApiResource
             'sourceId' => $this->study->getSourceId(),
             'sourceServer' => $sourceServer,
             'published' => $this->study->isPublished(),
-            'count' => [
-                'dataset' => $this->study->getDatasets()->count(),
-            ],
             'catalogs' => $catalogs,
         ];
     }

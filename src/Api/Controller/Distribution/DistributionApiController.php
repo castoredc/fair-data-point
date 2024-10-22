@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -85,7 +84,6 @@ class DistributionApiController extends ApiController
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
         $contents = $distribution->getContents();
@@ -101,7 +99,7 @@ class DistributionApiController extends ApiController
             $parsed = $this->parseRequest(DistributionGenerationLogsFilterApiRequest::class, $request);
             assert($parsed instanceof DistributionGenerationLogsFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetDistributionGenerationLogsCommand(
                     $distribution,
                     $parsed->getPerPage(),
@@ -160,7 +158,6 @@ class DistributionApiController extends ApiController
         #[MapEntity(mapping: ['log' => 'id'])]
         DistributionGenerationLog $log,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
@@ -172,7 +169,7 @@ class DistributionApiController extends ApiController
             $parsed = $this->parseRequest(DistributionGenerationLogsFilterApiRequest::class, $request);
             assert($parsed instanceof DistributionGenerationLogsFilterApiRequest);
 
-            $envelope = $bus->dispatch(
+            $envelope = $this->bus->dispatch(
                 new GetDistributionGenerationRecordLogsCommand(
                     $log,
                     $parsed->getPerPage(),
@@ -210,7 +207,6 @@ class DistributionApiController extends ApiController
         #[MapEntity(mapping: ['dataset' => 'slug'])]
         Dataset $dataset,
         Request $request,
-        MessageBusInterface $bus,
         UriHelper $uriHelper,
     ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
@@ -220,7 +216,7 @@ class DistributionApiController extends ApiController
             assert($parsed instanceof DistributionApiRequest);
 
             if ($parsed->getType()->isCsv()) {
-                $envelope = $bus->dispatch(
+                $envelope = $this->bus->dispatch(
                     new CreateCSVDistributionCommand(
                         $parsed->getSlug(),
                         $parsed->getDefaultMetadataModel(),
@@ -234,7 +230,7 @@ class DistributionApiController extends ApiController
                     )
                 );
             } elseif ($parsed->getType()->isRdf()) {
-                $envelope = $bus->dispatch(
+                $envelope = $this->bus->dispatch(
                     new CreateRDFDistributionCommand(
                         $parsed->getSlug(),
                         $parsed->getDefaultMetadataModel(),
@@ -285,7 +281,6 @@ class DistributionApiController extends ApiController
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
@@ -294,7 +289,7 @@ class DistributionApiController extends ApiController
             assert($parsed instanceof DistributionApiRequest);
 
             if ($distribution->getContents() instanceof RDFDistribution) {
-                $bus->dispatch(
+                $this->bus->dispatch(
                     new UpdateRDFDistributionCommand(
                         $distribution,
                         $parsed->getSlug(),
@@ -359,14 +354,13 @@ class DistributionApiController extends ApiController
         #[MapEntity(mapping: ['distribution' => 'slug'])]
         Distribution $distribution,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(DistributionSubsetApiRequest::class, $request);
             assert($parsed instanceof DistributionSubsetApiRequest);
-            $bus->dispatch(
+            $this->bus->dispatch(
                 new UpdateDistributionSubsetCommand(
                     $distribution,
                     $parsed->getDependencies()

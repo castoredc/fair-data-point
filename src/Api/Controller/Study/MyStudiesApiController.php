@@ -31,7 +31,7 @@ class MyStudiesApiController extends ApiController
         assert($user instanceof User);
 
         try {
-            $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
+            $envelope = $this->bus->dispatch(new FindStudiesByUserCommand($user, false));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

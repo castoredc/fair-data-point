@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
@@ -45,7 +44,6 @@ class DataDictionaryApiController extends ApiController
         #[MapEntity(mapping: ['dataDictionary' => 'id'])]
         DataDictionary $dataDictionary,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
 
@@ -60,7 +58,7 @@ class DataDictionaryApiController extends ApiController
             $parsed = $this->parseRequest(DataDictionaryVersionApiRequest::class, $request);
             assert($parsed instanceof DataDictionaryVersionApiRequest);
 
-            $envelope = $bus->dispatch(new ImportDataDictionaryCommand($dataDictionary, $file, $parsed->getVersion()));
+            $envelope = $this->bus->dispatch(new ImportDataDictionaryCommand($dataDictionary, $file, $parsed->getVersion()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

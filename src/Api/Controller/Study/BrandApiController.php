@@ -9,7 +9,6 @@ use App\Entity\FAIRData\Catalog;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BrandApiController extends ApiController
@@ -18,7 +17,6 @@ class BrandApiController extends ApiController
     public function brand(
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 

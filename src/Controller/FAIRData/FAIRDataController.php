@@ -29,8 +29,11 @@ abstract class FAIRDataController extends AbstractController
 
     protected string $basePurl;
 
-    public function __construct(protected UriHelper $uriHelper, protected LoggerInterface $logger)
-    {
+    public function __construct(
+        protected UriHelper $uriHelper,
+        protected LoggerInterface $logger,
+        protected MessageBusInterface $bus,
+    ) {
         $this->baseUri = $uriHelper->getBaseUri();
         $this->basePurl = $uriHelper->getBasePurl();
 
@@ -119,14 +122,13 @@ abstract class FAIRDataController extends AbstractController
     protected function renderResource(
         Request $request,
         MetadataEnrichedEntity $entity,
-        MessageBusInterface $bus,
     ): mixed {
         if ($this->acceptsHttp($request)) {
             return $this->render('react.html.twig');
         }
 
         try {
-            $handledStamp = $bus->dispatch(new RenderRDFMetadataCommand($entity))->last(
+            $handledStamp = $this->bus->dispatch(new RenderRDFMetadataCommand($entity))->last(
                 HandledStamp::class
             );
 
@@ -177,11 +179,10 @@ abstract class FAIRDataController extends AbstractController
 
     protected function renderRdf(
         MetadataEnrichedEntity $entity,
-        MessageBusInterface $bus,
         bool $shouldDownload,
     ): mixed {
         try {
-            $handledStamp = $bus->dispatch(new RenderRDFMetadataCommand($entity))->last(
+            $handledStamp = $this->bus->dispatch(new RenderRDFMetadataCommand($entity))->last(
                 HandledStamp::class
             );
             assert($handledStamp instanceof HandledStamp);

@@ -3,13 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Catalog;
 
-use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Metadata\MetadataApiResource;
-use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Catalog;
-use function count;
-use const DATE_ATOM;
 
 class CatalogApiResource implements ApiResource
 {
@@ -20,7 +16,7 @@ class CatalogApiResource implements ApiResource
     /** @return array<mixed> */
     public function toArray(): array
     {
-        $catalog = [
+        return [
             'relativeUrl' => $this->catalog->getRelativeUrl(),
             'id' => $this->catalog->getId(),
             'slug' => $this->catalog->getSlug(),
@@ -29,33 +25,6 @@ class CatalogApiResource implements ApiResource
             'submissionAccessesData' => $this->catalog->isSubmissionAccessingData(),
             'hasMetadata' => $this->catalog->hasMetadata(),
             'metadata' => $this->catalog->hasMetadata() ? (new MetadataApiResource($this->catalog->getLatestMetadata()))->toArray() : null,
-            'count' => [
-                'study' => count($this->catalog->getStudies(false)),
-                'dataset' => count($this->catalog->getDatasets(false)),
-            ],
         ];
-
-        if ($this->catalog->hasMetadata() && $this->catalog->getLatestMetadata()->getMetadataModelVersion() === null) {
-            $first = $this->catalog->getFirstMetadata();
-            $metadata = $this->catalog->getLatestMetadata();
-
-            $catalog['legacy']['metadata'] = [
-                'title' => $metadata->getLegacyTitle()->toArray(),
-                'version' => [
-                    'metadata' => $metadata->getVersion()->getValue(),
-                ],
-                'description' => $metadata->getDescription()->toArray(),
-                'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage()?->getCode(),
-                'license' => $metadata->getLicense()?->getSlug(),
-                'homepage' => $metadata->getHomepage()?->getValue(),
-                'logo' => $metadata->getLogo()?->getValue(),
-                'themeTaxonomy' => (new OntologyConceptsApiResource($metadata->getThemeTaxonomies()->toArray()))->toArray(),
-                'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
-            ];
-        }
-
-        return $catalog;
     }
 }

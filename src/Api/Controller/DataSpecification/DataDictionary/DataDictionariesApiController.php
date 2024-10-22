@@ -27,7 +27,7 @@ class DataDictionariesApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $envelope = $bus->dispatch(new GetDataDictionariesCommand());
+        $envelope = $this->bus->dispatch(new GetDataDictionariesCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
@@ -36,7 +36,7 @@ class DataDictionariesApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_dictionaries_add')]
-    public function addDataDictionary(Request $request, MessageBusInterface $bus): Response
+    public function addDataDictionary(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -44,7 +44,7 @@ class DataDictionariesApiController extends ApiController
             $parsed = $this->parseRequest(DataDictionaryApiRequest::class, $request);
             assert($parsed instanceof DataDictionaryApiRequest);
 
-            $envelope = $bus->dispatch(new CreateDataDictionaryCommand($parsed->getTitle(), $parsed->getDescription()));
+            $envelope = $this->bus->dispatch(new CreateDataDictionaryCommand($parsed->getTitle(), $parsed->getDescription()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

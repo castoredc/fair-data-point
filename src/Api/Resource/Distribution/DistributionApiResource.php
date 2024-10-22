@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Distribution;
 
-use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
 use App\Api\Resource\DataSpecification\DataModel\DataModelVersionApiResource;
@@ -13,7 +12,6 @@ use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Service\UriHelper;
-use const DATE_ATOM;
 
 class DistributionApiResource implements ApiResource
 {
@@ -37,24 +35,6 @@ class DistributionApiResource implements ApiResource
             'hasApiUser' => $this->distribution->getApiUser() !== null,
             'published' => $this->distribution->isPublished(),
         ];
-
-        if ($this->distribution->hasMetadata() && $this->distribution->getLatestMetadata()->getMetadataModelVersion() === null) {
-            $first = $this->distribution->getFirstMetadata();
-            $metadata = $this->distribution->getLatestMetadata();
-
-            $distribution['legacy']['metadata'] = [
-                'title' => $metadata->getLegacyTitle()->toArray(),
-                'version' => [
-                    'metadata' => $metadata->getVersion()->getValue(),
-                ],
-                'description' => $metadata->getDescription()->toArray(),
-                'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage()?->getCode(),
-                'license' => $metadata->getLicense()?->getSlug(),
-                'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
-            ];
-        }
 
         if ($this->distribution->hasContents()) {
             $contents = $this->distribution->getContents();

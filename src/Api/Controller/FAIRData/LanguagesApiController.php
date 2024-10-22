@@ -20,7 +20,7 @@ class LanguagesApiController extends ApiController
     #[Route(path: '/api/languages', name: 'api_languages')]
     public function languages(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetLanguagesCommand());
+        $envelope = $this->bus->dispatch(new GetLanguagesCommand());
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);

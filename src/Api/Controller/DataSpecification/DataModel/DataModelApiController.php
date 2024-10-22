@@ -47,7 +47,7 @@ use const JSON_PRETTY_PRINT;
 class DataModelApiController extends ApiController
 {
     #[Route(path: '', methods: ['POST'], name: 'api_data_model_add')]
-    public function addDataModel(Request $request, MessageBusInterface $bus): Response
+    public function addDataModel(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -55,7 +55,7 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
             assert($parsed instanceof DataModelApiRequest);
 
-            $envelope = $bus->dispatch(new CreateDataModelCommand($parsed->getTitle(), $parsed->getDescription()));
+            $envelope = $this->bus->dispatch(new CreateDataModelCommand($parsed->getTitle(), $parsed->getDescription()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -79,7 +79,7 @@ class DataModelApiController extends ApiController
         assert($user instanceof User);
 
         try {
-            $envelope = $bus->dispatch(new FindDataModelsByUserCommand($user));
+            $envelope = $this->bus->dispatch(new FindDataModelsByUserCommand($user));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -117,7 +117,6 @@ class DataModelApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'id'])]
         DataModel $dataModel,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
@@ -125,7 +124,7 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
             assert($parsed instanceof DataModelApiRequest);
 
-            $bus->dispatch(new UpdateDataModelCommand($dataModel, $parsed->getTitle(), $parsed->getDescription()));
+            $this->bus->dispatch(new UpdateDataModelCommand($dataModel, $parsed->getTitle(), $parsed->getDescription()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -152,7 +151,6 @@ class DataModelApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'id'])]
         DataModel $dataModel,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
@@ -160,7 +158,7 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationVersionTypeApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationVersionTypeApiRequest);
 
-            $envelope = $bus->dispatch(new CreateDataModelVersionCommand($dataModel, $parsed->getVersionType()));
+            $envelope = $this->bus->dispatch(new CreateDataModelVersionCommand($dataModel, $parsed->getVersionType()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -186,7 +184,6 @@ class DataModelApiController extends ApiController
         #[MapEntity(mapping: ['model' => 'id'])]
         DataModel $dataModel,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
@@ -201,7 +198,7 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationVersionApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationVersionApiRequest);
 
-            $envelope = $bus->dispatch(new ImportDataModelVersionCommand($dataModel, $file, $parsed->getVersion()));
+            $envelope = $this->bus->dispatch(new ImportDataModelVersionCommand($dataModel, $file, $parsed->getVersion()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -234,7 +231,6 @@ class DataModelApiController extends ApiController
     public function exportDataModelVersion(
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -258,11 +254,10 @@ class DataModelApiController extends ApiController
     public function dataModelRDFPreview(
         #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        $envelope = $bus->dispatch(new GetDataModelRDFPreviewCommand($dataModelVersion));
+        $envelope = $this->bus->dispatch(new GetDataModelRDFPreviewCommand($dataModelVersion));
 
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);

@@ -7,7 +7,6 @@ use App\Entity\FAIRData\Catalog;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CatalogController extends FAIRDataController
@@ -30,14 +29,12 @@ class CatalogController extends FAIRDataController
         #[MapEntity(mapping: ['catalog' => 'slug'])]
         Catalog $catalog,
         Request $request,
-        MessageBusInterface $bus,
     ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         return $this->renderResource(
             $request,
-            $catalog,
-            $bus
+            $catalog
         );
     }
 }
