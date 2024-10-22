@@ -48,10 +48,7 @@ interface DataModelMappingsDataTableState {
     pagination: Pagination;
 }
 
-export default class DataModelMappingsDataTable extends Component<
-    DataModelMappingsDataTableProps,
-    DataModelMappingsDataTableState
-> {
+export default class DataModelMappingsDataTable extends Component<DataModelMappingsDataTableProps, DataModelMappingsDataTableState> {
     private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DataModelMappingsDataTableProps) {
@@ -96,7 +93,7 @@ export default class DataModelMappingsDataTable extends Component<
             .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/contents/rdf/v/${versionId}/${type}`, {
                 params: filters,
             })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     mappings: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -104,7 +101,7 @@ export default class DataModelMappingsDataTable extends Component<
                     hasLoadedMappings: type,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoadingMappings: false,
                 });
@@ -173,7 +170,7 @@ export default class DataModelMappingsDataTable extends Component<
                     ...(!item.transformed && {
                         mappedElement: <CellText key={index}>{item.elements ? item.elements[0].label : ''}</CellText>,
                     }),
-                }
+                };
             });
         } else if (type === 'module') {
             rows = mappings.map((item, index) => ({

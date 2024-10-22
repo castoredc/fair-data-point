@@ -24,6 +24,6 @@ const useGetLanguage = (code: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, language };
-}
+};
 
-export default useGetLanguage
+export default useGetLanguage;

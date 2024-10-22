@@ -62,7 +62,7 @@ const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, co
                 ]}
                 name="type"
                 collapse={true}
-                onChange={(e) => setType('value' in e.target ? e.target.value as string : '')}
+                onChange={e => setType('value' in e.target ? (e.target.value as string) : '')}
             />
 
             {type === 'person' && <PersonForm handleSubmit={handleSubmit} />}
@@ -70,6 +70,6 @@ const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, co
             {type === 'organization' && <OrganizationForm countries={countries} handleSubmit={handleSubmit} />}
         </Modal>
     );
-}
+};
 
 export default PublisherModal;

@@ -7,7 +7,7 @@ interface LicenseProps {
     slug: string;
 }
 
-const License: React.FC<LicenseProps> = ({slug}) => {
+const License: React.FC<LicenseProps> = ({ slug }) => {
     const { license, isLoading } = useGetLicense(slug);
 
     if (isLoading || !license) {
@@ -15,6 +15,6 @@ const License: React.FC<LicenseProps> = ({slug}) => {
     }
 
     return <div className="License">{license.label}</div>;
-}
+};
 
 export default License;

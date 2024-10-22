@@ -2,7 +2,7 @@ import React from 'react';
 import List from './List';
 import { CommonListProps } from 'components/List/types';
 
-const StudyList: React.FC<CommonListProps> = (props) => {
+const StudyList: React.FC<CommonListProps> = props => {
     const { catalog, agent } = props;
 
     let apiEndpoint = '/api/study';
@@ -16,12 +16,7 @@ const StudyList: React.FC<CommonListProps> = (props) => {
         noResultsText = 'This agent does not have any associated studies.';
     }
 
-    return <List
-        {...props}
-        apiEndpoint={apiEndpoint}
-        filterFunction={item => item.hasMetadata}
-        noResultsText={noResultsText}
-    />;
+    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata} noResultsText={noResultsText} />;
 };
 
 export default StudyList;

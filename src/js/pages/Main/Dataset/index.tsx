@@ -34,10 +34,7 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
                         </div>
 
                         <div className="SideCol">
-                            <MetadataSideBar
-                                metadata={dataset.metadata}
-                                title={title}
-                            />
+                            <MetadataSideBar metadata={dataset.metadata} title={title} />
                         </div>
 
                         <AssociatedItemsBar items={dataset.count} current="distribution" />
@@ -53,6 +50,6 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
             </MainBody>
         </Layout>
     );
-}
+};
 
 export default Dataset;

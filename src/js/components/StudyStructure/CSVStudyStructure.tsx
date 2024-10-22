@@ -39,8 +39,8 @@ export default class CSVStudyStructure extends Component<CSVStudyStructureProps,
     handleSelect = (fieldId: string, variableName: string, label: string) => {
         let { distributionContents } = this.state;
 
-        distributionContents = distributionContents.filter((field) => {
-            return !((field === fieldId));
+        distributionContents = distributionContents.filter(field => {
+            return !(field === fieldId);
         });
 
         distributionContents.push(fieldId);

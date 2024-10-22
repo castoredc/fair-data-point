@@ -59,7 +59,7 @@ export default class Login extends Component<LoginProps, LoginState> {
     getServers = () => {
         apiClient
             .get('/api/castor/servers')
-            .then((response) => {
+            .then(response => {
                 const params = queryString.parse(this.props.location.search);
                 const defaultServer = response.data.find((server: ServerType) => server.default)?.id;
                 const serverIds = response.data.map((server: ServerType) => server.id);
@@ -76,7 +76,7 @@ export default class Login extends Component<LoginProps, LoginState> {
                     view: view,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoading: false,
                 });
@@ -87,7 +87,7 @@ export default class Login extends Component<LoginProps, LoginState> {
     getCatalog = (catalog: string, callback?: () => void) => {
         apiClient
             .get(`/api/brand/${catalog}`)
-            .then((response) => {
+            .then(response => {
                 if (typeof callback === 'function') {
                     this.setState(
                         {
@@ -102,7 +102,7 @@ export default class Login extends Component<LoginProps, LoginState> {
                     });
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoading: false,
                 });

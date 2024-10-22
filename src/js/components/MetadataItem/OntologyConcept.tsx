@@ -11,14 +11,16 @@ interface OntologyConceptProps {
     url: string;
 }
 
-const OntologyConcept: React.FC<OntologyConceptProps> = ({code, displayName, ontology, url}) => {
-    return <div className="OntologyConcept">
-        <Tooltip content={`${ontology.name} · ${code}`}>
-            <a href={url} target="_blank">
-                {displayName}
-            </a>
-        </Tooltip>
-    </div>;
-}
+const OntologyConcept: React.FC<OntologyConceptProps> = ({ code, displayName, ontology, url }) => {
+    return (
+        <div className="OntologyConcept">
+            <Tooltip content={`${ontology.name} · ${code}`}>
+                <a href={url} target="_blank">
+                    {displayName}
+                </a>
+            </Tooltip>
+        </div>
+    );
+};
 
 export default OntologyConcept;

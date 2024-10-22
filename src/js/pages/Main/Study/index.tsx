@@ -32,19 +32,12 @@ const Study: React.FC<StudyProps> = ({ user, embedded, location, match }) => {
                             <MetadataDescription metadata={study.metadata} />
                         </div>
                         <div className="SideCol">
-                            <MetadataSideBar
-                                metadata={study.metadata}
-                                title={title}
-                            />
+                            <MetadataSideBar metadata={study.metadata} title={title} />
                         </div>
 
                         <AssociatedItemsBar items={study.count} current="dataset" />
 
-                        <DatasetList
-                            study={study}
-                            state={breadcrumbs.current ? breadcrumbs.current.state : null}
-                            className="MainCol"
-                        />
+                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} className="MainCol" />
                     </>
                 )}
             </MainBody>

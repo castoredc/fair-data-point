@@ -52,7 +52,7 @@ const OptionGroupOptionInput: FC<OptionGroupOptionInputProps> = ({ field, form, 
                     const first = index === 0;
 
                     return (
-                        <React.Fragment key={`${field.name}-${index}`} >
+                        <React.Fragment key={`${field.name}-${index}`}>
                             <div className="OptionGroupOptionInputItem">
                                 <div className="OptionGroupOptionInputTitle">
                                     <TextInput
@@ -95,8 +95,7 @@ const OptionGroupOptionInput: FC<OptionGroupOptionInputProps> = ({ field, form, 
             </div>
 
             <div className="OptionGroupOptionInputAddButton">
-                <Button icon="add" className="AddButton" buttonType="contentOnly"
-                        onClick={() => handleAdd(field, form)}>
+                <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>
                     Add new
                 </Button>
             </div>

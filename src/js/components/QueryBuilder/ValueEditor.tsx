@@ -7,8 +7,8 @@ import MaskedInput from 'react-text-mask';
 import { findOptionByValue } from '../../util';
 
 interface ValueEditorProps extends QueryBuilderValueEditorProps {
-    prefixes: PrefixType[],
-    institutes: InstituteType[],
+    prefixes: PrefixType[];
+    institutes: InstituteType[];
 }
 
 export const ValueEditor: React.FC<ValueEditorProps> = ({ field, fieldData, operator, handleOnChange, value, values, prefixes, institutes }) => {

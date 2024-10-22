@@ -160,12 +160,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <MetadataForm
-                                        type="dataset"
-                                        object={dataset}
-                                        onCreate={this.getDataset}
-                                        onSave={this.getDataset}
-                                    />
+                                    <MetadataForm type="dataset" object={dataset} onCreate={this.getDataset} onSave={this.getDataset} />
                                 </PageBody>
                             )}
                         />

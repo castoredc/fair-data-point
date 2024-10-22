@@ -56,9 +56,7 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
 
         let newSelectedElements = [...selectedElements];
         const field = { id: fieldId, variableName, label };
-        const index = selectedElements.findIndex(
-            selectedElement => selectedElement.id === fieldId
-        );
+        const index = selectedElements.findIndex(selectedElement => selectedElement.id === fieldId);
 
         if (index !== -1) {
             newSelectedElements.splice(index, 1);
@@ -100,16 +98,13 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
         this.setState({ isLoading: true });
 
         apiClient
-            .post(
-                `/api/dataset/${dataset}/distribution/${distribution.slug}/contents/rdf/v/${versionId}/node`,
-                {
-                    type: 'node',
-                    node: mapping.node.id,
-                    transform: dataTransformation,
-                    elements: selectedElements.map(element => element.id),
-                    ...(dataTransformation && { transformSyntax }),
-                }
-            )
+            .post(`/api/dataset/${dataset}/distribution/${distribution.slug}/contents/rdf/v/${versionId}/node`, {
+                type: 'node',
+                node: mapping.node.id,
+                transform: dataTransformation,
+                elements: selectedElements.map(element => element.id),
+                ...(dataTransformation && { transformSyntax }),
+            })
             .then(() => {
                 this.setState({ isLoading: false }, () => {
                     toast.success(<ToastItem type="success" title="The mapping was successfully saved." />, {

@@ -60,8 +60,7 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
                     isLoadingLog: false,
                 });
 
-                const message =
-                    error.response?.data?.error || 'An error occurred while loading the log';
+                const message = error.response?.data?.error || 'An error occurred while loading the log';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
@@ -85,13 +84,7 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
         let tabs: { [key: string]: { title: string; content: JSX.Element } } = {
             records: {
                 title: 'Record logs',
-                content: (
-                    <DistributionRecordLogsDataTable
-                        dataset={dataset}
-                        distribution={distribution}
-                        log={match.params.log}
-                    />
-                ),
+                content: <DistributionRecordLogsDataTable dataset={dataset} distribution={distribution} log={match.params.log} />,
             },
         };
 

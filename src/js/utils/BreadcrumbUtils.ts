@@ -85,6 +85,6 @@ export const getBreadCrumbs = (location, data): BreadcrumbsType => {
     return {
         current,
         previous,
-        crumbs: crumbs as BreadcrumbType[]
+        crumbs: crumbs as BreadcrumbType[],
     };
 };

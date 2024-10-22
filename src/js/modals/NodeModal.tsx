@@ -23,7 +23,7 @@ type AddNodeModalProps = {
     versionId: string;
     type: string;
     modelType: string;
-    types: Types,
+    types: Types;
     optionGroups: any;
     prefixes: any;
 };
@@ -109,13 +109,13 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
             <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
                 <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                        const isPlainValue = (values.type === 'value' && values.value === 'plain');
-                        const isAnnotatedValue = (values.type === 'value' && values.value === 'annotated');
+                        const isPlainValue = values.type === 'value' && values.value === 'plain';
+                        const isAnnotatedValue = values.type === 'value' && values.value === 'annotated';
 
                         const showDataTypes = values.type === 'literal' || isPlainValue;
                         const showRepeated =
-                            modelType === 'data-model' && (values.type === 'internal' || values.type === 'value') ||
-                            modelType === 'metadata-model' && (values.type === 'internal');
+                            (modelType === 'data-model' && (values.type === 'internal' || values.type === 'value')) ||
+                            (modelType === 'metadata-model' && values.type === 'internal');
 
                         return (
                             <Form>

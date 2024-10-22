@@ -82,7 +82,6 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
                 toast.success(<ToastItem type="success" title="The dataset details are saved successfully" />, {
                     position: 'top-right',
                 });
-
             })
             .catch(error => {
                 setSubmitting(false);
@@ -122,7 +121,11 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
                                                     <dl>
                                                         <dt>Title</dt>
                                                         <dd>
-                                                            {dataset.study.hasMetadata ? localizedText(dataset.study.metadata.title, 'en') : <span className="None">None</span>}
+                                                            {dataset.study.hasMetadata ? (
+                                                                localizedText(dataset.study.metadata.title, 'en')
+                                                            ) : (
+                                                                <span className="None">None</span>
+                                                            )}
                                                         </dd>
                                                         <dt>Study name</dt>
                                                         <dd>{dataset.study.name}</dd>
@@ -137,8 +140,7 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
                                     </FormItem>
                                 )}
 
-                                <FormItem label="Slug"
-                                          tooltip="The unique identifying part of a web address, typically at the end of the URL">
+                                <FormItem label="Slug" tooltip="The unique identifying part of a web address, typically at the end of the URL">
                                     <Field component={Input} name="slug" serverError={validation} />
                                 </FormItem>
 

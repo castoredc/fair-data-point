@@ -102,7 +102,7 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
 
         apiClient
             .get(url, { params: filters })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     datasets: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -110,7 +110,7 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
                     hasLoadedDatasets: true,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoadingDatasets: false,
                 });
@@ -206,13 +206,7 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
                 isLoading={isLoadingDatasets}
                 forwardRef={this.tableRef}
             >
-                <DataGrid
-                    accessibleName="Datasets"
-                    emptyStateContent="No datasets found"
-                    onClick={this.handleClick}
-                    rows={rows}
-                    columns={columns}
-                />
+                <DataGrid accessibleName="Datasets" emptyStateContent="No datasets found" onClick={this.handleClick} rows={rows} columns={columns} />
             </DataGridContainer>
         );
     }

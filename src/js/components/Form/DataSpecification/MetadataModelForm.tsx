@@ -42,8 +42,7 @@ export default class MetadataModelForm extends Component<MetadataModelFormProps,
                 setSubmitting(false);
 
                 if (metadataModel) {
-                    toast.success(<ToastItem type="success"
-                                                title="The metadata model details are saved successfully" />, {
+                    toast.success(<ToastItem type="success" title="The metadata model details are saved successfully" />, {
                         position: 'top-right',
                     });
                 } else {
@@ -70,17 +69,7 @@ export default class MetadataModelForm extends Component<MetadataModelFormProps,
         return (
             <PageBody>
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={MetadataModelSchema}>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          setValues,
-                          setFieldValue,
-                      }) => {
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         return (
                             <Form>
                                 <div className="FormContent">
@@ -88,8 +77,7 @@ export default class MetadataModelForm extends Component<MetadataModelFormProps,
                                         <Field component={Input} name="title" serverError={validation} />
                                     </FormItem>
                                     <FormItem label="Description">
-                                        <Field component={Input} name="description" serverError={validation}
-                                               multiline />
+                                        <Field component={Input} name="description" serverError={validation} multiline />
                                     </FormItem>
                                 </div>
 

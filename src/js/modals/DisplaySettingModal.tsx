@@ -18,7 +18,7 @@ type DisplaySettingModalProps = {
     modelId: string;
     versionId: string;
     nodes: any;
-    types: Types,
+    types: Types;
     items: any;
     resourceType: string;
     position: string;
@@ -38,7 +38,6 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
             validation: {},
         };
     }
-
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { open } = this.props;
@@ -66,7 +65,7 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
             newData.order = this.getOrderOptions().slice(-1)[0].value;
         }
 
-        const selectedNode = nodes.value.find((node) => node.id === newData.node);
+        const selectedNode = nodes.value.find(node => node.id === newData.node);
         newData.nodeData = selectedNode ? selectedNode.value : null;
 
         return newData;
@@ -75,10 +74,12 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
     getOrderOptions = () => {
         const { data, items } = this.props;
 
-        let order = [{
-            value: 1,
-            label: 'At the beginning',
-        }];
+        let order = [
+            {
+                value: 1,
+                label: 'At the beginning',
+            },
+        ];
 
         if (items.length === 0) {
             return order;
@@ -135,28 +136,28 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
             <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
                 <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                        const isPlainValue = values.nodeData && (values.nodeData.value === 'plain');
-                        const isAnnotatedValue = values.nodeData && (values.nodeData.value === 'annotated');
+                        const isPlainValue = values.nodeData && values.nodeData.value === 'plain';
+                        const isAnnotatedValue = values.nodeData && values.nodeData.value === 'annotated';
                         const orderOptions = this.getOrderOptions();
 
-                        let displayTypes: { value: string; label: string }[]  = [];
+                        let displayTypes: { value: string; label: string }[] = [];
 
-                        if(isPlainValue) {
+                        if (isPlainValue) {
                             displayTypes = types.displayTypes.plain[values.nodeData.dataType];
-                        } else if(isAnnotatedValue) {
+                        } else if (isAnnotatedValue) {
                             displayTypes = types.displayTypes.annotated;
                         }
 
-                        displayTypes = displayTypes.sort(function(a, b) {
-                            return a.label.localeCompare(b.label)
+                        displayTypes = displayTypes.sort(function (a, b) {
+                            return a.label.localeCompare(b.label);
                         });
 
-                        const nodeItems = nodes.value.map((node) => {
+                        const nodeItems = nodes.value.map(node => {
                             return {
                                 value: node.id,
                                 label: node.title,
-                            }
-                        })
+                            };
+                        });
 
                         return (
                             <Form>
@@ -169,13 +170,19 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
                                 </FormItem>
 
                                 <FormItem label="Node">
-                                    <Field component={Select} options={nodeItems} serverError={validation} name="node" onChange={(e) => {
-                                        setFieldValue('node', e.value);
-                                        setFieldValue('displayType', '');
+                                    <Field
+                                        component={Select}
+                                        options={nodeItems}
+                                        serverError={validation}
+                                        name="node"
+                                        onChange={e => {
+                                            setFieldValue('node', e.value);
+                                            setFieldValue('displayType', '');
 
-                                        const selectedNode = nodes.value.find((node) => node.id === e.value);
-                                        setFieldValue('nodeData', selectedNode.value);
-                                    }}/>
+                                            const selectedNode = nodes.value.find(node => node.id === e.value);
+                                            setFieldValue('nodeData', selectedNode.value);
+                                        }}
+                                    />
                                 </FormItem>
 
                                 <FormItem label="Display type">

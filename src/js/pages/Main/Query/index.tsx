@@ -79,7 +79,7 @@ export default class Query extends Component<QueryProps, QueryState> {
 
         apiClient
             .get(`/api/dataset/${match.params.dataset}/distribution/${match.params.distribution}`)
-            .then((response) => {
+            .then(response => {
                 this.setState(
                     {
                         distribution: response.data,
@@ -89,7 +89,7 @@ export default class Query extends Component<QueryProps, QueryState> {
                     this.getPrefixes
                 );
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoading: false,
                 });
@@ -109,7 +109,7 @@ export default class Query extends Component<QueryProps, QueryState> {
 
         apiClient
             .get(`/api/data-model/${distribution.dataModel.dataModel}/v/${distribution.dataModel.id}/prefix`)
-            .then((response) => {
+            .then(response => {
                 let prefixes = response.data.reduce((map: { [key: string]: string }, obj: { prefix: string; uri: string }) => {
                     map[obj.prefix] = obj.uri;
                     return map;
@@ -117,7 +117,7 @@ export default class Query extends Component<QueryProps, QueryState> {
 
                 apiClient
                     .get('/static/prefixes.json')
-                    .then((staticPrefixes) => {
+                    .then(staticPrefixes => {
                         prefixes = {
                             ...prefixes,
                             ...staticPrefixes.data,
@@ -129,7 +129,7 @@ export default class Query extends Component<QueryProps, QueryState> {
                         this.setState({ prefixes }, this.createYasgui);
                     });
             })
-            .catch((error) => {
+            .catch(error => {
                 const message =
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
@@ -159,7 +159,7 @@ export default class Query extends Component<QueryProps, QueryState> {
 
                 const element = document.getElementById('query');
 
-                if(element) {
+                if (element) {
                     this.yasqe = new Yasqe(element, config);
                     this.yasqe.on('query', this.onQuery);
                     this.yasqe.on('queryResponse', this.onResponse);
@@ -206,7 +206,7 @@ export default class Query extends Component<QueryProps, QueryState> {
     };
 
     toggleEditor = () => {
-        this.setState((prevState) => ({
+        this.setState(prevState => ({
             showEditor: !prevState.showEditor,
         }));
     };
@@ -243,8 +243,8 @@ export default class Query extends Component<QueryProps, QueryState> {
                                 <div className="ResultCount">
                                     {executedWithoutErrors && (
                                         <>
-                                            <strong>{rows.length}</strong> results in{' '}
-                                            <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong> seconds
+                                            <strong>{rows.length}</strong> results in <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong>{' '}
+                                            seconds
                                         </>
                                     )}
                                 </div>

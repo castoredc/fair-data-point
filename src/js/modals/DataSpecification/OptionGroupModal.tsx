@@ -10,7 +10,7 @@ import { apiClient } from '../../network';
 import OptionGroupOptionInput from 'components/Input/Formik/OptionGroupOptionInput';
 
 type OptionGroupModalProps = {
-    type: string,
+    type: string;
     show: boolean;
     handleClose: () => void;
     data: any;
@@ -87,8 +87,7 @@ export default class OptionGroupModal extends Component<OptionGroupModalProps, O
                                     <Field component={Input} name="title" serverError={validation} />
                                 </FormItem>
                                 <FormItem label="Description">
-                                    <Field component={Input} name="description" serverError={validation}
-                                           multiline />
+                                    <Field component={Input} name="description" serverError={validation} multiline />
                                 </FormItem>
 
                                 <FormItem label="Options">
@@ -110,10 +109,12 @@ export default class OptionGroupModal extends Component<OptionGroupModalProps, O
 const defaultData = {
     title: '',
     description: '',
-    options: [{
-        title: '',
-        value: '',
-    }],
+    options: [
+        {
+            title: '',
+            value: '',
+        },
+    ],
 };
 
 const PrefixSchema = Yup.object().shape({
@@ -126,5 +127,5 @@ const PrefixSchema = Yup.object().shape({
                 value: Yup.string().required('Please enter a value'),
             })
         )
-    .nullable(),
+        .nullable(),
 });

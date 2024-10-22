@@ -24,6 +24,6 @@ const useGetCountry = (code: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, country };
-}
+};
 
-export default useGetCountry
+export default useGetCountry;

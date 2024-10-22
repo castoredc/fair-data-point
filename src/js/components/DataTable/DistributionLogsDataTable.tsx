@@ -86,7 +86,7 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
 
         apiClient
             .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/log`, { params: filters })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     logs: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -94,7 +94,7 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
                     hasLoadedLogs: true,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoadingLogs: false,
                 });
@@ -128,9 +128,7 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
         const { logs } = this.state;
         const { dataset, distribution, history, study, catalog } = this.props;
 
-        const mainUrl = study
-            ? `/dashboard/studies/${study}/datasets/${dataset}`
-            : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
+        const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
 
         const log = logs[rowId];
 

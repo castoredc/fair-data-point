@@ -6,7 +6,7 @@ import UserDetailsForm from 'components/Form/Agent/UserDetailsForm';
 interface UserDetailsProps extends AuthorizedRouteComponentProps {}
 
 const UserDetails: React.FC<UserDetailsProps> = ({ user, history }) => {
-    if(user === null) {
+    if (user === null) {
         return null;
     }
 
@@ -21,7 +21,6 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, history }) => {
             </header>
 
             <UserDetailsForm user={user} history={history} />
-
         </>
     );
 };

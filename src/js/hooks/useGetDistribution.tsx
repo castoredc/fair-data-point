@@ -28,6 +28,6 @@ const useGetDistribution = (datasetSlug: string, distributionSlug: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, distribution };
-}
+};
 
-export default useGetDistribution
+export default useGetDistribution;

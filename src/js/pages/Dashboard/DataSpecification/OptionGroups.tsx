@@ -75,15 +75,9 @@ export default class OptionGroups extends Component<OptionGroupsProps, OptionGro
         apiClient
             .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/option-group/' + optionGroupModalData.id)
             .then(() => {
-                toast.success(
-                    <ToastMessage
-                        type="success"
-                        title={`The option group was successfully removed`}
-                    />,
-                    {
-                        position: 'top-right',
-                    }
-                );
+                toast.success(<ToastMessage type="success" title={`The option group was successfully removed`} />, {
+                    position: 'top-right',
+                });
 
                 this.onSaved('remove');
             })

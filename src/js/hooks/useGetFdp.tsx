@@ -28,6 +28,6 @@ const useGetFdp = () => {
     }, []); // Only run once on mount
 
     return { isLoading, fdp };
-}
+};
 
-export default useGetFdp
+export default useGetFdp;

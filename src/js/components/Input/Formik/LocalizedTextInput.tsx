@@ -40,7 +40,7 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, languages, multiline, serverError }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
-    const value = (field.value && field.value.length > 0) ? field.value : [defaultData];
+    const value = field.value && field.value.length > 0 ? field.value : [defaultData];
 
     return (
         <div className="Input LocalizedTextInput">
@@ -49,7 +49,7 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                     const first = index === 0;
 
                     return (
-                        <Fragment key={`${field.name}-${index}`} >
+                        <Fragment key={`${field.name}-${index}`}>
                             <div className="LocalizedTextInputItem">
                                 <div className="LocalizedTextInputText">
                                     <TextInput

@@ -41,13 +41,13 @@ export default class MappingInterface extends Component<MappingInterfaceProps, M
 
         apiClient
             .get('/api/castor/study/' + studyId + '/structure')
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     structure: response.data,
                     isLoadingStructure: false,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
                     toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {

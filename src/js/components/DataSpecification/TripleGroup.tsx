@@ -3,7 +3,7 @@ import TriplePredicate from './TriplePredicate';
 import { Node } from './Node';
 import { TripleGroupProps } from './types';
 
-const TripleGroup: React.FC<TripleGroupProps> = (props) => {
+const TripleGroup: React.FC<TripleGroupProps> = props => {
     const { id, type, title, repeated, value, predicates, openTripleModal, openRemoveTripleModal } = props;
 
     const newData = {

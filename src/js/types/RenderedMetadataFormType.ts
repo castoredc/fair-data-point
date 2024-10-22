@@ -16,4 +16,4 @@ export type RenderedMetadataFormFieldType = {
     optionGroup?: string;
     value?: string;
     isRequired: boolean;
-}
+};

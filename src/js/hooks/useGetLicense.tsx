@@ -24,6 +24,6 @@ const useGetLicense = (slug: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, license };
-}
+};
 
-export default useGetLicense
+export default useGetLicense;

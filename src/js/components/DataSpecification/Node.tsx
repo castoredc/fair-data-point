@@ -33,8 +33,7 @@ export const Node = (title: string, type: string, value: any, repeated: boolean)
             {type === 'children' && (
                 <div className="NodeInfo Literal">
                     <span>
-                        Children of type
-                        &nbsp;
+                        Children of type &nbsp;
                         <OpenNewWindowIcon width="8px" height="8px" />
                     </span>
                 </div>
@@ -42,8 +41,7 @@ export const Node = (title: string, type: string, value: any, repeated: boolean)
             {type === 'parents' && (
                 <div className="NodeInfo Literal">
                     <span>
-                        Parents of type
-                        &nbsp;
+                        Parents of type &nbsp;
                         <OpenNewWindowIcon width="8px" height="8px" />
                     </span>
                 </div>

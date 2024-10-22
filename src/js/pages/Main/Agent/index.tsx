@@ -25,7 +25,7 @@ interface AgentState {
 }
 
 interface AgentData extends GenericAgentType {
-    slug: string,
+    slug: string;
     count: {
         [key: string]: number;
     };
@@ -50,14 +50,14 @@ export default class Agent extends Component<AgentProps, AgentState> {
 
         apiClient
             .get(`/api/agent/details/${match.params.slug}`)
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     agent: response.data,
-                    currentItem: Object.keys(response.data.count).find((key) => response.data.count[key] > 0) ?? null,
+                    currentItem: Object.keys(response.data.count).find(key => response.data.count[key] > 0) ?? null,
                     isLoading: false,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoading: false,
                 });

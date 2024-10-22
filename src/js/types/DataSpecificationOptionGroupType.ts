@@ -11,4 +11,4 @@ export type DataSpecificationOptionGroupOptionType = {
     description?: string;
     value: string;
     order: number;
-}
+};

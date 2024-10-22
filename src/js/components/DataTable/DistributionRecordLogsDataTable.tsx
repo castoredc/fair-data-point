@@ -37,10 +37,7 @@ interface DistributionRecordLogsDataTableState {
     selectedLog: Log | null;
 }
 
-export default class DistributionRecordLogsDataTable extends Component<
-    DistributionRecordLogsDataTableProps,
-    DistributionRecordLogsDataTableState
-> {
+export default class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDataTableProps, DistributionRecordLogsDataTableState> {
     private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DistributionRecordLogsDataTableProps) {
@@ -87,7 +84,7 @@ export default class DistributionRecordLogsDataTable extends Component<
 
         apiClient
             .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/log/${log}/records`, { params: filters })
-            .then((response) => {
+            .then(response => {
                 this.setState({
                     logs: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -95,7 +92,7 @@ export default class DistributionRecordLogsDataTable extends Component<
                     hasLoadedLogs: true,
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.setState({
                     isLoadingLogs: false,
                 });

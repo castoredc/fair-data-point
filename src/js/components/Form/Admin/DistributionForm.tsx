@@ -155,7 +155,6 @@ export default class DistributionForm extends Component<DistributionFormProps, D
             });
     };
 
-
     handleSubmit = (values, { setSubmitting }) => {
         const { dataset, distribution, mainUrl, history } = this.props;
 
@@ -193,7 +192,17 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     };
 
     render() {
-        const { initialValues, licenses, dataModels, metadataModels, distribution, hasLoadedLanguages, hasLoadedLicenses, hasLoadedDataModels, hasLoadedMetadataModels } = this.state;
+        const {
+            initialValues,
+            licenses,
+            dataModels,
+            metadataModels,
+            distribution,
+            hasLoadedLanguages,
+            hasLoadedLicenses,
+            hasLoadedDataModels,
+            hasLoadedMetadataModels,
+        } = this.state;
 
         if (!hasLoadedLanguages || !hasLoadedLicenses || !hasLoadedDataModels || !hasLoadedMetadataModels) {
             return <LoadingOverlay accessibleLabel="Loading distribution" />;
@@ -240,12 +249,14 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                 />
                                             </FormItem>
                                             <FormItem label="Data model version">
-                                                {currentDataModel && <Field
-                                                    component={Select}
-                                                    options={currentDataModel.versions}
-                                                    name="dataModelVersion"
-                                                    // value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
-                                                />}
+                                                {currentDataModel && (
+                                                    <Field
+                                                        component={Select}
+                                                        options={currentDataModel.versions}
+                                                        name="dataModelVersion"
+                                                        // value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
+                                                    />
+                                                )}
                                             </FormItem>
                                         </Stack>
                                     </>
@@ -255,7 +266,10 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                     <>
                                         <Separator />
 
-                                        <FormItem label="Slug" tooltip="The unique identifying part of a web address, typically at the end of the URL">
+                                        <FormItem
+                                            label="Slug"
+                                            tooltip="The unique identifying part of a web address, typically at the end of the URL"
+                                        >
                                             <Field component={Input} name="slug" />
                                         </FormItem>
 
@@ -320,11 +334,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                     />
                                                 </FormItem>
 
-                                                {values.public === true && <Banner
-                                                    type="information"
-                                                    description="Please note that this enables data access to everyone, without any access control."
-                                                    customWidth="400px"
-                                                />}
+                                                {values.public === true && (
+                                                    <Banner
+                                                        type="information"
+                                                        description="Please note that this enables data access to everyone, without any access control."
+                                                        customWidth="400px"
+                                                    />
+                                                )}
 
                                                 <FormItem
                                                     label="Cache distribution data"
@@ -349,9 +365,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                             </>
                                         )}
 
-                                        <FormHeading
-                                            label="Castor EDC API Credentials"
-                                        />
+                                        <FormHeading label="Castor EDC API Credentials" />
 
                                         <FormItem>
                                             <Field
@@ -420,12 +434,12 @@ export const distributionTypes = [
     {
         value: 'csv',
         labelText: 'CSV Distribution',
-        details: 'CSV distributions contain tabulated data, where every column represents a variable collected in your study'
+        details: 'CSV distributions contain tabulated data, where every column represents a variable collected in your study',
     },
     {
         value: 'rdf',
         labelText: 'RDF Distribution',
-        details: 'RDF distributions contain linked data, where the data is modeled using a pre-defined semantic data model'
+        details: 'RDF distributions contain linked data, where the data is modeled using a pre-defined semantic data model',
     },
 ];
 

@@ -15,14 +15,14 @@ interface DropdownButtonProps {
 }
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
-                                                           className,
-                                                           icon,
-                                                           iconDescription,
-                                                           text,
-                                                           buttonType = 'contentOnly',
-                                                           hideDropdown = false,
-                                                           items,
-                                                       }) => {
+    className,
+    icon,
+    iconDescription,
+    text,
+    buttonType = 'contentOnly',
+    hideDropdown = false,
+    items,
+}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const menuRef = useRef<HTMLUListElement | null>(null);

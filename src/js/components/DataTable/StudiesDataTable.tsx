@@ -56,7 +56,7 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
 
         this.setState({ isLoadingStudies: true });
 
-        let filters = { };
+        let filters = {};
         filters['page'] = pagination.currentPage;
         filters['perPage'] = pagination.perPage;
 
@@ -144,16 +144,8 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
 
         const rows = studies.map((item, index) => ({
             __rowId: String(index),
-            title: (
-                <CellText>
-                    {item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}
-                </CellText>
-            ),
-            description: (
-                <CellText>
-                    {item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}
-                </CellText>
-            ),
+            title: <CellText>{item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}</CellText>,
+            description: <CellText>{item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}</CellText>,
             published: item.published ? <IconCell icon={{ type: 'view' }} /> : undefined,
         }));
 

@@ -135,32 +135,22 @@ export default class Study extends Component<StudyProps, StudyState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <MetadataForm
-                                        type="study"
-                                        object={study}
-                                        onCreate={this.getStudy}
-                                        onSave={this.getStudy}
-                                    />
+                                    <MetadataForm type="study" object={study} onCreate={this.getStudy} onSave={this.getStudy} />
                                 </PageBody>
                             )}
                         />
                         <Route
                             path="/dashboard/studies/:study/annotations"
                             exact
-                            render={
-                                props => (
-                                    isGranted("edit_source_system", study.permissions) ? (
-                                        <PageBody>
-                                            <Annotations studyId={study.id} />
-                                        </PageBody>
-                                    ) : (
-                                      <PageBody>
-                                        <Banner
-                                          type="error"
-                                          title="You do not have permission to access this study in Castor"
-                                        />
-                                      </PageBody>
-                                    )
+                            render={props =>
+                                isGranted('edit_source_system', study.permissions) ? (
+                                    <PageBody>
+                                        <Annotations studyId={study.id} />
+                                    </PageBody>
+                                ) : (
+                                    <PageBody>
+                                        <Banner type="error" title="You do not have permission to access this study in Castor" />
+                                    </PageBody>
                                 )
                             }
                         />

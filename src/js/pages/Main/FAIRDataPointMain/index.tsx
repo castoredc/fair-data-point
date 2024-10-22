@@ -33,10 +33,7 @@ const FAIRDataPointMain: React.FC<FAIRDataPointMainProps> = ({ user, embedded, l
                             <MetadataDescription metadata={fdp.metadata} />
                         </div>
                         <div className="SideCol">
-                            <MetadataSideBar
-                                metadata={fdp.metadata}
-                                title={title}
-                            />
+                            <MetadataSideBar metadata={fdp.metadata} title={title} />
                         </div>
 
                         <AssociatedItemsBar items={fdp.count} current="catalog" />

@@ -26,19 +26,19 @@ interface FieldListItemProps {
 }
 
 const FieldListItem: React.FC<FieldListItemProps> = ({
-                                                         id,
-                                                         type,
-                                                         label,
-                                                         stepNumber,
-                                                         number,
-                                                         variableName,
-                                                         selected,
-                                                         onSelect,
-                                                         exportable,
-                                                         dataFormat,
-                                                         dataType,
-                                                         dataTransformation,
-                                                     }) => {
+    id,
+    type,
+    label,
+    stepNumber,
+    number,
+    variableName,
+    selected,
+    onSelect,
+    exportable,
+    dataFormat,
+    dataType,
+    dataTransformation,
+}) => {
     let isExportable = exportable.exportable;
 
     if (isExportable && dataTransformation) {

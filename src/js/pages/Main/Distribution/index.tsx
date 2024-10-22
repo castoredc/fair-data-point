@@ -36,19 +36,13 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                         </div>
 
                         <div className="SideCol">
-                            <MetadataSideBar
-                                metadata={distribution.metadata}
-                                title={title}
-                            />
+                            <MetadataSideBar metadata={distribution.metadata} title={title} />
                         </div>
 
                         <div className="Separator"></div>
 
                         <div
-                            className={classNames(
-                                'MainCol DistributionAccess',
-                                !isGranted('access_data', distribution.permissions) && 'Restricted'
-                            )}
+                            className={classNames('MainCol DistributionAccess', !isGranted('access_data', distribution.permissions) && 'Restricted')}
                         >
                             {!user && !isGranted('access_data', distribution.permissions) && (
                                 <div className="Overlay">
@@ -62,7 +56,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                                 onClick: () =>
                                                     (window.location.href =
                                                         '/connect/castor/' +
-                                                        ((distribution && distribution.study !== null) ? distribution.study.sourceServer : '') +
+                                                        (distribution && distribution.study !== null ? distribution.study.sourceServer : '') +
                                                         '?target_path=' +
                                                         distribution.relativeUrl),
                                             },
@@ -89,7 +83,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                             link={distribution.relativeUrl + '/query'}
                                             title="Query the data"
                                             description="Use SPARQL queries to extract specific information from this distribution."
-                                            icon={(isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            icon={isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock'}
                                             smallIcon={true}
                                             newWindow
                                         />
@@ -100,7 +94,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                             link={distribution.accessUrl}
                                             title="Access the data"
                                             description="Get access to the distribution."
-                                            icon={(isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            icon={isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock'}
                                             smallIcon={true}
                                             newWindow
                                         />
@@ -111,7 +105,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                             link={distribution.downloadUrl}
                                             title="Download the data"
                                             description="Get a downloadable file for this distribution."
-                                            icon={(isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            icon={isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock'}
                                             smallIcon={true}
                                             newWindow
                                         />
@@ -124,6 +118,6 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
             </MainBody>
         </Layout>
     );
-}
+};
 
 export default Distribution;

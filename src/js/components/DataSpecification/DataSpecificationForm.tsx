@@ -3,22 +3,22 @@ import { ActionsCell, Button, CellText, DataGrid, IconCell, Stack } from '@casto
 import { MetadataFieldType } from 'components/MetadataItem/EnumMappings';
 
 export interface DataSpecificationFormProps {
-    fields: any[],
-    openFormModal: () => void,
-    openFieldModal: (field) => void,
-    openRemoveFieldModal: (field) => void,
-    optionGroups: any[],
-    nodes: any,
+    fields: any[];
+    openFormModal: () => void;
+    openFieldModal: (field) => void;
+    openRemoveFieldModal: (field) => void;
+    optionGroups: any[];
+    nodes: any;
 }
 
 const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
-                                                                   fields,
-                                                                   openFormModal,
-                                                                   openFieldModal,
-                                                                   openRemoveFieldModal,
-                                                                    optionGroups,
-                                                                    nodes
-                                                               }) => {
+    fields,
+    openFormModal,
+    openFieldModal,
+    openRemoveFieldModal,
+    optionGroups,
+    nodes,
+}) => {
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
@@ -41,9 +41,9 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
                 <DataGrid
                     accessibleName="Internal nodes"
                     emptyStateContent={`This form does not contain fields`}
-                    rows={fields.map((field) => {
-                        const optionGroup = field.optionGroup ? optionGroups.find((optionGroup) => optionGroup.id === field.optionGroup) : null;
-                        const node = nodes.value.find((node) => node.id === field.node);
+                    rows={fields.map(field => {
+                        const optionGroup = field.optionGroup ? optionGroups.find(optionGroup => optionGroup.id === field.optionGroup) : null;
+                        const node = nodes.value.find(node => node.id === field.node);
 
                         return {
                             order: <CellText>{field.order}</CellText>,

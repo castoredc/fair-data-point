@@ -42,7 +42,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
             },
             () => {
                 this.setState({
-                    showModal: true
+                    showModal: true,
                 });
             }
         );
@@ -93,27 +93,21 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         }}
                         show={showModal}
                     >
-                        Are you sure you want to add <strong>{selectedStudy.hasMetadata ? localizedText(selectedStudy.metadata.title, 'en') : selectedStudy.name}</strong> to this catalog?
+                        Are you sure you want to add{' '}
+                        <strong>{selectedStudy.hasMetadata ? localizedText(selectedStudy.metadata.title, 'en') : selectedStudy.name}</strong> to this
+                        catalog?
                     </ConfirmModal>
                 )}
 
                 <div className="PageButtons">
                     <Stack distribution="trailing" alignment="end">
-                        <Button
-                            icon="add"
-                            className="AddButton"
-                            onClick={() => history.push(`/dashboard/studies/add/${catalog}`)}
-                        >
+                        <Button icon="add" className="AddButton" onClick={() => history.push(`/dashboard/studies/add/${catalog}`)}>
                             Create new study
                         </Button>
                     </Stack>
                 </div>
 
-                <StudiesDataTable
-                    onClick={this.handleStudyClick}
-                    hideCatalog={catalog}
-                    lastHandledStudy={addedStudy}
-                />
+                <StudiesDataTable onClick={this.handleStudyClick} hideCatalog={catalog} lastHandledStudy={addedStudy} />
             </PageBody>
         );
     }

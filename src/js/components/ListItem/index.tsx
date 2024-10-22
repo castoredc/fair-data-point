@@ -100,9 +100,11 @@ const ListItem: FC<ListItemProps> = ({
     }
 
     // @ts-ignore
-    return <Link to={{ pathname: link, state: state }} className="ListItem" onClick={onClick}>
-        {children}
-    </Link>;
+    return (
+        <Link to={{ pathname: link, state: state }} className="ListItem" onClick={onClick}>
+            {children}
+        </Link>
+    );
 };
 
 ListItem.defaultProps = {

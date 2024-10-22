@@ -20,62 +20,53 @@ export class DashboardRoutes extends Component<{ user: UserType | null }> {
     render() {
         const { user } = this.props;
 
-        return <Switch>
-            <Redirect exact from="/dashboard" to="/dashboard/studies" />
+        return (
+            <Switch>
+                <Redirect exact from="/dashboard" to="/dashboard/studies" />
 
-            <PrivateRoute path="/dashboard/studies" exact routeComponent={DashboardTabs} user={user} />
+                <PrivateRoute path="/dashboard/studies" exact routeComponent={DashboardTabs} user={user} />
 
-            <PrivateRoute path="/dashboard/studies/add" exact routeComponent={SelectCatalog} user={user} />
-            <PrivateRoute path="/dashboard/studies/add/:catalog" exact routeComponent={AddStudy}
-                          user={user} />
+                <PrivateRoute path="/dashboard/studies/add" exact routeComponent={SelectCatalog} user={user} />
+                <PrivateRoute path="/dashboard/studies/add/:catalog" exact routeComponent={AddStudy} user={user} />
 
-            <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/add" routeComponent={Dataset}
-                          user={user} />
-            <PrivateRoute
-                path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution"
-                routeComponent={Distribution}
-                user={user}
-            />
-            <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" routeComponent={Dataset}
-                          user={user} />
-            <PrivateRoute path="/dashboard/studies/:study" routeComponent={Study} user={user} />
+                <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/add" routeComponent={Dataset} user={user} />
+                <PrivateRoute
+                    path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution"
+                    routeComponent={Distribution}
+                    user={user}
+                />
+                <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" routeComponent={Dataset} user={user} />
+                <PrivateRoute path="/dashboard/studies/:study" routeComponent={Study} user={user} />
 
-            <ProtectedRoute path="/dashboard/catalogs/add" exact routeComponent={AddCatalog} user={user} />
-            <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add"
-                          routeComponent={Dataset} user={user} />
-            <PrivateRoute
-                path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"
-                routeComponent={Distribution}
-                user={user}
-            />
-            <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/add" exact routeComponent={Catalog}
-                          user={user} />
-            <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" routeComponent={Dataset}
-                          user={user} />
-            <PrivateRoute path="/dashboard/catalogs" exact routeComponent={DashboardTabs} user={user} />
-            <PrivateRoute path="/dashboard/catalogs/:catalog" routeComponent={Catalog} user={user} />
+                <ProtectedRoute path="/dashboard/catalogs/add" exact routeComponent={AddCatalog} user={user} />
+                <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add" routeComponent={Dataset} user={user} />
+                <PrivateRoute
+                    path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"
+                    routeComponent={Distribution}
+                    user={user}
+                />
+                <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/add" exact routeComponent={Catalog} user={user} />
+                <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" routeComponent={Dataset} user={user} />
+                <PrivateRoute path="/dashboard/catalogs" exact routeComponent={DashboardTabs} user={user} />
+                <PrivateRoute path="/dashboard/catalogs/:catalog" routeComponent={Catalog} user={user} />
 
-            <ProtectedRoute path="/dashboard/fdp" exact routeComponent={DashboardTabs} user={user} />
-            <ProtectedRoute path="/dashboard/edc-servers" exact routeComponent={DashboardTabs} user={user} />
+                <ProtectedRoute path="/dashboard/fdp" exact routeComponent={DashboardTabs} user={user} />
+                <ProtectedRoute path="/dashboard/edc-servers" exact routeComponent={DashboardTabs} user={user} />
 
-            <PrivateRoute path="/dashboard/data-models" exact routeComponent={DashboardTabs} user={user} />
-            <PrivateRoute path="/dashboard/data-models/add" exact routeComponent={AddDataModel}
-                          user={user} />
+                <PrivateRoute path="/dashboard/data-models" exact routeComponent={DashboardTabs} user={user} />
+                <PrivateRoute path="/dashboard/data-models/add" exact routeComponent={AddDataModel} user={user} />
 
-            <PrivateRoute path="/dashboard/data-models/:model/:version" routeComponent={DataModel}
-                          user={user} />
-            <PrivateRoute path="/dashboard/data-models/:model" routeComponent={DataModel} user={user} />
+                <PrivateRoute path="/dashboard/data-models/:model/:version" routeComponent={DataModel} user={user} />
+                <PrivateRoute path="/dashboard/data-models/:model" routeComponent={DataModel} user={user} />
 
-            <PrivateRoute path="/dashboard/metadata-models" exact routeComponent={DashboardTabs} user={user} />
-            <PrivateRoute path="/dashboard/metadata-models/add" exact routeComponent={AddMetadataModel}
-                          user={user} />
+                <PrivateRoute path="/dashboard/metadata-models" exact routeComponent={DashboardTabs} user={user} />
+                <PrivateRoute path="/dashboard/metadata-models/add" exact routeComponent={AddMetadataModel} user={user} />
 
-            <PrivateRoute path="/dashboard/metadata-models/:model/:version" routeComponent={MetadataModel}
-                          user={user} />
-            <PrivateRoute path="/dashboard/metadata-models/:model" routeComponent={MetadataModel} user={user} />
+                <PrivateRoute path="/dashboard/metadata-models/:model/:version" routeComponent={MetadataModel} user={user} />
+                <PrivateRoute path="/dashboard/metadata-models/:model" routeComponent={MetadataModel} user={user} />
 
-
-            <Route component={NotFound} />
-        </Switch>;
+                <Route component={NotFound} />
+            </Switch>
+        );
     }
 }

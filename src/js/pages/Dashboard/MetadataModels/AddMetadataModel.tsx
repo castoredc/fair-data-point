@@ -12,8 +12,8 @@ export default class AddMetadataModel extends Component<AddMetadataModelProps> {
             <SelectPage
                 title="Add a metadata model"
                 backButton={{
-                    label: "Back to metadata models",
-                    to: "/dashboard/metadata-models"
+                    label: 'Back to metadata models',
+                    to: '/dashboard/metadata-models',
                 }}
             >
                 <MetadataModelForm history={history} />

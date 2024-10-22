@@ -107,12 +107,9 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
     changeType = (tabIndex: string) => {
         const { structure } = this.state;
 
-        this.setState(
-            { selectedType: tabIndex, fields: [] },
-            () => {
-                this.handleStepSwitch(structure[tabIndex][0].steps[0]);
-            }
-        );
+        this.setState({ selectedType: tabIndex, fields: [] }, () => {
+            this.handleStepSwitch(structure[tabIndex][0].steps[0]);
+        });
     };
 
     handleStepSwitch = (step: any) => {
@@ -157,11 +154,7 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
 
         const tabContent = (
             <div className="StudyStructureType">
-                <StudyStructureNavigator
-                    contents={structure[selectedType]}
-                    selectedStep={selectedStep}
-                    handleStepSwitch={this.handleStepSwitch}
-                />
+                <StudyStructureNavigator contents={structure[selectedType]} selectedStep={selectedStep} handleStepSwitch={this.handleStepSwitch} />
                 <div className="StudyStructureContents">
                     <div className="Fields">
                         {isLoadingFields ? (

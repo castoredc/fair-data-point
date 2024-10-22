@@ -9,28 +9,12 @@ import { InstituteType } from 'types/InstituteType';
 import { findOptionByValue } from '../../util';
 
 interface RuleProps extends QueryBuilderRuleProps {
-    prefixes: PrefixType[],
-    institutes: InstituteType[],
+    prefixes: PrefixType[];
+    institutes: InstituteType[];
 }
 
-export const Rule: React.FC<RuleProps> = ({
-                                              id,
-                                              parentId,
-                                              field,
-                                              operator,
-                                              value,
-                                              translations,
-                                              schema,
-                                              prefixes,
-                                              institutes,
-                                          }) => {
-    const {
-        fields,
-        getLevel,
-        getOperators,
-        onPropChange,
-        onRuleRemove,
-    } = schema;
+export const Rule: React.FC<RuleProps> = ({ id, parentId, field, operator, value, translations, schema, prefixes, institutes }) => {
+    const { fields, getLevel, getOperators, onPropChange, onRuleRemove } = schema;
 
     const level = getLevel(id);
     const fieldData = findOptionByValue(field, fields);
@@ -42,13 +26,21 @@ export const Rule: React.FC<RuleProps> = ({
     return (
         <div className={`rule`} data-rule-id={id} data-level={level}>
             <Stack>
-                <FieldSelector value={field} options={fields} handleOnChange={(value: string) => {
-                    onPropChange('field', value, id);
-                }} />
+                <FieldSelector
+                    value={field}
+                    options={fields}
+                    handleOnChange={(value: string) => {
+                        onPropChange('field', value, id);
+                    }}
+                />
 
-                <OperatorSelector value={operator} options={getOperators(field)} handleOnChange={(value: string) => {
-                    onPropChange('operator', value, id);
-                }} />
+                <OperatorSelector
+                    value={operator}
+                    options={getOperators(field)}
+                    handleOnChange={(value: string) => {
+                        onPropChange('operator', value, id);
+                    }}
+                />
 
                 {fieldData ? (
                     <ValueEditor
@@ -62,13 +54,19 @@ export const Rule: React.FC<RuleProps> = ({
                         }}
                         level={level}
                         value={value}
-                    />) : (
-                        <TextInput className="ValueEditor" disabled inputSize="20rem" />
+                    />
+                ) : (
+                    <TextInput className="ValueEditor" disabled inputSize="20rem" />
                 )}
 
-                <Button icon="trash" buttonType="danger" onClick={() => {
-                    onRuleRemove(id, parentId);
-                }} iconDescription="Delete condition" />
+                <Button
+                    icon="trash"
+                    buttonType="danger"
+                    onClick={() => {
+                        onRuleRemove(id, parentId);
+                    }}
+                    iconDescription="Delete condition"
+                />
             </Stack>
         </div>
     );

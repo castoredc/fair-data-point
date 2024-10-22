@@ -102,14 +102,7 @@ export default class DistributionContentsRdf extends Component<DistributionConte
     };
 
     render() {
-        const {
-            selectedMapping,
-            addedMapping,
-            isLoadingDataModel,
-            dataModel,
-            currentVersion,
-            selectedType,
-        } = this.state;
+        const { selectedMapping, addedMapping, isLoadingDataModel, dataModel, currentVersion, selectedType } = this.state;
         const { distribution, dataset } = this.props;
 
         if (isLoadingDataModel || currentVersion === null) {

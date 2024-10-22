@@ -13,15 +13,15 @@ interface NodeMappingInterfaceFooterProps {
 }
 
 const NodeMappingInterfaceFooter: React.FC<NodeMappingInterfaceFooterProps> = ({
-                                                                                   dataTransformation,
-                                                                                   step,
-                                                                                   fieldDescription,
-                                                                                   valueDescription,
-                                                                                   selectedElements,
-                                                                                   isLoading,
-                                                                                   setStep,
-                                                                                   handleSubmit,
-                                                                               }) => {
+    dataTransformation,
+    step,
+    fieldDescription,
+    valueDescription,
+    selectedElements,
+    isLoading,
+    setStep,
+    handleSubmit,
+}) => {
     if (dataTransformation && step === 'elements') {
         return (
             <div className="FormButtons">

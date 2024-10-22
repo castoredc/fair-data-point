@@ -50,7 +50,10 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
 
     componentDidMount() {
         const { object } = this.props;
-        const hasMetadata = !(!object.hasMetadata || object.hasMetadata && (object.metadata.model === null || object.metadata.modelVersion === null));
+        const hasMetadata = !(
+            !object.hasMetadata ||
+            (object.hasMetadata && (object.metadata.model === null || object.metadata.modelVersion === null))
+        );
 
         this.getMetadataModels();
         this.getLanguages();
@@ -93,7 +96,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             .get('/api/metadata/form/' + object.metadata.id)
             .then(response => {
                 this.setState({
-                    forms: response.data
+                    forms: response.data,
                 });
             })
             .catch(() => {
@@ -174,7 +177,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         this.setState({ showModal: true });
     };
 
-    handleVersionUpdate = (versionType) => {
+    handleVersionUpdate = versionType => {
         const { onCreate } = this.props;
 
         this.closeModal();
@@ -222,12 +225,13 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         const { validation, languages, licenses, countries, currentVersion, showModal, metadataModels, forms, optionGroups } = this.state;
         const { type, object } = this.props;
 
-        if(metadataModels === undefined) {
-            return <LoadingOverlay accessibleLabel="Loading metadata models" />
+        if (metadataModels === undefined) {
+            return <LoadingOverlay accessibleLabel="Loading metadata models" />;
         }
 
-        if(!object.hasMetadata || object.hasMetadata && (object.metadata.model === null || object.metadata.modelVersion === null)) {
-            return (<>
+        if (!object.hasMetadata || (object.hasMetadata && (object.metadata.model === null || object.metadata.modelVersion === null))) {
+            return (
+                <>
                     <MetadataVersionModal
                         open={showModal}
                         currentVersion={currentVersion}
@@ -248,11 +252,11 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                         </Button>
                     </div>
                 </>
-            )
+            );
         }
 
-        if(forms === undefined) {
-            return <LoadingOverlay accessibleLabel="Loading forms" />
+        if (forms === undefined) {
+            return <LoadingOverlay accessibleLabel="Loading forms" />;
         }
 
         const initialValues = getInitialValues(forms);
@@ -272,30 +276,22 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 />
 
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={schema}>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          setValues,
-                          setFieldValue,
-                      }) => {
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         return (
                             <Form>
                                 <div className="FormContent">
-                                    {forms.map((form) => {
-                                        return <RenderedForm
-                                            key={form.id}
-                                            form={form}
-                                            validation={validation}
-                                            optionGroups={optionGroups}
-                                            languages={languages}
-                                            licenses={licenses}
-                                            countries={countries}
-                                        />;
+                                    {forms.map(form => {
+                                        return (
+                                            <RenderedForm
+                                                key={form.id}
+                                                form={form}
+                                                validation={validation}
+                                                optionGroups={optionGroups}
+                                                languages={languages}
+                                                licenses={licenses}
+                                                countries={countries}
+                                            />
+                                        );
                                     })}
                                 </div>
                                 <div className="FormButtons">
@@ -303,17 +299,13 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                                         <Button buttonType="secondary" icon="add" onClick={() => this.showModal()}>
                                             New metadata version
                                         </Button>
-                                        <Button
-                                            buttonType="primary"
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                        >
+                                        <Button buttonType="primary" type="submit" disabled={isSubmitting}>
                                             Save
                                         </Button>
                                     </Stack>
                                 </div>
                             </Form>
-                    );
+                        );
                     }}
                 </Formik>
             </>

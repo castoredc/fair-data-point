@@ -21,11 +21,7 @@ const SPARQLDataTable: React.FC<SPARQLDataTableProps> = ({ vars, bindings, prefi
             const row: Record<string, JSX.Element> = {};
 
             vars.forEach(sparqlVar => {
-                row[sparqlVar] = (
-                    <CellText key={sparqlVar}>
-                        {sparqlVar in binding ? getCellContent(binding, sparqlVar) : ''}
-                    </CellText>
-                );
+                row[sparqlVar] = <CellText key={sparqlVar}>{sparqlVar in binding ? getCellContent(binding, sparqlVar) : ''}</CellText>;
             });
 
             return row;

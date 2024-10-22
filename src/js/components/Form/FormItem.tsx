@@ -15,7 +15,7 @@ interface FormItemProps {
     isRequired?: boolean;
 }
 
-const FormItem: FC<FormItemProps> = ({ label, children, hidden, inline, align, className, tooltip , details, isRequired}) => {
+const FormItem: FC<FormItemProps> = ({ label, children, hidden, inline, align, className, tooltip, details, isRequired }) => {
     let alignClass = '';
 
     if (align === 'left') {
@@ -32,14 +32,21 @@ const FormItem: FC<FormItemProps> = ({ label, children, hidden, inline, align, c
                 <div className="FormItemLabel">
                     <FormLabel>
                         {label}
-                        {isRequired && <Tooltip content="This field is required">
-                            <span className="RequiredIndicator">*</span>
-                        </Tooltip>}
-                        {tooltip && <>&nbsp;<Tooltip content={tooltip}><InfoIcon /></Tooltip></>}
+                        {isRequired && (
+                            <Tooltip content="This field is required">
+                                <span className="RequiredIndicator">*</span>
+                            </Tooltip>
+                        )}
+                        {tooltip && (
+                            <>
+                                &nbsp;
+                                <Tooltip content={tooltip}>
+                                    <InfoIcon />
+                                </Tooltip>
+                            </>
+                        )}
                     </FormLabel>
-                    {details && <div className="FormItemDetails">
-                        {details}
-                    </div>}
+                    {details && <div className="FormItemDetails">{details}</div>}
                 </div>
             )}
             <div className="FormItemContent">{children}</div>

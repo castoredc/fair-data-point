@@ -18,22 +18,20 @@ const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & 
     const newData = field.value;
 
     const exists =
-        (agent.id !== '' && agent.id === null)
+        agent.id !== '' && agent.id === null
             ? !!newData.find(existingAgent => {
-                if (existingAgent.type !== agent.type) {
-                    return false;
-                }
+                  if (existingAgent.type !== agent.type) {
+                      return false;
+                  }
 
-                return existingAgent[existingAgent.type].id === agent[agent.type].id;
-            })
+                  return existingAgent[existingAgent.type].id === agent[agent.type].id;
+              })
             : false;
 
     if (!exists) {
         newData.push(agent);
     } else {
-        toast.error(
-            <ToastItem type="error" title="The agent was already associated with this metadata and was, therefore, not added again." />
-        );
+        toast.error(<ToastItem type="error" title="The agent was already associated with this metadata and was, therefore, not added again." />);
     }
 
     form.setFieldValue(field.name, newData);
@@ -57,8 +55,8 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
             <PublisherModal
                 open={showModal}
                 onClose={() => setShowModal(false)}
-                handleSave={(agent) => {
-                    handleAdd(agent, field, form)
+                handleSave={agent => {
+                    handleAdd(agent, field, form);
                     setShowModal(false);
                 }}
                 countries={countries}
@@ -81,7 +79,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                         name = [agent.person.firstName, agent.person.middleName, agent.person.lastName].filter(Boolean).join(' ');
                         additionalInfo = agent.person.orcid;
                     }
-                    
+
                     return (
                         <div className="Row" key={index}>
                             <div className="Name">{name}</div>
@@ -101,8 +99,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                 })}
             </div>
             <div className="AddButton">
-                <Button icon="add" className="AddButton" buttonType="bare"
-                        onClick={() => setShowModal(true)}>
+                <Button icon="add" className="AddButton" buttonType="bare" onClick={() => setShowModal(true)}>
                     Add
                 </Button>
             </div>

@@ -26,10 +26,7 @@ export const SelectPage: FunctionComponent<SelectPageProps> = ({ title, descript
                 <Separator />
             </div>
 
-
-            <div className="SelectPageContent">
-                {children}
-            </div>
+            <div className="SelectPageContent">{children}</div>
         </div>
     );
 };

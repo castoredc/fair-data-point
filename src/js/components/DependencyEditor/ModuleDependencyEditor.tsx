@@ -23,7 +23,7 @@ type ModuleDependencyEditorProps = {
 };
 
 type ModuleDependencyEditorState = {
-    fields: { name: string; label: string; dataType: NodeValueType['dataType'] ; valueType: NodeValueType['value'] }[];
+    fields: { name: string; label: string; dataType: NodeValueType['dataType']; valueType: NodeValueType['value'] }[];
 };
 
 export default class ModuleDependencyEditor extends Component<ModuleDependencyEditorProps, ModuleDependencyEditorState> {
@@ -36,7 +36,7 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
                     name: node.id,
                     value: node.id,
                     label: node.title,
-                    dataType: (node.value !== null && 'dataType' in node.value) ? node.value.dataType : null,
+                    dataType: node.value !== null && 'dataType' in node.value ? node.value.dataType : null,
                     valueType: node.value !== null ? node.value.value : null,
                 };
             }),
@@ -48,7 +48,7 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
 
         const fieldObject = fields.find(item => item.name === field);
 
-        if(fieldObject === undefined || fieldObject.valueType === null) {
+        if (fieldObject === undefined || fieldObject.valueType === null) {
             return [];
         }
 
@@ -85,32 +85,38 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
                             removeRuleAction: props => (
                                 <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete condition" />
                             ),
-                            combinatorSelector: (props) => {
-                                return <CombinatorSelector
-                                    options={props.options.map(option => {
-                                        return { value: option.name, label: option.label, name: option.name };
-                                    })}
-                                    value={props.value}
-                                    handleOnChange={props.handleOnChange}
-                                />
+                            combinatorSelector: props => {
+                                return (
+                                    <CombinatorSelector
+                                        options={props.options.map(option => {
+                                            return { value: option.name, label: option.label, name: option.name };
+                                        })}
+                                        value={props.value}
+                                        handleOnChange={props.handleOnChange}
+                                    />
+                                );
                             },
-                            fieldSelector: (props) => {
-                                return <FieldSelector
-                                    options={props.options.map(option => {
-                                        return { value: option.name, label: option.label, name: option.name };
-                                    })}
-                                    value={props.value}
-                                    handleOnChange={props.handleOnChange}
-                                />
+                            fieldSelector: props => {
+                                return (
+                                    <FieldSelector
+                                        options={props.options.map(option => {
+                                            return { value: option.name, label: option.label, name: option.name };
+                                        })}
+                                        value={props.value}
+                                        handleOnChange={props.handleOnChange}
+                                    />
+                                );
                             },
-                            operatorSelector: (props) => {
-                                return <OperatorSelector
-                                    options={props.options.map(option => {
-                                        return { value: option.name, label: option.label, name: option.name };
-                                    })}
-                                    value={props.value}
-                                    handleOnChange={props.handleOnChange}
-                                />
+                            operatorSelector: props => {
+                                return (
+                                    <OperatorSelector
+                                        options={props.options.map(option => {
+                                            return { value: option.name, label: option.label, name: option.name };
+                                        })}
+                                        value={props.value}
+                                        handleOnChange={props.handleOnChange}
+                                    />
+                                );
                             },
                             ruleGroup: props => <RuleGroup {...props} />,
                             rule: props => <Rule prefixes={prefixes} institutes={[]} {...props} />,

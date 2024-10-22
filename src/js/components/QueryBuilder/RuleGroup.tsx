@@ -3,7 +3,7 @@ import { Stack } from '@castoredc/matter';
 import React, { FC } from 'react';
 import { RuleGroupProps as QueryBuilderRuleGroupProps } from 'react-querybuilder/types/types';
 
-interface RuleGroupProps extends QueryBuilderRuleGroupProps {};
+interface RuleGroupProps extends QueryBuilderRuleGroupProps {}
 
 export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules = [], translations, schema, not }) => {
     const {
@@ -58,7 +58,7 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
 
     const length = rules.length - 1;
 
-    if(combinator === undefined) {
+    if (combinator === undefined) {
         combinator = 'and';
     }
 

@@ -28,6 +28,6 @@ const useGetDataset = (slug: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, dataset };
-}
+};
 
-export default useGetDataset
+export default useGetDataset;

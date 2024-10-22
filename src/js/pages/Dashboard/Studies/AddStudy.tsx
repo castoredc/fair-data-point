@@ -130,7 +130,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
             return <LoadingOverlay accessibleLabel="Loading studies" />;
         }
 
-        if(selectedStudy) {
+        if (selectedStudy) {
             return (
                 <SelectPage
                     title="Add a study"
@@ -156,7 +156,6 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
             );
         }
 
-
         return (
             <SelectPage
                 title="Add a study"
@@ -181,7 +180,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                             />
                         );
                     })
-                ) : <div className="NoResults">No studies found.</div> }
+                ) : (
+                    <div className="NoResults">No studies found.</div>
+                )}
             </SelectPage>
         );
     }

@@ -4,4 +4,4 @@ export type Predicate = {
     id: string;
     value: any;
     objects: TripleObjectProps[];
-}
+};

@@ -72,8 +72,7 @@ export default class DistributionSubset extends Component<DistributionSubsetProp
             })
             .catch(error => {
                 this.setState({ isLoadingNodes: false });
-                const message =
-                    error.response?.data?.error || 'An error occurred while loading the nodes';
+                const message = error.response?.data?.error || 'An error occurred while loading the nodes';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
@@ -93,8 +92,7 @@ export default class DistributionSubset extends Component<DistributionSubsetProp
             })
             .catch(error => {
                 this.setState({ isLoadingDataModel: false });
-                const message =
-                    error.response?.data?.error || 'An error occurred while loading the data model';
+                const message = error.response?.data?.error || 'An error occurred while loading the data model';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
@@ -110,8 +108,7 @@ export default class DistributionSubset extends Component<DistributionSubsetProp
                 this.setState({ institutes: response.data, isLoadingInstitutes: false });
             })
             .catch(error => {
-                const message =
-                    error.response?.data?.error || 'An error occurred';
+                const message = error.response?.data?.error || 'An error occurred';
                 toast.error(<ToastItem type="error" title={message} />);
                 this.setState({ isLoadingInstitutes: false });
             });
@@ -126,8 +123,7 @@ export default class DistributionSubset extends Component<DistributionSubsetProp
                 this.setState({ contents: response.data, isLoadingContents: false });
             })
             .catch(error => {
-                const message =
-                    error.response?.data?.error || 'An error occurred while loading the distribution';
+                const message = error.response?.data?.error || 'An error occurred while loading the distribution';
                 toast.error(<ToastItem type="error" title={message} />);
                 this.setState({ isLoadingContents: false });
             });

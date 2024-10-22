@@ -10,8 +10,8 @@ export type UserType = {
 };
 
 export type WizardsType = {
-    [key: string]: boolean,
-}
+    [key: string]: boolean;
+};
 
 export type LinkedAccountsType = {
     castor: CastorAccountType | null;

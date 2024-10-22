@@ -13,7 +13,7 @@ import ToastItem from 'components/ToastItem';
 import { apiClient } from '../network';
 
 type TripleModalProps = {
-    type: string,
+    type: string;
     show: boolean;
     handleClose: () => void;
     data: any;
@@ -54,7 +54,10 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
         const { type, modelId, versionId, module, onSaved } = this.props;
 
         apiClient
-            .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (values.id ? '/' + values.id : ''), values)
+            .post(
+                '/api/' + type + '/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (values.id ? '/' + values.id : ''),
+                values
+            )
             .then(response => {
                 setSubmitting(false);
 
@@ -94,8 +97,8 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
                         const subjectSelectable =
                             (type === 'metadata-model' && values.subjectType === 'record') ||
-                                values.subjectType === 'internal' ||
-                                values.subjectType === 'external';
+                            values.subjectType === 'internal' ||
+                            values.subjectType === 'external';
                         let subjectOptions = subjectSelectable ? this.getOptions(values.subjectType) : [];
 
                         const objectSelectable =
@@ -256,7 +259,7 @@ const defaultData = {
         predicateValue: '',
         objectType: 'internal',
         objectValue: '',
-    }
+    },
 };
 
 const TripleSchema = Yup.object().shape({
@@ -268,7 +271,13 @@ const TripleSchema = Yup.object().shape({
     predicateValue: Yup.string().required('Please enter a predicate').url('Please enter a valid predicate'),
     objectType: Yup.string().oneOf(['internal', 'external', 'record', 'literal', 'value', 'children', 'parents'], 'Please select an object type'),
     objectValue: Yup.string().when('objectType', {
-        is: objectType => objectType === 'internal' || objectType === 'external' || objectType === 'value' || objectType === 'literal' || objectType === 'children' || objectType === 'parents',
+        is: objectType =>
+            objectType === 'internal' ||
+            objectType === 'external' ||
+            objectType === 'value' ||
+            objectType === 'literal' ||
+            objectType === 'children' ||
+            objectType === 'parents',
         then: Yup.string().required('Please select a node'),
     }),
 });

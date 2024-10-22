@@ -28,6 +28,6 @@ const useGetCatalog = (slug: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, catalog };
-}
+};
 
-export default useGetCatalog
+export default useGetCatalog;

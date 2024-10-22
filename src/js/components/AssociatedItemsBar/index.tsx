@@ -27,13 +27,7 @@ const AssociatedItemsBar: React.FC<AssociatedItemsBarProps> = ({ items, current,
     return (
         <div className="AssociatedItemsBar">
             {content.map(item => (
-                <AssociatedItemsBarItem
-                    key={item.type}
-                    count={item.count}
-                    type={item.type}
-                    current={current}
-                    onClick={onClick}
-                />
+                <AssociatedItemsBarItem key={item.type} count={item.count} type={item.type} current={current} onClick={onClick} />
             ))}
         </div>
     );

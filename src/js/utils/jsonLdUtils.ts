@@ -5,7 +5,7 @@ export const localizedText = (texts, language = 'en', paragraph = false) => {
         return '';
     }
 
-    if(Array.isArray(texts)) {
+    if (Array.isArray(texts)) {
         for (const text of texts) {
             if (text['@language'] === language) {
                 return paragraph ? paragraphText(text['@value']) : text['@value'];

@@ -37,10 +37,7 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
                             <MetadataDescription metadata={catalog.metadata} />
                         </div>
                         <div className="SideCol">
-                            <MetadataSideBar
-                                metadata={catalog.metadata}
-                                title={title}
-                            />
+                            <MetadataSideBar metadata={catalog.metadata} title={title} />
                         </div>
 
                         <AssociatedItemsBar items={catalog.count} current={currentItem} onClick={setCurrentItem} />

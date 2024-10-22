@@ -31,14 +31,14 @@ interface DistributionContentsDependencyEditorProps {
 }
 
 const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEditorProps> = ({
-                                                                                                 prefixes,
-                                                                                                 institutes,
-                                                                                                 handleChange,
-                                                                                                 save,
-                                                                                                 value,
-                                                                                                 type,
-                                                                                                 valueNodes
-                                                                                             }) => {
+    prefixes,
+    institutes,
+    handleChange,
+    save,
+    value,
+    type,
+    valueNodes,
+}) => {
     let fields: Field[] = [
         {
             label: 'Record details',
@@ -59,15 +59,15 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
         fields = fields.concat({
             label: 'Value nodes',
             name: 'valueNodes',
-            options: valueNodes.map((node) => {
+            options: valueNodes.map(node => {
                 return {
                     type: 'valueNode',
                     name: node.id,
                     value: node.id,
                     label: node.title,
-                    dataType: (node.value !== null && 'dataType' in node.value) ? node.value.dataType : null,
+                    dataType: node.value !== null && 'dataType' in node.value ? node.value.dataType : null,
                     valueType: node.value !== null ? node.value.value : null,
-                }
+                };
             }),
         });
     }
@@ -78,7 +78,7 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
         if (!field) {
             return operators;
         }
-        return operators.filter((operator) => operator.types.includes(field.valueType));
+        return operators.filter(operator => operator.types.includes(field.valueType));
     };
 
     return (
@@ -96,51 +96,39 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                             query={values.query}
                             fields={fields}
                             showCombinatorsBetweenRules
-                            onQueryChange={(newQuery) => {
+                            onQueryChange={newQuery => {
                                 setFieldValue('query', newQuery);
                                 handleChange(newQuery);
                             }}
                             controlElements={{
-                                addGroupAction: (props) => (
+                                addGroupAction: props => (
                                     <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
                                         Group
                                     </Button>
                                 ),
-                                removeGroupAction: (props) => (
+                                removeGroupAction: props => (
                                     <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete group" />
                                 ),
-                                addRuleAction: (props) => (
+                                addRuleAction: props => (
                                     <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
                                         Condition
                                     </Button>
                                 ),
-                                removeRuleAction: (props) => (
+                                removeRuleAction: props => (
                                     <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete condition" />
                                 ),
-                                combinatorSelector: (props) => {
-                                    return <CombinatorSelector
-                                        options={props.options}
-                                        value={props.value}
-                                        handleOnChange={props.handleOnChange}
-                                    />
+                                combinatorSelector: props => {
+                                    return <CombinatorSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
-                                fieldSelector: (props) => {
-                                    return <FieldSelector
-                                        options={props.options}
-                                        value={props.value}
-                                        handleOnChange={props.handleOnChange}
-                                    />
+                                fieldSelector: props => {
+                                    return <FieldSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
-                                operatorSelector: (props) => {
-                                    return <OperatorSelector
-                                        options={props.options}
-                                        value={props.value}
-                                        handleOnChange={props.handleOnChange}
-                                    />
+                                operatorSelector: props => {
+                                    return <OperatorSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
-                                ruleGroup: (props) => <RuleGroup {...props} />,
-                                rule: (props) => <Rule prefixes={prefixes} institutes={institutes} {...props} />,
-                                valueEditor: (props) => <ValueEditor prefixes={prefixes} institutes={institutes} {...props} />,
+                                ruleGroup: props => <RuleGroup {...props} />,
+                                rule: props => <Rule prefixes={prefixes} institutes={institutes} {...props} />,
+                                valueEditor: props => <ValueEditor prefixes={prefixes} institutes={institutes} {...props} />,
                             }}
                             operators={operators}
                             getOperators={getOperators}

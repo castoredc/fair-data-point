@@ -83,12 +83,7 @@ export default class ModuleMappingInterface extends Component<ModuleMappingInter
             <>
                 <Heading type="Panel">{`${mapping.element ? `Edit` : `Add`} mapping for ${mapping.module.displayName}`}</Heading>
 
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={this.handleSubmit}
-                    enableReinitialize
-                >
+                <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, handleChange, setFieldValue, errors, touched }) => {
                         const structureItems = values.type !== '' && values.type !== null ? structure[values.type] : [];
 
@@ -97,36 +92,33 @@ export default class ModuleMappingInterface extends Component<ModuleMappingInter
                             value: item.id,
                         }));
 
-                        return <Form>
-                            <FormItem label="Type">
-                                <Field
-                                    component={Choice}
-                                    options={[
-                                        { value: 'report', labelText: 'Report' },
-                                        { value: 'survey', labelText: 'Survey' },
-                                    ]}
-                                    collapse
-                                    name="type"
-                                    onChange={(e) => {
-                                        handleChange(e);
-                                        setFieldValue('element', '');
-                                    }}
-                                />
-                            </FormItem>
+                        return (
+                            <Form>
+                                <FormItem label="Type">
+                                    <Field
+                                        component={Choice}
+                                        options={[
+                                            { value: 'report', labelText: 'Report' },
+                                            { value: 'survey', labelText: 'Survey' },
+                                        ]}
+                                        collapse
+                                        name="type"
+                                        onChange={e => {
+                                            handleChange(e);
+                                            setFieldValue('element', '');
+                                        }}
+                                    />
+                                </FormItem>
 
-                            <FormItem label="Element">
-                                <Field
-                                    component={Select}
-                                    options={options}
-                                    name="element"
-                                    menuPosition="fixed"
-                                />
-                            </FormItem>
+                                <FormItem label="Element">
+                                    <Field component={Select} options={options} name="element" menuPosition="fixed" />
+                                </FormItem>
 
-                            <Button type="submit" disabled={isLoading}>
-                                {mapping && mapping.element ? 'Edit mapping' : 'Add mapping'}
-                            </Button>
-                        </Form>
+                                <Button type="submit" disabled={isLoading}>
+                                    {mapping && mapping.element ? 'Edit mapping' : 'Add mapping'}
+                                </Button>
+                            </Form>
+                        );
                     }}
                 </Formik>
             </>

@@ -12,8 +12,8 @@ export default class AddCatalog extends Component<AddCatalogProps> {
             <SelectPage
                 title="Add a catalog"
                 backButton={{
-                    label: "Back to catalogs",
-                    to: "/dashboard/catalogs"
+                    label: 'Back to catalogs',
+                    to: '/dashboard/catalogs',
                 }}
             >
                 <CatalogForm history={history} />

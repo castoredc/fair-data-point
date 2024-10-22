@@ -65,7 +65,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                 const params = queryString.parse(location.search);
 
                 history.push({
-                    pathname: (typeof params.origin !== 'undefined' && params.origin !== null) ? params.origin as string : '/',
+                    pathname: typeof params.origin !== 'undefined' && params.origin !== null ? (params.origin as string) : '/',
                 });
 
                 setSubmitting(false);
@@ -90,14 +90,14 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
         let initialValues = this.parseUserDetails(user);
 
         const validationSchema = Yup.object().shape({
-            ...user.wizards.details && {
+            ...(user.wizards.details && {
                 firstName: Yup.string().required('Please enter a first name'),
                 middleName: Yup.string().nullable(),
                 lastName: Yup.string().required('Please enter a last name'),
-            },
-            ...user.wizards.email && {
+            }),
+            ...(user.wizards.email && {
                 email: Yup.string().email('Please enter a valid email address').required('Please enter an email address'),
-            }
+            }),
         });
 
         return (
@@ -119,13 +119,11 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                                 </>
                             )}
 
-                            {user.wizards.email && <FormItem label="Email address">
-                                <Field
-                                    component={Input}
-                                    name="email"
-                                    serverError={validation}
-                                />
-                            </FormItem>}
+                            {user.wizards.email && (
+                                <FormItem label="Email address">
+                                    <Field component={Input} name="email" serverError={validation} />
+                                </FormItem>
+                            )}
 
                             <Button buttonType="primary" type="submit" disabled={isSubmitting}>
                                 Save details
