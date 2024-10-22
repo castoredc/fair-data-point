@@ -10,9 +10,29 @@ import DatasetList from '../../../components/List/DatasetList';
 import CatalogList from '../../../components/List/CatalogList';
 import DistributionList from '../../../components/List/DistributionList';
 import { apiClient } from 'src/js/network';
+import { AuthorizedRouteComponentProps } from 'components/Route';
+import { GenericAgentType } from 'types/AgentListType';
 
-export default class Agent extends Component {
-    constructor(props) {
+interface AgentProps extends AuthorizedRouteComponentProps {
+    embedded: boolean;
+    type: string;
+}
+
+interface AgentState {
+    isLoading: boolean;
+    agent: AgentData | null;
+    currentItem: string | null;
+}
+
+interface AgentData extends GenericAgentType {
+    slug: string,
+    count: {
+        [key: string]: number;
+    };
+}
+
+export default class Agent extends Component<AgentProps, AgentState> {
+    constructor(props: AgentProps) {
         super(props);
         this.state = {
             isLoading: true,
@@ -29,15 +49,15 @@ export default class Agent extends Component {
         const { match } = this.props;
 
         apiClient
-            .get('/api/agent/details/' + match.params.slug)
-            .then(response => {
+            .get(`/api/agent/details/${match.params.slug}`)
+            .then((response) => {
                 this.setState({
                     agent: response.data,
-                    currentItem: Object.keys(response.data.count).find(key => response.data.count[key] > 0) ?? null,
+                    currentItem: Object.keys(response.data.count).find((key) => response.data.count[key] > 0) ?? null,
                     isLoading: false,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({
                     isLoading: false,
                 });
@@ -50,7 +70,7 @@ export default class Agent extends Component {
             });
     };
 
-    handleItemChange = item => {
+    handleItemChange = (item: string) => {
         this.setState({
             currentItem: item,
         });
@@ -60,16 +80,16 @@ export default class Agent extends Component {
         const { isLoading, agent, currentItem } = this.state;
         const { user, embedded, location } = this.props;
 
-        const title = agent ? agent.name : null;
+        const title = agent ? agent.name : '';
 
         const breadcrumbs = getBreadCrumbs(location, { agent });
 
         return (
-            <Layout className="Agent" title={title} isLoading={isLoading} embedded={embedded}>
+            <Layout className="Agent" embedded={embedded}>
                 <Header user={user} embedded={embedded} title={title} />
 
                 <MainBody isLoading={isLoading}>
-                    {agent && (
+                    {agent && currentItem && (
                         <>
                             <AssociatedItemsBar items={agent.count} current={currentItem} onClick={this.handleItemChange} />
 

@@ -11,16 +11,50 @@ import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import Split from '../../../components/Layout/Split';
 import { apiClient } from 'src/js/network';
+import { AuthorizedRouteComponentProps } from 'components/Route';
 
-export default class Query extends Component {
-    constructor(props) {
+interface QueryProps extends AuthorizedRouteComponentProps {
+    embedded: boolean;
+}
+
+interface QueryState {
+    hasDistribution: boolean;
+    isLoading: boolean;
+    distribution: Distribution | null;
+    prefixes: { [key: string]: string };
+    columns: string[];
+    rows: any[];
+    queryExecuted: boolean;
+    isExecutingQuery: boolean;
+    showEditor: boolean;
+    executionTime: string | number;
+    error?: boolean;
+    message?: string | null;
+}
+
+interface Distribution {
+    dataModel: {
+        dataModel: string;
+        id: string;
+    };
+    metadata: {
+        title: string;
+    };
+    fullUrl: string;
+    relativeUrl: string;
+}
+
+export default class Query extends Component<QueryProps, QueryState> {
+    private yasqe: any;
+
+    constructor(props: QueryProps) {
         super(props);
 
         this.state = {
             hasDistribution: !!props.match.params.distribution,
             isLoading: true,
             distribution: null,
-            prefixes: [],
+            prefixes: {},
             columns: [],
             rows: [],
             queryExecuted: false,
@@ -44,22 +78,20 @@ export default class Query extends Component {
         const { match } = this.props;
 
         apiClient
-            .get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution)
-            .then(response => {
+            .get(`/api/dataset/${match.params.dataset}/distribution/${match.params.distribution}`)
+            .then((response) => {
                 this.setState(
                     {
                         distribution: response.data,
-                        isLoadingDistribution: false,
-                        hasLoadedDistribution: true,
+                        isLoading: false,
+                        hasDistribution: true,
                     },
-                    () => {
-                        this.getPrefixes();
-                    }
+                    this.getPrefixes
                 );
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({
-                    isLoadingDistribution: false,
+                    isLoading: false,
                 });
 
                 const message =
@@ -73,50 +105,36 @@ export default class Query extends Component {
     getPrefixes = () => {
         const { distribution } = this.state;
 
+        if (!distribution) return;
+
         apiClient
-            .get('/api/data-model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/prefix')
-            .then(response => {
-                let prefixes = response.data.reduce(function (map, obj) {
+            .get(`/api/data-model/${distribution.dataModel.dataModel}/v/${distribution.dataModel.id}/prefix`)
+            .then((response) => {
+                let prefixes = response.data.reduce((map: { [key: string]: string }, obj: { prefix: string; uri: string }) => {
                     map[obj.prefix] = obj.uri;
                     return map;
                 }, {});
 
                 apiClient
                     .get('/static/prefixes.json')
-                    .then(response => {
+                    .then((staticPrefixes) => {
                         prefixes = {
-                            prefixes,
-                            ...response.data,
+                            ...prefixes,
+                            ...staticPrefixes.data,
                         };
-                        this.setState(
-                            {
-                                prefixes: prefixes,
-                            },
-                            () => {
-                                this.createYasgui();
-                            }
-                        );
+                        this.setState({ prefixes }, this.createYasgui);
                     })
-                    .catch(error => {
+                    .catch(() => {
                         toast.error(<ToastItem type="error" title="An error occurred while loading the prefixes from prefix.cc" />);
-
-                        this.setState(
-                            {
-                                prefixes: prefixes,
-                            },
-                            () => {
-                                this.createYasgui();
-                            }
-                        );
+                        this.setState({ prefixes }, this.createYasgui);
                     });
             })
-            .catch(error => {
+            .catch((error) => {
                 const message =
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the prefixes from the data model';
                 toast.error(<ToastItem type="error" title={message} />);
-
                 this.createYasgui();
             });
     };
@@ -129,8 +147,8 @@ export default class Query extends Component {
                 isLoading: false,
             },
             () => {
-                let config = {
-                    resizeable: false,
+                let config: any = {
+                    resizable: false,
                 };
 
                 if (distribution) {
@@ -139,15 +157,18 @@ export default class Query extends Component {
                     };
                 }
 
-                this.yasqe = new Yasqe(document.getElementById('query'), config);
+                const element = document.getElementById('query');
 
-                this.yasqe.on('query', this.onQuery);
-                this.yasqe.on('queryResponse', this.onResponse);
+                if(element) {
+                    this.yasqe = new Yasqe(element, config);
+                    this.yasqe.on('query', this.onQuery);
+                    this.yasqe.on('queryResponse', this.onResponse);
+                }
             }
         );
     };
 
-    onQuery = (instance, req) => {
+    onQuery = () => {
         this.setState({
             isExecutingQuery: true,
             queryExecuted: false,
@@ -156,7 +177,7 @@ export default class Query extends Component {
         });
     };
 
-    onResponse = (instance, req, duration) => {
+    onResponse = (instance: any, req: any, duration: string | number) => {
         if (req instanceof Error) {
             this.setState({
                 columns: [],
@@ -185,11 +206,9 @@ export default class Query extends Component {
     };
 
     toggleEditor = () => {
-        const { showEditor } = this.state;
-
-        this.setState({
-            showEditor: !showEditor,
-        });
+        this.setState((prevState) => ({
+            showEditor: !prevState.showEditor,
+        }));
     };
 
     render() {
@@ -209,22 +228,23 @@ export default class Query extends Component {
         } = this.state;
         const { location, user, embedded } = this.props;
 
-        let title = hasDistribution && !isLoading ? localizedText(distribution.metadata.title, 'en') : 'Query';
+        const title = hasDistribution && !isLoading ? localizedText(distribution?.metadata.title, 'en') : 'Query';
         const executedWithoutErrors = queryExecuted && !error;
 
         return (
-            <Layout className="Query" title={title} isLoading={isLoading} embedded={embedded} fullWidth>
+            <Layout className="Query" embedded={embedded} fullWidth>
                 <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true} />
 
                 <MainBody isLoading={isLoading} className="QueryComponent">
                     <Split sizes={[40, 60]}>
                         <div className="QueryTools">
                             <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query" />
-                            <Stack className="QueryButtons" alignment="center" distribution="equalSpacing">
+                            <Stack alignment="center" distribution="equalSpacing">
                                 <div className="ResultCount">
                                     {executedWithoutErrors && (
                                         <>
-                                            <strong>{rows.length}</strong> results in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds
+                                            <strong>{rows.length}</strong> results in{' '}
+                                            <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong> seconds
                                         </>
                                     )}
                                 </div>
@@ -251,7 +271,7 @@ export default class Query extends Component {
                         <div className="QueryResults">
                             {isExecutingQuery && <LoadingOverlay accessibleLabel="Loading" />}
                             {executedWithoutErrors && (
-                                <SPARQLDataTable vars={columns} bindings={rows} prefixes={prefixes} fullUrl={distribution.fullUrl} />
+                                <SPARQLDataTable vars={columns} bindings={rows} prefixes={prefixes} fullUrl={distribution?.fullUrl} />
                             )}
 
                             {error && <Banner type="error" title="An error occurred, please check your query and try again" description={message} />}
