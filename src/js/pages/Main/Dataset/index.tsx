@@ -7,7 +7,6 @@ import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import DistributionList from '../../../components/List/DistributionList';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import useGetDataset from '../../../hooks/useGetDataset';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';

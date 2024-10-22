@@ -2,7 +2,6 @@ import React, { Component, createRef } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { CellText, DataGrid, Heading, Icon, IconCell, LoadingOverlay } from '@castoredc/matter';
-import { MethodType, StudyType } from '../MetadataItem/EnumMappings';
 import './DataTable.scss';
 import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';

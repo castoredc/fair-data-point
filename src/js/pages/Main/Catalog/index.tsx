@@ -7,11 +7,9 @@ import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import DatasetList from '../../../components/List/DatasetList';
 import useGetFdp from '../../../hooks/useGetFdp';
 import useGetCatalog from '../../../hooks/useGetCatalog';
-import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
-import DistributionList from 'components/List/DistributionList';
 import StudyList from 'components/List/StudyList';
 import { localizedText } from '../../../util';
 

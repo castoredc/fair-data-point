@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Dropdown } from '@castoredc/matter';
+import { Button } from '@castoredc/matter';
 import './DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
 import { RuleGroup } from '../QueryBuilder/RuleGroup';
 import { Rule } from '../QueryBuilder/Rule';
 import { NodeType, NodeValueType } from 'types/NodeType';
 import { PrefixType } from 'types/PrefixType';
-import { DependenciesType, DependencyGroupType } from 'types/ModuleType';
+import { DependencyGroupType } from 'types/ModuleType';
 import { RuleGroupType } from 'react-querybuilder/types/types';
 import { ValueEditor } from 'components/QueryBuilder/ValueEditor';
 import CombinatorSelector from 'components/QueryBuilder/CombinatorSelector';

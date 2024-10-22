@@ -12,7 +12,6 @@ import { getType } from '../../../util';
 import MetadataFormModal from 'modals/MetadataFormModal';
 import DataSpecificationForm from 'components/DataSpecification/DataSpecificationForm';
 import FieldModal from 'modals/FieldModal';
-import { ResourceType } from 'components/MetadataItem/EnumMappings';
 import { Types } from 'types/Types';
 
 interface FormsProps extends AuthorizedRouteComponentProps {

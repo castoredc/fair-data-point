@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, ButtonVariants, Icon, Menu } from '@castoredc/matter';
 import './DropdownButton.scss';
 import { classNames } from '../../util';
-import EventListener from '../EventListener';
 import { MatterIcon } from '@castoredc/matter-icons';
 
 interface DropdownButtonProps {

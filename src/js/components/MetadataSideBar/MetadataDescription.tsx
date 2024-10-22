@@ -1,5 +1,5 @@
 import { Metadata } from 'types/Metadata';
-import React, { useState } from 'react';
+import React from 'react';
 import MetadataItem from 'components/MetadataItem';
 
 interface MetadataDescriptionProps {

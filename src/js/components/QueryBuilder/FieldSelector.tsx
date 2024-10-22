@@ -1,4 +1,3 @@
-import { NameLabelPair } from 'react-querybuilder/types/types';
 import { findOptionByValue } from '../../util';
 import { Dropdown } from '@castoredc/matter';
 import React, { FC } from 'react';

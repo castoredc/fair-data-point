@@ -1,6 +1,5 @@
 import { IriType } from 'types/IriType';
 import { Metadata } from 'types/Metadata';
-import Distribution from 'pages/Main/Distribution';
 
 export type PermissionsEnabledEntity = {
     permissions?: string[],

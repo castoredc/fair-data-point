@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
-import { RenderedMetadataFormFieldType, RenderedMetadataFormType } from 'types/RenderedMetadataFormType';
-import { Card } from '@castoredc/matter';
+import { RenderedMetadataFormFieldType } from 'types/RenderedMetadataFormType';
 import { Field } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import LocalizedTextInput from 'components/Input/Formik/LocalizedTextInput';
@@ -10,10 +9,7 @@ import TimePicker from 'components/Input/Formik/TimePicker';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Choice from 'components/Input/Formik/Choice';
 import Select from 'components/Input/Formik/Select';
-import {
-    DataSpecificationOptionGroupOptionType,
-    DataSpecificationOptionGroupType,
-} from 'types/DataSpecificationOptionGroupType';
+import { DataSpecificationOptionGroupType } from 'types/DataSpecificationOptionGroupType';
 import { LanguageType } from 'types/LanguageType';
 import { LicenseType } from 'types/LicenseType';
 import { CountryType } from 'types/CountryType';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Emoji from 'components/Emoji';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import UserDetailsForm from 'components/Form/Agent/UserDetailsForm';

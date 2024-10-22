@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import StudiesDataTable from 'components/DataTable/StudiesDataTable';
-import { Button, Modal, Stack } from '@castoredc/matter';
+import { Button, Stack } from '@castoredc/matter';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';

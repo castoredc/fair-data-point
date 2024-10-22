@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import FormItem from '../Form/FormItem';
 import { Button, Heading } from '@castoredc/matter';

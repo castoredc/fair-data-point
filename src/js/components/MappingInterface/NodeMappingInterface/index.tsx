@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
-import {
-    ChoiceOption,
-    Heading,
-    List,
-    ListItem,
-    Stack
-} from '@castoredc/matter';
-import Index from '../../StudyStructure';
+import { ChoiceOption, Heading, List, ListItem, Stack } from '@castoredc/matter';
+import StudyStructure from '../../StudyStructure';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import NodeMappingInterfaceFooter from './NodeMappingInterfaceFooter';
 import TwigEditor from '../../Input/CodeEditor/TwigEditor';
 import { apiClient } from 'src/js/network';
-import StudyStructure from '../../StudyStructure';
 
 interface NodeMappingInterfaceProps {
     studyId: string;

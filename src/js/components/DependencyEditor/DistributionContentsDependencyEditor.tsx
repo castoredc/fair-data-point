@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
-import { Formik, Form } from 'formik';
-import { Button, Dropdown } from '@castoredc/matter';
+import { Form, Formik } from 'formik';
+import { Button } from '@castoredc/matter';
 import QueryBuilder, { Field } from 'react-querybuilder';
 import { Rule } from '../QueryBuilder/Rule';
 import { ValueEditor } from '../QueryBuilder/ValueEditor';
 import './DependencyEditor.scss';
-import { NameLabelPair } from 'react-querybuilder/types/types';
 import { findOptionByValue } from '../../util';
 import CombinatorSelector from 'components/QueryBuilder/CombinatorSelector';
 import FieldSelector from 'components/QueryBuilder/FieldSelector';

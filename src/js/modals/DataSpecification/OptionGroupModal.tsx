@@ -7,7 +7,6 @@ import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import { apiClient } from '../../network';
-import LocalizedTextInput from 'components/Input/Formik/LocalizedTextInput';
 import OptionGroupOptionInput from 'components/Input/Formik/OptionGroupOptionInput';
 
 type OptionGroupModalProps = {

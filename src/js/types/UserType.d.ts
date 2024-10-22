@@ -1,5 +1,4 @@
 import { PersonType } from './PersonType';
-import { ValueLabel } from 'types/Types';
 
 export type UserType = {
     id: string;

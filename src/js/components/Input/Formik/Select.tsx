@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { DefaultOptionType, Dropdown, Icon, ReactSelectTypes } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { components } from 'react-select/dist/react-select.esm';
 
 type IsMulti = boolean;
 

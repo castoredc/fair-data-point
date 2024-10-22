@@ -3,17 +3,12 @@ import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button, Modal } from '@castoredc/matter';
-import { DataType, ResourceType } from 'components/MetadataItem/EnumMappings';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
-import Choice from 'components/Input/Formik/Choice';
-import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
-import { getType, mergeData } from '../util';
 import { apiClient } from '../network';
-import UriInput from 'components/Input/Formik/UriInput';
-import { Types, ValueLabel } from 'types/Types';
+import { Types } from 'types/Types';
 
 type DisplaySettingModalProps = {
     open: boolean;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { CommonListProps } from 'components/List/types';
 import List from 'components/List/List';
 

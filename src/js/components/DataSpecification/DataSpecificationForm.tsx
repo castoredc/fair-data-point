@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack } from '@castoredc/matter';
+import { ActionsCell, Button, CellText, DataGrid, IconCell, Stack } from '@castoredc/matter';
 import { MetadataFieldType } from 'components/MetadataItem/EnumMappings';
-import { TickSmallIcon } from '@castoredc/matter-icons';
 
 export interface DataSpecificationFormProps {
     fields: any[],

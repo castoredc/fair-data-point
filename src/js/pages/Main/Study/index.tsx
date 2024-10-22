@@ -1,5 +1,5 @@
 import React from 'react';
-import { localizedText, paragraphText } from '../../../util';
+import { localizedText } from '../../../util';
 import Header from '../../../components/Layout/Header';
 import DatasetList from '../../../components/List/DatasetList';
 import Layout from '../../../components/Layout';

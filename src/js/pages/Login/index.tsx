@@ -7,7 +7,6 @@ import ToastItem from 'components/ToastItem';
 import { CastorLogo, LoadingOverlay } from '@castoredc/matter';
 import LoginForm from '../../components/Form/LoginForm';
 import { apiClient } from 'src/js/network';
-import { Catalog } from 'types/Resources';
 import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';
 

@@ -3,8 +3,7 @@ import React, { ChangeEvent, FC } from 'react';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { DatePicker as CastorDatePicker, Stack, TimePicker as CastorTimePicker } from '@castoredc/matter';
-import moment from 'moment';
-import { format, parseISO, setHours, setMinutes, setSeconds } from 'date-fns';
+import { format, setHours, setMinutes, setSeconds } from 'date-fns';
 
 interface DateAndTimePickerProps extends FieldProps {
     readOnly?: boolean;

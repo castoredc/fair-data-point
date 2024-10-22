@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Fdp } from 'types/Resources';
 import { LanguageType } from 'types/LanguageType';
 
 const useGetLanguage = (code: string) => {

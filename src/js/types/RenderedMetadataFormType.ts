@@ -1,6 +1,3 @@
-import { NodeType } from 'types/NodeType';
-import { IriType } from 'types/IriType';
-
 export type RenderedMetadataFormType = {
     id: string;
     title: string;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Space, Stack } from '@castoredc/matter';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import { localizedText } from '../../../util';
 import { AuthorizedRouteComponentProps } from 'components/Route';

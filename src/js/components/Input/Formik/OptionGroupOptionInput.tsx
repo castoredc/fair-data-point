@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Button, DefaultOptionType, Dropdown, TextInput } from '@castoredc/matter';
+import { Button, TextInput } from '@castoredc/matter';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { replaceAt } from '../../../util';

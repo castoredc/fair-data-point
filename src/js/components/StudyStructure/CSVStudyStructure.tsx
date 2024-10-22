@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import { Button, Stack } from '@castoredc/matter';
 import { Redirect } from 'react-router-dom';
 import { apiClient } from 'src/js/network';
-import PageTabs from 'components/PageTabs';
 import StudyStructure from 'components/StudyStructure';
 
 interface CSVStudyStructureProps {

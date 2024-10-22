@@ -14,7 +14,7 @@ import { NodeType } from 'types/NodeType';
 import { PrefixType } from 'types/PrefixType';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
-import { DataType, ResourceType } from 'components/MetadataItem/EnumMappings';
+import { ResourceType } from 'components/MetadataItem/EnumMappings';
 
 type DataModelModuleModalProps = {
     show: boolean;

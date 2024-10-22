@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Button, Card, LoadingOverlay, Stack } from '@castoredc/matter';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import MetadataVersionModal from '../../../modals/MetadataVersionModal';
-import { getType, mergeData } from '../../../util';
 import { Form, Formik } from 'formik';
-import GeneralMetadata from 'components/Form/Metadata/FormGroups/GeneralMetadata';
-import PublishersMetadata from 'components/Form/Metadata/FormGroups/PublishersMetadata';
 import { apiClient } from 'src/js/network';
-import PageTabs from 'components/PageTabs';
 import { RenderedMetadataFormType } from 'types/RenderedMetadataFormType';
 import RenderedForm from 'components/Form/Metadata/RenderedForm';
 import { DataSpecificationOptionGroupType } from 'types/DataSpecificationOptionGroupType';

@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './AssociatedItemsBar.scss';
-import { classNames } from '../../util';
 import AssociatedItemsBarItem from 'components/AssociatedItemsBar/AssociatedItemsBarItem';
 
 interface AssociatedItemsBarProps {

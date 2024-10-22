@@ -1,4 +1,4 @@
-import React, { Component, FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Choice, Modal } from '@castoredc/matter';
 import PersonForm from 'components/Form/Agent/PersonForm';
 import OrganizationForm from 'components/Form/Agent/OrganizationForm';

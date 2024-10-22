@@ -1,5 +1,4 @@
 import { paragraphText } from '../util';
-import { useMemo } from 'react';
 
 export const localizedText = (texts, language = 'en', paragraph = false) => {
     if (texts === null || texts === undefined || Object.keys(texts).length === 0) {

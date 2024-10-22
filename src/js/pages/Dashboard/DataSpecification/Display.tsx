@@ -1,16 +1,5 @@
 import React, { Component } from 'react';
-import {
-    ActionsCell,
-    Button,
-    CellText,
-    DataGrid, FormLabel,
-    Icon,
-    IconCell,
-    LoadingOverlay, Separator, Space,
-    Stack,
-    ToastMessage,
-} from '@castoredc/matter';
-import NodeModal from 'modals/NodeModal';
+import { ActionsCell, CellText, LoadingOverlay, Separator, ToastMessage } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
@@ -18,8 +7,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import PageTabs from 'components/PageTabs';
-import { getType, ucfirst } from '../../../util';
-import { MetadataDisplayType, MetadataFieldType, ResourceType } from 'components/MetadataItem/EnumMappings';
+import { MetadataDisplayType, ResourceType } from 'components/MetadataItem/EnumMappings';
 import MetadataDisplaySetting from 'components/Form/DataSpecification/MetadataDisplaySetting';
 import { Types } from 'types/Types';
 import DisplaySettingModal from 'modals/DisplaySettingModal';
