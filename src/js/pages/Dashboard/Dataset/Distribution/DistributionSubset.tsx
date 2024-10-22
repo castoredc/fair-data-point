@@ -6,8 +6,34 @@ import DistributionContentsDependencyEditor from 'components/DependencyEditor/Di
 import { formatQuery } from 'react-querybuilder';
 import { apiClient } from 'src/js/network';
 
-export default class DistributionSubset extends Component {
-    constructor(props) {
+interface DistributionSubsetProps {
+    distribution: any;
+    dataset: string;
+    match: {
+        params: {
+            dataset: string;
+            distribution: string;
+        };
+    };
+}
+
+interface DistributionSubsetState {
+    isLoadingNodes: boolean;
+    isLoadingDataModel: boolean;
+    isLoadingInstitutes: boolean;
+    isLoadingContents: boolean;
+    nodes: any | null;
+    dataModel: any | null;
+    institutes: any[];
+    contents: any | null;
+    query: any;
+    isLoading?: boolean;
+    submitDisabled?: boolean;
+    validation?: any;
+}
+
+export default class DistributionSubset extends Component<DistributionSubsetProps, DistributionSubsetState> {
+    constructor(props: DistributionSubsetProps) {
         super(props);
         this.state = {
             isLoadingNodes: props.distribution.type === 'rdf',
@@ -37,27 +63,17 @@ export default class DistributionSubset extends Component {
     getNodes = () => {
         const { distribution } = this.props;
 
-        this.setState({
-            isLoadingNodes: true,
-        });
+        this.setState({ isLoadingNodes: true });
 
         apiClient
-            .get('/api/data-model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/node')
+            .get(`/api/data-model/${distribution.dataModel.dataModel}/v/${distribution.dataModel.id}/node`)
             .then(response => {
-                this.setState({
-                    nodes: response.data,
-                    isLoadingNodes: false,
-                });
+                this.setState({ nodes: response.data, isLoadingNodes: false });
             })
             .catch(error => {
-                this.setState({
-                    isLoadingNodes: false,
-                });
-
+                this.setState({ isLoadingNodes: false });
                 const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while loading the nodes';
+                    error.response?.data?.error || 'An error occurred while loading the nodes';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
@@ -65,28 +81,20 @@ export default class DistributionSubset extends Component {
     getDataModel = () => {
         const { distribution } = this.props;
 
-        this.setState({
-            isLoadingDataModel: true,
-        });
+        this.setState({ isLoadingDataModel: true });
 
         apiClient
-            .get('/api/data-model/' + distribution.dataModel.dataModel)
+            .get(`/api/data-model/${distribution.dataModel.dataModel}`)
             .then(response => {
                 this.setState({
                     dataModel: response.data,
                     isLoadingDataModel: false,
-                    currentVersion: distribution.dataModel.id,
                 });
             })
             .catch(error => {
-                this.setState({
-                    isLoadingDataModel: false,
-                });
-
+                this.setState({ isLoadingDataModel: false });
                 const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while loading the data model';
+                    error.response?.data?.error || 'An error occurred while loading the data model';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
@@ -94,103 +102,68 @@ export default class DistributionSubset extends Component {
     getInstitutes = () => {
         const { distribution } = this.props;
 
-        this.setState({
-            isLoadingInstitutes: true,
-        });
+        this.setState({ isLoadingInstitutes: true });
 
         apiClient
-            .get('/api/castor/study/' + distribution.study.id + '/institutes/')
+            .get(`/api/castor/study/${distribution.study.id}/institutes/`)
             .then(response => {
-                this.setState({
-                    institutes: response.data,
-                    isLoadingInstitutes: false,
-                });
+                this.setState({ institutes: response.data, isLoadingInstitutes: false });
             })
             .catch(error => {
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
-                }
-
-                this.setState({
-                    isLoadingInstitutes: false,
-                });
+                const message =
+                    error.response?.data?.error || 'An error occurred';
+                toast.error(<ToastItem type="error" title={message} />);
+                this.setState({ isLoadingInstitutes: false });
             });
     };
 
     getContents = () => {
-        this.setState({
-            isLoadingContents: true,
-        });
+        this.setState({ isLoadingContents: true });
 
         apiClient
-            .get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution + '/contents')
+            .get(`/api/dataset/${this.props.match.params.dataset}/distribution/${this.props.match.params.distribution}/contents`)
             .then(response => {
-                this.setState({
-                    contents: response.data,
-                    isLoadingContents: false,
-                });
+                this.setState({ contents: response.data, isLoadingContents: false });
             })
             .catch(error => {
-                this.setState({
-                    isLoadingContents: false,
-                });
-
                 const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while loading the distribution';
+                    error.response?.data?.error || 'An error occurred while loading the distribution';
                 toast.error(<ToastItem type="error" title={message} />);
+                this.setState({ isLoadingContents: false });
             });
     };
 
-    handleChange = query => {
-        this.setState({
-            query: query,
-        });
+    handleChange = (query: any) => {
+        this.setState({ query });
     };
 
     handleSave = () => {
         const { query } = this.state;
         const { dataset, distribution } = this.props;
 
-        const sqlQuery = formatQuery(query, 'sql');
+        const sqlQuery = formatQuery(query, 'sql') as string;
         const replaced = sqlQuery.replace(/\(|\)|and|or| /gi, '');
 
-        this.setState({
-            isLoading: true,
-            submitDisabled: true,
-        });
+        this.setState({ isLoading: true, submitDisabled: true });
 
         apiClient
-            .post('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/subset', {
+            .post(`/api/dataset/${dataset}/distribution/${distribution.slug}/subset`, {
                 dependencies: replaced.length === 0 ? null : query,
             })
             .then(() => {
-                this.setState({
-                    isLoading: false,
-                    submitDisabled: false,
-                });
-
+                this.setState({ isLoading: false, submitDisabled: false });
                 this.getContents();
-
                 toast.success(<ToastItem type="success" title="The subset details are saved successfully" />, {
                     position: 'top-right',
                 });
             })
             .catch(error => {
-                if (error.response && error.response.status === 400) {
-                    this.setState({
-                        validation: error.response.data.fields,
-                    });
+                if (error.response?.status === 400) {
+                    this.setState({ validation: error.response.data.fields });
                 } else {
                     toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
-                this.setState({
-                    submitDisabled: false,
-                    isLoading: false,
-                });
+                this.setState({ submitDisabled: false, isLoading: false });
             });
     };
 
@@ -205,11 +178,12 @@ export default class DistributionSubset extends Component {
         return (
             <div className="PageContainer">
                 <DistributionContentsDependencyEditor
-                    type={distribution.type}
+                    prefixes={[]}
                     institutes={institutes}
                     handleChange={this.handleChange}
-                    value={contents.dependencies}
-                    valueNodes={distribution.type === 'rdf' ? nodes.value : null}
+                    value={contents?.dependencies}
+                    type={distribution.type}
+                    valueNodes={distribution.type === 'rdf' ? nodes?.value : null}
                     save={this.handleSave}
                 />
             </div>

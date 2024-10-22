@@ -1,44 +1,71 @@
 import React, { Component } from 'react';
-import { ChoiceOption, Heading, List, ListItem, Stack } from '@castoredc/matter';
-import StudyStructure from '../../StudyStructure/StudyStructure';
+import {
+    ChoiceOption,
+    Heading,
+    List,
+    ListItem,
+    Stack
+} from '@castoredc/matter';
+import Index from '../../StudyStructure';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import NodeMappingInterfaceFooter from './NodeMappingInterfaceFooter';
 import TwigEditor from '../../Input/CodeEditor/TwigEditor';
 import { apiClient } from 'src/js/network';
+import StudyStructure from '../../StudyStructure';
 
-export default class NodeMappingInterface extends Component {
-    constructor(props) {
+interface NodeMappingInterfaceProps {
+    studyId: string;
+    dataset: string;
+    distribution: any;
+    versionId: string;
+    mapping: any;
+    onSave: () => void;
+}
+
+interface NodeMappingInterfaceState {
+    selectedElements: any[];
+    dataTransformation: boolean;
+    transformSyntax: string;
+    step: 'elements' | 'syntax';
+    isLoading: boolean;
+}
+
+export default class NodeMappingInterface extends Component<NodeMappingInterfaceProps, NodeMappingInterfaceState> {
+    constructor(props: NodeMappingInterfaceProps) {
         super(props);
         this.state = {
-            selectedElements: props.mapping && props.mapping.elements ? props.mapping.elements : [],
-            dataTransformation: props.mapping ? props.mapping.transformed : false,
-            transformSyntax: props.mapping ? (props.mapping.transformed ? props.mapping.syntax : '') : '',
+            selectedElements: props.mapping?.elements || [],
+            dataTransformation: props.mapping?.transformed || false,
+            transformSyntax: props.mapping?.transformed ? props.mapping.syntax : '',
             step: 'elements',
+            isLoading: false,
         };
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { mapping, type } = this.props;
+    componentDidUpdate(prevProps: NodeMappingInterfaceProps) {
+        const { mapping } = this.props;
 
         if (prevProps.mapping === mapping) {
             return;
         }
 
         this.setState({
-            selectedElements: mapping && mapping.elements ? mapping.elements : [],
-            dataTransformation: mapping ? mapping.transformed : false,
+            selectedElements: mapping?.elements || [],
+            dataTransformation: mapping?.transformed || false,
             step: 'elements',
             transformSyntax: '',
         });
     }
 
-    handleSelect = (fieldId, variableName, label) => {
+    handleSelect = (fieldId: string, variableName: string, label: string) => {
         const { selectedElements, dataTransformation } = this.state;
 
-        let newSelectedElements = selectedElements;
+        let newSelectedElements = [...selectedElements];
         const field = { id: fieldId, variableName, label };
-        const index = selectedElements.findIndex(selectedElement => selectedElement.id === fieldId);
+        const index = selectedElements.findIndex(
+            selectedElement => selectedElement.id === fieldId
+        );
 
         if (index !== -1) {
             newSelectedElements.splice(index, 1);
@@ -48,14 +75,11 @@ export default class NodeMappingInterface extends Component {
             newSelectedElements = [field];
         }
 
-        this.setState({
-            selectedElements: newSelectedElements,
-        });
+        this.setState({ selectedElements: newSelectedElements });
     };
 
     handleChange = () => {
         const { dataTransformation, selectedElements } = this.state;
-
         const newDataTransformation = !dataTransformation;
 
         this.setState({
@@ -64,73 +88,60 @@ export default class NodeMappingInterface extends Component {
         });
     };
 
-    handleSyntaxChange = syntax => {
-        this.setState({
-            transformSyntax: syntax,
-        });
+    handleSyntaxChange = (syntax: string) => {
+        this.setState({ transformSyntax: syntax });
     };
 
-    setStep = step => {
+    setStep = (step: 'elements' | 'syntax') => {
         const { selectedElements, dataTransformation } = this.state;
 
         if (dataTransformation && selectedElements.length > 0) {
-            this.setState({
-                step: step,
-            });
+            this.setState({ step });
         }
     };
 
     handleSubmit = () => {
         const { selectedElements, dataTransformation, transformSyntax } = this.state;
-        const { mapping, dataset, distribution, onSave, versionId } = this.props;
+        const { mapping, dataset, distribution, versionId, onSave } = this.props;
 
-        this.setState({
-            isLoading: true,
-        });
+        this.setState({ isLoading: true });
 
         apiClient
-            .post('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId + '/node', {
-                type: 'node',
-                node: mapping.node.id,
-                transform: dataTransformation,
-                elements: selectedElements.map(element => element.id),
-                ...(dataTransformation && { transformSyntax: transformSyntax }),
-            })
-            .then(response => {
-                this.setState(
-                    {
-                        isLoading: false,
-                    },
-                    () => {
-                        toast.success(<ToastItem type="success" title="The mapping was successfully saved." />, {
-                            position: 'top-right',
-                        });
-                        onSave();
-                    }
-                );
+            .post(
+                `/api/dataset/${dataset}/distribution/${distribution.slug}/contents/rdf/v/${versionId}/node`,
+                {
+                    type: 'node',
+                    node: mapping.node.id,
+                    transform: dataTransformation,
+                    elements: selectedElements.map(element => element.id),
+                    ...(dataTransformation && { transformSyntax }),
+                }
+            )
+            .then(() => {
+                this.setState({ isLoading: false }, () => {
+                    toast.success(<ToastItem type="success" title="The mapping was successfully saved." />, {
+                        position: 'top-right',
+                    });
+                    onSave();
+                });
             })
             .catch(error => {
-                this.setState({
-                    isLoading: false,
-                });
+                this.setState({ isLoading: false });
 
-                const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while saving the mapping';
+                const message = error.response?.data?.error || 'An error occurred while saving the mapping';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     render() {
-        const { studyId, mapping, type } = this.props;
+        const { studyId, mapping } = this.props;
         const { selectedElements, isLoading, dataTransformation, step, transformSyntax } = this.state;
 
         let valueDescription = '';
         const fieldDescription = <span>{mapping.node.repeated && <b>repeated</b>} fields</span>;
 
         if (mapping.node.value.value === 'plain') {
-            valueDescription = 'a plain ' + mapping.node.value.dataType + ' value';
+            valueDescription = `a plain ${mapping.node.value.dataType} value`;
         } else if (mapping.node.value.value === 'annotated') {
             valueDescription = 'an annotated value';
         }
@@ -141,21 +152,13 @@ export default class NodeMappingInterface extends Component {
         const dataType = mapping.node.value.dataType;
 
         const variables = selectedElements.map(element => {
-            if (element.variableName) {
-                return element.variableName;
-            }
-
-            if (element.slug) {
-                return element.slug;
-            }
-
-            return element.id;
+            return element.variableName || element.slug || element.id;
         });
 
         return (
             <>
                 <Stack distribution="equalSpacing">
-                    <Heading type="Panel">{`${mapping.elements ? `Edit` : `Add`} mapping for ${mapping.node.title}`}</Heading>
+                    <Heading type="Panel">{`${mapping.elements ? 'Edit' : 'Add'} mapping for ${mapping.node.title}`}</Heading>
 
                     {step === 'elements' && (
                         <div className="CheckboxFormGroup HeadingCheckboxFormGroup">
@@ -194,9 +197,9 @@ export default class NodeMappingInterface extends Component {
                     </span>
 
                     <List>
-                        {variables.map(variable => {
-                            return <ListItem key={variable}>{variable}</ListItem>;
-                        })}
+                        {variables.map(variable => (
+                            <ListItem key={variable}>{variable}</ListItem>
+                        ))}
                     </List>
 
                     <TwigEditor label="Twig template" value={transformSyntax} onChange={this.handleSyntaxChange} />

@@ -2,11 +2,15 @@ import React from 'react';
 import { DistributionGenerationStatus } from '../MetadataItem/EnumMappings';
 import { Icon, TextStyle } from '@castoredc/matter';
 
-export default ({ status }) => {
+interface StatusProps {
+    status: keyof typeof DistributionGenerationStatus;
+}
+
+const StatusComponent: React.FC<StatusProps> = ({ status }) => {
     const message = DistributionGenerationStatus[status];
 
     let icon = <Icon type="info" />;
-    let variation = 'information';
+    let variation: 'information' | 'success' | 'quiet' | 'error' | 'warning' = 'information';
 
     if (status === 'success') {
         variation = 'success';
@@ -29,3 +33,5 @@ export default ({ status }) => {
         </TextStyle>
     );
 };
+
+export default StatusComponent;

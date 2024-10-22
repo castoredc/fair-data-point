@@ -1,16 +1,27 @@
 import { Button, Stack } from '@castoredc/matter';
 import React from 'react';
 
-const NodeMappingInterfaceFooter = ({
-    dataTransformation,
-    step,
-    fieldDescription,
-    valueDescription,
-    selectedElements,
-    isLoading,
-    setStep,
-    handleSubmit,
-}) => {
+interface NodeMappingInterfaceFooterProps {
+    dataTransformation: boolean;
+    step: 'elements' | 'syntax';
+    fieldDescription: React.ReactNode;
+    valueDescription: string;
+    selectedElements: any[];
+    isLoading: boolean;
+    setStep: (step: 'elements' | 'syntax') => void;
+    handleSubmit: () => void;
+}
+
+const NodeMappingInterfaceFooter: React.FC<NodeMappingInterfaceFooterProps> = ({
+                                                                                   dataTransformation,
+                                                                                   step,
+                                                                                   fieldDescription,
+                                                                                   valueDescription,
+                                                                                   selectedElements,
+                                                                                   isLoading,
+                                                                                   setStep,
+                                                                                   handleSubmit,
+                                                                               }) => {
     if (dataTransformation && step === 'elements') {
         return (
             <div className="FormButtons">

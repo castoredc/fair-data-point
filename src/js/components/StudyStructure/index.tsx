@@ -7,20 +7,39 @@ import FieldListItem from '../ListItem/FieldListItem';
 import StudyStructureNavigator from './StudyStructureNavigator';
 import { apiClient } from 'src/js/network';
 
-export default class StudyStructure extends Component {
-    constructor(props) {
+interface StudyStructureProps {
+    studyId: string;
+    types?: string[];
+    selectable?: boolean;
+    selection: string[];
+    onSelect: (fieldId: string, variableName: string, label: string) => void;
+    dataFormat?: string;
+    dataType?: string;
+    dataTransformation?: boolean;
+}
+
+interface StudyStructureState {
+    isLoadingStructure: boolean;
+    hasLoadedStructure: boolean;
+    structure: any;
+    isLoadingFields: boolean;
+    fields: any[];
+    selectedStep: any;
+    selectedType: string;
+    selectableTypes: string[];
+}
+
+export default class StudyStructure extends Component<StudyStructureProps, StudyStructureState> {
+    constructor(props: StudyStructureProps) {
         super(props);
         this.state = {
             isLoadingStructure: true,
             hasLoadedStructure: false,
             structure: null,
-
             isLoadingFields: true,
-
             fields: [],
             selectedStep: null,
             selectedType: 'study',
-
             selectableTypes: props.types || ['study', 'report', 'survey'],
         };
     }
@@ -29,10 +48,10 @@ export default class StudyStructure extends Component {
         this.getStructure();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps: StudyStructureProps) {
         const { types } = this.props;
 
-        if (types.length !== prevProps.types.length) {
+        if (types && types.length !== prevProps.types?.length) {
             const selectableTypes = this.parseTypes();
             const selectedType = selectableTypes[0];
 
@@ -44,12 +63,10 @@ export default class StudyStructure extends Component {
         const { studyId } = this.props;
         const { selectedType } = this.state;
 
-        this.setState({
-            isLoading: true,
-        });
+        this.setState({ isLoadingStructure: true });
 
         apiClient
-            .get('/api/castor/study/' + studyId + '/structure')
+            .get(`/api/castor/study/${studyId}/structure`)
             .then(response => {
                 this.setState(
                     {
@@ -63,15 +80,10 @@ export default class StudyStructure extends Component {
                 );
             })
             .catch(error => {
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
-                }
+                const errorMessage = error.response?.data?.error || 'An error occurred';
+                toast.error(<ToastItem type="error" title={errorMessage} />);
 
-                this.setState({
-                    isLoading: false,
-                });
+                this.setState({ isLoadingStructure: false });
             });
     };
 
@@ -92,23 +104,19 @@ export default class StudyStructure extends Component {
         ];
     };
 
-    changeType = tabIndex => {
+    changeType = (tabIndex: string) => {
         const { structure } = this.state;
 
         this.setState(
-            {
-                selectedType: tabIndex,
-                fields: [],
-            },
+            { selectedType: tabIndex, fields: [] },
             () => {
                 this.handleStepSwitch(structure[tabIndex][0].steps[0]);
             }
         );
     };
 
-    handleStepSwitch = step => {
+    handleStepSwitch = (step: any) => {
         const { studyId } = this.props;
-        const { selectedStep } = this.state;
 
         this.setState({
             isLoadingFields: true,
@@ -116,7 +124,7 @@ export default class StudyStructure extends Component {
         });
 
         apiClient
-            .get('/api/castor/study/' + studyId + '/structure/step/' + step.id + '/fields')
+            .get(`/api/castor/study/${studyId}/structure/step/${step.id}/fields`)
             .then(response => {
                 this.setState({
                     fields: response.data,
@@ -124,15 +132,11 @@ export default class StudyStructure extends Component {
                 });
             })
             .catch(error => {
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
-                }
+                const errorMessage = error.response?.data?.error || 'An error occurred';
+                toast.error(<ToastItem type="error" title={errorMessage} />);
 
                 this.setState({
                     isLoadingFields: false,
-                    selectedStep: selectedStep,
                 });
             });
     };
@@ -153,19 +157,20 @@ export default class StudyStructure extends Component {
 
         const tabContent = (
             <div className="StudyStructureType">
-                <StudyStructureNavigator contents={structure[selectedType]} selectedStep={selectedStep} handleStepSwitch={this.handleStepSwitch} />
-
+                <StudyStructureNavigator
+                    contents={structure[selectedType]}
+                    selectedStep={selectedStep}
+                    handleStepSwitch={this.handleStepSwitch}
+                />
                 <div className="StudyStructureContents">
                     <div className="Fields">
                         {isLoadingFields ? (
                             <LoadingOverlay accessibleLabel="Loading fields" />
                         ) : (
-                            fields.map(field => {
-                                const selected = selection.filter(id => id === field.id).length > 0;
-
+                            fields.map((field: any) => {
+                                const selected = selection.includes(field.id);
                                 return (
                                     <FieldListItem
-                                        selectable={selectable}
                                         selected={selected}
                                         onSelect={onSelect}
                                         key={field.id}

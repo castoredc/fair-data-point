@@ -58,7 +58,7 @@ final class DataModelController extends AbstractController
     public function adminModelVersion(
         #[MapEntity(mapping: ['model' => 'id'])]
         DataModel $dataModel,
-        #[MapEntity(mapping: ['model' => 'dataModel', 'version' => 'version'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'version'])]
         DataModelVersion $dataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
@@ -73,7 +73,7 @@ final class DataModelController extends AbstractController
     public function adminModelVersionNodes(
         #[MapEntity(mapping: ['model' => 'id'])]
         DataModel $dataModel,
-        #[MapEntity(mapping: ['model' => 'dataModel', 'version' => 'version'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'version'])]
         DataModelVersion $dataModelVersion,
         string $nodeType,
     ): Response {

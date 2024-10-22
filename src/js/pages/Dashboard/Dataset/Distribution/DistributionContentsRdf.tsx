@@ -10,8 +10,23 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import PageTabs from 'components/PageTabs';
 
-export default class DistributionContentsRdf extends Component {
-    constructor(props) {
+interface DistributionContentsRdfProps {
+    distribution: any;
+    dataset: string;
+}
+
+interface DistributionContentsRdfState {
+    selectedMapping: any | null;
+    addedMapping: any | null;
+    isLoadingDataModel: boolean;
+    hasLoadedDataModel: boolean;
+    currentVersion: string | null;
+    dataModel: any | null;
+    selectedType: 'node' | 'module';
+}
+
+export default class DistributionContentsRdf extends Component<DistributionContentsRdfProps, DistributionContentsRdfState> {
+    constructor(props: DistributionContentsRdfProps) {
         super(props);
         this.state = {
             selectedMapping: null,
@@ -36,7 +51,7 @@ export default class DistributionContentsRdf extends Component {
         });
 
         apiClient
-            .get('/api/data-model/' + distribution.dataModel.dataModel)
+            .get(`/api/data-model/${distribution.dataModel.dataModel}`)
             .then(response => {
                 this.setState({
                     dataModel: response.data,
@@ -58,7 +73,7 @@ export default class DistributionContentsRdf extends Component {
             });
     };
 
-    selectMapping = mapping => {
+    selectMapping = (mapping: any) => {
         this.setState({
             selectedMapping: mapping,
         });
@@ -73,13 +88,13 @@ export default class DistributionContentsRdf extends Component {
         });
     };
 
-    handleVersionChange = version => {
+    handleVersionChange = (version: string) => {
         this.setState({
             currentVersion: version,
         });
     };
 
-    changeTab = tabIndex => {
+    changeTab = (tabIndex: 'node' | 'module') => {
         this.setState({
             selectedType: tabIndex,
             selectedMapping: null,
@@ -97,12 +112,12 @@ export default class DistributionContentsRdf extends Component {
         } = this.state;
         const { distribution, dataset } = this.props;
 
-        if (isLoadingDataModel) {
+        if (isLoadingDataModel || currentVersion === null) {
             return <LoadingOverlay accessibleLabel="Loading distribution" />;
         }
 
-        const versions = dataModel.versions.map(version => {
-            const label = distribution.dataModel.id === version.id ? version.version + ' (active)' : version.version;
+        const versions = dataModel.versions.map((version: any) => {
+            const label = distribution.dataModel.id === version.id ? `${version.version} (active)` : version.version;
             return { value: version.id, label: label };
         });
 

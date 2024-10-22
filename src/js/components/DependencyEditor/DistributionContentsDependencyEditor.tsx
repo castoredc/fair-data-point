@@ -13,6 +13,7 @@ import OperatorSelector from 'components/QueryBuilder/OperatorSelector';
 import { PrefixType } from 'types/PrefixType';
 import { InstituteType } from 'types/InstituteType';
 import { RuleGroup } from 'components/QueryBuilder/RuleGroup';
+import { NodeType } from 'types/NodeType';
 
 interface Operator {
     name: string;
@@ -26,6 +27,8 @@ interface DistributionContentsDependencyEditorProps {
     handleChange: (query: any) => void;
     save: () => void;
     value: any;
+    type: 'rdf' | 'csv';
+    valueNodes?: NodeType[];
 }
 
 const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEditorProps> = ({
@@ -34,7 +37,42 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                                                                                                  handleChange,
                                                                                                  save,
                                                                                                  value,
+                                                                                                 type,
+                                                                                                 valueNodes
                                                                                              }) => {
+    let fields: Field[] = [
+        {
+            label: 'Record details',
+            name: 'recordDetails',
+            options: [
+                {
+                    type: 'recordDetails',
+                    value: 'institute',
+                    name: 'institute',
+                    label: 'Institute',
+                    valueType: 'institute',
+                },
+            ],
+        },
+    ];
+
+    if (type === 'rdf' && valueNodes) {
+        fields = fields.concat({
+            label: 'Value nodes',
+            name: 'valueNodes',
+            options: valueNodes.map((node) => {
+                return {
+                    type: 'valueNode',
+                    name: node.id,
+                    value: node.id,
+                    label: node.title,
+                    dataType: (node.value !== null && 'dataType' in node.value) ? node.value.dataType : null,
+                    valueType: node.value !== null ? node.value.value : null,
+                }
+            }),
+        });
+    }
+
     const getOperators = (fieldName: string): Operator[] => {
         const field = findOptionByValue(fieldName, fields);
 
@@ -131,22 +169,6 @@ const operators: Operator[] = [
     { name: '>=', label: '>=', types: ['plain'] },
     { name: 'null', label: 'is empty', types: ['plain', 'annotated'] },
     { name: 'notNull', label: 'is not empty', types: ['plain', 'annotated'] },
-];
-
-const fields: Field[] = [
-    {
-        label: 'Record details',
-        name: 'recordDetails',
-        options: [
-            {
-                type: 'recordDetails',
-                value: 'institute',
-                name: 'institute',
-                label: 'Institute',
-                valueType: 'institute',
-            },
-        ],
-    },
 ];
 
 export default DistributionContentsDependencyEditor;

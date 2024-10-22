@@ -131,7 +131,9 @@ export const ucfirst = text => {
 };
 
 export const downloadFile = (contents, filename) => {
-    if (!window.navigator.msSaveOrOpenBlob) {
+    const nav = (window.navigator as any);
+
+    if (!nav.msSaveOrOpenBlob) {
         const url = window.URL.createObjectURL(new Blob([contents]));
         const link = document.createElement('a');
         link.href = url;
@@ -140,7 +142,7 @@ export const downloadFile = (contents, filename) => {
         link.click();
     } else {
         // IE
-        const url = window.navigator.msSaveOrOpenBlob(new Blob([contents]), filename);
+        const url = nav.msSaveOrOpenBlob(new Blob([contents]), filename);
     }
 };
 

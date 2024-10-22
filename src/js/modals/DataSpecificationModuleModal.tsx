@@ -160,9 +160,11 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                     <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
-                                <FormItem label="Type">
-                                    <Field component={Select} options={resourceTypes} name="resourceType" serverError={validation} menuPosition="fixed" />
-                                </FormItem>
+                                {type === 'metadata-model' && <>
+                                    <FormItem label="Type">
+                                        <Field component={Select} options={resourceTypes} name="resourceType" serverError={validation} menuPosition="fixed" />
+                                    </FormItem>
+                                </>}
 
                                 {type === 'data-model' && <>
                                     <FormItem>

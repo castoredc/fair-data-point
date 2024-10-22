@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { CellText, DataGrid, LoadingOverlay } from '@castoredc/matter';
@@ -8,8 +8,42 @@ import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
 
-export default class DistributionLogsDataTable extends Component {
-    constructor(props) {
+interface Log {
+    createdAt: string;
+    status: 'error' | 'success' | 'not_updated' | 'partially';
+    records: {
+        total: number;
+    };
+    id: string;
+}
+
+interface Pagination {
+    currentPage: number;
+    perPage: number;
+}
+
+interface DistributionLogsDataTableProps {
+    dataset: string;
+    distribution: { slug: string };
+    study?: string;
+    catalog?: string;
+    history: {
+        push: (location: { pathname: string }) => void;
+    };
+    lastHandledDataset?: any;
+}
+
+interface DistributionLogsDataTableState {
+    isLoadingLogs: boolean;
+    hasLoadedLogs: boolean;
+    logs: Log[];
+    pagination: Pagination;
+}
+
+export default class DistributionLogsDataTable extends Component<DistributionLogsDataTableProps, DistributionLogsDataTableState> {
+    private tableRef: RefObject<HTMLDivElement>;
+
+    constructor(props: DistributionLogsDataTableProps) {
         super(props);
         this.state = {
             isLoadingLogs: true,
@@ -25,7 +59,7 @@ export default class DistributionLogsDataTable extends Component {
         this.getLogs();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps: DistributionLogsDataTableProps) {
         const { lastHandledDataset } = this.props;
 
         if (lastHandledDataset !== prevProps.lastHandledDataset) {
@@ -46,13 +80,13 @@ export default class DistributionLogsDataTable extends Component {
             perPage: pagination.perPage,
         };
 
-        if (hasLoadedLogs) {
+        if (hasLoadedLogs && this.tableRef.current) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
         apiClient
-            .get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/log', { params: filters })
-            .then(response => {
+            .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/log`, { params: filters })
+            .then((response) => {
                 this.setState({
                     logs: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -60,7 +94,7 @@ export default class DistributionLogsDataTable extends Component {
                     hasLoadedLogs: true,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({
                     isLoadingLogs: false,
                 });
@@ -73,7 +107,7 @@ export default class DistributionLogsDataTable extends Component {
             });
     };
 
-    handlePagination = paginationCount => {
+    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
         const { pagination } = this.state;
 
         this.setState(
@@ -90,11 +124,13 @@ export default class DistributionLogsDataTable extends Component {
         );
     };
 
-    handleClick = rowId => {
+    handleClick = (rowId: string) => {
         const { logs } = this.state;
         const { dataset, distribution, history, study, catalog } = this.props;
 
-        const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
+        const mainUrl = study
+            ? `/dashboard/studies/${study}/datasets/${dataset}`
+            : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
 
         const log = logs[rowId];
 
@@ -125,17 +161,15 @@ export default class DistributionLogsDataTable extends Component {
             },
         ];
 
-        const rows = logs.map(log => {
-            return {
-                createdAt: <CellText>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
-                status: (
-                    <CellText>
-                        <DistributionGenerationStatus status={log.status} />
-                    </CellText>
-                ),
-                records: <CellText>{log.records.total}</CellText>,
-            };
-        });
+        const rows = logs.map((log, index) => ({
+            createdAt: <CellText key={`createdAt-${index}`}>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
+            status: (
+                <CellText key={`status-${index}`}>
+                    <DistributionGenerationStatus status={log.status} />
+                </CellText>
+            ),
+            records: <CellText key={`records-${index}`}>{log.records.total}</CellText>,
+        }));
 
         return (
             <DataGridContainer

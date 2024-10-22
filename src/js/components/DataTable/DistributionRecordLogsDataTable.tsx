@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { CellText, DataGrid, Heading, LoadingOverlay } from '@castoredc/matter';
@@ -10,8 +10,40 @@ import DataGridContainer from './DataGridContainer';
 import Split from 'components/Layout/Split';
 import { apiClient } from 'src/js/network';
 
-export default class DistributionRecordLogsDataTable extends Component {
-    constructor(props) {
+interface Log {
+    record: { id: string };
+    status: 'error' | 'success' | 'not_updated' | 'partially';
+    createdAt: string;
+    errors?: { exception: string; message: string }[];
+}
+
+interface Pagination {
+    currentPage: number;
+    perPage: number;
+}
+
+interface DistributionRecordLogsDataTableProps {
+    dataset: string;
+    distribution: { slug: string };
+    log: string;
+    lastHandledDataset?: any;
+}
+
+interface DistributionRecordLogsDataTableState {
+    isLoadingLogs: boolean;
+    hasLoadedLogs: boolean;
+    logs: Log[];
+    pagination: Pagination;
+    selectedLog: Log | null;
+}
+
+export default class DistributionRecordLogsDataTable extends Component<
+    DistributionRecordLogsDataTableProps,
+    DistributionRecordLogsDataTableState
+> {
+    private tableRef: RefObject<HTMLDivElement>;
+
+    constructor(props: DistributionRecordLogsDataTableProps) {
         super(props);
         this.state = {
             isLoadingLogs: true,
@@ -28,7 +60,7 @@ export default class DistributionRecordLogsDataTable extends Component {
         this.getLogs();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps: DistributionRecordLogsDataTableProps) {
         const { lastHandledDataset } = this.props;
 
         if (lastHandledDataset !== prevProps.lastHandledDataset) {
@@ -49,13 +81,13 @@ export default class DistributionRecordLogsDataTable extends Component {
             perPage: pagination.perPage,
         };
 
-        if (hasLoadedLogs) {
+        if (hasLoadedLogs && this.tableRef.current) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
         apiClient
-            .get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + log + '/records', { params: filters })
-            .then(response => {
+            .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/log/${log}/records`, { params: filters })
+            .then((response) => {
                 this.setState({
                     logs: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -63,7 +95,7 @@ export default class DistributionRecordLogsDataTable extends Component {
                     hasLoadedLogs: true,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({
                     isLoadingLogs: false,
                 });
@@ -76,7 +108,7 @@ export default class DistributionRecordLogsDataTable extends Component {
             });
     };
 
-    handlePagination = paginationCount => {
+    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
         const { pagination } = this.state;
 
         this.setState(
@@ -93,9 +125,8 @@ export default class DistributionRecordLogsDataTable extends Component {
         );
     };
 
-    handleClick = rowId => {
+    handleClick = (rowId: string) => {
         const { logs } = this.state;
-
         const log = logs[rowId];
 
         this.setState({ selectedLog: log });
@@ -127,17 +158,15 @@ export default class DistributionRecordLogsDataTable extends Component {
             },
         ];
 
-        const rows = logs.map(log => {
-            return {
-                record: <CellText>{log.record.id}</CellText>,
-                status: (
-                    <CellText>
-                        <DistributionGenerationStatus status={log.status} />
-                    </CellText>
-                ),
-                createdAt: <CellText>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
-            };
-        });
+        const rows = logs.map((log, index) => ({
+            record: <CellText key={`record-${index}`}>{log.record.id}</CellText>,
+            status: (
+                <CellText key={`status-${index}`}>
+                    <DistributionGenerationStatus status={log.status} />
+                </CellText>
+            ),
+            createdAt: <CellText key={`createdAt-${index}`}>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
+        }));
 
         return (
             <div className="RecordLogs">
@@ -172,16 +201,14 @@ export default class DistributionRecordLogsDataTable extends Component {
                                 <FormItem label="Date and time">{moment(selectedLogItem.createdAt).format('DD-MM-YYYY HH:mm:ss')}</FormItem>
 
                                 <FormItem label="Errors" className="ErrorLog">
-                                    {selectedLogItemHasErrors ? (
-                                        selectedLogItem.errors.map(error => {
-                                            return (
-                                                <div className="ErrorLogItem">
-                                                    <strong>{error.exception}</strong>
-                                                    <br />
-                                                    <div>{error.message}</div>
-                                                </div>
-                                            );
-                                        })
+                                    {selectedLogItemHasErrors && selectedLogItem.errors ? (
+                                        selectedLogItem.errors.map((error, index) => (
+                                            <div className="ErrorLogItem" key={`error-${index}`}>
+                                                <strong>{error.exception}</strong>
+                                                <br />
+                                                <div>{error.message}</div>
+                                            </div>
+                                        ))
                                     ) : (
                                         <div className="NoResults">No errors occurred while generating this record</div>
                                     )}

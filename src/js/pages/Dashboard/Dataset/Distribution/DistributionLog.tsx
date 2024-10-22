@@ -6,9 +6,25 @@ import ToastItem from 'components/ToastItem';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import PageTabs from 'components/PageTabs';
+import * as H from 'history';
 
-export default class DistributionLog extends Component {
-    constructor(props) {
+interface DistributionLogProps {
+    dataset: string;
+    distribution: any;
+    match: { params: { log: string } };
+    history: H.History;
+}
+
+interface DistributionLogState {
+    showModal: boolean;
+    isLoadingLog: boolean;
+    hasLoadedLog: boolean;
+    log: any | null;
+    selectedTab: string;
+}
+
+export default class DistributionLog extends Component<DistributionLogProps, DistributionLogState> {
+    constructor(props: DistributionLogProps) {
         super(props);
         this.state = {
             showModal: false,
@@ -31,7 +47,7 @@ export default class DistributionLog extends Component {
         });
 
         apiClient
-            .get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + match.params.log)
+            .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/log/${match.params.log}`)
             .then(response => {
                 this.setState({
                     log: response.data,
@@ -45,14 +61,12 @@ export default class DistributionLog extends Component {
                 });
 
                 const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while loading the log';
+                    error.response?.data?.error || 'An error occurred while loading the log';
                 toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
-    changeTab = tabIndex => {
+    changeTab = (tabIndex: string) => {
         this.setState({
             selectedTab: tabIndex,
         });
@@ -68,11 +82,16 @@ export default class DistributionLog extends Component {
 
         const hasErrors = log.errors !== null && Array.isArray(log.errors) && log.errors.length > 0;
 
-        let tabs = {
+        let tabs: { [key: string]: { title: string; content: JSX.Element } } = {
             records: {
                 title: 'Record logs',
-                content: <DistributionRecordLogsDataTable history={history} dataset={dataset}
-                                                          distribution={distribution} log={match.params.log} />,
+                content: (
+                    <DistributionRecordLogsDataTable
+                        dataset={dataset}
+                        distribution={distribution}
+                        log={match.params.log}
+                    />
+                ),
             },
         };
 
@@ -81,14 +100,12 @@ export default class DistributionLog extends Component {
                 title: 'Errors',
                 content: (
                     <div>
-                        {log.errors.map(error => {
-                            return (
-                                <div className="ErrorLogItem">
-                                    <Heading type="Panel">{error.exception}</Heading>
-                                    <div>{error.message}</div>
-                                </div>
-                            );
-                        })}
+                        {log.errors.map((error: any, index: number) => (
+                            <div className="ErrorLogItem" key={index}>
+                                <Heading type="Panel">{error.exception}</Heading>
+                                <div>{error.message}</div>
+                            </div>
+                        ))}
                     </div>
                 ),
             };

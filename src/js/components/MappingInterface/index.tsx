@@ -6,8 +6,24 @@ import ModuleMappingInterface from './ModuleMappingInterface';
 import NodeMappingInterface from './NodeMappingInterface';
 import { apiClient } from 'src/js/network';
 
-export default class MappingInterface extends Component {
-    constructor(props) {
+interface MappingInterfaceProps {
+    studyId: string;
+    dataset: any;
+    distribution: any;
+    versionId: string;
+    mapping: any;
+    type: 'node' | 'module';
+    onSave: () => void;
+}
+
+interface MappingInterfaceState {
+    isLoading: boolean;
+    isLoadingStructure: boolean;
+    structure: any | null;
+}
+
+export default class MappingInterface extends Component<MappingInterfaceProps, MappingInterfaceState> {
+    constructor(props: MappingInterfaceProps) {
         super(props);
         this.state = {
             isLoading: false,
@@ -25,13 +41,13 @@ export default class MappingInterface extends Component {
 
         apiClient
             .get('/api/castor/study/' + studyId + '/structure')
-            .then(response => {
+            .then((response) => {
                 this.setState({
                     structure: response.data,
                     isLoadingStructure: false,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
                     toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
@@ -56,7 +72,6 @@ export default class MappingInterface extends Component {
                     <NodeMappingInterface
                         studyId={studyId}
                         mapping={mapping}
-                        structure={structure}
                         dataset={dataset}
                         distribution={distribution}
                         versionId={versionId}

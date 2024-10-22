@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { CellText, DataGrid, Icon, IconCell, LoadingOverlay, TextStyle } from '@castoredc/matter';
@@ -7,8 +7,54 @@ import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
 
-export default class DataModelMappingsDataTable extends Component {
-    constructor(props) {
+interface Mapping {
+    node?: {
+        title: string;
+        value: {
+            value: string;
+            dataType: string;
+        };
+        repeated?: boolean;
+    };
+    elements?: { label: string }[];
+    module?: {
+        displayName: string;
+    };
+    element?: {
+        label: string;
+        structureType: string;
+    };
+    transformed?: boolean;
+}
+
+interface Pagination {
+    currentPage: number;
+    perPage: number;
+}
+
+interface DataModelMappingsDataTableProps {
+    type: 'node' | 'module';
+    dataset: string;
+    distribution: { slug: string };
+    versionId: string;
+    lastHandledMapping?: any;
+    onClick: (mapping: Mapping) => void;
+}
+
+interface DataModelMappingsDataTableState {
+    isLoadingMappings: boolean;
+    hasLoadedMappings: boolean | string;
+    mappings: Mapping[];
+    pagination: Pagination;
+}
+
+export default class DataModelMappingsDataTable extends Component<
+    DataModelMappingsDataTableProps,
+    DataModelMappingsDataTableState
+> {
+    private tableRef: RefObject<HTMLDivElement>;
+
+    constructor(props: DataModelMappingsDataTableProps) {
         super(props);
         this.state = {
             isLoadingMappings: true,
@@ -22,11 +68,10 @@ export default class DataModelMappingsDataTable extends Component {
 
     componentDidMount() {
         const { type } = this.props;
-
         this.getMappings(type);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps: DataModelMappingsDataTableProps) {
         const { lastHandledMapping, versionId, type } = this.props;
 
         if (type !== prevProps.type || versionId !== prevProps.versionId || lastHandledMapping !== prevProps.lastHandledMapping) {
@@ -34,8 +79,8 @@ export default class DataModelMappingsDataTable extends Component {
         }
     }
 
-    getMappings = type => {
-        const { pagination, hasLoadedMappings } = this.state;
+    getMappings = (type: 'node' | 'module') => {
+        const { pagination } = this.state;
         const { dataset, distribution, versionId } = this.props;
 
         this.setState({
@@ -48,8 +93,10 @@ export default class DataModelMappingsDataTable extends Component {
         };
 
         apiClient
-            .get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId + '/' + type, { params: filters })
-            .then(response => {
+            .get(`/api/dataset/${dataset}/distribution/${distribution.slug}/contents/rdf/v/${versionId}/${type}`, {
+                params: filters,
+            })
+            .then((response) => {
                 this.setState({
                     mappings: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
@@ -57,7 +104,7 @@ export default class DataModelMappingsDataTable extends Component {
                     hasLoadedMappings: type,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({
                     isLoadingMappings: false,
                 });
@@ -70,7 +117,7 @@ export default class DataModelMappingsDataTable extends Component {
             });
     };
 
-    handlePagination = paginationCount => {
+    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
         const { pagination } = this.state;
 
         this.setState(
@@ -82,12 +129,12 @@ export default class DataModelMappingsDataTable extends Component {
                 },
             },
             () => {
-                this.getMappings();
+                this.getMappings(this.props.type);
             }
         );
     };
 
-    handleClick = rowId => {
+    handleClick = (rowId: string) => {
         const { mappings } = this.state;
         const { onClick } = this.props;
 
@@ -103,37 +150,38 @@ export default class DataModelMappingsDataTable extends Component {
             return <LoadingOverlay accessibleLabel="Loading mappings" />;
         }
 
-        let rows = null;
+        let rows: any[] = [];
 
         if (type === 'node') {
-            rows = mappings.map(item => {
+            rows = mappings.map((item, index) => {
+                const valueType = item.node?.value.value ? ValueType[item.node?.value.value] : '';
+                const dataType = item.node?.value.dataType ? DataType[item.node?.value.dataType] : '';
+
                 return {
-                    mapped: !item.elements ? <IconCell icon={{ type: 'errorCircledInverted' }} /> : undefined,
-                    title: <CellText>{item.node.title}</CellText>,
-                    valueType: <CellText>{ValueType[item.node.value.value]}</CellText>,
-                    dataType: <CellText>{DataType[item.node.value.dataType]}</CellText>,
-                    repeated: item.node.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                    mapped: !item.elements ? <IconCell key={index} icon={{ type: 'errorCircledInverted' }} /> : undefined,
+                    title: <CellText key={index}>{item.node?.title}</CellText>,
+                    valueType: <CellText key={index}>{valueType}</CellText>,
+                    dataType: <CellText key={index}>{dataType}</CellText>,
+                    repeated: item.node?.repeated ? <IconCell key={index} icon={{ type: 'tickSmall' }} /> : undefined,
                     ...(item.transformed && {
                         mappedElement: (
-                            <CellText>
+                            <CellText key={index}>
                                 <TextStyle variation="italic">Transformed value</TextStyle>
                             </CellText>
                         ),
                     }),
                     ...(!item.transformed && {
-                        mappedElement: <CellText>{item.elements ? item.elements[0].label : ''}</CellText>,
+                        mappedElement: <CellText key={index}>{item.elements ? item.elements[0].label : ''}</CellText>,
                     }),
-                };
+                }
             });
         } else if (type === 'module') {
-            rows = mappings.map(item => {
-                return {
-                    mapped: !item.element ? <IconCell icon={{ type: 'errorCircledInverted' }} /> : undefined,
-                    title: <CellText>{item.module.displayName}</CellText>,
-                    mappedElement: <CellText>{item.element ? item.element.label : ''}</CellText>,
-                    mappedElementType: <CellText>{item.element ? item.element.structureType : ''}</CellText>,
-                };
-            });
+            rows = mappings.map((item, index) => ({
+                mapped: !item.element ? <IconCell key={index} icon={{ type: 'errorCircledInverted' }} /> : undefined,
+                title: <CellText key={index}>{item.module?.displayName}</CellText>,
+                mappedElement: <CellText key={index}>{item.element ? item.element.label : ''}</CellText>,
+                mappedElementType: <CellText key={index}>{item.element ? item.element.structureType : ''}</CellText>,
+            }));
         } else {
             return null;
         }
