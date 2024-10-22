@@ -15,7 +15,7 @@
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/orm": "2.19.5",
+        "doctrine/orm": "2.20.0",
         "fresh/doctrine-enum-bundle": "^10.0",
         "guzzlehttp/guzzle": "^6.5.8",
         "knpuniversity/oauth2-client-bundle": "^2.18",
