@@ -42,6 +42,7 @@ class StudiesApiController extends ApiController
                 new GetPaginatedStudiesCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
+                    true,
                     null,
                     null,
                     $parsed->getHideCatalogs()

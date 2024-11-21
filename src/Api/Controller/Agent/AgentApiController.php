@@ -91,6 +91,7 @@ class AgentApiController extends ApiController
                 new GetPaginatedStudiesCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
+                    false,
                     null,
                     $agent,
                     null

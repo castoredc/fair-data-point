@@ -12,6 +12,7 @@ class GetPaginatedStudiesCommand
     public function __construct(
         private int $perPage,
         private int $page,
+        private bool $includeUnpublished,
         private ?Catalog $catalog = null,
         private ?Agent $agent = null,
         private ?array $hideCatalogs = null,
@@ -42,5 +43,10 @@ class GetPaginatedStudiesCommand
     public function getHideCatalogs(): ?array
     {
         return $this->hideCatalogs;
+    }
+
+    public function getIncludeUnpublished(): bool
+    {
+        return $this->includeUnpublished;
     }
 }

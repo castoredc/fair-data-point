@@ -27,6 +27,7 @@ class GetPaginatedStudiesCommandHandler
             $command->getCatalog(),
             $command->getAgent(),
             $command->getHideCatalogs(),
+            $command->getIncludeUnpublished(),
             $isAdmin
         );
 
@@ -34,6 +35,7 @@ class GetPaginatedStudiesCommandHandler
             $command->getCatalog(),
             $command->getAgent(),
             $command->getHideCatalogs(),
+            $command->getIncludeUnpublished(),
             $command->getPerPage(),
             $command->getPage(),
             $isAdmin
