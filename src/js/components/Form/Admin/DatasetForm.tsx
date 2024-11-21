@@ -104,6 +104,11 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
             return <LoadingOverlay accessibleLabel="Loading dataset" />;
         }
 
+        let studyTitle = dataset.study.hasMetadata ? localizedText(dataset.study.metadata.title, 'en') : 'None';
+        if(studyTitle === '') {
+            studyTitle = 'None'
+        }
+
         return (
             <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={DatasetSchema}>
                 {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
@@ -121,11 +126,7 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
                                                     <dl>
                                                         <dt>Title</dt>
                                                         <dd>
-                                                            {dataset.study.hasMetadata ? (
-                                                                localizedText(dataset.study.metadata.title, 'en')
-                                                            ) : (
-                                                                <span className="None">None</span>
-                                                            )}
+                                                            {studyTitle}
                                                         </dd>
                                                         <dt>Study name</dt>
                                                         <dd>{dataset.study.name}</dd>

@@ -111,13 +111,19 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     {datasets.length === 0 && <div className="NoResults">This study does not have datasets.</div>}
 
                     {datasets.map(dataset => {
+                        let title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
+
+                        if(title === '') {
+                            title = 'Untitled dataset'
+                        }
+
                         return (
                             <ListItem
                                 key={dataset.id}
                                 selectable={false}
                                 disabled={!isGranted('edit', dataset.permissions)}
                                 link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`}
-                                title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
+                                title={title}
                             />
                         );
                     })}

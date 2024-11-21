@@ -126,12 +126,18 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
 
                 <ScrollShadow className="DashboardList">
                     {studies.map(study => {
+                        let title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
+
+                        if(title === '') {
+                            title = 'Untitled study'
+                        }
+
                         return (
                             <ListItem
                                 key={study.id}
                                 selectable={false}
                                 link={`/dashboard/studies/${study.id}`}
-                                title={study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name}
+                                title={title}
                             />
                         );
                     })}
