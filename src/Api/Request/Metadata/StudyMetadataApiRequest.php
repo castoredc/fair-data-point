@@ -59,10 +59,8 @@ class StudyMetadataApiRequest extends SingleApiRequest
     #[Assert\Type('array')]
     private array $conditions;
 
-    /**
-     * @var mixed[]|null
-     * @AppAssert\LocalizedText
-     */
+    /** @var mixed[]|null */
+    #[AppAssert\LocalizedText]
     private ?array $keywords = null;
 
     protected function parse(): void

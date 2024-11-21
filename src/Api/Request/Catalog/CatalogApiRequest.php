@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CatalogApiRequest extends SingleApiRequest
 {
-    /** @AppAssert\Slug(type="App\Entity\FAIRData\Catalog") */
+    #[AppAssert\Slug(type: 'App\Entity\FAIRData\Catalog')]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     private string $slug;
