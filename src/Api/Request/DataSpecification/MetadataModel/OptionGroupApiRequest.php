@@ -16,10 +16,8 @@ class OptionGroupApiRequest extends SingleApiRequest
     #[Assert\Type('string')]
     private ?string $description = null;
 
-    /**
-     * @var mixed[]
-     * @AppAssert\OptionGroupOptions
-     */
+    /** @var mixed[] */
+    #[AppAssert\OptionGroupOptions]
     private array $options;
 
     protected function parse(): void

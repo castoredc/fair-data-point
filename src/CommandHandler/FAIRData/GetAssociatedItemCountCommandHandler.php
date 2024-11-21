@@ -56,6 +56,7 @@ class GetAssociatedItemCountCommandHandler
                     $entity,
                     null,
                     null,
+                    false,
                     $isAdmin,
                 )
             );

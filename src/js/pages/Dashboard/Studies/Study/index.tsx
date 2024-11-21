@@ -79,7 +79,11 @@ export default class Study extends Component<StudyProps, StudyState> {
             return <NoPermission text="You do not have permission to edit this study" />;
         }
 
-        const title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
+        let title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
+        
+        if(title === '') {
+            title = 'Untitled study'
+        }
 
         return (
             <>

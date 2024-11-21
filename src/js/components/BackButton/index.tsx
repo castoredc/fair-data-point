@@ -22,16 +22,24 @@ export type BackButtonProps =
       };
 
 const BackButton: FC<BackButtonProps> = ({ to, returnButton, children, sidebar, history }) => {
+    let onClickFunction: () => any;
+
     if (returnButton) {
         let history = useHistory();
-        to = () => history.go(-1);
+        onClickFunction = () => history.go(-1);
     } else if (typeof to === 'string') {
-        to = () => history.push(to as string);
+        onClickFunction = () => {
+            history.push(to as string);
+        }
+    } else if(to !== undefined) {
+        onClickFunction = () => to();
+    } else {
+        return null;
     }
 
     return (
         <div className={classNames('BackButton', sidebar && 'Sidebar')}>
-            <button onClick={typeof to === 'function' ? to : undefined}>
+            <button onClick={onClickFunction}>
                 <span className="circle">
                     <ArrowLeftIcon height="10px" width="10px" />
                 </span>

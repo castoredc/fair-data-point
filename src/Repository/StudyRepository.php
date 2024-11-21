@@ -24,6 +24,7 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         ?Catalog $catalog,
         ?Agent $agent,
         ?array $hideCatalogs,
+        bool $includeUnpublished,
         ?int $perPage,
         ?int $page,
         bool $admin,
@@ -31,7 +32,7 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         $qb = $this->createQueryBuilder('study')
                    ->select('study');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $includeUnpublished, $admin);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -49,18 +50,18 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         $qb = $this->createQueryBuilder('study')
             ->select('study');
 
-        $qb = $this->getStudyQuery($qb, null, $agent, null, false);
+        $qb = $this->getStudyQuery($qb, null, $agent, null, false, false);
 
         return $qb->getQuery()->getResult();
     }
 
     /** @param string[]|null $hideCatalogs */
-    public function countStudies(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, bool $admin): int
+    public function countStudies(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, bool $includeUnpublished, bool $admin): int
     {
         $qb = $this->createQueryBuilder('study')
                    ->select('count(study.id)');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $includeUnpublished, $admin);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -73,7 +74,7 @@ class StudyRepository extends MetadataEnrichedEntityRepository
 
     public function countByAgent(Agent $agent): int
     {
-        return $this->countStudies(null, $agent, null, false);
+        return $this->countStudies(null, $agent, null, false, false);
     }
 
     /** @param string[]|null $hideCatalogs */
@@ -82,6 +83,7 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         ?Catalog $catalog,
         ?Agent $agent,
         ?array $hideCatalogs,
+        bool $includeUnpublished,
         bool $admin,
     ): QueryBuilder {
         $qb = $this->getQuery($qb);
@@ -96,7 +98,7 @@ class StudyRepository extends MetadataEnrichedEntityRepository
                ->setParameter('catalog_ids', $hideCatalogs);
         }
 
-        if (! $admin) {
+        if (! $includeUnpublished) {
             $qb->andWhere('study.isPublished = 1');
         }
 

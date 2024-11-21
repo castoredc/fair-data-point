@@ -83,12 +83,18 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                     {distributions.length === 0 && <div className="NoResults">This study does not have distributions.</div>}
 
                     {distributions.map(distribution => {
+                        let title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
+
+                        if(title === '') {
+                            title = 'Untitled distribution'
+                        }
+
                         return (
                             <ListItem
                                 selectable={false}
                                 disabled={!isGranted('edit', distribution.permissions)}
                                 link={`${mainUrl}/distributions/${distribution.slug}`}
-                                title={distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution'}
+                                title={title}
                             />
                         );
                     })}

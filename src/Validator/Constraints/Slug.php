@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Validator\Constraints;
 
+use Attribute;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
-use function array_values;
 
-/** @Annotation */
+#[Attribute]
 class Slug extends Constraint
 {
     public string $message = 'This slug is already in use, please use a different slug';
@@ -17,6 +18,7 @@ class Slug extends Constraint
      * @param string[]             $groups  An array of validation groups
      * @param mixed                $payload Domain-specific data attached to a constraint
      */
+    #[HasNamedArguments]
     public function __construct(
         public $type,
         ?array $groups = null,
@@ -28,7 +30,6 @@ class Slug extends Constraint
     /** @return class-string<object> */
     public function getType()
     {
-        /** @phpstan-ignore-next-line */
-        return array_values($this->type)[0];
+        return $this->type;
     }
 }

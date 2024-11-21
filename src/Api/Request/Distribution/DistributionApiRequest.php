@@ -18,7 +18,7 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     #[Assert\Choice(['rdf', 'csv'])]
     private string $type;
 
-    /** @AppAssert\Slug(type="App\Entity\FAIRData\Distribution") */
+    #[AppAssert\Slug(type: 'App\Entity\FAIRData\Distribution')]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     private string $slug;

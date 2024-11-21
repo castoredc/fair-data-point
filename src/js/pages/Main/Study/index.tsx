@@ -19,7 +19,11 @@ const Study: React.FC<StudyProps> = ({ user, embedded, location, match }) => {
     const { isLoading: isLoadingStudy, study } = useGetStudy(match.params.study);
 
     const breadcrumbs = getBreadCrumbs(location, { study });
-    const title = study ? localizedText(study.metadata.title, 'en') : null;
+    let title = study ? localizedText(study.metadata.title, 'en') : 'Untitled study';
+
+    if(title === '') {
+        title = 'Untitled study'
+    }
 
     return (
         <Layout className="Study" embedded={embedded}>

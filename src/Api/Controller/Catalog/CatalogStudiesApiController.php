@@ -46,6 +46,7 @@ class CatalogStudiesApiController extends ApiController
                 new GetPaginatedStudiesCommand(
                     $parsed->getPerPage(),
                     $parsed->getPage(),
+                    $this->isGranted('edit', $catalog),
                     $catalog,
                     null,
                     null
