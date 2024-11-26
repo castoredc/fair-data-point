@@ -12,12 +12,12 @@ class EditNodeCommand extends CommonEditNodeCommand
     public function __construct(
         private Node $node,
         string $title,
-        ?string $description,
         string $value,
+        ?string $description,
         ?XsdDataType $dataType,
         ?bool $isRepeated,
     ) {
-        parent::__construct($title, $description, $value, $dataType, $isRepeated);
+        parent::__construct($title, $value, $description, $dataType, $isRepeated);
     }
 
     public function getNode(): Node
