@@ -73,8 +73,8 @@ class NodeApiController extends ApiController
                     $metadataModelVersion,
                     $nodeType,
                     $parsed->getTitle(),
-                    $parsed->getDescription(),
                     $parsed->getValue(),
+                    $parsed->getDescription(),
                     $parsed->getDataType(),
                     $parsed->isRepeated()
                 )
@@ -119,8 +119,8 @@ class NodeApiController extends ApiController
                 new EditNodeCommand(
                     $node,
                     $parsed->getTitle(),
-                    $parsed->getDescription(),
                     $parsed->getValue(),
+                    $parsed->getDescription(),
                     $parsed->getDataType(),
                     $parsed->isRepeated()
                 )

@@ -70,8 +70,8 @@ class NodeApiController extends ApiController
                     $dataModelVersion,
                     $nodeType,
                     $parsed->getTitle(),
-                    $parsed->getDescription(),
                     $parsed->getValue(),
+                    $parsed->getDescription(),
                     $parsed->getDataType(),
                     $parsed->isRepeated()
                 )
@@ -116,8 +116,8 @@ class NodeApiController extends ApiController
                 new EditNodeCommand(
                     $node,
                     $parsed->getTitle(),
-                    $parsed->getDescription(),
                     $parsed->getValue(),
+                    $parsed->getDescription(),
                     $parsed->getDataType(),
                     $parsed->isRepeated()
                 )

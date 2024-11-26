@@ -10,9 +10,16 @@ use App\Entity\Enum\XsdDataType;
 
 class CreateNodeCommand extends CommonCreateNodeCommand
 {
-    public function __construct(private DataModelVersion $dataModelVersion, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType, ?bool $isRepeated)
-    {
-        parent::__construct($type, $title, $description, $value, $dataType, $isRepeated);
+    public function __construct(
+        private DataModelVersion $dataModelVersion,
+        NodeType $type,
+        string $title,
+        string $value,
+        ?string $description,
+        ?XsdDataType $dataType,
+        ?bool $isRepeated,
+    ) {
+        parent::__construct($type, $title, $value, $description, $dataType, $isRepeated);
     }
 
     public function getDataModelVersion(): DataModelVersion
