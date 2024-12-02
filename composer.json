@@ -34,7 +34,7 @@
         "symfony/messenger": "^7.1",
         "symfony/monolog-bundle": "^3.10",
         "symfony/security-bundle": "^7.1",
-        "symfony/twig-bundle": "^7.1",
+        "symfony/twig-bundle": "^7.2",
         "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "^7.1",
         "twig/twig": "^3.3"
