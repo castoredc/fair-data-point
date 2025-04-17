@@ -1,14 +1,24 @@
 import React, { FC, useState } from 'react';
-
-import Button from '@mui/material/Button';
+import { 
+    Box,
+    Button,
+    IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
-import { ucfirst } from '../../../util';
 import { FormikProps } from 'formik/dist/types';
+import { ucfirst } from '../../../util';
 import PublisherModal from 'modals/PublisherModal';
 import { CountryType } from 'types/CountryType';
-import ClearIcon from '@mui/icons-material/Clear';
-import { IconButton } from '@mui/material';
 import { useNotifications } from 'components/WithNotifications';
 
 interface AgentPickerPropsProps extends FieldProps {
@@ -54,7 +64,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
     const value = field.value ? field.value : [];
 
     return (
-        <div className="Input AgentPicker">
+        <Box sx={{ width: '100%' }}>
             <PublisherModal
                 open={showModal}
                 onClose={() => setShowModal(false)}
@@ -65,47 +75,92 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                 countries={countries}
             />
 
-            <div className="Header Row">
-                <div className="Name">Name</div>
-                <div className="Type">Type</div>
-                <div className="AdditionalInformation">Additional information</div>
-            </div>
-            <div className="Agents">
-                {value.map((agent, index) => {
-                    let name = '';
-                    let additionalInfo = '';
-
-                    if (agent.type === 'organization') {
-                        name = agent.organization.name;
-                        additionalInfo = typeof agent.department !== 'undefined' ? agent.department.name : '';
-                    } else if (agent.type === 'person') {
-                        name = [agent.person.firstName, agent.person.middleName, agent.person.lastName].filter(Boolean).join(' ');
-                        additionalInfo = agent.person.orcid;
+            <TableContainer 
+                component={Paper} 
+                variant="outlined"
+                sx={{ 
+                    mb: 2,
+                    '& .MuiTableCell-root': {
+                        py: 1.5
                     }
+                }}
+            >
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 500 }}>Name</TableCell>
+                            <TableCell sx={{ fontWeight: 500 }}>Type</TableCell>
+                            <TableCell sx={{ fontWeight: 500 }}>Additional information</TableCell>
+                            <TableCell align="right" sx={{ width: 70 }} />
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {value.map((agent, index) => {
+                            let name = '';
+                            let additionalInfo = '';
 
-                    return (
-                        <div className="Row" key={index}>
-                            <div className="Name">{name}</div>
-                            <div className="Type">{ucfirst(agent.type)}</div>
-                            <div className="AdditionalInformation">{additionalInfo}</div>
-                            <div className="Buttons">
-                                <IconButton
-                                    className="RemoveButton"
-                                    onClick={() => handleRemove(field, form, index)}
+                            if (agent.type === 'organization') {
+                                name = agent.organization.name;
+                                additionalInfo = typeof agent.department !== 'undefined' ? agent.department.name : '';
+                            } else if (agent.type === 'person') {
+                                name = [agent.person.firstName, agent.person.middleName, agent.person.lastName].filter(Boolean).join(' ');
+                                additionalInfo = agent.person.orcid;
+                            }
+
+                            return (
+                                <TableRow 
+                                    key={index}
+                                    sx={{
+                                        '&:last-child td, &:last-child th': { border: 0 },
+                                        '&:hover': {
+                                            bgcolor: 'action.hover'
+                                        }
+                                    }}
                                 >
-                                    <ClearIcon />
-                                </IconButton>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-            <div className="AddButton">
-                <Button startIcon={<AddIcon />} className="AddButton" variant="text" onClick={() => setShowModal(true)}>
-                    Add
+                                    <TableCell>{name}</TableCell>
+                                    <TableCell>{ucfirst(agent.type)}</TableCell>
+                                    <TableCell>{additionalInfo}</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton
+                                            size="small"
+                                            onClick={() => handleRemove(field, form, index)}
+                                            sx={{ 
+                                                color: 'error.main',
+                                                '&:hover': {
+                                                    bgcolor: 'error.lighter'
+                                                }
+                                            }}
+                                        >
+                                            <ClearIcon fontSize="small" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                        {value.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={4} align="center" sx={{ py: 4 }}>
+                                    <Typography color="text.secondary">
+                                        No agents added yet
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button
+                    startIcon={<AddIcon />}
+                    variant="outlined"
+                    onClick={() => setShowModal(true)}
+                    sx={{ px: 3 }}
+                >
+                    Add Agent
                 </Button>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
