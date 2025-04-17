@@ -1,107 +1,107 @@
 @import '../../../scss/colors';
 
 .Query {
-    height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+
+  .QueryComponent {
+    padding: 30px !important;
+    flex: 1;
+    overflow: auto;
+
+    .QueryTools,
+    .QueryResults,
+    .QueryResults .DataTableWrapper {
+      height: 100%;
+    }
+  }
+
+  .QueryTools {
     display: flex;
     flex-direction: column;
+
+    .QueryEditor {
+      flex: 1;
+    }
+  }
+
+  .QueryResults {
+    .DataTableWrapper {
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid #d1d1d1;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .Information {
+    flex: 1;
     overflow: hidden;
-    width: 100%;
+    min-height: inherit;
+    padding: 0;
 
-    .QueryComponent {
-        padding: 30px !important;
-        flex: 1;
-        overflow: auto;
-
-        .QueryTools,
-        .QueryResults,
-        .QueryResults .DataTableWrapper {
-            height: 100%;
-        }
+    .InformationRow {
+      height: 100%;
     }
+  }
 
-    .QueryTools {
-        display: flex;
-        flex-direction: column;
+  .Children {
+    padding-top: 10px !important;
 
-        .QueryEditor {
-            flex: 1;
-        }
-    }
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    overflow: hidden;
+  }
 
-    .QueryResults {
-        .DataTableWrapper {
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid #d1d1d1;
-        }
+  .yasgui .controlbar {
+    display: none;
+  }
 
-        a {
-            text-decoration: none;
-        }
-    }
+  .yasqe_queryButton {
+    display: none !important;
+  }
 
-    .Information {
-        flex: 1;
-        overflow: hidden;
-        min-height: inherit;
-        padding: 0;
+  .CodeMirror {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    height: 100% !important;
+    border-radius: 4px;
+  }
 
-        .InformationRow {
-            height: 100%;
-        }
-    }
+  .yasqe {
+    transition: all 0.8s ease;
+    height: 100%;
+    border-radius: 3px;
+  }
 
-    .Children {
-        padding-top: 10px !important;
-
-        display: flex;
-        flex-flow: column;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    .yasgui .controlbar {
-        display: none;
-    }
-
-    .yasqe_queryButton {
-        display: none !important;
-    }
-
-    .CodeMirror {
-        font-family: 'Fira Code', monospace;
-        font-size: 13px;
-        height: 100% !important;
-        border-radius: 4px;
-    }
-
+  .QueryEditor.Hide {
     .yasqe {
-        transition: all 0.8s ease;
-        height: 100%;
-        border-radius: 3px;
+      max-height: 0 !important;
+    }
+  }
+
+  .QueryButtons {
+    margin-top: 10px;
+    margin-bottom: 0;
+
+    .ResultCount {
+      line-height: 30px;
     }
 
-    .QueryEditor.Hide {
-        .yasqe {
-            max-height: 0 !important;
-        }
+    .ExecuteButton {
+      float: right;
     }
 
-    .QueryButtons {
-        margin-top: 10px;
-        margin-bottom: 0;
-
-        .ResultCount {
-            line-height: 30px;
-        }
-
-        .ExecuteButton {
-            float: right;
-        }
-
-        .ShowHideButton {
-            border: 0;
-            display: none;
-        }
+    .ShowHideButton {
+      border: 0;
+      display: none;
     }
+  }
 }

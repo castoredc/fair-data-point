@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, ChoiceOption, LoadingOverlay, Pagination, Space } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
@@ -9,11 +8,20 @@ import { isAdmin } from 'utils/PermissionHelper';
 import ScrollShadow from 'components/ScrollShadow';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
-import DashboardTab from 'components/Layout/DashboardTab';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 import { localizedText } from '../../../util';
+import Body from 'components/Layout/Dashboard/Body';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Pagination from '@mui/material/Pagination';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import AddIcon from '@mui/icons-material/Add';
+import List from '@mui/material/List';
 
-interface StudiesProps extends AuthorizedRouteComponentProps {}
+interface StudiesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface StudiesState {
     studies: any;
@@ -22,7 +30,7 @@ interface StudiesState {
     viewAll: boolean;
 }
 
-export default class Studies extends Component<StudiesProps, StudiesState> {
+class Studies extends Component<StudiesProps, StudiesState> {
     constructor(props) {
         super(props);
 
@@ -35,6 +43,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
     }
 
     getStudies = () => {
+        const { notifications } = this.props;
         const { viewAll, pagination } = this.state;
 
         this.setState({
@@ -61,9 +70,9 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your studies" />);
+                    notifications.show('An error occurred while loading your studies', { variant: 'error' });
                 }
             });
     };
@@ -77,24 +86,24 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
             },
             () => {
                 this.getStudies();
-            }
+            },
         );
     };
 
-    handlePagination = paginationCount => {
+    handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: value,
+                    perPage: pagination.pageSize,
                 },
             },
             () => {
                 this.getStudies();
-            }
+            },
         );
     };
 
@@ -103,60 +112,74 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
     }
 
     render() {
-        const { history, user } = this.props;
+        const { history, location, user } = this.props;
         const { isLoading, studies, pagination, viewAll } = this.state;
 
         return (
-            <DashboardTab>
+            <DashboardPage>
                 <DocumentTitle title="Studies" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
 
-                <Space bottom="comfortable" />
+                <DashboardSideBar location={location} history={history} user={user} />
 
-                <DashboardTabHeader
-                    title="My studies"
-                    type="Section"
-                    badge={isAdmin(user) ? <ChoiceOption labelText="View all studies" checked={viewAll} onChange={this.handleView} /> : undefined}
-                >
-                    <Button buttonType="primary" onClick={() => history.push('/dashboard/studies/add')}>
-                        Add study
-                    </Button>
-                </DashboardTabHeader>
+                <Body>
+                    <Header
+                        title="My studies"
 
-                <ScrollShadow className="DashboardList">
-                    {studies.map(study => {
-                        let title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
+                        badge={isAdmin(user) ?
+                            <FormControlLabel
+                                control={<Checkbox name="viewAll"
+                                                   onChange={this.handleView}
+                                                   checked={viewAll} />}
+                                label="View all studies"
+                            /> : undefined}
+                    >
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => history.push('/dashboard/studies/add')}
+                            variant="contained"
+                        >
+                            Add study
+                        </Button>
+                    </Header>
 
-                        if(title === '') {
-                            title = 'Untitled study'
-                        }
+                    <PageBody>
+                        <List sx={{ width: '100%' }}>
+                            {studies.map(study => {
+                                let title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
 
-                        return (
-                            <ListItem
-                                key={study.id}
-                                selectable={false}
-                                link={`/dashboard/studies/${study.id}`}
-                                title={title}
-                            />
-                        );
-                    })}
+                                if (title === '') {
+                                    title = 'Untitled study';
+                                }
 
-                    {studies.length == 0 && <div className="NoResults">No studies found.</div>}
-                </ScrollShadow>
+                                return (
+                                    <ListItem
+                                        key={study.id}
+                                        selectable={false}
+                                        link={`/dashboard/studies/${study.id}`}
+                                        title={title}
+                                    />
+                                );
+                            })}
 
-                <div className="DashboardFooter">
-                    {pagination && (
-                        <Pagination
-                            accessibleName="Pagination"
-                            onChange={this.handlePagination}
-                            pageSize={pagination.perPage}
-                            currentPage={pagination.currentPage - 1}
-                            totalItems={pagination.totalResults}
-                        />
-                    )}
-                </div>
-            </DashboardTab>
+                            {studies.length == 0 && <div className="NoResults">No studies found.</div>}
+                        </List>
+
+                        <div className="DashboardFooter">
+                            {pagination && (
+                                <Pagination
+                                    onChange={this.handlePagination}
+                                    page={pagination.currentPage - 1}
+                                    count={pagination.totalResults}
+                                />
+                            )}
+                        </div>
+                    </PageBody>
+                </Body>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(Studies);

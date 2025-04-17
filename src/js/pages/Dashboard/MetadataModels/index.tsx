@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Space } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
 import { apiClient } from 'src/js/network';
-import DashboardTab from 'components/Layout/DashboardTab';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import Body from 'components/Layout/Dashboard/Body';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import AddIcon from '@mui/icons-material/Add';
 
-interface MetadataModelsProps extends AuthorizedRouteComponentProps {}
+interface MetadataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface MetadataModelsState {
     metadataModels: any;
     isLoading: boolean;
 }
 
-export default class MetadataModels extends Component<MetadataModelsProps, MetadataModelsState> {
+class MetadataModels extends Component<MetadataModelsProps, MetadataModelsState> {
     constructor(props) {
         super(props);
 
@@ -28,6 +33,8 @@ export default class MetadataModels extends Component<MetadataModelsProps, Metad
     }
 
     getMetadataModels = () => {
+        const { notifications } = this.props;
+
         this.setState({
             isLoading: true,
         });
@@ -46,9 +53,9 @@ export default class MetadataModels extends Component<MetadataModelsProps, Metad
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your metadata models" />);
+                    notifications.show('An error occurred while loading your metadata models', { variant: 'error' });
                 }
             });
     };
@@ -58,33 +65,43 @@ export default class MetadataModels extends Component<MetadataModelsProps, Metad
     }
 
     render() {
-        const { history, user } = this.props;
+        const { location, history, user } = this.props;
         const { isLoading, metadataModels } = this.state;
 
         return (
-            <DashboardTab>
+            <DashboardPage>
                 <DocumentTitle title="Metadata models" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading metadata models" />}
 
-                <Space bottom="comfortable" />
 
-                <DashboardTabHeader title="My metadata models" type="Section">
-                    {isAdmin(user) && (
-                        <Button buttonType="primary" onClick={() => history.push('/dashboard/metadata-models/add')}>
-                            Add metadata model
-                        </Button>
-                    )}
-                </DashboardTabHeader>
+                <DashboardSideBar location={location} history={history} user={user} />
 
-                <div>
-                    {metadataModels.map(model => {
-                        return <ListItem selectable={false} link={`/dashboard/metadata-models/${model.id}`} title={model.title} />;
-                    })}
+                <Body>
+                    <Header title="My metadata models">
+                        {isAdmin(user) && (
+                            <Button
+                                startIcon={<AddIcon />}
+                                onClick={() => history.push('/dashboard/metadata-models/add')}
+                                variant="contained"
+                            >
+                                Add metadata model
+                            </Button>
+                        )}
+                    </Header>
 
-                    {metadataModels.length == 0 && <div className="NoResults">No metadata models found.</div>}
-                </div>
-            </DashboardTab>
+                    <PageBody>
+                        {metadataModels.map(model => {
+                            return <ListItem selectable={false} link={`/dashboard/metadata-models/${model.id}`}
+                                             title={model.title} />;
+                        })}
+
+                        {metadataModels.length == 0 && <div className="NoResults">No metadata models found.</div>}
+                    </PageBody>
+                </Body>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(MetadataModels);

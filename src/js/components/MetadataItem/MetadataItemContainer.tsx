@@ -9,7 +9,13 @@ interface MetadataItemContainerProps {
     hideLabel?: boolean;
 }
 
-const MetadataItemContainer: React.FC<MetadataItemContainerProps> = ({ label, className, table, children, hideLabel = false }) => {
+const MetadataItemContainer: React.FC<MetadataItemContainerProps> = ({
+                                                                         label,
+                                                                         className,
+                                                                         table,
+                                                                         children,
+                                                                         hideLabel = false,
+                                                                     }) => {
     return (
         <div className={classNames('MetadataItem', className, table && 'Table')}>
             {!hideLabel && <div className="MetadataItemLabel">{label}</div>}

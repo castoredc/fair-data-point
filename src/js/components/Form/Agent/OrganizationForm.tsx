@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import '../Form.scss';
 import FormItem from '../FormItem';
-import { Button } from '@castoredc/matter';
+import Button from '@mui/material/Button';
 import { classNames } from '../../../util';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
@@ -20,7 +19,7 @@ type OrganizationFormState = {
     validation: any;
 };
 
-export default class OrganizationForm extends Component<OrganizationFormProps, OrganizationFormState> {
+class OrganizationForm extends Component<OrganizationFormProps, OrganizationFormState> {
     constructor(props) {
         super(props);
 
@@ -40,11 +39,16 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
                     return (
                         <Form>
                             <FormItem label="Country">
-                                <Field component={Select} options={countries} name="country" menuPosition="fixed" serverError={validation} />
+                                <Field component={Select} options={countries} name="country" serverError={validation} />
                             </FormItem>
                             <div className={classNames(values.country === null && 'WaitingOnInput')}>
-                                <Field component={OrganizationSelect} country={values.country} name="organization" serverError={validation} />
-                                <Button buttonType="primary" type="submit" disabled={isSubmitting}>
+                                <Field component={OrganizationSelect} country={values.country} name="organization"
+                                       serverError={validation} />
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    variant="contained"
+                                >
                                     Add organization
                                 </Button>
                             </div>
@@ -86,3 +90,5 @@ const OrganizationSchema = Yup.object().shape({
             }),
     }),
 });
+
+export default OrganizationForm;

@@ -1,6 +1,7 @@
 import React from 'react';
 import './Breadcrumbs.scss';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@mui/material/Link';
 
 interface BreadcrumbProps {
     title: string;
@@ -11,16 +12,24 @@ interface BreadcrumbProps {
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ title, to }) => {
-    return (
-        <div className="Breadcrumb">
-            {to ? (
+    return to ? (
                 /* @ts-ignore */
-                <Link to={{ pathname: to.pathname, state: to.state }}>{title}</Link>
+                <Link
+                    underline="hover"
+                    color="inherit"
+                    component={RouterLink}
+                    to={{ pathname: to.pathname, state: to.state }}
+                >
+                    {title}
+                </Link>
             ) : (
-                title
-            )}
-        </div>
-    );
+                <Link
+                    underline="hover"
+                    color="inherit"
+                >
+                    {title}
+                </Link>
+            )
 };
 
 export default Breadcrumb;

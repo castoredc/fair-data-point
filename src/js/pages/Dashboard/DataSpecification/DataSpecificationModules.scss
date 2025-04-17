@@ -1,129 +1,129 @@
 @import '../../../scss/colors';
 
-.DataSpecificationTableHeader {
-    font-weight: bold;
-    display: flex;
-
-    & > div {
-        flex: 1;
-    }
-
-    & > div:first-child {
-        width: 33%;
-        flex: 0 0 33%;
-    }
-}
-
-.DataSpecificationTableBody {
-    .DataSpecificationTriple {
-        display: flex;
-        border-bottom: solid 1px $neutral-40;
-
-        &:hover {
-            background: $neutral-20;
-        }
-
-        .DataSpecificationSubject > div,
-        .DataSpecificationPredicate > div,
-        .DataSpecificationObject {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-
-        .DataSpecificationSubject {
-            width: 33%;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-
-        .DataSpecificationPredicateObjects {
-            flex: 1;
-
-            .TriplePredicateObject {
-                display: flex;
-                padding: 10px 0;
-                border-bottom: solid 1px $neutral-40;
-
-                &:last-child {
-                    border-bottom: 0;
-                }
-
-                .DataSpecificationPredicate,
-                .DataSpecificationObjects {
-                    width: 50%;
-                    flex: 0 50%;
-                }
-
-                .DataSpecificationObject {
-                    border-bottom: solid 1px $neutral-40;
-                    display: flex;
-                    justify-content: space-between;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-
-                    &:last-child {
-                        border-bottom: 0;
-                        padding-bottom: 0;
-                    }
-
-                    &:first-child {
-                        padding-top: 0;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.DataSpecificationTriple,
-.DataSpecificationTableHeader,
-.TriplePredicate {
-    color: $neutral-800;
-}
-
-.NodeInfo {
-    font-size: 10px;
-
-    &.Slug span {
-        color: $azul;
-    }
-
-    &.PrefixedUri span {
-        color: $neutral-100;
-    }
-
-    &.Value span {
-        color: $slug;
-    }
-}
-
-.DependencyDescription {
-    .DependencyGroup {
-        padding: 1px 5px;
-        border-radius: 3px;
-        border: solid 1px $neutral-70;
-        margin: 4px;
-        display: inline-block;
-    }
-
-    .DependencyCombinator {
-        margin: 0 5px;
-        font-weight: 700;
-    }
-}
-
-.DataSpecificationModuleAlerts > div {
-    margin-bottom: 5px;
-}
-
-.DataSpecificationModule {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: 100%;
-
-    .LargeTable {
-        flex: 1;
-        overflow: auto;
-    }
-}
+//.DataSpecificationTableHeader {
+//  font-weight: bold;
+//  display: flex;
+//
+//  & > div {
+//    flex: 1;
+//  }
+//
+//  & > div:first-child {
+//    width: 33%;
+//    flex: 0 0 33%;
+//  }
+//}
+//
+//.DataSpecificationTableBody {
+//  .DataSpecificationTriple {
+//    display: flex;
+//    border-bottom: solid 1px $neutral-40;
+//
+//    &:hover {
+//      background: $neutral-20;
+//    }
+//
+//    .DataSpecificationSubject > div,
+//    .DataSpecificationPredicate > div,
+//    .DataSpecificationObject {
+//      padding-left: 10px;
+//      padding-right: 10px;
+//    }
+//
+//    .DataSpecificationSubject {
+//      width: 33%;
+//      padding-top: 10px;
+//      padding-bottom: 10px;
+//    }
+//
+//    .DataSpecificationPredicateObjects {
+//      flex: 1;
+//
+//      .TriplePredicateObject {
+//        display: flex;
+//        padding: 10px 0;
+//        border-bottom: solid 1px $neutral-40;
+//
+//        &:last-child {
+//          border-bottom: 0;
+//        }
+//
+//        .DataSpecificationPredicate,
+//        .DataSpecificationObjects {
+//          width: 50%;
+//          flex: 0 50%;
+//        }
+//
+//        .DataSpecificationObject {
+//          border-bottom: solid 1px $neutral-40;
+//          display: flex;
+//          justify-content: space-between;
+//          padding-top: 10px;
+//          padding-bottom: 10px;
+//
+//          &:last-child {
+//            border-bottom: 0;
+//            padding-bottom: 0;
+//          }
+//
+//          &:first-child {
+//            padding-top: 0;
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+//
+//.DataSpecificationTriple,
+//.DataSpecificationTableHeader,
+//.TriplePredicate {
+//  color: $neutral-800;
+//}
+//
+//.NodeInfo {
+//  font-size: 10px;
+//
+//  &.Slug span {
+//    color: $azul;
+//  }
+//
+//  &.PrefixedUri span {
+//    color: $neutral-100;
+//  }
+//
+//  &.Value span {
+//    color: $slug;
+//  }
+//}
+//
+//.DependencyDescription {
+//  .DependencyGroup {
+//    padding: 1px 5px;
+//    border-radius: 3px;
+//    border: solid 1px $neutral-70;
+//    margin: 4px;
+//    display: inline-block;
+//  }
+//
+//  .DependencyCombinator {
+//    margin: 0 5px;
+//    font-weight: 700;
+//  }
+//}
+//
+//.DataSpecificationModuleAlerts > div {
+//  margin-bottom: 5px;
+//}
+//
+//.DataSpecificationModule {
+//  display: flex;
+//  flex-direction: column;
+//  overflow: hidden;
+//  height: 100%;
+//
+//  .LargeTable {
+//    flex: 1;
+//    overflow: auto;
+//  }
+//}

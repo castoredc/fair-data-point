@@ -4,7 +4,7 @@ import MetadataItemContainer from 'components/MetadataItem/MetadataItemContainer
 import Language from 'components/MetadataItem/Language';
 import License from 'components/MetadataItem/License';
 import OntologyConcept from 'components/MetadataItem/OntologyConcept';
-import { OpenNewWindowIcon } from '@castoredc/matter-icons';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Country from 'components/MetadataItem/Country';
 import { OntologyConceptType } from 'types/OntologyConceptType';
 import moment from 'moment';
@@ -103,7 +103,7 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
                     <a href={value} target="_blank">
                         {value}
                     </a>
-                    <OpenNewWindowIcon width="10px" height="10px" />
+                    <OpenInNewIcon width="10px" height="10px" />
                 </div>
             );
     }

@@ -1,11 +1,14 @@
 import React, { Component, RefObject } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { CellText, DataGrid, Icon, IconCell, LoadingOverlay } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { localizedText } from '../../util';
 import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef, GridRowParams } from '@mui/x-data-grid';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface Dataset {
     hasMetadata?: boolean;
@@ -24,7 +27,7 @@ interface Pagination {
     perPage: number;
 }
 
-interface DatasetsDataTableProps {
+interface DatasetsDataTableProps extends ComponentWithNotifications {
     catalog?: string;
     study?: string;
     hideCatalog?: string;
@@ -42,7 +45,7 @@ interface DatasetsDataTableState {
     pagination: Pagination;
 }
 
-export default class DatasetsDataTable extends Component<DatasetsDataTableProps, DatasetsDataTableState> {
+class DatasetsDataTable extends Component<DatasetsDataTableProps, DatasetsDataTableState> {
     private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DatasetsDataTableProps) {
@@ -71,7 +74,7 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
 
     getDatasets = () => {
         const { pagination, hasLoadedDatasets } = this.state;
-        const { catalog, study, hideCatalog } = this.props;
+        const { catalog, study, hideCatalog, notifications } = this.props;
 
         this.setState({
             isLoadingDatasets: true,
@@ -119,32 +122,32 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the datasets';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
-    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
+    handlePagination = (currentPage: number, pageSize: number ) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: currentPage + 1,
+                    perPage: pageSize,
                 },
             },
             () => {
                 this.getDatasets();
-            }
+            },
         );
     };
 
-    handleClick = (rowId: string) => {
+    handleClick = (params: GridRowParams) => {
         const { datasets } = this.state;
         const { catalog, history, onClick } = this.props;
 
-        const dataset = datasets[rowId];
+        const dataset = datasets[params.id];
 
         if (onClick) {
             onClick(dataset);
@@ -163,38 +166,41 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
             return <LoadingOverlay accessibleLabel="Loading datasets" />;
         }
 
-        const columns = [
+        const columns: GridColDef[] = [
             {
-                Header: 'Title',
-                accessor: 'title',
+                headerName: 'Title',
+                field: 'title',
             },
             {
-                Header: 'Description',
-                accessor: 'description',
+                headerName: 'Description',
+                field: 'description',
             },
             {
-                Header: 'Language',
-                accessor: 'language',
+                headerName: 'Language',
+                field: 'language',
             },
             {
-                Header: 'License',
-                accessor: 'license',
+                headerName: 'License',
+                field: 'license',
             },
             {
-                Header: <Icon description="Published" type="view" />,
-                accessor: 'published',
-                disableResizing: true,
+                headerName: 'Published',
+                field: 'published',
+                resizable: false,
                 width: 32,
+                renderCell: (params) => {
+                    return params.row.published ? <VisibilityIcon /> : <VisibilityOffIcon />;
+                },
             },
         ];
 
         const rows = datasets.map((item, index) => {
             return {
-                title: <CellText key={`title-${index}`}>{item.hasMetadata ? localizedText(item.metadata?.title, 'en') : '(no title)'}</CellText>,
-                description: <CellText key={`desc-${index}`}>{item.hasMetadata ? localizedText(item.metadata?.description, 'en') : ''}</CellText>,
-                language: <CellText key={`lang-${index}`}>{item.hasMetadata ? item.metadata?.language : ''}</CellText>,
-                license: <CellText key={`lic-${index}`}>{item.hasMetadata ? item.metadata?.license : ''}</CellText>,
-                published: item.published ? <IconCell key={`pub-${index}`} icon={{ type: 'view' }} /> : undefined,
+                title: item.hasMetadata ? localizedText(item.metadata?.title, 'en') : '(no title)',
+                description: item.hasMetadata ? localizedText(item.metadata?.description, 'en') : '',
+                language: item.hasMetadata ? item.metadata?.language : '',
+                license: item.hasMetadata ? item.metadata?.license : '',
+                published: item.published,
             };
         });
 
@@ -206,8 +212,17 @@ export default class DatasetsDataTable extends Component<DatasetsDataTableProps,
                 isLoading={isLoadingDatasets}
                 forwardRef={this.tableRef}
             >
-                <DataGrid accessibleName="Datasets" emptyStateContent="No datasets found" onClick={this.handleClick} rows={rows} columns={columns} />
+                <DataGrid
+                    disableRowSelectionOnClick
+                    accessibleName="Datasets"
+                    emptyStateContent="No datasets found"
+                    onRowClick={this.handleClick}
+                    rows={rows}
+                    columns={columns}
+                />
             </DataGridContainer>
         );
     }
 }
+
+export default withNotifications(DatasetsDataTable);

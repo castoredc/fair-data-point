@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import ModuleDependencyEditor from 'components/DependencyEditor/ModuleDependencyEditor';
 import { formatQuery } from 'react-querybuilder';
-import { Banner, Modal } from '@castoredc/matter';
 import { PrefixType } from 'types/PrefixType';
 import { NodeType } from 'types/NodeType';
 import { DependencyGroupType } from 'types/ModuleType';
 import { RuleGroupType } from 'react-querybuilder/types/types';
+import Modal from 'components/Modal';
+import Alert from '@mui/material/Alert';
+import { AlertTitle } from '@mui/material';
 
 type DependencyModalProps = {
     show: boolean;
@@ -22,7 +24,7 @@ type DependencyModalState = {
     lengthValid: boolean;
 };
 
-export default class DependencyModal extends Component<DependencyModalProps, DependencyModalState> {
+class DependencyModal extends Component<DependencyModalProps, DependencyModalState> {
     constructor(props) {
         super(props);
 
@@ -78,7 +80,7 @@ export default class DependencyModal extends Component<DependencyModalProps, Dep
             },
             () => {
                 handleClose();
-            }
+            },
         );
     };
 
@@ -87,13 +89,12 @@ export default class DependencyModal extends Component<DependencyModalProps, Dep
         const { lengthValid } = this.state;
 
         return (
-            <Modal open={show} onClose={this.handleClose} title="Edit dependencies" accessibleName="Edit dependencies">
+            <Modal open={show} onClose={this.handleClose} title="Edit dependencies">
                 {!lengthValid && (
-                    <Banner
-                        type="error"
-                        title="An error occurred"
-                        description="There were no dependency conditions found, please add one or more conditions"
-                    />
+                    <Alert severity="error">
+                        <AlertTitle>An error occurred</AlertTitle>
+                        description="There were no dependency conditions found, please add one or more conditions
+                    </Alert>
                 )}
 
                 <ModuleDependencyEditor
@@ -108,3 +109,5 @@ export default class DependencyModal extends Component<DependencyModalProps, Dep
         );
     }
 }
+
+export default DependencyModal;

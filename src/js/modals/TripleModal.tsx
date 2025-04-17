@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import { Button, Modal, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Modal from 'components/Modal';
 import { PrefixType } from 'types/PrefixType';
 import { NodesType } from 'types/NodesType';
 import { ModuleType } from 'types/ModuleType';
@@ -8,11 +9,11 @@ import { Field, Form, Formik } from 'formik';
 import Select from 'components/Input/Formik/Select';
 import UriInput from 'components/Input/Formik/UriInput';
 import * as Yup from 'yup';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { apiClient } from '../network';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type TripleModalProps = {
+interface TripleModalProps extends ComponentWithNotifications {
     type: string;
     show: boolean;
     handleClose: () => void;
@@ -30,7 +31,7 @@ type TripleModalState = {
     validation: any;
 };
 
-export default class TripleModal extends Component<TripleModalProps, TripleModalState> {
+class TripleModal extends Component<TripleModalProps, TripleModalState> {
     constructor(props) {
         super(props);
 
@@ -51,12 +52,12 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { type, modelId, versionId, module, onSaved } = this.props;
+        const { type, modelId, versionId, module, onSaved, notifications } = this.props;
 
         apiClient
             .post(
                 '/api/' + type + '/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (values.id ? '/' + values.id : ''),
-                values
+                values,
             )
             .then(response => {
                 setSubmitting(false);
@@ -71,7 +72,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                         validation: error.response.values.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -92,7 +93,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
         const title = edit ? 'Edit triple' : 'Add triple';
 
         return (
-            <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
+            <Modal open={show} onClose={handleClose} title={title}>
                 <Formik initialValues={initialValues} validationSchema={TripleSchema} onSubmit={this.handleSubmit}>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
                         const subjectSelectable =
@@ -132,7 +133,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                         return (
                             <Form>
                                 <FormItem label="Subject">
-                                    <Stack>
+                                    <Stack direction="row">
                                         <FormItem label="Type">
                                             <Field
                                                 component={Select}
@@ -140,7 +141,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                                 serverError={validation}
                                                 name="subjectType"
                                                 width="tiny"
-                                                menuPosition="fixed"
+
                                             />
                                         </FormItem>
 
@@ -152,7 +153,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                                     serverError={validation}
                                                     name="subjectValue"
                                                     width="small"
-                                                    menuPosition="fixed"
+
                                                 />
                                             </FormItem>
                                         )}
@@ -173,7 +174,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                 </FormItem>
 
                                 <FormItem label="Object">
-                                    <Stack>
+                                    <Stack direction="row">
                                         <FormItem label="Type">
                                             <Field
                                                 component={Select}
@@ -181,7 +182,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                                 serverError={validation}
                                                 name="objectType"
                                                 width="tiny"
-                                                menuPosition="fixed"
+
                                             />
                                         </FormItem>
 
@@ -193,14 +194,18 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                                     serverError={validation}
                                                     name="objectValue"
                                                     width="small"
-                                                    menuPosition="fixed"
+
                                                 />
                                             </FormItem>
                                         )}
                                     </Stack>
                                 </FormItem>
 
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    variant="contained"
+                                >
                                     {values.id ? 'Edit triple' : 'Add triple'}
                                 </Button>
                             </Form>
@@ -281,3 +286,5 @@ const TripleSchema = Yup.object().shape({
         then: Yup.string().required('Please select a node'),
     }),
 });
+
+export default withNotifications(TripleModal);

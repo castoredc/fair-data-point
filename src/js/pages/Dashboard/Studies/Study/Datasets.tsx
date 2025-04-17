@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import * as H from 'history';
@@ -9,8 +9,10 @@ import { localizedText } from '../../../../util';
 import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DatasetsProps {
+interface DatasetsProps extends ComponentWithNotifications {
     studyId: string;
     history: H.History;
 }
@@ -21,7 +23,7 @@ interface DatasetsState {
     pagination: any;
 }
 
-export default class Datasets extends Component<DatasetsProps, DatasetsState> {
+class Datasets extends Component<DatasetsProps, DatasetsState> {
     constructor(props) {
         super(props);
 
@@ -37,7 +39,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
     }
 
     getDatasets = () => {
-        const { studyId } = this.props;
+        const { studyId, notifications } = this.props;
         this.setState({
             isLoading: true,
         });
@@ -60,12 +62,12 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the datasets';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
     handleCreate = () => {
-        const { studyId, history } = this.props;
+        const { studyId, history, notifications } = this.props;
 
         this.setState({
             isLoading: true,
@@ -89,7 +91,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while creating a new dataset';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
@@ -101,8 +103,14 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
             <PageBody>
                 {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
 
-                <Stack distribution="trailing" alignment="end">
-                    <Button icon="add" className="AddButton" disabled={isLoading} onClick={this.handleCreate}>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                    <Button
+                        startIcon={<AddIcon />}
+                        className="AddButton"
+                        disabled={isLoading}
+                        onClick={this.handleCreate}
+                        variant="contained"
+                    >
                         New dataset
                     </Button>
                 </Stack>
@@ -113,8 +121,8 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     {datasets.map(dataset => {
                         let title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
 
-                        if(title === '') {
-                            title = 'Untitled dataset'
+                        if (title === '') {
+                            title = 'Untitled dataset';
                         }
 
                         return (
@@ -132,3 +140,5 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
         );
     }
 }
+
+export default withNotifications(Datasets);

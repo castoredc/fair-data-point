@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react';
-import { ActionMenu } from '@castoredc/matter';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
 
 interface AnnotationProps {
     conceptCode: string;
@@ -17,9 +17,7 @@ const Annotation: FC<AnnotationProps> = ({ conceptCode, displayName, ontology, h
             <div className="ConceptDisplayName">{displayName}</div>
             <div className="ConceptCode">{conceptCode}</div>
             <div className="DeleteAnnotation" ref={ref}>
-                <ActionMenu
-                    accessibleLabel="Contextual menu"
-                    container={ref.current !== null ? ref.current : undefined}
+                <RowActionsMenu
                     items={[
                         {
                             destination: () => handleRemove(),

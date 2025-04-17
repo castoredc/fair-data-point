@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Banner, Button, LoadingOverlay } from '@castoredc/matter';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../../util';
@@ -17,15 +14,25 @@ import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
+import Button from '@mui/material/Button';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import LoadingOverlay from 'components/LoadingOverlay';
+import Alert from '@mui/material/Alert';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import DescriptionIcon from '@mui/icons-material/Description';
+import DatasetIcon from '@mui/icons-material/Dataset';
+import MoreIcon from '@mui/icons-material/More';
 
-interface StudyProps extends AuthorizedRouteComponentProps {}
+interface StudyProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface StudyState {
     study: any;
     isLoading: boolean;
 }
 
-export default class Study extends Component<StudyProps, StudyState> {
+class Study extends Component<StudyProps, StudyState> {
     constructor(props) {
         super(props);
 
@@ -40,7 +47,7 @@ export default class Study extends Component<StudyProps, StudyState> {
             isLoading: true,
         });
 
-        const { match } = this.props;
+        const { match, notifications } = this.props;
 
         apiClient
             .get('/api/study/' + match.params.study)
@@ -56,9 +63,9 @@ export default class Study extends Component<StudyProps, StudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading the study" />);
+                    notifications.show('An error occurred while loading the study', { variant: 'error' });
                 }
             });
     };
@@ -80,13 +87,13 @@ export default class Study extends Component<StudyProps, StudyState> {
         }
 
         let title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
-        
-        if(title === '') {
-            title = 'Untitled study'
+
+        if (title === '') {
+            title = 'Untitled study';
         }
 
         return (
-            <>
+            <DashboardPage>
                 <DocumentTitle title={title} />
 
                 <SideBar
@@ -100,7 +107,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                             to: '/dashboard/studies/' + study.id + '/metadata',
                             exact: true,
                             title: 'Metadata',
-                            customIcon: 'metadata',
+                            icon: <DescriptionIcon />,
                         },
                         {
                             type: 'separator',
@@ -109,7 +116,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                             to: '/dashboard/studies/' + study.id + '/annotations',
                             exact: true,
                             title: 'Annotations',
-                            customIcon: 'annotations',
+                            icon: <MoreIcon />,
                         },
                         {
                             type: 'separator',
@@ -118,7 +125,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                             to: '/dashboard/studies/' + study.id + '/datasets',
                             exact: true,
                             title: 'Datasets',
-                            customIcon: 'dataset',
+                            icon: <DatasetIcon />,
                         },
                     ]}
                     history={history}
@@ -127,7 +134,8 @@ export default class Study extends Component<StudyProps, StudyState> {
                 <Body>
                     <Header title={title}>
                         {study.hasMetadata && (
-                            <Button buttonType="contentOnly" icon="openNewWindow" href={`/study/${study.slug}`} target="_blank">
+                            <Button variant="text" startIcon={<OpenInNewIcon />} href={`/study/${study.slug}`}
+                                    target="_blank">
                                 View
                             </Button>
                         )}
@@ -140,7 +148,8 @@ export default class Study extends Component<StudyProps, StudyState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <MetadataForm type="study" object={study} onCreate={this.getStudy} onSave={this.getStudy} />
+                                    <MetadataForm type="study" object={study} onCreate={this.getStudy}
+                                                  onSave={this.getStudy} />
                                 </PageBody>
                             )}
                         />
@@ -154,7 +163,9 @@ export default class Study extends Component<StudyProps, StudyState> {
                                     </PageBody>
                                 ) : (
                                     <PageBody>
-                                        <Banner type="error" title="You do not have permission to access this study in Castor" />
+                                        <Alert severity="error">
+                                            You do not have permission to access this study in Castor
+                                        </Alert>
                                     </PageBody>
                                 )
                             }
@@ -171,7 +182,9 @@ export default class Study extends Component<StudyProps, StudyState> {
                         <Route component={NotFound} />
                     </Switch>
                 </Body>
-            </>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(Study);

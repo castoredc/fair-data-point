@@ -10,6 +10,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import useGetDataset from '../../../hooks/useGetDataset';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
+import Grid from '@mui/material/Grid';
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -29,13 +30,14 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
             <MainBody isLoading={isLoading}>
                 {dataset && (
                     <>
-                        <div className="MainCol">
-                            <MetadataDescription metadata={dataset.metadata} />
-                        </div>
-
-                        <div className="SideCol">
-                            <MetadataSideBar metadata={dataset.metadata} title={title} />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid size={8}>
+                                <MetadataDescription metadata={dataset.metadata} />
+                            </Grid>
+                            <Grid size={4}>
+                                <MetadataSideBar metadata={dataset.metadata} title={title} />
+                            </Grid>
+                        </Grid>
 
                         <AssociatedItemsBar items={dataset.count} current="distribution" />
 
@@ -43,7 +45,6 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
                             dataset={dataset}
                             state={breadcrumbs.current ? breadcrumbs.current.state : null}
                             embedded={embedded}
-                            className="MainCol"
                         />
                     </>
                 )}

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import { ActionMenu } from '@castoredc/matter';
 import { TripleObjectProps } from './types';
 import { Node } from './Node';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
 
 const TripleObject: React.FC<TripleObjectProps> = props => {
     const { tripleId, id, type, title, repeated, value, openTripleModal, data, openRemoveTripleModal } = props;
@@ -19,9 +19,7 @@ const TripleObject: React.FC<TripleObjectProps> = props => {
             {Node(title, type, value, repeated)}
 
             <div className="DataSpecificationTripleActions" ref={ref}>
-                <ActionMenu
-                    accessibleLabel="Contextual menu"
-                    container={ref.current !== null ? ref.current : undefined}
+                <RowActionsMenu
                     items={[
                         {
                             destination: () => {

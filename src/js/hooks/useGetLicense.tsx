@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiClient } from '../network';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { LicenseType } from 'types/LicenseType';
+import { useNotifications } from 'components/WithNotifications';
 
 const useGetLicense = (slug: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [license, setLicense] = useState<LicenseType | null>(null);
+    const notifications = useNotifications();
 
     useEffect(() => {
         const getLicense = async () => {
@@ -16,7 +16,7 @@ const useGetLicense = (slug: string) => {
                 setIsLoading(false);
             } catch (error) {
                 setIsLoading(false);
-                toast.error(<ToastItem type="error" title="Could not load license information." />);
+                notifications.show('Could not load license information.', { variant: 'error' });
             }
         };
 

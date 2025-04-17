@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiClient } from '../network';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { Catalog } from 'types/Resources';
+import { useNotifications } from 'components/WithNotifications';
 
 const useGetCatalog = (slug: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [catalog, setCatalog] = useState<Catalog | null>(null);
+    const notifications = useNotifications();
 
     useEffect(() => {
         const getCatalog = async () => {
@@ -20,7 +20,7 @@ const useGetCatalog = (slug: string) => {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the catalog information';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             }
         };
 

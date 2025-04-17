@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { ActionsCell, Button, CellText, DataGrid, Stack, ToastMessage } from '@castoredc/matter';
 import DataSpecificationPrefixModal from 'modals/DataSpecificationPrefixModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import DataGridContainer from 'components/DataTable/DataGridContainer';
@@ -9,8 +6,15 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import Stack from '@mui/material/Stack';
+import DataGrid from 'components/DataTable/DataGrid';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
+import { GridColDef } from '@mui/x-data-grid';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface PrefixesProps extends AuthorizedRouteComponentProps {
+interface PrefixesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     type: string;
     prefixes: any;
     getPrefixes: () => void;
@@ -23,7 +27,7 @@ interface PrefixesState {
     prefixModalData: any;
 }
 
-export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
+class Prefixes extends Component<PrefixesProps, PrefixesState> {
     private tableRef: React.RefObject<unknown>;
 
     constructor(props) {
@@ -69,20 +73,21 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
     };
 
     removePrefix = () => {
-        const { type, dataSpecification, version } = this.props;
+        const { type, dataSpecification, version, notifications } = this.props;
         const { prefixModalData } = this.state;
 
         apiClient
             .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/prefix/' + prefixModalData.id)
             .then(() => {
-                toast.success(<ToastMessage type="success" title={`The prefix was successfully removed`} />, {
-                    position: 'top-right',
+                notifications.show(`The prefix was successfully removed`, {
+                    variant: 'success',
+
                 });
 
                 this.onSaved('remove');
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
@@ -90,24 +95,42 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
         const { showModal, prefixModalData } = this.state;
         const { type, dataSpecification, prefixes, version } = this.props;
 
-        const columns = [
+        const columns: GridColDef[] = [
             {
-                Header: 'Prefix',
-                accessor: 'prefix',
+                headerName: 'Prefix',
+                field: 'prefix',
             },
             {
-                Header: 'URI',
-                accessor: 'uri',
+                headerName: 'URI',
+                field: 'uri',
             },
             {
-                accessor: 'menu',
-                disableGroupBy: true,
-                disableResizing: true,
-                isInteractive: true,
-                isSticky: true,
-                maxWidth: 34,
-                minWidth: 34,
-                width: 34,
+                field: 'actions',
+                headerName: '',
+                width: 80,
+                sortable: false,
+                disableColumnMenu: true,
+                align: 'right',
+                cellClassName: 'actionsCell',
+                renderCell: (params) => {
+                    return <RowActionsMenu
+                        row={params.row}
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', params.row.data);
+                                },
+                                label: 'Edit prefix',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', params.row.data);
+                                },
+                                label: 'Delete prefix',
+                            },
+                        ]}
+                    />;
+                },
             },
         ];
 
@@ -115,26 +138,9 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
             const data = { id: item.id, prefix: item.prefix, uri: item.uri };
 
             return {
-                prefix: <CellText>{item.prefix}</CellText>,
-                uri: <CellText>{item.uri}</CellText>,
-                menu: (
-                    <ActionsCell
-                        items={[
-                            {
-                                destination: () => {
-                                    this.openModal('add', data);
-                                },
-                                label: 'Edit prefix',
-                            },
-                            {
-                                destination: () => {
-                                    this.openModal('remove', data);
-                                },
-                                label: 'Delete prefix',
-                            },
-                        ]}
-                    />
-                ),
+                prefix: item.prefix,
+                uri: item.uri,
+                data: data,
             };
         });
 
@@ -158,7 +164,8 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                     <ConfirmModal
                         title="Delete prefix"
                         action="Delete prefix"
-                        variant="danger"
+                        variant="contained"
+                        color="error"
                         onConfirm={this.removePrefix}
                         onCancel={() => {
                             this.closeModal('remove');
@@ -170,12 +177,13 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                 )}
 
                 <div className="PageButtons">
-                    <Stack distribution="trailing" alignment="end">
+                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
                         <Button
-                            icon="add"
+                            startIcon={<AddIcon />}
                             onClick={() => {
                                 this.openModal('add', null);
                             }}
+                            variant="contained"
                         >
                             Add prefix
                         </Button>
@@ -184,8 +192,9 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
 
                 <DataGridContainer fullHeight forwardRef={this.tableRef}>
                     <DataGrid
+                        disableRowSelectionOnClick
                         accessibleName="Prefixes"
-                        anchorRightColumns={1}
+                        // anchorRightColumns={1}
                         emptyStateContent={`This ${getType(type)} does not have prefixes`}
                         rows={rows}
                         columns={columns}
@@ -195,3 +204,5 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
         );
     }
 }
+
+export default withNotifications(Prefixes);

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import Annotations from '../Annotations';
-import { Button, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+
 import AddAnnotationModal from '../../modals/AddAnnotationModal';
 import './StudyStructure.scss';
 import ConfirmModal from '../../modals/ConfirmModal';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import AddIcon from '@mui/icons-material/Add';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface OptionGroupProps {
+interface OptionGroupProps extends ComponentWithNotifications {
     studyId: string;
     id: string;
     options: any;
@@ -20,7 +22,7 @@ interface OptionGroupState {
     modalData: any;
 }
 
-export default class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
+class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -66,21 +68,22 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
     };
 
     removeAnnotation = () => {
-        const { studyId, onUpdate } = this.props;
+        const { studyId, onUpdate, notifications } = this.props;
         const { modalData } = this.state;
 
         apiClient
             .delete(`/api/study/${studyId}/annotations/${modalData.remove.annotation.id}`)
             .then(() => {
-                toast.success(<ToastItem type="success" title="The annotation was successfully removed" />, {
-                    position: 'top-right',
+                notifications.show('The annotation was successfully removed', {
+                    variant: 'success',
+
                 });
 
                 this.closeModal('remove');
                 onUpdate();
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
@@ -103,11 +106,13 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
                         show={showModal.remove}
                         title={`Delete annotation for ${modalData.remove.option.name}`}
                         action="Delete annotation"
-                        variant="danger"
+                        variant="contained"
+                        color="error"
                         onConfirm={this.removeAnnotation}
                         includeButton={false}
                     >
-                        Are you sure you want to delete the annotation <strong>{modalData.remove.annotation.concept.displayName}</strong>{' '}
+                        Are you sure you want to delete the
+                        annotation <strong>{modalData.remove.annotation.concept.displayName}</strong>{' '}
                         <small>({modalData.remove.annotation.concept.code})</small>?
                     </ConfirmModal>
                 )}
@@ -152,14 +157,14 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
                                             />
 
                                             <div className="OptionGroupTableButton">
-                                                <Stack distribution="trailing">
+                                                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                                     <Button
                                                         onClick={() => {
                                                             this.openModal('add', data);
                                                         }}
-                                                        icon="add"
-                                                        buttonType="secondary"
-                                                        iconDescription="Add annotation"
+                                                        startIcon={<AddIcon />}
+                                                        variant="outlined"
+
                                                     />
                                                 </Stack>
                                             </div>
@@ -174,3 +179,5 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
         );
     }
 }
+
+export default withNotifications(OptionGroup);

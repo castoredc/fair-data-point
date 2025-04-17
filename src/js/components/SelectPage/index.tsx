@@ -1,9 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import BackButton, { BackButtonProps } from 'components/BackButton';
+import BackButton from 'components/BackButton';
 import DocumentTitle from 'components/DocumentTitle';
-import { Heading, Separator } from '@castoredc/matter';
 import './SelectPage.scss';
 import * as H from 'history';
+import { Divider, Typography } from '@mui/material';
+import MuiCard from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
 
 interface SelectPageProps {
     title: string;
@@ -17,24 +19,45 @@ interface SelectPageProps {
     sidebar?: boolean;
     history: H.History;
 }
-export const SelectPage: FunctionComponent<SelectPageProps> = ({ title, description, children, backButton, history }) => {
+
+const Card = styled(MuiCard)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'center',
+    width: '100%',
+    padding: theme.spacing(4),
+    gap: theme.spacing(2),
+    margin: 'auto',
+    marginTop: theme.spacing(4),
+    [theme.breakpoints.up('sm')]: {
+        maxWidth: '450px',
+    },
+}));
+
+export const SelectPage: FunctionComponent<SelectPageProps> = ({
+                                                                   title,
+                                                                   description,
+                                                                   children,
+                                                                   backButton,
+                                                                   history,
+                                                               }) => {
     return (
-        <div className="SelectPage">
+        <Card>
             <DocumentTitle title={title} />
             <div className="SelectPageHeader">
                 <BackButton to={backButton.to} history={history}>
                     {backButton.label}
                 </BackButton>
 
-                <Heading type="Section">{title}</Heading>
+                <Typography variant="h4">{title}</Typography>
 
                 {description && <p>{description}</p>}
 
-                <Separator />
+                <Divider />
             </div>
 
             <div className="SelectPageContent">{children}</div>
-        </div>
+        </Card>
     );
 };
 

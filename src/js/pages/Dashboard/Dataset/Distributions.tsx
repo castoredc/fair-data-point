@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import { localizedText } from '../../../util';
@@ -9,8 +9,11 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DistributionsProps extends AuthorizedRouteComponentProps {}
+interface DistributionsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface DistributionsState {
     distributions: any;
@@ -18,7 +21,7 @@ interface DistributionsState {
     pagination: any;
 }
 
-export default class Distributions extends Component<DistributionsProps, DistributionsState> {
+class Distributions extends Component<DistributionsProps, DistributionsState> {
     constructor(props) {
         super(props);
 
@@ -34,7 +37,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
     }
 
     getDistributions = () => {
-        const { match } = this.props;
+        const { match, notifications } = this.props;
         this.setState({
             isLoading: true,
         });
@@ -57,7 +60,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distributions';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
@@ -73,20 +76,27 @@ export default class Distributions extends Component<DistributionsProps, Distrib
             <PageBody>
                 {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
 
-                <Stack distribution="trailing" alignment="end">
-                    <Button icon="add" className="AddButton" disabled={isLoading} onClick={() => history.push(`${mainUrl}/distributions/add`)}>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                    <Button
+                        startIcon={<AddIcon />}
+                        className="AddButton"
+                        disabled={isLoading}
+                        onClick={() => history.push(`${mainUrl}/distributions/add`)}
+                        variant="contained"
+                    >
                         New distribution
                     </Button>
                 </Stack>
 
                 <div>
-                    {distributions.length === 0 && <div className="NoResults">This study does not have distributions.</div>}
+                    {distributions.length === 0 &&
+                        <div className="NoResults">This study does not have distributions.</div>}
 
                     {distributions.map(distribution => {
                         let title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
 
-                        if(title === '') {
-                            title = 'Untitled distribution'
+                        if (title === '') {
+                            title = 'Untitled distribution';
                         }
 
                         return (
@@ -103,3 +113,5 @@ export default class Distributions extends Component<DistributionsProps, Distrib
         );
     }
 }
+
+export default withNotifications(Distributions);

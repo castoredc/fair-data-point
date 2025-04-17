@@ -18,7 +18,8 @@ const DatasetList: React.FC<CommonListProps> = props => {
         noResultsText = 'This agent does not have any associated datasets.';
     }
 
-    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata} noResultsText={noResultsText} />;
+    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata}
+                 noResultsText={noResultsText} />;
 };
 
 export default DatasetList;

@@ -1,12 +1,13 @@
 import React, { Component, RefObject } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { CellText, DataGrid, LoadingOverlay } from '@castoredc/matter';
 import moment from 'moment';
 import DistributionGenerationStatus from '../Status/DistributionGenerationStatus';
 import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
+import LoadingOverlay from 'components/LoadingOverlay';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef, GridRowParams } from '@mui/x-data-grid';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface Log {
     createdAt: string;
@@ -22,7 +23,7 @@ interface Pagination {
     perPage: number;
 }
 
-interface DistributionLogsDataTableProps {
+interface DistributionLogsDataTableProps extends ComponentWithNotifications {
     dataset: string;
     distribution: { slug: string };
     study?: string;
@@ -40,7 +41,7 @@ interface DistributionLogsDataTableState {
     pagination: Pagination;
 }
 
-export default class DistributionLogsDataTable extends Component<DistributionLogsDataTableProps, DistributionLogsDataTableState> {
+class DistributionLogsDataTable extends Component<DistributionLogsDataTableProps, DistributionLogsDataTableState> {
     private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DistributionLogsDataTableProps) {
@@ -69,7 +70,7 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
 
     getLogs = () => {
         const { pagination, hasLoadedLogs } = this.state;
-        const { dataset, distribution } = this.props;
+        const { dataset, distribution, notifications } = this.props;
 
         this.setState({
             isLoadingLogs: true,
@@ -103,34 +104,34 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the logs';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
-    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
+    handlePagination = (currentPage: number, pageSize: number ) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: currentPage + 1,
+                    perPage: pageSize,
                 },
             },
             () => {
                 this.getLogs();
-            }
+            },
         );
     };
 
-    handleClick = (rowId: string) => {
+    handleClick = (params: GridRowParams) => {
         const { logs } = this.state;
         const { dataset, distribution, history, study, catalog } = this.props;
 
         const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
 
-        const log = logs[rowId];
+        const log = logs[params.id];
 
         history.push({
             pathname: mainUrl + '/distributions/' + distribution.slug + '/log/' + log.id,
@@ -144,29 +145,27 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
             return <LoadingOverlay accessibleLabel="Loading logs" />;
         }
 
-        const columns = [
+        const columns: GridColDef[] = [
             {
-                Header: 'Date and time',
-                accessor: 'createdAt',
+                headerName: 'Date and time',
+                field: 'createdAt',
             },
             {
-                Header: 'Status',
-                accessor: 'status',
+                headerName: 'Status',
+                field: 'status',
             },
             {
-                Header: 'Records',
-                accessor: 'records',
+                headerName: 'Records',
+                field: 'records',
             },
         ];
 
         const rows = logs.map((log, index) => ({
-            createdAt: <CellText key={`createdAt-${index}`}>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
+            createdAt: moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
             status: (
-                <CellText key={`status-${index}`}>
-                    <DistributionGenerationStatus status={log.status} />
-                </CellText>
+                <DistributionGenerationStatus status={log.status} />
             ),
-            records: <CellText key={`records-${index}`}>{log.records.total}</CellText>,
+            records: log.records.total,
         }));
 
         return (
@@ -178,9 +177,10 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
                 forwardRef={this.tableRef}
             >
                 <DataGrid
+                    disableRowSelectionOnClick
                     accessibleName="Distribution logs"
                     emptyStateContent="No logs found"
-                    onClick={this.handleClick}
+                    onRowClick={this.handleClick}
                     rows={rows}
                     columns={columns}
                 />
@@ -188,3 +188,5 @@ export default class DistributionLogsDataTable extends Component<DistributionLog
         );
     }
 }
+
+export default withNotifications(DistributionLogsDataTable);

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../util';
@@ -20,8 +19,15 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import DescriptionIcon from '@mui/icons-material/Description';
+import GroupsIcon from '@mui/icons-material/Groups';
+import DatasetIcon from '@mui/icons-material/Dataset';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
 
-interface DatasetProps extends AuthorizedRouteComponentProps {
+interface DatasetProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     study?: any;
     catalog?: any;
 }
@@ -31,7 +37,7 @@ interface DatasetState {
     isLoading: boolean;
 }
 
-export default class Dataset extends Component<DatasetProps, DatasetState> {
+class Dataset extends Component<DatasetProps, DatasetState> {
     constructor(props) {
         super(props);
 
@@ -46,7 +52,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
             isLoading: true,
         });
 
-        const { match } = this.props;
+        const { match, notifications } = this.props;
 
         apiClient
             .get('/api/dataset/' + match.params.dataset)
@@ -62,9 +68,9 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your dataset" />);
+                    notifications.show('An error occurred while loading your dataset', { variant: 'error' });
                 }
             });
     };
@@ -94,7 +100,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
         const mainUrl = match.params.study ? '/dashboard/studies/' + match.params.study : '/dashboard/catalogs/' + match.params.catalog;
 
         return (
-            <>
+            <DashboardPage>
                 <DocumentTitle title={title} />
 
                 <SideBar
@@ -108,23 +114,23 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             to: mainUrl + '/datasets/' + dataset.slug,
                             exact: true,
                             title: 'Dataset',
-                            customIcon: 'dataset',
+                            icon: <DatasetIcon />,
                         },
                         {
                             to: mainUrl + '/datasets/' + dataset.slug + '/metadata',
                             exact: true,
                             title: 'Metadata',
-                            customIcon: 'metadata',
+                            icon: <DescriptionIcon />,
                         },
                         ...(isGranted('manage', dataset.permissions)
                             ? [
-                                  {
-                                      to: mainUrl + '/datasets/' + dataset.slug + '/permissions',
-                                      exact: true,
-                                      title: 'Permissions',
-                                      icon: 'usersLight',
-                                  },
-                              ]
+                                {
+                                    to: mainUrl + '/datasets/' + dataset.slug + '/permissions',
+                                    exact: true,
+                                    title: 'Permissions',
+                                    icon: <GroupsIcon />,
+                                },
+                            ]
                             : []),
                         {
                             type: 'separator',
@@ -133,7 +139,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             to: mainUrl + '/datasets/' + dataset.slug + '/distributions',
                             exact: true,
                             title: 'Distributions',
-                            customIcon: 'distribution',
+                            icon: <FileOpenIcon />,
                         },
                     ]}
                     history={history}
@@ -141,7 +147,8 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
 
                 <Body>
                     <Header title={title}>
-                        <Button buttonType="contentOnly" icon="openNewWindow" href={`/fdp/dataset/${dataset.slug}`} target="_blank">
+                        <Button variant="text" startIcon={<OpenInNewIcon />} href={`/fdp/dataset/${dataset.slug}`}
+                                target="_blank">
                             View
                         </Button>
                     </Header>
@@ -161,7 +168,8 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <MetadataForm type="dataset" object={dataset} onCreate={this.getDataset} onSave={this.getDataset} />
+                                    <MetadataForm type="dataset" object={dataset} onCreate={this.getDataset}
+                                                  onSave={this.getDataset} />
                                 </PageBody>
                             )}
                         />
@@ -206,7 +214,9 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                         <Route component={NotFound} />
                     </Switch>
                 </Body>
-            </>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(Dataset);

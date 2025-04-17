@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 
-import '../Form.scss';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import { Field, Form, FormikProvider, useFormik } from 'formik';
@@ -12,6 +10,8 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import { apiClient } from 'src/js/network';
 import { ServerType } from 'types/ServerType';
 import { EDCServerDefaultData, EDCServerSchema } from 'components/Form/Admin/form';
+import Stack from '@mui/material/Stack';
+import { useNotifications } from 'components/WithNotifications';
 
 interface EDCServerFormProps {
     edcServer?: ServerType;
@@ -22,6 +22,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
     const [initialValues, setInitialValues] = useState(props.edcServer ? mergeData(EDCServerDefaultData, props.edcServer) : EDCServerDefaultData);
     const [validation, setValidation] = useState();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const notifications = useNotifications();
 
     const handleFormSubmit = (values, { setSubmitting }) => {
         // setIsSubmitting updates our internal EDCServerForm state, setSubmitting is Formik's.
@@ -37,8 +38,9 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // New server:
                 if (!props.edcServer && response.data.id) {
                     const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`;
-                    toast.success(<ToastItem type="success" title={message} />, {
-                        position: 'top-right',
+                    notifications.show(message, {
+                        variant: 'success',
+
                     });
 
                     props.handleSubmit(response.data);
@@ -49,8 +51,9 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // Existing server:
                 if (props.edcServer && props.edcServer.id) {
                     const message = `The EDC Server ${response.data.name} was updated successfully`;
-                    toast.success(<ToastItem type="success" title={message} />, {
-                        position: 'top-right',
+                    notifications.show(message, {
+                        variant: 'success',
+
                     });
 
                     props.handleSubmit(response.data);
@@ -65,7 +68,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 if (error.response && error.response.status === 400) {
                     setValidation(error.response.data.fields);
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -105,15 +108,23 @@ const EDCServerForm = (props: EDCServerFormProps) => {
 
                 {props.edcServer ? (
                     <div className="FormButtons">
-                        <Stack distribution="trailing">
-                            <Button disabled={isSubmitting} type="submit">
+                        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                            <Button
+                                disabled={isSubmitting}
+                                type="submit"
+                                variant="contained"
+                            >
                                 Update EDC server
                             </Button>
                         </Stack>
                     </div>
                 ) : (
                     <footer>
-                        <Button disabled={isSubmitting} type="submit">
+                        <Button
+                            disabled={isSubmitting}
+                            type="submit"
+                            variant="contained"
+                        >
                             Add EDC server
                         </Button>
                     </footer>

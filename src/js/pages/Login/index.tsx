@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import DocumentTitle from '../../components/DocumentTitle';
 import './Login.scss';
 import queryString from 'query-string';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { CastorLogo, LoadingOverlay } from '@castoredc/matter';
 import LoginForm from '../../components/Form/LoginForm';
 import { apiClient } from 'src/js/network';
 import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';
+import LoadingOverlay from 'components/LoadingOverlay';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface LoginProps {
+interface LoginProps extends ComponentWithNotifications {
     match: {
         params: {
             catalogSlug?: string;
@@ -30,7 +29,7 @@ interface LoginState {
     view: string;
 }
 
-export default class Login extends Component<LoginProps, LoginState> {
+class Login extends Component<LoginProps, LoginState> {
     constructor(props: LoginProps) {
         super(props);
 
@@ -57,6 +56,8 @@ export default class Login extends Component<LoginProps, LoginState> {
     }
 
     getServers = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/castor/servers')
             .then(response => {
@@ -80,11 +81,13 @@ export default class Login extends Component<LoginProps, LoginState> {
                 this.setState({
                     isLoading: false,
                 });
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getCatalog = (catalog: string, callback?: () => void) => {
+        const { notifications } = this.props;
+
         apiClient
             .get(`/api/brand/${catalog}`)
             .then(response => {
@@ -93,7 +96,7 @@ export default class Login extends Component<LoginProps, LoginState> {
                         {
                             catalog: response.data,
                         },
-                        callback
+                        callback,
                     );
                 } else {
                     this.setState({
@@ -106,7 +109,7 @@ export default class Login extends Component<LoginProps, LoginState> {
                 this.setState({
                     isLoading: false,
                 });
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
@@ -127,7 +130,7 @@ export default class Login extends Component<LoginProps, LoginState> {
 
                 <div className="LoginContainer">
                     <div className="LoginLogo">
-                        <CastorLogo className="Logo" />
+                        Logo
                     </div>
 
                     <LoginForm
@@ -143,3 +146,5 @@ export default class Login extends Component<LoginProps, LoginState> {
         );
     }
 }
+
+export default withNotifications(Login);

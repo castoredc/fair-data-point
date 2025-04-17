@@ -3,7 +3,8 @@ import Emoji from 'components/Emoji';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import UserDetailsForm from 'components/Form/Agent/UserDetailsForm';
 
-interface UserDetailsProps extends AuthorizedRouteComponentProps {}
+interface UserDetailsProps extends AuthorizedRouteComponentProps {
+}
 
 const UserDetails: React.FC<UserDetailsProps> = ({ user, history }) => {
     if (user === null) {

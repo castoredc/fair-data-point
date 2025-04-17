@@ -1,4 +1,3 @@
-import { Button, Stack, TextInput } from '@castoredc/matter';
 import React from 'react';
 import FieldSelector from 'components/QueryBuilder/FieldSelector';
 import OperatorSelector from 'components/QueryBuilder/OperatorSelector';
@@ -7,13 +6,26 @@ import { ValueEditor } from 'components/QueryBuilder/ValueEditor';
 import { PrefixType } from 'types/PrefixType';
 import { InstituteType } from 'types/InstituteType';
 import { findOptionByValue } from '../../util';
+import Stack from '@mui/material/Stack';
+import { IconButton, TextField } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RuleProps extends QueryBuilderRuleProps {
     prefixes: PrefixType[];
     institutes: InstituteType[];
 }
 
-export const Rule: React.FC<RuleProps> = ({ id, parentId, field, operator, value, translations, schema, prefixes, institutes }) => {
+export const Rule: React.FC<RuleProps> = ({
+                                              id,
+                                              parentId,
+                                              field,
+                                              operator,
+                                              value,
+                                              translations,
+                                              schema,
+                                              prefixes,
+                                              institutes,
+                                          }) => {
     const { fields, getLevel, getOperators, onPropChange, onRuleRemove } = schema;
 
     const level = getLevel(id);
@@ -21,7 +33,7 @@ export const Rule: React.FC<RuleProps> = ({ id, parentId, field, operator, value
 
     return (
         <div className={`rule`} data-rule-id={id} data-level={level}>
-            <Stack>
+            <Stack direction="row">
                 <FieldSelector
                     value={field}
                     options={fields}
@@ -52,17 +64,16 @@ export const Rule: React.FC<RuleProps> = ({ id, parentId, field, operator, value
                         value={value}
                     />
                 ) : (
-                    <TextInput className="ValueEditor" disabled inputSize="20rem" />
+                    <TextField className="ValueEditor" disabled />
                 )}
 
-                <Button
-                    icon="trash"
-                    buttonType="danger"
-                    onClick={() => {
-                        onRuleRemove(id, parentId);
-                    }}
-                    iconDescription="Delete condition"
-                />
+                <IconButton
+                    className="RemoveButton"
+                    color="error"
+                    onClick={() => onRuleRemove(id, parentId)}
+                >
+                    <DeleteIcon />
+                </IconButton>
             </Stack>
         </div>
     );

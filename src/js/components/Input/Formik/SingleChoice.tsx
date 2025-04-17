@@ -1,37 +1,41 @@
 import React, { FC, FormEvent, ReactNode } from 'react';
-
-import { ChoiceOption } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 interface SingleChoiceProps extends FieldProps {
     readOnly?: boolean;
     onChange?: (event: FormEvent<HTMLInputElement>) => void;
     serverError?: any;
-    labelText: string;
+    label: string;
     details?: ReactNode;
 }
 
-const SingleChoice: FC<SingleChoiceProps> = ({ field, readOnly, onChange, serverError, labelText, details }) => {
+const SingleChoice: FC<SingleChoiceProps> = ({ field, readOnly, onChange, label, serverError, details }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
     return (
         <>
-            <ChoiceOption
-                checked={field.value}
-                labelText={labelText}
-                name={field.name}
-                details={details}
-                type="checkbox"
-                onChange={
-                    onChange
-                        ? event => {
-                              onChange(event);
-                              field.onChange(event);
-                          }
-                        : field.onChange
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={field.value}
+                        name={field.name}
+                        onChange={
+                            onChange
+                                ? event => {
+                                    onChange(event);
+                                    field.onChange(event);
+                                }
+                                : field.onChange
+                        }
+                        disabled={readOnly}
+                    />
                 }
-                disabled={readOnly}
+                label={<>
+                    {label}
+                    {details && <div>{details}</div>}
+                </>}
             />
 
             <FieldErrors field={field} serverErrors={serverErrors} />

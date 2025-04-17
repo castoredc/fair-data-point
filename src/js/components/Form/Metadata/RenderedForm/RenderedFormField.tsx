@@ -26,11 +26,17 @@ type RenderedFormFieldProps = {
     countries: CountryType[];
 };
 
-const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionGroups, languages, licenses, countries }) => {
+const FieldComponent: FC<RenderedFormFieldProps> = ({
+                                                        field,
+                                                        validation,
+                                                        optionGroups,
+                                                        languages,
+                                                        licenses,
+                                                        countries,
+                                                    }) => {
     let options: {
         value: string;
         label: string;
-        labelText: string;
     }[] = [];
 
     if (field.optionGroup) {
@@ -39,7 +45,6 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
             options = optionGroup.options.map(option => {
                 return {
                     label: option.title,
-                    labelText: option.title,
                     value: option.value,
                 };
             });
@@ -50,11 +55,13 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
         case 'input':
             return <Field component={Input} name={field.id} serverError={validation} multiline={false} />;
         case 'inputLocale':
-            return <Field component={LocalizedTextInput} name={field.id} languages={languages} serverError={validation} multiline={false} />;
+            return <Field component={LocalizedTextInput} name={field.id} languages={languages} serverError={validation}
+                          multiline={false} />;
         case 'textarea':
             return <Field component={Input} name={field.id} serverError={validation} multiline={true} />;
         case 'textareaLocale':
-            return <Field component={LocalizedTextInput} name={field.id} languages={languages} serverError={validation} multiline={true} />;
+            return <Field component={LocalizedTextInput} name={field.id} languages={languages} serverError={validation}
+                          multiline={true} />;
         case 'ontologyConceptBrowser':
             return <Field component={OntologyConceptFormBlock} name={field.id} serverError={validation} />;
         case 'datePicker':
@@ -64,22 +71,25 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
         case 'dateAndTimePicker':
             return <Field component={DateAndTimePicker} name={field.id} serverError={validation} />;
         case 'checkbox':
-            return <Field component={SingleChoice} name={field.id} labelText={field.title} details={field.description} serverError={validation} />;
+            return <Field component={SingleChoice} name={field.id} labelText={field.title} details={field.description}
+                          serverError={validation} />;
         case 'checkboxes':
-            return <Field component={Choice} name={field.id} options={options} serverError={validation} multiple={true} />;
+            return <Field component={Choice} name={field.id} options={options} serverError={validation}
+                          multiple={true} />;
         case 'radioButtons':
-            return <Field component={Choice} name={field.id} options={options} serverError={validation} multiple={false} />;
+            return <Field component={Choice} name={field.id} options={options} serverError={validation}
+                          multiple={false} />;
         case 'dropdown':
-            return <Field component={Select} name={field.id} options={options} serverError={validation} menuPosition="fixed" menuPlacement="auto" />;
+            return <Field component={Select} name={field.id} options={options} serverError={validation} />;
         case 'languagePicker':
             return (
-                <Field component={Select} name={field.id} options={languages} serverError={validation} menuPosition="fixed" menuPlacement="auto" />
+                <Field component={Select} name={field.id} options={languages} serverError={validation} />
             );
         case 'licensePicker':
-            return <Field component={Select} name={field.id} options={licenses} serverError={validation} menuPosition="fixed" menuPlacement="auto" />;
+            return <Field component={Select} name={field.id} options={licenses} serverError={validation} />;
         case 'countryPicker':
             return (
-                <Field component={Select} name={field.id} options={countries} serverError={validation} menuPosition="fixed" menuPlacement="auto" />
+                <Field component={Select} name={field.id} options={countries} serverError={validation} />
             );
         case 'agentSelector':
             return (
@@ -88,8 +98,8 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
                     name={field.id}
                     countries={countries}
                     serverError={validation}
-                    menuPosition="fixed"
-                    menuPlacement="auto"
+
+
                 />
             );
         default:
@@ -97,7 +107,14 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
     }
 };
 
-const RenderedFormField: FC<RenderedFormFieldProps> = ({ field, validation, optionGroups, languages, licenses, countries }) => {
+const RenderedFormField: FC<RenderedFormFieldProps> = ({
+                                                           field,
+                                                           validation,
+                                                           optionGroups,
+                                                           languages,
+                                                           licenses,
+                                                           countries,
+                                                       }) => {
     const fieldComponent = (
         <FieldComponent
             field={field}

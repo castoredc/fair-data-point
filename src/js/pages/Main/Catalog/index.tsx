@@ -12,6 +12,7 @@ import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 import StudyList from 'components/List/StudyList';
 import { localizedText } from '../../../util';
+import Grid from '@mui/material/Grid';
 
 interface CatalogProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -33,12 +34,14 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
             <MainBody isLoading={isLoading}>
                 {catalog && (
                     <>
-                        <div className="MainCol">
-                            <MetadataDescription metadata={catalog.metadata} />
-                        </div>
-                        <div className="SideCol">
-                            <MetadataSideBar metadata={catalog.metadata} title={title} />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid size={8}>
+                                <MetadataDescription metadata={catalog.metadata} />
+                            </Grid>
+                            <Grid size={4}>
+                                <MetadataSideBar metadata={catalog.metadata} title={title} />
+                            </Grid>
+                        </Grid>
 
                         <AssociatedItemsBar items={catalog.count} current={currentItem} onClick={setCurrentItem} />
 
@@ -47,7 +50,6 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
                             catalog={catalog}
                             state={breadcrumbs.current ? breadcrumbs.current.state : null}
                             embedded={embedded}
-                            className="MainCol"
                         />
 
                         <DatasetList
@@ -55,7 +57,6 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
                             catalog={catalog}
                             state={breadcrumbs.current ? breadcrumbs.current.state : null}
                             embedded={embedded}
-                            className="MainCol"
                         />
                     </>
                 )}

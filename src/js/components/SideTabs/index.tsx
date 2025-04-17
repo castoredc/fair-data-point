@@ -1,10 +1,9 @@
 import React, { FC, useState } from 'react';
 import { classNames } from '../../util';
 import './SideTabs.scss';
-import { Icon, Stack, Tooltip } from '@castoredc/matter';
 import ScrollShadow from '../ScrollShadow';
-import type { MatterIcon } from '@castoredc/matter-icons';
 import { useHistory } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
 
 type Tab = {
     type?: 'separator';
@@ -12,7 +11,6 @@ type Tab = {
     title: string;
     badge?: React.ReactNode;
     content: React.ReactNode;
-    icons?: Array<{ title: string; icon: MatterIcon }>;
     tag?: string;
     id?: string;
 };
@@ -27,7 +25,15 @@ type SideTabsProps = {
     url?: string;
 };
 
-const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false, title, actions, initialTab, url }) => {
+const SideTabs: FC<SideTabsProps> = ({
+                                         tabs,
+                                         hasButtons = false,
+                                         hasTabs = false,
+                                         title,
+                                         actions,
+                                         initialTab,
+                                         url,
+                                     }) => {
     const [activeTab, setActiveTab] = useState(initialTab ?? 0);
     let history = useHistory();
 
@@ -44,7 +50,7 @@ const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false
             <div className="SideTabsNav">
                 {(title || actions) && (
                     <div className="SideTabsHeader">
-                        <Stack distribution="equalSpacing">
+                        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                             {title && <div className="SideTabsHeaderTitle">{title}</div>}
                             {actions && <div className="SideTabsHeaderActions">{actions}</div>}
                         </Stack>
@@ -68,17 +74,18 @@ const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false
                                     <span className="SideTabsNavItemTitle">{tab.title}</span>
 
                                     {tab.badge && <span className="SideTabsNavItemBadge">{tab.badge}</span>}
-                                    {tab.icons && tab.icons.length > 0 && (
-                                        <span className="SideTabsNavItemIcons">
-                                            {tab.icons.map((icon, key) => (
-                                                <span key={key} className="SideTabsNavItemIcon">
-                                                    <Tooltip content={icon.title} hideOnBlur>
-                                                        <Icon type={icon.icon} key={`sidetabs-icon-${index}`} width="12px" height="12px" />
-                                                    </Tooltip>
-                                                </span>
-                                            ))}
-                                        </span>
-                                    )}
+                                    {/*{tab.icons && tab.icons.length > 0 && (*/}
+                                    {/*    <span className="SideTabsNavItemIcons">*/}
+                                    {/*        {tab.icons.map((icon, key) => (*/}
+                                    {/*            <span key={key} className="SideTabsNavItemIcon">*/}
+                                    {/*                <Tooltip title={icon.title}>*/}
+                                    {/*                    <Icon type={icon.icon} key={`sidetabs-icon-${index}`}*/}
+                                    {/*                          width="12px" height="12px" />*/}
+                                    {/*                </Tooltip>*/}
+                                    {/*            </span>*/}
+                                    {/*        ))}*/}
+                                    {/*    </span>*/}
+                                    {/*)}*/}
                                 </button>
                             );
                         }

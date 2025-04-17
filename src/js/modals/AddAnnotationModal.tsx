@@ -1,29 +1,29 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import debounce from 'lodash/debounce';
-import { Button, Modal } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Modal from 'components/Modal';
 import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
 import Select, { AsyncSelect } from 'components/Input/Formik/Select';
 import * as Yup from 'yup';
 import Choice from 'components/Input/Formik/Choice';
 import { apiClient } from '../network';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type AddAnnotationModalProps = {
+interface AddAnnotationModalProps extends ComponentWithNotifications {
     open: boolean;
     onClose: () => void;
     entity: any;
     onSaved: () => void;
     studyId: string;
-};
+}
 
 type AddAnnotationModalState = {
     ontologies: any;
     validation: any;
 };
 
-export default class AddAnnotationModal extends Component<AddAnnotationModalProps, AddAnnotationModalState> {
+class AddAnnotationModal extends Component<AddAnnotationModalProps, AddAnnotationModalState> {
     constructor(props) {
         super(props);
 
@@ -38,6 +38,8 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
     }
 
     getOntologies = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/terminology/ontologies')
             .then(response => {
@@ -47,9 +49,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -58,6 +60,8 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
         if (ontology === null) {
             return null;
         }
+
+        const { notifications } = this.props;
 
         apiClient
             .get('/api/terminology/concepts', {
@@ -72,9 +76,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 callback(null);
@@ -82,7 +86,7 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
     }, 300);
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { entity, onSaved, studyId } = this.props;
+        const { entity, onSaved, studyId, notifications } = this.props;
 
         apiClient
             .post('/api/study/' + studyId + '/annotations/add', {
@@ -103,9 +107,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 setSubmitting(false);
@@ -125,7 +129,7 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
         }
 
         return (
-            <Modal accessibleName="Test" open={open} title={`Add annotation for ${entity.title}`} onClose={onClose}>
+            <Modal open={open} title={`Add annotation for ${entity.title}`} onClose={onClose}>
                 <Formik
                     initialValues={{
                         ontology: null,
@@ -143,7 +147,17 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                     })}
                     onSubmit={this.handleSubmit}
                 >
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         return (
                             <Form>
                                 <FormItem label="Ontology">
@@ -152,7 +166,7 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                                         options={options}
                                         name="ontology"
                                         onChange={() => setFieldValue('concept', null)}
-                                        menuPosition="fixed"
+
                                         serverError={validation}
                                     />
                                 </FormItem>
@@ -166,20 +180,24 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                                         }
                                         // onChange={this.handleConceptChange}
                                         isDisabled={values.ontology === null}
-                                        menuPosition="fixed"
+
                                         serverError={validation}
                                     />
 
                                     <Field
                                         component={Choice}
                                         multiple={true}
-                                        options={[{ value: '1', labelText: 'Include individuals' }]}
+                                        options={[{ value: '1', label: 'Include individuals' }]}
                                         name="includeIndividuals"
                                         serverError={validation}
                                     />
                                 </FormItem>
 
-                                <Button type="submit" disabled={values.ontology === null || isSubmitting}>
+                                <Button
+                                    type="submit"
+                                    disabled={values.ontology === null || isSubmitting}
+                                    variant="contained"
+                                >
                                     Add annotation
                                 </Button>
                             </Form>
@@ -190,3 +208,5 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
         );
     }
 }
+
+export default withNotifications(AddAnnotationModal);

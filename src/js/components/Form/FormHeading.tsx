@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Heading } from '@castoredc/matter';
+import { Typography } from '@mui/material';
 
 interface FormHeadingProps {
     label: string;
@@ -8,7 +8,7 @@ interface FormHeadingProps {
 const FormHeading: FC<FormHeadingProps> = ({ label }) => {
     return (
         <div className="FormHeading">
-            <Heading type="Subsection">{label}</Heading>
+            <Typography variant="h4">{label}</Typography>
         </div>
     );
 };

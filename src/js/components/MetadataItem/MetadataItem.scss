@@ -1,115 +1,115 @@
 @import '../../scss/colors';
 
 .MetadataItem {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 
-    .OntologyConcept {
-        display: inline-block;
+  .OntologyConcept {
+    display: inline-block;
 
-        a {
-            background: $neutral-10;
-            color: $neutral-600;
-            border-radius: 3px;
-            padding: 2px 6px;
-            display: block;
-        }
+    a {
+      background: $neutral-10;
+      color: $neutral-600;
+      border-radius: 3px;
+      padding: 2px 6px;
+      display: block;
+    }
+  }
+
+  .Agent {
+    display: inline-block;
+    background: $neutral-10;
+    color: $neutral-600;
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin-right: 5px;
+  }
+
+  .Link {
+    display: flex;
+    align-items: center;
+
+    a {
+      color: $neutral-600;
+      margin-right: 6px;
+    }
+  }
+
+  .MetadataItemLabel {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.43;
+    color: $neutral-600;
+    margin-bottom: 4px;
+  }
+
+  .MetadataItemValue {
+    font-size: 16px;
+    line-height: 1.5;
+    color: $neutral-300;
+
+    img {
+      width: 100%;
     }
 
-    .Agent {
-        display: inline-block;
-        background: $neutral-10;
-        color: $neutral-600;
-        border-radius: 3px;
-        padding: 2px 6px;
-        margin-right: 5px;
+    .Icon {
+      margin-right: 5px;
     }
 
-    .Link {
-        display: flex;
-        align-items: center;
+    .Map {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+      margin-top: 30px;
+      border-radius: 5px;
+      overflow: hidden;
 
-        a {
-            color: $neutral-600;
-            margin-right: 6px;
-        }
+      .leaflet-container {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
     }
+  }
+
+  &.Table {
+    display: flex;
 
     .MetadataItemLabel {
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.43;
-        color: $neutral-600;
-        margin-bottom: 4px;
+      width: 200px;
     }
-
-    .MetadataItemValue {
-        font-size: 16px;
-        line-height: 1.5;
-        color: $neutral-300;
-
-        img {
-            width: 100%;
-        }
-
-        .Icon {
-            margin-right: 5px;
-        }
-
-        .Map {
-            width: 100%;
-            padding-top: 100%;
-            position: relative;
-            margin-top: 30px;
-            border-radius: 5px;
-            overflow: hidden;
-
-            .leaflet-container {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-            }
-        }
-    }
-
-    &.Table {
-        display: flex;
-
-        .MetadataItemLabel {
-            width: 200px;
-        }
-    }
+  }
 }
 
 .Footer .MetadataItem {
-    .MetadataItemLabel {
-        font-size: 12px;
-        color: $neutral-70;
-    }
+  .MetadataItemLabel {
+    font-size: 12px;
+    color: $neutral-70;
+  }
 
-    .MetadataItemValue,
-    .MetadataItemValue a {
-        font-size: 14px;
-        color: $neutral-50;
-    }
+  .MetadataItemValue,
+  .MetadataItemValue a {
+    font-size: 14px;
+    color: $neutral-50;
+  }
 }
 
 .Study {
-    .Contacts .Contact {
-        a {
-            color: $neutral-700;
-            text-decoration: none;
-        }
+  .Contacts .Contact {
+    a {
+      color: $neutral-700;
+      text-decoration: none;
     }
+  }
 }
 
 .MetadataItemGroup {
-    display: flex;
+  display: flex;
 
-    .MetadataItem {
-        flex: 1;
-    }
+  .MetadataItem {
+    flex: 1;
+  }
 }

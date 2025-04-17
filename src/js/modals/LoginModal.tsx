@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Modal } from '@castoredc/matter';
+import Modal from 'components/Modal';
 import LoginForm from 'components/Form/LoginForm';
 import { ServerType } from 'types/ServerType';
 import { apiClient } from '../network';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type LoginModalProps = {
+interface LoginModalProps extends ComponentWithNotifications {
     show: boolean;
     handleClose: () => void;
     path: string;
@@ -19,7 +18,7 @@ type LoginModalState = {
     isLoading: boolean;
 };
 
-export default class LoginModal extends Component<LoginModalProps, LoginModalState> {
+class LoginModal extends Component<LoginModalProps, LoginModalState> {
     constructor(props) {
         super(props);
 
@@ -34,6 +33,8 @@ export default class LoginModal extends Component<LoginModalProps, LoginModalSta
     }
 
     getServers = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/castor/servers')
             .then(response => {
@@ -46,7 +47,7 @@ export default class LoginModal extends Component<LoginModalProps, LoginModalSta
                 this.setState({
                     isLoading: false,
                 });
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
@@ -55,9 +56,12 @@ export default class LoginModal extends Component<LoginModalProps, LoginModalSta
         const { servers, isLoading } = this.state;
 
         return (
-            <Modal open={show} onClose={handleClose} title="Log in" accessibleName="Log in" customWidth="50rem" isLoading={isLoading}>
-                <LoginForm path={path} modal={true} selectedServerId={server} serverLocked={!!server} servers={servers} view={view} />
+            <Modal open={show} onClose={handleClose} title="Log in" customWidth="50rem" isLoading={isLoading}>
+                <LoginForm path={path} modal={true} selectedServerId={server} serverLocked={!!server} servers={servers}
+                           view={view} />
             </Modal>
         );
     }
 }
+
+export default withNotifications(LoginModal);

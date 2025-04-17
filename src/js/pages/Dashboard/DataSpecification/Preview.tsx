@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { LoadingOverlay } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import DataSpecificationModulePreview from 'components/DataSpecification/DataSpecificationModulePreview';
 import SideTabs from 'components/SideTabs';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface PreviewProps extends AuthorizedRouteComponentProps {
+interface PreviewProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     type: string;
     dataSpecification: any;
     version: any;
@@ -20,7 +19,7 @@ interface PreviewState {
     previews: any;
 }
 
-export default class Preview extends Component<PreviewProps, PreviewState> {
+class Preview extends Component<PreviewProps, PreviewState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,7 +33,7 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
     }
 
     getPreviews = () => {
-        const { type, dataSpecification, version } = this.props;
+        const { type, dataSpecification, version, notifications } = this.props;
 
         this.setState({
             isLoading: true,
@@ -50,9 +49,9 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 this.setState({
@@ -133,3 +132,5 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
         );
     }
 }
+
+export default withNotifications(Preview);

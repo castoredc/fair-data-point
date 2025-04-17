@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Highlight from '../Highlight';
-import { Banner } from '@castoredc/matter';
 import ScrollShadow from '../ScrollShadow';
 import VisNetwork from '../Visualization/Network';
-import { CopyIcon, DecisionIcon } from '@castoredc/matter-icons';
+import AltRouteIcon from '@mui/icons-material/AltRoute';
 import PageTabs from 'components/PageTabs';
 import { DependenciesType, DependencyDescription, DependencyGroupType } from 'types/ModuleType';
+import { Alert } from '@mui/material';
+
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 type Visualization = {
     nodes: Node[];
@@ -87,19 +89,19 @@ const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, 
     const alerts = (
         <div className="DataModelModuleAlerts">
             {repeated && (
-                <Banner compact customIcon={<CopyIcon />} description="This group is repeated for every instance of a specific survey or report" />
+                <Alert severity="info" icon={<ContentCopyIcon />}>
+                    This group is repeated for every instance of a specific
+                    survey or report</Alert>
             )}
             {dependent && (
-                <Banner
-                    compact
-                    customIcon={<DecisionIcon />}
-                    description={
-                        <>
-                            This group is dependent and will only be rendered when:
-                            <div className="DependencyDescription">{dependencies && renderDependencies(dependencies.description)}</div>
-                        </>
-                    }
-                />
+                <Alert
+                    severity="info"
+                    icon={<AltRouteIcon />}
+                >
+                    This group is dependent and will only be rendered when:
+                    <div
+                        className="DependencyDescription">{dependencies && renderDependencies(dependencies.description)}</div>
+                </Alert>
             )}
         </div>
     );

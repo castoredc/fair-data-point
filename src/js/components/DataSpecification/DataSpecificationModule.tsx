@@ -1,6 +1,10 @@
 import React from 'react';
 import TripleGroup from './TripleGroup';
-import { Button, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import Stack from '@mui/material/Stack';
 
 type Triple = {
     id: string;
@@ -20,20 +24,21 @@ type DataSpecificationModuleProps = {
 };
 
 const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
-    groupedTriples,
-    openModuleModal,
-    openTripleModal,
-    openRemoveTripleModal,
-}) => {
+                                                                             groupedTriples,
+                                                                             openModuleModal,
+                                                                             openTripleModal,
+                                                                             openRemoveTripleModal,
+                                                                         }) => {
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
-                <Stack distribution="trailing">
-                    <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
+                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                    <Button startIcon={<EditIcon />} variant="outlined" onClick={openModuleModal}>
                         Edit group
                     </Button>
                     <Button
-                        icon="add"
+                        variant="outlined"
+                        startIcon={<AddIcon />}
                         onClick={() => {
                             openTripleModal(null);
                         }}

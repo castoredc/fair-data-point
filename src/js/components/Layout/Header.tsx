@@ -5,11 +5,16 @@ import { Link } from 'react-router-dom';
 import '../../pages/Main/Main.scss';
 import Breadcrumbs from '../Breadcrumbs';
 import './Header.scss';
-import { Button, CastorLogo, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
 import LoginModal from '../../modals/LoginModal';
-import DropdownButton from '../DropdownButton';
 import { BreadcrumbsType } from 'types/BreadcrumbType';
 import { UserType } from 'types/UserType';
+import Stack from '@mui/material/Stack';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Container, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
 interface HeaderProps {
     embedded?: boolean;
@@ -110,19 +115,31 @@ class Header extends Component<HeaderProps, HeaderState> {
     };
 
     closeModal = () => {
-        const { onModalClose = () => {} } = this.props;
+        const {
+            onModalClose = () => {
+            },
+        } = this.props;
         this.setState(
             {
                 showModal: false,
             },
             () => {
                 onModalClose();
-            }
+            },
         );
     };
 
     render() {
-        const { embedded, className, title, badge, breadcrumbs, user, hideTitle = false, forceSmallHeader = false } = this.props;
+        const {
+            embedded,
+            className,
+            title,
+            badge,
+            breadcrumbs,
+            user,
+            hideTitle = false,
+            forceSmallHeader = false,
+        } = this.props;
         const { mobile, smallHeader, showModal, loginModalUrl, loginModalServer, loginModalView } = this.state;
 
         const adminMenuItems = [];
@@ -156,29 +173,31 @@ class Header extends Component<HeaderProps, HeaderState> {
                     <div className="Header">
                         <div className={classNames('Spacing', forceSmallHeader && 'Small')} />
                         {!mobile && (
-                            <div className={classNames('MainHeader', smallHeader && 'Small', forceSmallHeader && 'Small')}>
-                                <div className="container">
-                                    <Stack distribution="equalSpacing">
+                            <div
+                                className={classNames('MainHeader', smallHeader && 'Small', forceSmallHeader && 'Small')}
+                            >
+                                <Container>
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                         <div className="HeaderLogoCol">
                                             <Link to="/fdp">
-                                                <CastorLogo className="Logo" />
+                                                Logo
                                             </Link>
                                         </div>
                                         <div className="HeaderUserCol">
                                             {user ? (
                                                 <div>
-                                                    <DropdownButton
-                                                        text={user.details ? user.details.fullName : ''}
-                                                        items={menuItems}
-                                                        icon="account"
-                                                        buttonType="primary"
-                                                    />
+                                                    {/*<DropdownButton*/}
+                                                    {/*    text={user.details ? user.details.fullName : ''}*/}
+                                                    {/*    items={menuItems}*/}
+                                                    {/*    icon="account"*/}
+                                                    {/*    buttonType="primary"*/}
+                                                    {/*/>*/}
                                                 </div>
                                             ) : (
                                                 <Button
                                                     target="_blank"
                                                     href={'/login?path=' + encodeURIComponent(window.location.pathname)}
-                                                    icon="account"
+                                                    startIcon={<AccountCircleIcon />}
                                                     onClick={this.openModal}
                                                 >
                                                     Log in
@@ -186,14 +205,14 @@ class Header extends Component<HeaderProps, HeaderState> {
                                             )}
                                         </div>
                                     </Stack>
-                                </div>
+                                </Container>
                             </div>
                         )}
                         {!mobile && breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs.crumbs} />}
                         {mobile && (
                             <div className="MobileHeader">
-                                <div className="container">
-                                    <Stack distribution="equalSpacing">
+                                <Container>
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                         <div className="HeaderBackCol">
                                             {breadcrumbs && breadcrumbs.previous && (
                                                 <Link
@@ -202,57 +221,57 @@ class Header extends Component<HeaderProps, HeaderState> {
                                                         state: breadcrumbs.previous.state,
                                                     }}
                                                 >
-                                                    <Button
-                                                        icon="arrowLeft"
-                                                        iconDescription={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}
-                                                    />
+                                                    <Tooltip
+                                                        title={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}>
+                                                        <IconButton>
+                                                            <ArrowBackIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
                                                 </Link>
                                             )}
                                         </div>
                                         <div className="HeaderLogoCol">
                                             <Link to="/fdp">
-                                                <CastorLogo className="Logo" />
+                                                Logo
                                             </Link>
                                         </div>
                                         <div className="HeaderUserCol">
                                             {user ? (
                                                 <div>
-                                                    <DropdownButton
-                                                        iconDescription={user.details ? user.details.fullName : ''}
-                                                        items={menuItems}
-                                                        icon="account"
-                                                        buttonType="primary"
-                                                        hideDropdown={true}
-                                                    />
+                                                    {/*<DropdownButton*/}
+                                                    {/*    iconDescription={user.details ? user.details.fullName : ''}*/}
+                                                    {/*    items={menuItems}*/}
+                                                    {/*    icon="account"*/}
+                                                    {/*    buttonType="primary"*/}
+                                                    {/*    hideDropdown={true}*/}
+                                                    {/*/>*/}
                                                 </div>
                                             ) : (
-                                                <Button
+                                                <IconButton
                                                     target="_blank"
                                                     href={'/login?path=' + encodeURIComponent(window.location.pathname)}
-                                                    icon="account"
                                                     onClick={this.openModal}
-                                                    iconDescription="Log in"
-                                                />
+                                                >
+                                                    <AccountCircleIcon />
+                                                </IconButton>
                                             )}
                                         </div>
                                     </Stack>
-                                </div>
+                                </Container>
                             </div>
                         )}
                     </div>
                 )}
                 {!hideTitle && (
                     <div className="InformationHeader">
-                        <div className="container Children">
-                            <div className="MainCol">
-                                {badge && (
-                                    <div>
-                                        <span className="InformationBadge">{badge}</span>
-                                    </div>
-                                )}
-                                <h1>{title}</h1>
-                            </div>
-                        </div>
+                        <Container>
+                            {badge && (
+                                <div>
+                                    <span className="InformationBadge">{badge}</span>
+                                </div>
+                            )}
+                            <Typography variant="h3" component="h1">{title}</Typography>
+                        </Container>
                     </div>
                 )}
             </header>

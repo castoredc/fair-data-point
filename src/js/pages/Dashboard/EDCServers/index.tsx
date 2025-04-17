@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 import DocumentTitle from 'components/DocumentTitle';
-import DashboardTab from 'components/Layout/DashboardTab';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from '../../../network';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay } from '@castoredc/matter';
 import { isAdmin } from 'utils/PermissionHelper';
 import { AddEDCServerModal } from 'modals/AddEDCServerModal';
 import { UpdateEDCServerModal } from 'modals/UpdateEDCServerModal';
 import ConfirmModal from 'modals/ConfirmModal';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import Body from 'components/Layout/Dashboard/Body';
+import DataGrid from 'components/DataTable/DataGrid';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import AddIcon from '@mui/icons-material/Add';
 
-interface EDCServersProps extends AuthorizedRouteComponentProps {}
+interface EDCServersProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface EDCServersState {
     edcServers: any;
@@ -21,7 +28,7 @@ interface EDCServersState {
     isLoading: boolean;
 }
 
-export default class EDCServers extends Component<EDCServersProps, EDCServersState> {
+class EDCServers extends Component<EDCServersProps, EDCServersState> {
     constructor(props) {
         super(props);
 
@@ -59,6 +66,8 @@ export default class EDCServers extends Component<EDCServersProps, EDCServersSta
     };
 
     getEDCServers = () => {
+        const { notifications } = this.props;
+
         this.setState({
             isLoading: true,
         });
@@ -77,28 +86,30 @@ export default class EDCServers extends Component<EDCServersProps, EDCServersSta
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading the EDC Servers information" />);
+                    notifications.show('An error occurred while loading the EDC Servers information', { variant: 'error' });
                 }
             });
     };
 
     handleDelete = () => {
+        const { notifications } = this.props;
         const { selectedServer } = this.state;
 
         apiClient
             .delete('/api/castor/servers/' + selectedServer.id)
             .then(response => {
                 const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`;
-                toast.success(<ToastItem type="success" title={message} />, {
-                    position: 'top-right',
+                notifications.show(message, {
+                    variant: 'success',
+
                 });
 
                 this.getEDCServers();
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
 
         this.closeModals();
@@ -121,98 +132,120 @@ export default class EDCServers extends Component<EDCServersProps, EDCServersSta
     }
 
     render() {
-        const { history, user } = this.props;
+        const { location, history, user } = this.props;
         const { isLoading, selectedServer, edcServers, showModal } = this.state;
 
         const serverRows = edcServers.map((edcServer, index) => ({
-            id: <CellText>{edcServer.id}</CellText>,
-            name: <CellText>{edcServer.name}</CellText>,
-            url: <CellText>{edcServer.url}</CellText>,
-            flag: <CellText>{edcServer.flag}</CellText>,
-            defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
-            menu: (
-                <ActionsCell
-                    items={[
-                        { destination: () => this.openServerModal('update', edcServer), label: 'Edit server' },
-                        { destination: () => this.openServerModal('remove', edcServer), label: 'Remove server' },
-                    ]}
-                />
-            ),
+            id: edcServer.id,
+            name: edcServer.name,
+            url: edcServer.url,
+            flag: edcServer.flag,
+            defaultServer: edcServer.default ? 'Yes' : '/., mNo',
+            data: edcServer,
         }));
 
         return (
-            <DashboardTab>
+            <DashboardPage>
                 <AddEDCServerModal open={showModal.add} onClose={this.closeModals} handleSave={this.handleUpdate} />
-                <UpdateEDCServerModal open={showModal.update} onClose={this.closeModals} handleSave={this.handleUpdate} data={selectedServer} />
+                <UpdateEDCServerModal open={showModal.update} onClose={this.closeModals} handleSave={this.handleUpdate}
+                                      data={selectedServer} />
 
                 <ConfirmModal
                     title="Remove server"
                     action="Remove server"
-                    variant="primary"
+                    variant="contained"
                     onConfirm={this.handleDelete}
                     onCancel={this.closeModals}
                     show={showModal.remove}
                 >
-                    Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server list?
+                    Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the
+                    server list?
                 </ConfirmModal>
 
                 <DocumentTitle title="EDC Servers overview" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading servers" />}
 
-                <DashboardTabHeader title="EDC Servers overview" type="Section">
-                    {isAdmin(user) && (
-                        <Button buttonType="primary" onClick={() => this.openModal('add')}>
-                            Add new server
-                        </Button>
-                    )}
-                </DashboardTabHeader>
+                <DashboardSideBar location={location} history={history} user={user} />
 
-                <DataGrid
-                    accessibleName="EDC Servers"
-                    emptyStateContent="No servers available"
-                    rows={serverRows}
-                    anchorRightColumns={1}
-                    columns={[
-                        {
-                            Header: 'ID',
-                            accessor: 'id',
-                            width: 40,
-                            maxWidth: 40,
-                        },
-                        {
-                            Header: 'Name',
-                            accessor: 'name',
-                        },
-                        {
-                            Header: 'URL',
-                            accessor: 'url',
-                            minWidth: 200,
-                            width: 300,
-                        },
-                        {
-                            Header: 'Location',
-                            accessor: 'flag',
-                            width: 100,
-                        },
-                        {
-                            Header: 'Default server?',
-                            accessor: 'defaultServer',
-                            width: 150,
-                        },
-                        {
-                            accessor: 'menu',
-                            disableGroupBy: true,
-                            disableResizing: true,
-                            isInteractive: true,
-                            isSticky: true,
-                            maxWidth: 34,
-                            minWidth: 34,
-                            width: 34,
-                        },
-                    ]}
-                />
-            </DashboardTab>
+                <Body>
+                    <Header title="EDC Servers overview">
+                        {isAdmin(user) && (
+                            <Button
+                                startIcon={<AddIcon />}
+                                onClick={() => this.openModal('add')}
+                                variant="contained"
+                            >
+                                Add new server
+                            </Button>
+                        )}
+                    </Header>
+
+                    <PageBody>
+                        <DataGrid
+                            disableRowSelectionOnClick
+                            accessibleName="EDC Servers"
+                            emptyStateContent="No servers available"
+                            rows={serverRows}
+                            // anchorRightColumns={1}
+                            columns={[
+                                {
+                                    headerName: 'ID',
+                                    field: 'id',
+                                    width: 40,
+                                    maxWidth: 40,
+                                },
+                                {
+                                    headerName: 'Name',
+                                    field: 'name',
+                                },
+                                {
+                                    headerName: 'URL',
+                                    field: 'url',
+                                    minWidth: 200,
+                                    width: 300,
+                                },
+                                {
+                                    headerName: 'Location',
+                                    field: 'flag',
+                                    width: 100,
+                                },
+                                {
+                                    headerName: 'Default server?',
+                                    field: 'defaultServer',
+                                    width: 150,
+                                },
+                                {
+                                    field: 'actions',
+                                    headerName: '',
+                                    width: 80,
+                                    sortable: false,
+                                    disableColumnMenu: true,
+                                    align: 'right',
+                                    cellClassName: 'actionsCell',
+                                    renderCell: (params) => {
+                                        return <RowActionsMenu
+                                            row={params.row}
+                                            items={[
+                                                {
+                                                    destination: () => this.openServerModal('update', params.row.data),
+                                                    label: 'Edit server',
+                                                },
+                                                {
+                                                    destination: () => this.openServerModal('remove', params.row.data),
+                                                    label: 'Remove server',
+                                                },
+                                            ]}
+                                        />;
+                                    },
+                                },
+                            ]}
+                        />
+                    </PageBody>
+                </Body>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(EDCServers);

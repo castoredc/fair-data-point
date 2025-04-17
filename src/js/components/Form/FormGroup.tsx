@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 type FormGroupProps = {
     label: string;
+    children: React.ReactNode;
 };
 
 const FormGroup: FC<FormGroupProps> = ({ label, children }) => {

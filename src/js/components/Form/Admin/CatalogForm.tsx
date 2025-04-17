@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
-import '../Form.scss';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import * as H from 'history';
@@ -13,8 +11,11 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import * as Yup from 'yup';
 import { apiClient } from 'src/js/network';
 import Select from 'components/Input/Formik/Select';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import AddIcon from '@mui/icons-material/Add';
 
-interface CatalogFormProps {
+interface CatalogFormProps extends ComponentWithNotifications {
     catalog?: any;
     history: H.History;
 }
@@ -27,7 +28,7 @@ interface CatalogFormState {
     hasLoadedMetadataModels: boolean;
 }
 
-export default class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
+class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
     constructor(props) {
         super(props);
 
@@ -45,6 +46,8 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
     }
 
     getMetadataModels = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/metadata-model/my')
             .then(response => {
@@ -64,12 +67,12 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { catalog, history } = this.props;
+        const { catalog, history, notifications } = this.props;
 
         apiClient
             .post('/api/catalog' + (catalog ? '/' + catalog.slug : ''), values)
@@ -78,8 +81,9 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 
                 if (catalog) {
                     history.push('/dashboard/catalogs/' + values.slug);
-                    toast.success(<ToastItem type="success" title="The catalog details are saved successfully" />, {
-                        position: 'top-right',
+                    notifications.show('The catalog details are saved successfully', {
+                        variant: 'success',
+
                     });
                 } else {
                     history.push('/dashboard/catalogs/' + response.data.slug + '/metadata');
@@ -93,7 +97,7 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -108,11 +112,22 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 
         return (
             <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={CatalogSchema}>
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting,
+                      setValues,
+                      setFieldValue,
+                  }) => {
                     return (
                         <Form>
                             <div className="FormContent">
-                                <FormItem label="Slug" tooltip="The unique identifying part of a web address, typically at the end of the URL">
+                                <FormItem label="Slug"
+                                          tooltip="The unique identifying part of a web address, typically at the end of the URL">
                                     <Field component={Input} name="slug" serverError={validation} />
                                 </FormItem>
 
@@ -121,8 +136,8 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                                         component={Select}
                                         options={metadataModels}
                                         name="defaultMetadataModel"
-                                        menuPosition="fixed"
-                                        menuPlacement="auto"
+
+
                                         details="Please select which semantic metadata model you want to use as default"
                                     />
                                 </FormItem>
@@ -139,15 +154,24 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 
                             {catalog ? (
                                 <div className="FormButtons">
-                                    <Stack distribution="trailing">
-                                        <Button disabled={isSubmitting} type="submit">
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                                        <Button
+                                            disabled={isSubmitting}
+                                            type="submit"
+                                            variant="contained"
+                                        >
                                             Update catalog
                                         </Button>
                                     </Stack>
                                 </div>
                             ) : (
                                 <footer>
-                                    <Button disabled={isSubmitting} type="submit">
+                                    <Button
+                                        disabled={isSubmitting}
+                                        type="submit"
+                                        variant="contained"
+                                        startIcon={<AddIcon />}
+                                    >
                                         Add catalog
                                     </Button>
                                 </footer>
@@ -176,3 +200,5 @@ const CatalogSchema = Yup.object().shape({
         then: Yup.boolean().required('Please enter if the submission accesses data in the process'),
     }),
 });
+
+export default withNotifications(CatalogForm);

@@ -1,9 +1,11 @@
 // @ts-nocheck
-import { Stack } from '@castoredc/matter';
+
 import React, { FC } from 'react';
 import { RuleGroupProps as QueryBuilderRuleGroupProps } from 'react-querybuilder/types/types';
+import Stack from '@mui/material/Stack';
 
-interface RuleGroupProps extends QueryBuilderRuleGroupProps {}
+interface RuleGroupProps extends QueryBuilderRuleGroupProps {
+}
 
 export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules = [], translations, schema, not }) => {
     const {
@@ -65,8 +67,8 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
     return (
         <div className={`RuleGroup`} data-rule-group-id={id} data-level={level}>
             <div className={`RuleGroup-header`}>
-                <Stack alignment="normal" distribution="equalSpacing">
-                    <Stack>
+                <Stack direction="row" alignment="normal" sx={{ justifyContent: 'space-between' }}>
+                    <Stack direction="row">
                         {showCombinatorsBetweenRules ? null : (
                             <div className="RuleGroupCombinator">
                                 <controls.combinatorSelector
@@ -90,7 +92,7 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
                             />
                         )}
                     </Stack>
-                    <Stack>
+                    <Stack direction="row">
                         <controls.addRuleAction
                             label={translations.addRule.label}
                             title={translations.addRule.title}

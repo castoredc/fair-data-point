@@ -1,14 +1,12 @@
 import React, { FC, FormEvent } from 'react';
-
-import { Choice as MatterChoice } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { ChoiceOptionProps } from '@castoredc/matter/lib/types/src/ChoiceOption/ChoiceOption';
+import RadioGroup, { Option } from 'components/RadioGroup';
 
 interface ChoiceProps extends FieldProps {
     readOnly?: boolean;
-    onChange?: (event: FormEvent<HTMLFieldSetElement>) => void;
-    options: ChoiceOptionProps[];
+    onChange?: (event: FormEvent<HTMLInputElement>) => void;
+    options: Option[];
     serverError?: any;
     collapse?: boolean;
     multiple?: boolean;
@@ -26,18 +24,16 @@ const Choice: FC<ChoiceProps> = ({ field, readOnly, onChange, options, serverErr
 
     return (
         <>
-            <MatterChoice
-                hideLabel
-                labelText={field.name}
+            <RadioGroup
                 name={field.name}
                 options={renderedOptions}
                 collapse={!!collapse}
                 onChange={
                     onChange
                         ? event => {
-                              onChange(event);
-                              field.onChange(event);
-                          }
+                            onChange(event);
+                            field.onChange(event);
+                        }
                         : field.onChange
                 }
                 value={field.value}

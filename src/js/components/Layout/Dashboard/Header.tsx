@@ -1,29 +1,28 @@
 import React, { FC, ReactElement } from 'react';
 import './Dashboard.scss';
-import { Stack, StackItem, ViewHeader } from '@castoredc/matter';
-import { HeadingType } from '@castoredc/matter/lib/types/types/heading';
+import Stack from '@mui/material/Stack';
+import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 type HeaderProps = {
     title: string;
     badge?: ReactElement;
-    type?: HeadingType;
     fullWidth?: boolean;
+    children?: React.ReactNode
 };
 
-const Header: FC<HeaderProps> = ({ title, badge, children, type, fullWidth }) => {
+const Header: FC<HeaderProps> = ({ title, badge, children }) => {
     return (
-        <div className="DashboardHeader">
-            <ViewHeader>
-                <Stack distribution="space-between" withoutExternalMargins>
-                    <div className="HeaderTitle">
-                        {title}
-                        {badge && badge}
-                    </div>
+        <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' }, p: 3 }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                <Typography variant="h4">
+                    {title}
+                    {badge && badge}
+                </Typography>
 
-                    <StackItem className="HeaderActions">{children}</StackItem>
-                </Stack>
-            </ViewHeader>
-        </div>
+                <div className="HeaderActions">{children}</div>
+            </Stack>
+        </Box>
     );
 };
 

@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
 import { localizedText } from '../../util';
-import { Button, CastorNest } from '@castoredc/matter';
+import Button from '@mui/material/Button';
 import { LoginViews } from 'components/MetadataItem/EnumMappings';
-import './LoginForm.scss';
 import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';
 import { Field, Form, Formik } from 'formik';
@@ -20,15 +19,15 @@ interface LoginFormProps {
 }
 
 const LoginForm: FC<LoginFormProps> = ({
-    catalog,
-    path,
-    servers,
-    selectedServerId,
-    serverLocked = false,
-    modal = false,
-    brand = 'FAIR Data Point',
-    view,
-}) => {
+                                           catalog,
+                                           path,
+                                           servers,
+                                           selectedServerId,
+                                           serverLocked = false,
+                                           modal = false,
+                                           brand = 'FAIR Data Point',
+                                           view,
+                                       }) => {
     const serverIds = servers.map(server => server.id);
     const defaultServer = servers.filter(server => server.default)[0].id;
 
@@ -53,12 +52,15 @@ const LoginForm: FC<LoginFormProps> = ({
 
                                     <div className="LoginText">
                                         <p>
-                                            To enter your study in the {localizedText(catalog.name, 'en')} you must be a registered Castor EDC user.
+                                            To enter your study in the {localizedText(catalog.name, 'en')} you must be a
+                                            registered user.
                                         </p>
-                                        <p>Please log in with your Castor CDMS account and allow the application to access your information.</p>
+                                        <p>Please log in with your account and allow the application to
+                                            access your information.</p>
                                         {!catalog.accessingData && (
                                             <p>
-                                                The application only accesses high-level information from your study and will not download nor upload
+                                                The application only accesses high-level information from your study and
+                                                will not download nor upload
                                                 any data to your study.
                                             </p>
                                         )}
@@ -69,12 +71,15 @@ const LoginForm: FC<LoginFormProps> = ({
                                     {!modal && <h1>{brand}</h1>}
 
                                     <div className="LoginText">
-                                        {!modal && <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>}
+                                        {!modal && <p>You need to be a registered user in order to access
+                                            this {viewName}.</p>}
                                         {modal && view !== 'generic' && view !== null && (
-                                            <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>
+                                            <p>You need to be a registered user in order to access
+                                                this {viewName}.</p>
                                         )}
 
-                                        <p>Please log in with your Castor CDMS account and allow the application to access your information.</p>
+                                        <p>Please log in with your account and allow the application to
+                                            access your information.</p>
                                     </div>
                                 </div>
                             )}
@@ -100,7 +105,6 @@ const LoginForm: FC<LoginFormProps> = ({
 
                             <div className="LoginButton">
                                 <Button type="submit" disabled={values.server === null}>
-                                    <CastorNest className="LoginButtonLogo" />
                                     Log in with Castor
                                 </Button>
                             </div>

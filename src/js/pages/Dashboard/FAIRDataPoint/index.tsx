@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
 import { localizedText } from '../../../util';
-import { LoadingOverlay } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import DocumentTitle from 'components/DocumentTitle';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
-import DashboardTab from 'components/Layout/DashboardTab';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import Body from 'components/Layout/Dashboard/Body';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
-interface FAIRDataPointProps extends AuthorizedRouteComponentProps {}
+interface FAIRDataPointProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface FAIRDataPointState {
     fdp: any;
     isLoading: boolean;
 }
 
-export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDataPointState> {
+class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDataPointState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,6 +34,8 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
     }
 
     getFairDataPoint = () => {
+        const { notifications } = this.props;
+
         this.setState({
             isLoading: true,
         });
@@ -49,28 +54,37 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading the FAIR Data Point information" />);
+                    notifications.show('An error occurred while loading the FAIR Data Point information', { variant: 'error' });
                 }
             });
     };
 
     render() {
         const { fdp, isLoading } = this.state;
+        const { location, history, user } = this.props;
 
         const title = fdp ? (fdp.hasMetadata ? localizedText(fdp.metadata.title, 'en') : 'FAIR Data Point') : 'FAIR Data Point';
 
         return (
-            <DashboardTab>
+            <DashboardPage>
                 <DocumentTitle title="FAIR Data Point" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading FAIR Data Point information" />}
 
-                <DashboardTabHeader type="Section" title={title} />
+                <DashboardSideBar location={location} history={history} user={user} />
 
-                {fdp && <MetadataForm type="fdp" object={fdp} onSave={this.getFairDataPoint} onCreate={this.getFairDataPoint} />}
-            </DashboardTab>
+                <Body>
+                    <Header title={title} />
+                    <PageBody>
+                        {fdp && <MetadataForm type="fdp" object={fdp} onSave={this.getFairDataPoint}
+                                              onCreate={this.getFairDataPoint} />}
+                    </PageBody>
+                </Body>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(FAIRDataPoint);

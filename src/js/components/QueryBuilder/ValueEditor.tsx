@@ -2,16 +2,26 @@ import React from 'react';
 import { ValueEditorProps as QueryBuilderValueEditorProps } from 'react-querybuilder/types/types';
 import { PrefixType } from 'types/PrefixType';
 import { InstituteType } from 'types/InstituteType';
-import { Dropdown, TextInput } from '@castoredc/matter';
 import MaskedInput from 'react-text-mask';
-import { findOptionByValue } from '../../util';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { TextField } from '@mui/material';
 
 interface ValueEditorProps extends QueryBuilderValueEditorProps {
     prefixes: PrefixType[];
     institutes: InstituteType[];
 }
 
-export const ValueEditor: React.FC<ValueEditorProps> = ({ field, fieldData, operator, handleOnChange, value, values, prefixes, institutes }) => {
+export const ValueEditor: React.FC<ValueEditorProps> = ({
+                                                            field,
+                                                            fieldData,
+                                                            operator,
+                                                            handleOnChange,
+                                                            value,
+                                                            values,
+                                                            prefixes,
+                                                            institutes,
+                                                        }) => {
     const handleUrlChange = (value, prefixes) => {
         let newValue = value;
         const regex = /^([^:]*):(.*)/;
@@ -37,24 +47,21 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({ field, fieldData, oper
 
     if (typeof field !== 'undefined') {
         if (fieldData.valueType === 'institute') {
-            const parsedInstitutes = institutes.map(institute => {
-                return { value: institute.id, label: institute.name };
-            });
-            const selectedValue = findOptionByValue(value, parsedInstitutes);
-
             return (
-                <Dropdown
-                    value={selectedValue}
-                    onChange={e => handleOnChange(e.value)}
-                    menuPosition="fixed"
-                    width="tiny"
-                    options={parsedInstitutes}
-                />
+                <Select
+                    value={value}
+                    onChange={handleOnChange}
+                >
+                    {institutes.map(institute => {
+                        return <MenuItem value={institute.id}>{institute.name}</MenuItem>
+                    })}
+                </Select>
             );
         }
 
         if (fieldData.valueType === 'annotated') {
-            return <TextInput className="ValueEditor" value={value} onChange={e => handleUrlChange(e.target.value, prefixes)} inputSize="20rem" />;
+            return <TextField className="ValueEditor" value={value}
+                              onChange={e => handleUrlChange(e.target.value, prefixes)} />;
         }
 
         if (fieldData.dataType === 'date' || fieldData.dataType === 'dateTime' || fieldData.dataType === 'time') {
@@ -82,11 +89,12 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({ field, fieldData, oper
                     }}
                     value={value}
                     onChange={e => handleOnChange(e.target.value)}
-                    render={(ref, props) => <TextInput forwardRef={ref} {...props} inputSize="20rem" placeholder={placeholder} />}
+                    render={(ref, props) => <TextField forwardRef={ref} {...props} width="20rem"
+                                                       placeholder={placeholder} />}
                 />
             );
         }
     }
 
-    return <TextInput className="ValueEditor" value={value} onChange={e => handleOnChange(e.target.value)} inputSize="20rem" />;
+    return <TextField className="ValueEditor" value={value} onChange={e => handleOnChange(e.target.value)} />;
 };

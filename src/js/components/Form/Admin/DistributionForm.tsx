@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
-import '../Form.scss';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Banner, Button, LoadingOverlay, Separator, Stack } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import FormHeading from '../FormHeading';
@@ -15,8 +12,12 @@ import * as Yup from 'yup';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import * as H from 'history';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { Alert, Divider } from '@mui/material';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DistributionFormProps {
+interface DistributionFormProps extends ComponentWithNotifications {
     distribution?: any;
     dataset?: any;
     history: H.History;
@@ -38,7 +39,7 @@ interface DistributionFormState {
     validation?: any;
 }
 
-export default class DistributionForm extends Component<DistributionFormProps, DistributionFormState> {
+class DistributionForm extends Component<DistributionFormProps, DistributionFormState> {
     constructor(props) {
         super(props);
 
@@ -81,6 +82,8 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     }
 
     getLanguages = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/languages')
             .then(response => {
@@ -90,11 +93,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getLicenses = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/licenses')
             .then(response => {
@@ -104,11 +109,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getDataModels = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/data-model/my')
             .then(response => {
@@ -128,10 +135,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
+
     getMetadataModels = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/metadata-model/my')
             .then(response => {
@@ -151,12 +161,12 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { dataset, distribution, mainUrl, history } = this.props;
+        const { dataset, distribution, mainUrl, history, notifications } = this.props;
 
         const url = '/api/dataset/' + dataset + '/distribution' + (distribution ? '/' + distribution.slug : '');
 
@@ -169,8 +179,9 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
                 if (distribution) {
                     history.push(mainUrl + '/distributions/' + values.slug);
-                    toast.success(<ToastItem type="success" title="The distribution details are saved successfully" />, {
-                        position: 'top-right',
+                    notifications.show('The distribution details are saved successfully', {
+                        variant: 'success',
+
                     });
                 } else {
                     history.push(mainUrl + '/distributions/' + response.data.slug + '/metadata');
@@ -184,7 +195,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 setSubmitting(false);
@@ -210,7 +221,17 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
         return (
             <Formik initialValues={initialValues} onSubmit={this.handleSubmit}>
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting,
+                      setValues,
+                      setFieldValue,
+                  }) => {
                     const currentDataModel = dataModels.find(({ value }) => value === values.dataModel);
 
                     return (
@@ -220,7 +241,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                     <Field component={Choice} options={distributionTypes} name="type" />
                                 </FormItem>
 
-                                <Separator />
+                                <Divider />
 
                                 {values.type === 'csv' && (
                                     <>
@@ -239,7 +260,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                 {values.type === 'rdf' && (
                                     <>
                                         <FormHeading label="RDF Distribution" />
-                                        <Stack>
+                                        <Stack direction="row">
                                             <FormItem label="Data model">
                                                 <Field
                                                     component={Select}
@@ -264,7 +285,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
                                 {values.type !== '' && (
                                     <>
-                                        <Separator />
+                                        <Divider />
 
                                         <FormItem
                                             label="Slug"
@@ -278,14 +299,15 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                 component={Select}
                                                 options={metadataModels}
                                                 name="defaultMetadataModel"
-                                                menuPosition="fixed"
-                                                menuPlacement="auto"
+
+
                                                 details="Please select which semantic metadata model you want to use as default"
                                             />
                                         </FormItem>
 
-                                        <FormItem label="License" details="The reference to the usage license of the distribution">
-                                            <Field component={Select} options={licenses} name="license" menuPosition="fixed" menuPlacement="auto" />
+                                        <FormItem label="License"
+                                                  details="The reference to the usage license of the distribution">
+                                            <Field component={Select} options={licenses} name="license" />
                                         </FormItem>
 
                                         {distribution && (
@@ -298,11 +320,11 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                         component={Choice}
                                                         options={[
                                                             {
-                                                                labelText: 'Yes',
+                                                                label: 'Yes',
                                                                 value: true,
                                                             },
                                                             {
-                                                                labelText: 'No',
+                                                                label: 'No',
                                                                 value: false,
                                                             },
                                                         ]}
@@ -321,11 +343,11 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                         component={Choice}
                                                         options={[
                                                             {
-                                                                labelText: 'Yes',
+                                                                label: 'Yes',
                                                                 value: true,
                                                             },
                                                             {
-                                                                labelText: 'No',
+                                                                label: 'No',
                                                                 value: false,
                                                             },
                                                         ]}
@@ -335,11 +357,10 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                 </FormItem>
 
                                                 {values.public === true && (
-                                                    <Banner
-                                                        type="information"
-                                                        description="Please note that this enables data access to everyone, without any access control."
-                                                        customWidth="400px"
-                                                    />
+                                                    <Alert severity="info">
+                                                        Please note that this enables data access to everyone, without
+                                                        any access control.
+                                                    </Alert>
                                                 )}
 
                                                 <FormItem
@@ -350,11 +371,11 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                         component={Choice}
                                                         options={[
                                                             {
-                                                                labelText: 'Yes',
+                                                                label: 'Yes',
                                                                 value: true,
                                                             },
                                                             {
-                                                                labelText: 'No',
+                                                                label: 'No',
                                                                 value: false,
                                                             },
                                                         ]}
@@ -382,7 +403,8 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                     <div>
                                                         <p>The API Credentials for this distribution are encrypted.</p>
 
-                                                        <Button buttonType="danger" onClick={() => setFieldValue('apiUserEncrypted', false)}>
+                                                        <Button color="error"
+                                                                onClick={() => setFieldValue('apiUserEncrypted', false)}>
                                                             Change API Credentials
                                                         </Button>
                                                     </div>
@@ -392,7 +414,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                             <Field component={Input} name="apiUser" />
                                                         </FormItem>
 
-                                                        <Stack>
+                                                        <Stack direction="row">
                                                             <FormItem label="Client ID">
                                                                 <Field component={Input} name="clientId" />
                                                             </FormItem>
@@ -410,13 +432,21 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                             </div>
 
                             <div className="FormButtons">
-                                <Stack distribution="trailing">
+                                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                     {distribution ? (
-                                        <Button disabled={isSubmitting} type="submit">
+                                        <Button
+                                            disabled={isSubmitting}
+                                            type="submit"
+                                            variant="contained"
+                                        >
                                             Update distribution
                                         </Button>
                                     ) : (
-                                        <Button disabled={isSubmitting} type="submit">
+                                        <Button
+                                            disabled={isSubmitting}
+                                            type="submit"
+                                            variant="contained"
+                                        >
                                             Add distribution
                                         </Button>
                                     )}
@@ -433,12 +463,12 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 export const distributionTypes = [
     {
         value: 'csv',
-        labelText: 'CSV Distribution',
+        label: 'CSV Distribution',
         details: 'CSV distributions contain tabulated data, where every column represents a variable collected in your study',
     },
     {
         value: 'rdf',
-        labelText: 'RDF Distribution',
+        label: 'RDF Distribution',
         details: 'RDF distributions contain linked data, where the data is modeled using a pre-defined semantic data model',
     },
 ];
@@ -498,3 +528,5 @@ const DistributionSchema = Yup.object().shape({
     cached: Yup.boolean().required('Please select if this distribution should be cached'),
     public: Yup.boolean().required('Please select if the data in this distribution should be publicly available'),
 });
+
+export default withNotifications(DistributionForm);

@@ -1,11 +1,13 @@
 import { findOptionByValue } from '../../util';
-import { Dropdown } from '@castoredc/matter';
 import React, { FC } from 'react';
 import { Field } from 'react-querybuilder';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 interface FieldSelectorProps {
     options: Field[];
     value?: string;
+
     handleOnChange(value: any): void;
 }
 
@@ -29,7 +31,14 @@ const FieldSelector: FC<FieldSelectorProps> = ({ options, value, handleOnChange 
 
     const selectedValue = findOptionByValue(value, parsedOptions);
 
-    return <Dropdown value={selectedValue} onChange={e => handleOnChange(e.value)} menuPosition="fixed" width="tiny" options={parsedOptions} />;
+    return <Select
+        value={selectedValue}
+        onChange={handleOnChange}
+    >
+        {parsedOptions.map((option: any) => {
+            return <MenuItem value={option.value}>{option.label}</MenuItem>
+        })}
+    </Select>
 };
 
 export default FieldSelector;

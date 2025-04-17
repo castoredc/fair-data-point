@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../../../components/Layout/Header';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Banner, Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { classNames, localizedText } from '../../../util';
 import Yasqe from '@triply/yasqe';
 import './Query.scss';
@@ -12,8 +10,13 @@ import MainBody from '../../../components/Layout/MainBody';
 import Split from '../../../components/Layout/Split';
 import { apiClient } from 'src/js/network';
 import { AuthorizedRouteComponentProps } from 'components/Route';
+import Button from '@mui/material/Button';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import Stack from '@mui/material/Stack';
+import { Alert, AlertTitle } from '@mui/material';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface QueryProps extends AuthorizedRouteComponentProps {
+interface QueryProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     embedded: boolean;
 }
 
@@ -44,7 +47,7 @@ interface Distribution {
     relativeUrl: string;
 }
 
-export default class Query extends Component<QueryProps, QueryState> {
+class Query extends Component<QueryProps, QueryState> {
     private yasqe: any;
 
     constructor(props: QueryProps) {
@@ -75,7 +78,7 @@ export default class Query extends Component<QueryProps, QueryState> {
     }
 
     getDistribution = () => {
-        const { match } = this.props;
+        const { match, notifications } = this.props;
 
         apiClient
             .get(`/api/dataset/${match.params.dataset}/distribution/${match.params.distribution}`)
@@ -86,7 +89,7 @@ export default class Query extends Component<QueryProps, QueryState> {
                         isLoading: false,
                         hasDistribution: true,
                     },
-                    this.getPrefixes
+                    this.getPrefixes,
                 );
             })
             .catch(error => {
@@ -98,11 +101,12 @@ export default class Query extends Component<QueryProps, QueryState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
     getPrefixes = () => {
+        const { notifications } = this.props;
         const { distribution } = this.state;
 
         if (!distribution) return;
@@ -110,7 +114,10 @@ export default class Query extends Component<QueryProps, QueryState> {
         apiClient
             .get(`/api/data-model/${distribution.dataModel.dataModel}/v/${distribution.dataModel.id}/prefix`)
             .then(response => {
-                let prefixes = response.data.reduce((map: { [key: string]: string }, obj: { prefix: string; uri: string }) => {
+                let prefixes = response.data.reduce((map: { [key: string]: string }, obj: {
+                    prefix: string;
+                    uri: string
+                }) => {
                     map[obj.prefix] = obj.uri;
                     return map;
                 }, {});
@@ -125,7 +132,7 @@ export default class Query extends Component<QueryProps, QueryState> {
                         this.setState({ prefixes }, this.createYasgui);
                     })
                     .catch(() => {
-                        toast.error(<ToastItem type="error" title="An error occurred while loading the prefixes from prefix.cc" />);
+                        notifications.show('An error occurred while loading the prefixes from prefix.cc', { variant: 'error' });
                         this.setState({ prefixes }, this.createYasgui);
                     });
             })
@@ -134,7 +141,7 @@ export default class Query extends Component<QueryProps, QueryState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the prefixes from the data model';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
                 this.createYasgui();
             });
     };
@@ -164,7 +171,7 @@ export default class Query extends Component<QueryProps, QueryState> {
                     this.yasqe.on('query', this.onQuery);
                     this.yasqe.on('queryResponse', this.onResponse);
                 }
-            }
+            },
         );
     };
 
@@ -239,11 +246,12 @@ export default class Query extends Component<QueryProps, QueryState> {
                     <Split sizes={[40, 60]}>
                         <div className="QueryTools">
                             <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query" />
-                            <Stack alignment="center" distribution="equalSpacing">
+                            <Stack direction="row" sx={{ justifyContent: 'center' }}>
                                 <div className="ResultCount">
                                     {executedWithoutErrors && (
                                         <>
-                                            <strong>{rows.length}</strong> results in <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong>{' '}
+                                            <strong>{rows.length}</strong> results
+                                            in <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong>{' '}
                                             seconds
                                         </>
                                     )}
@@ -252,17 +260,15 @@ export default class Query extends Component<QueryProps, QueryState> {
                                     {executedWithoutErrors && (
                                         <Button
                                             onClick={this.toggleEditor}
-                                            buttonType="secondary"
-                                            fullWidth
-                                            isDropdown
-                                            isOpen={showEditor}
+                                            variant="outlined"
                                             className="ShowHideButton"
                                         >
                                             {showEditor ? 'Hide' : 'Show'} query editor
                                         </Button>
                                     )}
                                 </div>
-                                <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">
+                                <Button onClick={this.runQuery} startIcon={<PlayArrowIcon />} className="ExecuteButton"
+                                        variant="contained">
                                     Run query
                                 </Button>
                             </Stack>
@@ -271,10 +277,14 @@ export default class Query extends Component<QueryProps, QueryState> {
                         <div className="QueryResults">
                             {isExecutingQuery && <LoadingOverlay accessibleLabel="Loading" />}
                             {executedWithoutErrors && (
-                                <SPARQLDataTable vars={columns} bindings={rows} prefixes={prefixes} fullUrl={distribution?.fullUrl} />
+                                <SPARQLDataTable vars={columns} bindings={rows} prefixes={prefixes}
+                                                 fullUrl={distribution?.fullUrl} />
                             )}
 
-                            {error && <Banner type="error" title="An error occurred, please check your query and try again" description={message} />}
+                            {error && <Alert severity="error">
+                                <AlertTitle>An error occurred, please check your query and try again</AlertTitle>
+                                {message}
+                            </Alert>}
                         </div>
                     </Split>
                 </MainBody>
@@ -282,3 +292,5 @@ export default class Query extends Component<QueryProps, QueryState> {
         );
     }
 }
+
+export default withNotifications(Query);

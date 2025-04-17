@@ -4,13 +4,14 @@ import queryString from 'query-string';
 import AffiliationsForm from 'components/Form/Agent/AffiliationsForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 
-interface AffiliationsProps extends AuthorizedRouteComponentProps {}
+interface AffiliationsProps extends AuthorizedRouteComponentProps {
+}
 
 interface AffiliationsState {
     isSaved: boolean;
 }
 
-export default class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
+class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
     constructor(props) {
         super(props);
 
@@ -53,3 +54,5 @@ export default class Affiliations extends Component<AffiliationsProps, Affiliati
         );
     }
 }
+
+export default Affiliations;

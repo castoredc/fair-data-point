@@ -1,17 +1,17 @@
 @import '../../scss/const';
 
-.SelectPage {
-    margin: 0 auto;
-    padding: $pagePadding;
-    flex: 1;
-    overflow: auto;
-    height: calc(100vh - $navbarHeight - (2 * $pagePadding));
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-
-    .SelectPageContent {
-        flex: 1;
-        overflow: auto;
-    }
-}
+//.SelectPage {
+//  margin: 0 auto;
+//  padding: $pagePadding;
+//  flex: 1;
+//  overflow: auto;
+//  height: calc(100vh - $navbarHeight - (2 * $pagePadding));
+//  max-width: 480px;
+//  display: flex;
+//  flex-direction: column;
+//
+//  .SelectPageContent {
+//    flex: 1;
+//    overflow: auto;
+//  }
+//}

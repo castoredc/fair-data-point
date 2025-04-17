@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { Dropdown, FormLabel, LoadingOverlay, Separator } from '@castoredc/matter';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
+import LoadingOverlay from 'components/LoadingOverlay';
 import OptionGroup from 'components/StudyStructure/OptionGroup';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { Divider, FormLabel } from '@mui/material';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
-interface AnnotationsProps {
+interface AnnotationsProps extends ComponentWithNotifications {
     studyId: string;
 }
 
@@ -17,7 +19,7 @@ interface AnnotationsState {
     selectedOptionGroup: string;
 }
 
-export default class Annotations extends Component<AnnotationsProps, AnnotationsState> {
+class Annotations extends Component<AnnotationsProps, AnnotationsState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,7 +35,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
     }
 
     getOptionGroups = () => {
-        const { studyId } = this.props;
+        const { studyId, notifications } = this.props;
         const { selectedOptionGroup } = this.state;
         this.setState({
             isLoading: true,
@@ -50,9 +52,9 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 this.setState({
@@ -75,10 +77,6 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             return <LoadingOverlay accessibleLabel="Loading option groups" />;
         }
 
-        const options = optionGroups.map(optionGroup => {
-            return { value: optionGroup.id, label: optionGroup.name };
-        });
-
         const optionGroup = optionGroups.find(optionGroup => {
             return optionGroup.id === selectedOptionGroup;
         });
@@ -90,20 +88,21 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
         return (
             <PageBody>
                 <FormLabel>Option group</FormLabel>
-                <Dropdown
-                    options={options}
-                    menuPlacement={'auto'}
-                    menuPosition="fixed"
-                    getOptionLabel={({ label }) => label}
-                    getOptionValue={({ value }) => value}
+                <Select
                     onChange={this.updateSelection}
-                    value={selectedOptionGroup ? { value: optionGroup.id, label: optionGroup.name } : undefined}
-                />
+                    value={selectedOptionGroup}
+                >
+                    {optionGroups.map(optionGroup => {
+                        return <MenuItem value={optionGroup.id}>{optionGroup.name}</MenuItem>
+                    })}
+                </Select>
 
-                <Separator spacing="comfortable" />
+                <Divider />
 
                 {optionGroup && <OptionGroup studyId={studyId} onUpdate={this.getOptionGroups} {...optionGroup} />}
             </PageBody>
         );
     }
 }
+
+export default withNotifications(Annotations);

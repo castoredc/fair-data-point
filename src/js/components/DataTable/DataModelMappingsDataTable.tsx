@@ -1,11 +1,14 @@
 import React, { Component, RefObject } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { CellText, DataGrid, Icon, IconCell, LoadingOverlay, TextStyle } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { DataType, ValueType } from '../MetadataItem/EnumMappings';
 import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridRowParams } from '@mui/x-data-grid';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import CheckIcon from '@mui/icons-material/Check';
+import ErrorIcon from '@mui/icons-material/Error';
 
 interface Mapping {
     node?: {
@@ -32,7 +35,7 @@ interface Pagination {
     perPage: number;
 }
 
-interface DataModelMappingsDataTableProps {
+interface DataModelMappingsDataTableProps extends ComponentWithNotifications {
     type: 'node' | 'module';
     dataset: string;
     distribution: { slug: string };
@@ -48,7 +51,7 @@ interface DataModelMappingsDataTableState {
     pagination: Pagination;
 }
 
-export default class DataModelMappingsDataTable extends Component<DataModelMappingsDataTableProps, DataModelMappingsDataTableState> {
+class DataModelMappingsDataTable extends Component<DataModelMappingsDataTableProps, DataModelMappingsDataTableState> {
     private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DataModelMappingsDataTableProps) {
@@ -78,7 +81,7 @@ export default class DataModelMappingsDataTable extends Component<DataModelMappi
 
     getMappings = (type: 'node' | 'module') => {
         const { pagination } = this.state;
-        const { dataset, distribution, versionId } = this.props;
+        const { dataset, distribution, versionId, notifications } = this.props;
 
         this.setState({
             isLoadingMappings: true,
@@ -110,32 +113,32 @@ export default class DataModelMappingsDataTable extends Component<DataModelMappi
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the mappings';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
-    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
+    handlePagination = (currentPage: number, pageSize: number ) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: currentPage + 1,
+                    perPage: pageSize,
                 },
             },
             () => {
                 this.getMappings(this.props.type);
-            }
+            },
         );
     };
 
-    handleClick = (rowId: string) => {
+    handleClick = (params: GridRowParams) => {
         const { mappings } = this.state;
         const { onClick } = this.props;
 
-        const mapping = mappings[rowId];
+        const mapping = mappings[params.id];
         onClick(mapping);
     };
 
@@ -155,29 +158,25 @@ export default class DataModelMappingsDataTable extends Component<DataModelMappi
                 const dataType = item.node?.value.dataType ? DataType[item.node?.value.dataType] : '';
 
                 return {
-                    mapped: !item.elements ? <IconCell key={index} icon={{ type: 'errorCircledInverted' }} /> : undefined,
-                    title: <CellText key={index}>{item.node?.title}</CellText>,
-                    valueType: <CellText key={index}>{valueType}</CellText>,
-                    dataType: <CellText key={index}>{dataType}</CellText>,
-                    repeated: item.node?.repeated ? <IconCell key={index} icon={{ type: 'tickSmall' }} /> : undefined,
+                    mapped: !!item.elements,
+                    title: item.node?.title,
+                    valueType: valueType,
+                    dataType: dataType,
+                    repeated: item.node?.repeated ?? false,
                     ...(item.transformed && {
-                        mappedElement: (
-                            <CellText key={index}>
-                                <TextStyle variation="italic">Transformed value</TextStyle>
-                            </CellText>
-                        ),
+                        mappedElement: 'Transformed value',
                     }),
                     ...(!item.transformed && {
-                        mappedElement: <CellText key={index}>{item.elements ? item.elements[0].label : ''}</CellText>,
+                        mappedElement: item.elements ? item.elements[0].label : '',
                     }),
                 };
             });
         } else if (type === 'module') {
             rows = mappings.map((item, index) => ({
-                mapped: !item.element ? <IconCell key={index} icon={{ type: 'errorCircledInverted' }} /> : undefined,
-                title: <CellText key={index}>{item.module?.displayName}</CellText>,
-                mappedElement: <CellText key={index}>{item.element ? item.element.label : ''}</CellText>,
-                mappedElementType: <CellText key={index}>{item.element ? item.element.structureType : ''}</CellText>,
+                mapped: !!item.element,
+                title: item.module?.displayName,
+                mappedElement: item.element ? item.element.label : '',
+                mappedElementType: item.element ? item.element.structureType : '',
             }));
         } else {
             return null;
@@ -192,9 +191,10 @@ export default class DataModelMappingsDataTable extends Component<DataModelMappi
                 forwardRef={this.tableRef}
             >
                 <DataGrid
+                    disableRowSelectionOnClick
                     accessibleName="Mappings"
                     emptyStateContent="No mappings found"
-                    onClick={this.handleClick}
+                    onRowClick={this.handleClick}
                     rows={rows}
                     columns={columns[type]}
                 />
@@ -206,52 +206,63 @@ export default class DataModelMappingsDataTable extends Component<DataModelMappi
 const columns = {
     node: [
         {
-            Header: '',
-            accessor: 'mapped',
-            disableResizing: true,
+            headerName: '',
+            field: 'mapped',
+            resizable: false,
             width: 32,
+            renderCell: (params) => {
+                return params.row.mapped ? '' : <ErrorIcon />;
+            },
         },
         {
-            Header: 'Title',
-            accessor: 'title',
+            headerName: 'Title',
+            field: 'title',
         },
         {
-            Header: 'Value type',
-            accessor: 'valueType',
+            headerName: 'Value type',
+            field: 'valueType',
         },
         {
-            Header: 'Data type',
-            accessor: 'dataType',
+            headerName: 'Data type',
+            field: 'dataType',
         },
         {
-            Header: <Icon description="Repeated" type="copy" />,
-            accessor: 'repeated',
-            disableResizing: true,
+            headerName: 'Repeated',
+            field: 'repeated',
+            resizable: false,
             width: 32,
+            renderCell: (params) => {
+                return params.row.repeated ? <CheckIcon /> : '';
+            },
         },
         {
-            Header: 'Mapped field',
-            accessor: 'mappedElement',
+            headerName: 'Mapped field',
+            field: 'mappedElement',
         },
     ],
     module: [
         {
-            Header: '',
-            accessor: 'mapped',
-            disableResizing: true,
+            headerName: '',
+            field: 'mapped',
+            resizable: false,
             width: 32,
+            renderCell: (params) => {
+                return params.row.mapped ? '' : <ErrorIcon />;
+            },
         },
         {
-            Header: 'Title',
-            accessor: 'title',
+            headerName: 'Title',
+            field: 'title',
         },
         {
-            Header: 'Mapped',
-            accessor: 'mappedElement',
+            headerName: 'Mapped',
+            field: 'mappedElement',
         },
         {
-            Header: 'Type',
-            accessor: 'mappedElementType',
+            headerName: 'Type',
+            field: 'mappedElementType',
         },
     ],
 };
+
+export default withNotifications(DataModelMappingsDataTable);

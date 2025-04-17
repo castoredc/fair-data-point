@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { LoadingOverlay, Pagination } from '@castoredc/matter';
-import { PaginationState } from '@castoredc/matter/lib/types/src/Pagination/Pagination';
+import LoadingOverlay from 'components/LoadingOverlay';
+import { TablePagination } from '@mui/material';
 
 interface DataGridContainerProps {
     fullHeight?: boolean;
@@ -8,19 +8,19 @@ interface DataGridContainerProps {
     inFlexContainer?: boolean;
     pagination?: any;
     children: React.ReactNode;
-    handlePageChange?: (value: PaginationState) => void;
+    handlePageChange?: (currentPage: number, pageSize: number) => void;
     forwardRef?: any;
 }
 
 const DataGridContainer: FC<DataGridContainerProps> = ({
-    fullHeight = false,
-    isLoading = false,
-    inFlexContainer = false,
-    children,
-    pagination,
-    handlePageChange,
-    forwardRef,
-}) => {
+                                                           fullHeight = false,
+                                                           isLoading = false,
+                                                           inFlexContainer = false,
+                                                           children,
+                                                           pagination,
+                                                           handlePageChange,
+                                                           forwardRef,
+                                                       }) => {
     const grid = (
         <div
             style={{
@@ -50,12 +50,16 @@ const DataGridContainer: FC<DataGridContainerProps> = ({
                 {grid}
 
                 {pagination && (
-                    <Pagination
-                        accessibleName="Pagination"
-                        onChange={handlePageChange ? handlePageChange : () => null}
-                        pageSize={pagination.perPage}
-                        currentPage={pagination.currentPage - 1}
-                        totalItems={pagination.totalResults}
+                    <TablePagination
+                        onPageChange={handlePageChange ? (event, page) => {
+                            handlePageChange(page, pagination.perPage)
+                        } : () => {}}
+                        onRowsPerPageChange={handlePageChange ? (event) => {
+                            handlePageChange(pagination.currentPage, parseInt(event.target.value))
+                        } : () => {}}
+                        rowsPerPage={pagination.perPage}
+                        page={pagination.currentPage - 1}
+                        count={pagination.totalResults}
                     />
                 )}
             </div>

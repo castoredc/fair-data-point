@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Pagination, Space } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Pagination from '@mui/material/Pagination';
+import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
@@ -9,10 +9,16 @@ import { localizedText } from '../../../util';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
 import { apiClient } from 'src/js/network';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
-import DashboardTab from 'components/Layout/DashboardTab';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import Body from 'components/Layout/Dashboard/Body';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import AddIcon from '@mui/icons-material/Add';
 
-interface CatalogsProps extends AuthorizedRouteComponentProps {}
+interface CatalogsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 interface CatalogsState {
     catalogs: any;
@@ -20,7 +26,7 @@ interface CatalogsState {
     pagination: any;
 }
 
-export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
+class Catalogs extends Component<CatalogsProps, CatalogsState> {
     constructor(props) {
         super(props);
 
@@ -32,6 +38,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
     }
 
     getCatalogs = () => {
+        const { notifications } = this.props;
         const { pagination } = this.state;
 
         this.setState({
@@ -58,27 +65,27 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your catalogs" />);
+                    notifications.show('An error occurred while loading your catalogs', { variant: 'error' });
                 }
             });
     };
 
-    handlePagination = paginationCount => {
+    handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: value,
+                    perPage: pagination.pageSize,
                 },
             },
             () => {
                 this.getCatalogs();
-            }
+            },
         );
     };
 
@@ -87,50 +94,57 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
     }
 
     render() {
-        const { history, user } = this.props;
+        const { location, history, user } = this.props;
         const { isLoading, catalogs, pagination } = this.state;
 
         return (
-            <DashboardTab>
+            <DashboardPage>
                 <DocumentTitle title="Catalogs" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs" />}
 
-                <Space bottom="comfortable" />
+                <DashboardSideBar location={location} history={history} user={user} />
 
-                <DashboardTabHeader title="My catalogs" type="Section">
-                    {isAdmin(user) && (
-                        <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
-                            Add catalog
-                        </Button>
-                    )}
-                </DashboardTabHeader>
+                <Body>
 
-                <div>
-                    {catalogs.map(catalog => {
-                        return (
-                            <ListItem
-                                selectable={false}
-                                link={`/dashboard/catalogs/${catalog.slug}`}
-                                title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
-                                key={catalog.id}
+                    <Header title="My catalogs">
+                        {isAdmin(user) && (
+                            <Button
+                                startIcon={<AddIcon />}
+                                onClick={() => history.push('/dashboard/catalogs/add')}
+                                variant="contained"
+                            >
+                                Add catalog
+                            </Button>
+                        )}
+                    </Header>
+
+                    <PageBody>
+                        {catalogs.map(catalog => {
+                            return (
+                                <ListItem
+                                    selectable={false}
+                                    link={`/dashboard/catalogs/${catalog.slug}`}
+                                    title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
+                                    key={catalog.id}
+                                />
+                            );
+                        })}
+
+                        {catalogs.length == 0 && <div className="NoResults">No catalogs found.</div>}
+
+                        {pagination && (
+                            <Pagination
+                                onChange={this.handlePagination}
+                                page={pagination.currentPage - 1}
+                                count={pagination.totalResults}
                             />
-                        );
-                    })}
-
-                    {catalogs.length == 0 && <div className="NoResults">No catalogs found.</div>}
-
-                    {pagination && (
-                        <Pagination
-                            accessibleName="Pagination"
-                            onChange={this.handlePagination}
-                            pageSize={pagination.perPage}
-                            currentPage={pagination.currentPage - 1}
-                            totalItems={pagination.totalResults}
-                        />
-                    )}
-                </div>
-            </DashboardTab>
+                        )}
+                    </PageBody>
+                </Body>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(Catalogs);

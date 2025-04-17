@@ -8,7 +8,12 @@ interface DistributionContentsCsvProps {
     dataset: string;
 }
 
-const DistributionContentsCsv: React.FC<DistributionContentsCsvProps> = ({ contents, catalog, distribution, dataset }) => {
+const DistributionContentsCsv: React.FC<DistributionContentsCsvProps> = ({
+                                                                             contents,
+                                                                             catalog,
+                                                                             distribution,
+                                                                             dataset,
+                                                                         }) => {
     return (
         <div className="PageContainer">
             {distribution.includeAllData ? (

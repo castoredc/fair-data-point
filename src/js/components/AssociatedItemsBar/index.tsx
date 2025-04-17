@@ -1,6 +1,6 @@
 import React from 'react';
-import './AssociatedItemsBar.scss';
-import AssociatedItemsBarItem from 'components/AssociatedItemsBar/AssociatedItemsBarItem';
+import Tabs from '@mui/material/Tabs';
+import { Badge, Tab } from '@mui/material';
 
 interface AssociatedItemsBarProps {
     items: { [key: string]: number };
@@ -25,11 +25,21 @@ const AssociatedItemsBar: React.FC<AssociatedItemsBarProps> = ({ items, current,
     const content = withContent.concat(withoutContent);
 
     return (
-        <div className="AssociatedItemsBar">
+        <Tabs
+            value={content.findIndex(item => item.type === current)}
+            onChange={onClick ? (event: React.SyntheticEvent, newValue: number) => onClick(content[newValue].type) : undefined}
+        >
             {content.map(item => (
-                <AssociatedItemsBarItem key={item.type} count={item.count} type={item.type} current={current} onClick={onClick} />
+                <Tab
+                    disabled={current !== item.type && item.count === 0}
+                    label={(
+                        <Badge badgeContent={item.count}  color="primary">
+                            {item.type}
+                        </Badge>
+                    )}
+                />
             ))}
-        </div>
+        </Tabs>
     );
 };
 

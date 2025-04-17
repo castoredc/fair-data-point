@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, Modal } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Modal from 'components/Modal';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -13,8 +12,9 @@ import { mergeData } from '../util';
 import { apiClient } from '../network';
 import UriInput from 'components/Input/Formik/UriInput';
 import { Types } from 'types/Types';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type AddNodeModalProps = {
+interface AddNodeModalProps extends ComponentWithNotifications {
     open: boolean;
     onClose: () => void;
     data: any;
@@ -33,7 +33,7 @@ type AddNodeModalState = {
     initialValues: any;
 };
 
-export default class NodeModal extends Component<AddNodeModalProps, AddNodeModalState> {
+class NodeModal extends Component<AddNodeModalProps, AddNodeModalState> {
     constructor(props) {
         super(props);
 
@@ -78,7 +78,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { modelType, type, modelId, versionId, onSaved, data } = this.props;
+        const { modelType, type, modelId, versionId, onSaved, data, notifications } = this.props;
 
         apiClient
             .post('/api/' + modelType + '/' + modelId + '/v/' + versionId + '/node/' + type + (data ? `/${data.id}` : ''), values)
@@ -93,7 +93,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
                 setSubmitting(false);
             });
@@ -106,9 +106,20 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
         const title = data ? `Edit ${type} node` : `Add ${type} node`;
 
         return (
-            <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
-                <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+            <Modal open={open} title={title} onClose={onClose}>
+                <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit}
+                        enableReinitialize>
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         const isPlainValue = values.type === 'value' && values.value === 'plain';
                         const isAnnotatedValue = values.type === 'value' && values.value === 'annotated';
 
@@ -123,11 +134,13 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                     <Field component={Input} name="title" serverError={validation} />
                                 </FormItem>
                                 <FormItem label="Description">
-                                    <Field component={Input} name="description" serverError={validation} multiline={true} />
+                                    <Field component={Input} name="description" serverError={validation}
+                                           multiline={true} />
                                 </FormItem>
                                 {values.type === 'external' && (
                                     <FormItem label="URI">
-                                        <Field component={UriInput} name="value" serverError={validation} prefixes={prefixes} />
+                                        <Field component={UriInput} name="value" serverError={validation}
+                                               prefixes={prefixes} />
                                     </FormItem>
                                 )}
                                 {values.type === 'internal' && (
@@ -141,8 +154,8 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                         <Field
                                             component={Choice}
                                             options={[
-                                                { value: 'plain', labelText: 'Plain value' },
-                                                { value: 'annotated', labelText: 'Annotated value' },
+                                                { value: 'plain', label: 'Plain value' },
+                                                { value: 'annotated', label: 'Annotated value' },
                                             ]}
                                             serverError={validation}
                                             name="value"
@@ -153,7 +166,8 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
 
                                 {showDataTypes && (
                                     <FormItem label="Data type">
-                                        <Field component={Select} options={types.dataTypes} serverError={validation} name="dataType" />
+                                        <Field component={Select} options={types.dataTypes} serverError={validation}
+                                               name="dataType" />
                                     </FormItem>
                                 )}
 
@@ -175,7 +189,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                     </FormItem>
                                 )}
 
-                                <Button buttonType="primary" type="submit" disabled={isSubmitting}>
+                                <Button type="submit" disabled={isSubmitting}>
                                     {title}
                                 </Button>
                             </Form>
@@ -215,3 +229,5 @@ const NodeSchema = Yup.object().shape({
         then: schema => schema.required('Please select a data type'),
     }),
 });
+
+export default withNotifications(NodeModal);

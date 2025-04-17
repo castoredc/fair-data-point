@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import './CodeEditor.scss';
 import CodeMirror, { EditorFromTextArea } from 'codemirror';
-import { FormLabel } from '@castoredc/matter';
+import { FormLabel } from '@mui/material';
 
 require('codemirror/mode/twig/twig');
 require('codemirror/addon/display/autorefresh');
@@ -12,7 +12,7 @@ interface TwigEditorProps {
     onChange: (value: string) => void;
 }
 
-export default class TwigEditor extends Component<TwigEditorProps> {
+class TwigEditor extends Component<TwigEditorProps> {
     private ref = createRef<HTMLTextAreaElement>();
     private codeMirror!: EditorFromTextArea;
 
@@ -42,3 +42,5 @@ export default class TwigEditor extends Component<TwigEditorProps> {
         );
     }
 }
+
+export default TwigEditor;

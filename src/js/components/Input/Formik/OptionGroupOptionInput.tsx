@@ -1,10 +1,13 @@
 import React, { FC } from 'react';
 
-import { Button, TextInput } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { replaceAt } from '../../../util';
 import { FormikProps } from 'formik/dist/types';
+import ClearIcon from '@mui/icons-material/Clear';
+import { IconButton, TextField } from '@mui/material';
 
 interface OptionGroupOptionInputProps extends FieldProps {
     serverError?: any;
@@ -55,35 +58,32 @@ const OptionGroupOptionInput: FC<OptionGroupOptionInputProps> = ({ field, form, 
                         <React.Fragment key={`${field.name}-${index}`}>
                             <div className="OptionGroupOptionInputItem">
                                 <div className="OptionGroupOptionInputTitle">
-                                    <TextInput
+                                    <TextField
                                         name="title"
                                         onChange={e => {
                                             handleChange(field, form, index, 'title', e.target.value);
                                         }}
                                         value={option.title}
-                                        inputSize="20rem"
                                     />
                                 </div>
                                 <div className="OptionGroupOptionInputValue">
-                                    <TextInput
+                                    <TextField
                                         name="value"
                                         onChange={e => {
                                             handleChange(field, form, index, 'value', e.target.value);
                                         }}
                                         value={option.value}
-                                        inputSize="18.5rem"
                                     />
                                 </div>
                                 <div className="OptionGroupOptionInputButtons">
                                     <div className="OptionGroupOptionInputButton">
                                         {!first && (
-                                            <Button
-                                                icon="cross"
+                                            <IconButton
                                                 className="RemoveButton"
-                                                buttonType="contentOnly"
                                                 onClick={() => handleRemove(field, form, index)}
-                                                iconDescription="Remove option"
-                                            />
+                                            >
+                                                <ClearIcon />
+                                            </IconButton>
                                         )}
                                     </div>
                                 </div>
@@ -95,7 +95,12 @@ const OptionGroupOptionInput: FC<OptionGroupOptionInputProps> = ({ field, form, 
             </div>
 
             <div className="OptionGroupOptionInputAddButton">
-                <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>
+                <Button
+                    startIcon={<AddIcon />}
+                    className="AddButton"
+                    variant="text"
+                    onClick={() => handleAdd(field, form)}
+                >
                     Add new
                 </Button>
             </div>
