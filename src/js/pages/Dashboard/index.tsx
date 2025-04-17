@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Dashboard.scss';
+import { Box, Container } from '@mui/material';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { DashboardRoutes } from 'pages/Dashboard/DashboardRoutes';
 
@@ -11,8 +11,14 @@ class Dashboard extends Component<DashboardProps> {
         const { history, user } = this.props;
 
         return (
-            <div className="Dashboard">
-                <DashboardRoutes user={user} />
+            <Box sx={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh'
+            }}>
+                <Container maxWidth={false}>
+                    <DashboardRoutes user={user} />
+                </Container>
                 {/*<CastorBar*/}
                 {/*    items={[*/}
                 {/*        {*/}
@@ -39,7 +45,7 @@ class Dashboard extends Component<DashboardProps> {
                 {/*    label="Castor navigation"*/}
                 {/*    horizontalNav*/}
                 {/*/>*/}
-            </div>
+            </Box>
         );
     }
 }
