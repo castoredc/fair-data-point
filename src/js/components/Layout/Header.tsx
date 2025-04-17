@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DropdownButton from '../Button/DropdownButton';
 
 interface HeaderProps {
     embedded?: boolean;
@@ -210,12 +211,12 @@ class Header extends Component<HeaderProps, HeaderState> {
                                         <Box>
                                             {user ? (
                                                 <Box>
-                                                    {/*<DropdownButton*/}
-                                                    {/*    text={user.details ? user.details.fullName : ''}*/}
-                                                    {/*    items={menuItems}*/}
-                                                    {/*    icon="account"*/}
-                                                    {/*    buttonType="primary"*/}
-                                                    {/*/>*/}
+                                                    <DropdownButton
+                                                        text={user?.details?.fullName || 'User Menu'}
+                                                        items={menuItems}
+                                                        icon="account"
+                                                        buttonType="primary"
+                                                    />
                                                 </Box>
                                             ) : mobile ? (
                                                 <IconButton
