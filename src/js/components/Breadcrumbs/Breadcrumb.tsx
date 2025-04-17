@@ -1,7 +1,6 @@
 import React from 'react';
-import './Breadcrumbs.scss';
 import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import { Link, Typography } from '@mui/material';
 
 interface BreadcrumbProps {
     title: string;
@@ -19,16 +18,29 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ title, to }) => {
                     color="inherit"
                     component={RouterLink}
                     to={{ pathname: to.pathname, state: to.state }}
+                    sx={{
+                        maxWidth: 250,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: 'block'
+                    }}
                 >
                     {title}
                 </Link>
             ) : (
-                <Link
-                    underline="hover"
-                    color="inherit"
+                <Typography
+                    color="text.secondary"
+                    sx={{
+                        maxWidth: 250,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: 'block'
+                    }}
                 >
                     {title}
-                </Link>
+                </Typography>
             )
 };
 

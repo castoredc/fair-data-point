@@ -1,10 +1,8 @@
 import React from 'react';
-
-import './Breadcrumbs.scss';
 import Breadcrumb from './Breadcrumb';
 import { localizedText } from '../../util';
 import { BreadcrumbType } from 'types/BreadcrumbType';
-import { Breadcrumbs as MuiBreadcrumbs, Container } from '@mui/material';
+import { Breadcrumbs as MuiBreadcrumbs, Container, Paper } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 interface BreadcrumbsProps {
@@ -13,10 +11,12 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
     return (
-        <Container>
-            <MuiBreadcrumbs
-                separator={<NavigateNextIcon fontSize="small" />}
-            >
+        <Paper elevation={0} sx={{ bgcolor: 'grey.100', borderBottom: 1, borderColor: 'grey.300', py: 1 }}>
+            <Container>
+                <MuiBreadcrumbs
+                    separator={<NavigateNextIcon fontSize="small" />}
+                    sx={{ '& .MuiBreadcrumbs-li': { display: 'flex' } }}
+                >
                 {breadcrumbs.map(crumb => (
                     <Breadcrumb
                         key={crumb.type}
@@ -27,8 +27,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
                         title={localizedText(crumb.title, 'en')}
                     />
                 ))}
-            </MuiBreadcrumbs>
-        </Container>
+                </MuiBreadcrumbs>
+            </Container>
+        </Paper>
     );
 };
 
