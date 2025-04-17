@@ -1,10 +1,6 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import Pagination from '@mui/material/Pagination';
-import LoadingOverlay from 'components/LoadingOverlay';
-import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
-import DataGridHelper from 'components/DataTable/DataGridHelper';
 import { localizedText } from '../../../util';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
@@ -16,135 +12,112 @@ import withNotifications, { ComponentWithNotifications } from 'components/WithNo
 import Header from 'components/Layout/Dashboard/Header';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import AddIcon from '@mui/icons-material/Add';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 
-interface CatalogsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
-}
-
-interface CatalogsState {
-    catalogs: any;
-    isLoading: boolean;
-    pagination: any;
-}
-
-class Catalogs extends Component<CatalogsProps, CatalogsState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            catalogs: [],
-            isLoading: false,
-            pagination: DataGridHelper.getDefaultState(25),
+interface Catalog {
+    id: string;
+    slug: string;
+    hasMetadata: boolean;
+    metadata?: {
+        title: {
+            [key: string]: string;
         };
-    }
-
-    getCatalogs = () => {
-        const { notifications } = this.props;
-        const { pagination } = this.state;
-
-        this.setState({
-            isLoading: true,
-        });
-
-        let filters = {
-            page: pagination.currentPage,
-            perPage: pagination.perPage,
-        };
-
-        apiClient
-            .get('/api/catalog/my', { params: filters })
-            .then(response => {
-                this.setState({
-                    catalogs: response.data.results,
-                    pagination: DataGridHelper.parseResults(response.data),
-                    isLoading: false,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
-                } else {
-                    notifications.show('An error occurred while loading your catalogs', { variant: 'error' });
-                }
-            });
     };
+}
 
-    handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
-        const { pagination } = this.state;
+interface CatalogsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
 
-        this.setState(
-            {
-                pagination: {
-                    ...pagination,
-                    currentPage: value,
-                    perPage: pagination.pageSize,
+const Catalogs: React.FC<CatalogsProps> = ({ history, location, user, notifications }) => {
+    const [catalogs, setCatalogs] = useState<Catalog[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [paginationModel, setPaginationModel] = useState({
+        page: 0,
+        pageSize: 25,
+    });
+
+    const columns: GridColDef<Catalog>[] = [
+        { 
+            field: 'displayTitle', 
+            headerName: 'Title', 
+            flex: 1,
+        },
+    ];
+
+    const getCatalogs = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await apiClient.get('/api/catalog/my', {
+                params: {
+                    page: paginationModel.page + 1,
+                    perPage: paginationModel.pageSize,
                 },
-            },
-            () => {
-                this.getCatalogs();
-            },
-        );
+            });
+
+            const mappedCatalogs: Catalog[] = response.data.results.map((catalog: any) => ({
+                id: catalog.id,
+                ...catalog,
+                displayTitle: catalog.hasMetadata 
+                    ? localizedText(catalog.metadata?.title, 'en') 
+                    : '(no title)'
+            }));
+            setCatalogs(mappedCatalogs);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.error || 'An error occurred while loading your catalogs';
+            setError(errorMessage);
+            notifications.show(errorMessage, { variant: 'error' });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    componentDidMount() {
-        this.getCatalogs();
-    }
+    useEffect(() => {
+        getCatalogs();
+    }, [paginationModel.page, paginationModel.pageSize]);
 
-    render() {
-        const { location, history, user } = this.props;
-        const { isLoading, catalogs, pagination } = this.state;
 
-        return (
-            <DashboardPage>
-                <DocumentTitle title="Catalogs" />
+    return (
+        <DashboardPage>
+            <DocumentTitle title="Catalogs" />
+            <DashboardSideBar location={location} history={history} user={user} />
 
-                {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs" />}
+            <Body>
+                <Header title="My catalogs">
+                    {isAdmin(user) && (
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => history.push('/dashboard/catalogs/add')}
+                            variant="contained"
+                        >
+                            Add catalog
+                        </Button>
+                    )}
+                </Header>
 
-                <DashboardSideBar location={location} history={history} user={user} />
-
-                <Body>
-
-                    <Header title="My catalogs">
-                        {isAdmin(user) && (
-                            <Button
-                                startIcon={<AddIcon />}
-                                onClick={() => history.push('/dashboard/catalogs/add')}
-                                variant="contained"
-                            >
-                                Add catalog
-                            </Button>
-                        )}
-                    </Header>
-
-                    <PageBody>
-                        {catalogs.map(catalog => {
-                            return (
-                                <ListItem
-                                    selectable={false}
-                                    link={`/dashboard/catalogs/${catalog.slug}`}
-                                    title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
-                                    key={catalog.id}
-                                />
-                            );
-                        })}
-
-                        {catalogs.length == 0 && <div className="NoResults">No catalogs found.</div>}
-
-                        {pagination && (
-                            <Pagination
-                                onChange={this.handlePagination}
-                                page={pagination.currentPage - 1}
-                                count={pagination.totalResults}
-                            />
-                        )}
-                    </PageBody>
-                </Body>
-            </DashboardPage>
-        );
-    }
-}
+                <PageBody>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={catalogs}
+                            columns={columns}
+                            loading={loading}
+                            error={error}
+                            paginationModel={paginationModel}
+                            onPaginationModelChange={setPaginationModel}
+                            pageSizeOptions={[10, 25, 50]}
+                            disableRowSelectionOnClick
+                            emptyStateContent="No catalogs found"
+                            onRowClick={(params) => history.push(`/dashboard/catalogs/${params.row.slug}`)}
+                            sx={{ cursor: 'pointer' }}
+                        />
+                    </Box>
+                </PageBody>
+            </Body>
+        </DashboardPage>
+    );
+};
 
 export default withNotifications(Catalogs);

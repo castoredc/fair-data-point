@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import LoadingOverlay from 'components/LoadingOverlay';
-import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
@@ -13,95 +11,89 @@ import withNotifications, { ComponentWithNotifications } from 'components/WithNo
 import Header from 'components/Layout/Dashboard/Header';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import AddIcon from '@mui/icons-material/Add';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 
-interface DataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface DataModel {
+    id: string;
+    title: string;
 }
 
-interface DataModelsState {
-    dataModels: any;
-    isLoading: boolean;
-}
+interface DataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
 
-class DataModels extends Component<DataModelsProps, DataModelsState> {
-    constructor(props) {
-        super(props);
+const DataModels: React.FC<DataModelsProps> = ({ history, location, user, notifications }) => {
+    const [dataModels, setDataModels] = useState<DataModel[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-        this.state = {
-            dataModels: [],
-            isLoading: false,
-        };
-    }
+    const columns: GridColDef<DataModel>[] = [
+        { 
+            field: 'title', 
+            headerName: 'Title', 
+            flex: 1,
+        },
+    ];
 
-    getDataModels = () => {
-        const { notifications } = this.props;
+    const getDataModels = async () => {
+        setLoading(true);
+        setError(null);
 
-        this.setState({
-            isLoading: true,
-        });
-
-        apiClient
-            .get('/api/data-model/my')
-            .then(response => {
-                this.setState({
-                    dataModels: response.data,
-                    isLoading: false,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
-                } else {
-                    notifications.show('An error occurred while loading your data models', { variant: 'error' });
-                }
-            });
+        try {
+            const response = await apiClient.get('/api/data-model/my');
+            const mappedModels: DataModel[] = response.data.map((model: any) => ({
+                id: model.id,
+                title: model.title || 'Untitled model'
+            }));
+            setDataModels(mappedModels);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.error || 'An error occurred while loading your data models';
+            setError(errorMessage);
+            notifications.show(errorMessage, { variant: 'error' });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    componentDidMount() {
-        this.getDataModels();
-    }
+    useEffect(() => {
+        getDataModels();
+    }, []);
 
-    render() {
-        const { location, history, user } = this.props;
-        const { isLoading, dataModels } = this.state;
+    return (
+        <DashboardPage>
+            <DocumentTitle title="Data models" />
+            <DashboardSideBar location={location} history={history} user={user} />
 
-        return (
-            <DashboardPage>
-                <DocumentTitle title="Data models" />
+            <Body>
+                <Header title="My data models">
+                    {isAdmin(user) && (
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => history.push('/dashboard/data-models/add')}
+                            variant="contained"
+                        >
+                            Add data model
+                        </Button>
+                    )}
+                </Header>
 
-                {isLoading && <LoadingOverlay accessibleLabel="Loading data models" />}
-
-
-                <DashboardSideBar location={location} history={history} user={user} />
-
-                <Body>
-                    <Header title="My data models">
-                        {isAdmin(user) && (
-                            <Button
-                                startIcon={<AddIcon />}
-                                onClick={() => history.push('/dashboard/data-models/add')}
-                                variant="contained"
-                            >
-                                Add data model
-                            </Button>
-                        )}
-                    </Header>
-
-                    <PageBody>
-                        {dataModels.map(model => {
-                            return <ListItem selectable={false} link={`/dashboard/data-models/${model.id}`}
-                                             title={model.title} />;
-                        })}
-
-                        {dataModels.length == 0 && <div className="NoResults">No data models found.</div>}
-                    </PageBody>
-                </Body>
-            </DashboardPage>
-        );
-    }
-}
+                <PageBody>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={dataModels}
+                            columns={columns}
+                            loading={loading}
+                            error={error}
+                            disableRowSelectionOnClick
+                            emptyStateContent="No data models found"
+                            onRowClick={(params) => history.push(`/dashboard/data-models/${params.row.id}`)}
+                            sx={{ cursor: 'pointer' }}
+                        />
+                    </Box>
+                </PageBody>
+            </Body>
+        </DashboardPage>
+    );
+};
 
 export default withNotifications(DataModels);
