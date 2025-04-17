@@ -1,5 +1,6 @@
 import React from 'react';
 import CSVStudyStructure from 'components/StudyStructure/CSVStudyStructure';
+import NoResults from 'components/NoResults';
 
 interface DistributionContentsCsvProps {
     contents: any[];
@@ -17,7 +18,7 @@ const DistributionContentsCsv: React.FC<DistributionContentsCsvProps> = ({
     return (
         <div className="PageContainer">
             {distribution.includeAllData ? (
-                <div className="NoResults">This distribution contains all fields.</div>
+                <NoResults>This distribution contains all fields.</NoResults>
             ) : (
                 <CSVStudyStructure
                     studyId={distribution.study.id}

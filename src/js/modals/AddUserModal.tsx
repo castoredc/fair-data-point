@@ -65,15 +65,16 @@ class AddUserModal extends Component<AddUserModalProps, AddUserModalState> {
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
                         return (
                             <Form>
-                                <Alert severity="info">
-                                    Please note that users need to log in to the FAIR Data Point first, before they can
-                                    be invited.
-                                </Alert>
-                                {!edit && (
+                                {!edit && <>
+                                    <Alert severity="info">
+                                        Please note that users need to log in to the FAIR Data Point first, before they
+                                        can be invited.
+                                    </Alert>
                                     <FormItem label="Email address">
                                         <Field component={Input} name="email" readOnly={edit} autofocus />
                                     </FormItem>
-                                )}
+                                </>
+                                }
 
                                 <FormItem label="Permissions">
                                     <Field component={Choice} collapse name="type" options={permissions} />

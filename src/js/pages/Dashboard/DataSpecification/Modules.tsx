@@ -12,6 +12,7 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface ModulesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     modules: any;
@@ -217,8 +218,8 @@ class Modules extends Component<ModulesProps, ModulesState> {
                 </ConfirmModal>
 
                 {modules.length === 0 ? (
-                    <div className="NoResults">
-                        This {getType(type)} does not have any groups.
+                    <NoResults>
+                        This {getType(type)} does not have modules.
                         <br />
                         <br />
                         <Button
@@ -226,9 +227,9 @@ class Modules extends Component<ModulesProps, ModulesState> {
                             onClick={() => this.openModuleModal(null)}
                             variant="contained"
                         >
-                            Add group
+                            Add module
                         </Button>
-                    </div>
+                    </NoResults>
                 ) : (
                     <SideTabs
                         hasButtons

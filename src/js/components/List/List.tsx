@@ -8,6 +8,7 @@ import { apiClient } from 'src/js/network';
 import { CommonListProps } from 'components/List/types';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import { List as MuiList } from '@mui/material';
+import NoResults from 'components/NoResults';
 
 export interface Item {
     id: string;
@@ -141,7 +142,7 @@ class List extends Component<ListProps, CommonListState> {
                         />
                     </>
                 ) : (
-                    <div className="NoResults">{noResultsText}</div>
+                    <NoResults>{noResultsText}</NoResults>
                 )}
             </MuiList>
         );

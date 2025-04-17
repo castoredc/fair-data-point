@@ -6,6 +6,7 @@ import AltRouteIcon from '@mui/icons-material/AltRoute';
 import PageTabs from 'components/PageTabs';
 import { DependenciesType, DependencyDescription, DependencyGroupType } from 'types/ModuleType';
 import { Alert } from '@mui/material';
+import NoResults from 'components/NoResults';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
@@ -175,7 +176,7 @@ const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, 
                             {rdf !== '' ? (
                                 <VisNetwork className="FullHeightNetwork" nodes={nodes} edges={edges} />
                             ) : (
-                                <div className="NoResults">There is no preview available.</div>
+                                <NoResults>There is no preview available.</NoResults>
                             )}
                         </div>
                     ),
@@ -190,7 +191,7 @@ const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, 
                                     <Highlight content={rdf} />
                                 </ScrollShadow>
                             ) : (
-                                <div className="NoResults">There is no preview available.</div>
+                                <NoResults>There is no preview available.</NoResults>
                             )}
                         </>
                     ),

@@ -8,6 +8,7 @@ import { apiClient } from 'src/js/network';
 import SelectPage from 'components/SelectPage';
 import Stack from '@mui/material/Stack';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface AddStudyProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
 }
@@ -150,11 +151,11 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     history={history}
                 >
                     <div>
-                        <ListItem key={selectedStudy.sourceId} title={selectedStudy.name} selectable={true}
+                        <ListItem key={selectedStudy.sourceId} title={selectedStudy.name}
                                   active={true} icon="study" />
 
-                        <Stack direction="row" sx={{ justifyContent: 'center' }}>
-                            <Button disabled={submitDisabled} onClick={this.importStudy}>
+                        <Stack direction="row" sx={{ justifyContent: 'flex-end', mt: 2 }}>
+                            <Button disabled={submitDisabled} onClick={this.importStudy} variant="contained">
                                 Next
                             </Button>
                         </Stack>
@@ -182,14 +183,13 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                             <ListItem
                                 key={study.sourceId}
                                 title={study.name}
-                                selectable={true}
                                 onClick={() => this.handleStudySelect(study.sourceId)}
                                 icon="study"
                             />
                         );
                     })
                 ) : (
-                    <div className="NoResults">No studies found.</div>
+                    <NoResults>No studies found.</NoResults>
                 )}
             </SelectPage>
         );

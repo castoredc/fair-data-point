@@ -13,6 +13,7 @@ import DataSpecificationForm from 'components/DataSpecification/DataSpecificatio
 import FieldModal from 'modals/FieldModal';
 import { Types } from 'types/Types';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface FormsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     forms: any;
@@ -217,8 +218,8 @@ class Forms extends Component<FormsProps, FormsState> {
                 </ConfirmModal>
 
                 {forms.length === 0 ? (
-                    <div className="NoResults">
-                        This {getType(type)} does not have any forms.
+                    <NoResults>
+                        This {getType(type)} does not have forms.
                         <br />
                         <br />
                         <Button
@@ -228,7 +229,7 @@ class Forms extends Component<FormsProps, FormsState> {
                         >
                             Add form
                         </Button>
-                    </div>
+                    </NoResults>
                 ) : (
                     <SideTabs
                         hasButtons

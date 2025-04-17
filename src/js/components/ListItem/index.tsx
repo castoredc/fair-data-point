@@ -43,27 +43,6 @@ const ListItem: FC<ListItemProps> = ({
                                          tags = [],
                                          disabled = false,
                                      }) => {
-    if (selectable && onClick) {
-        return (
-            <a
-                href="#"
-                className={classNames('ListItem', 'Selectable', active && 'Active', className)}
-                onClick={e => {
-                    e.preventDefault();
-                    onClick(e);
-                }}
-            >
-                {icon && (
-                    <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                        {icon}
-                    </span>
-                )}
-                <span className="ListItemTitle">{title}</span>
-                <span className="ListItemDescription">{description}</span>
-            </a>
-        );
-    }
-
     const children = (
         <>
             <ListItemText

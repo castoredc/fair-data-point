@@ -11,6 +11,8 @@ import { Typography } from '@mui/material';
 import DataGrid from 'components/DataTable/DataGrid';
 import { GridColDef, GridRowParams } from '@mui/x-data-grid';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { Box } from '@mui/material';
+import NoResults from 'components/NoResults';
 
 interface Log {
     record: { id: string };
@@ -210,12 +212,12 @@ class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDa
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="NoResults">No errors occurred while generating this record</div>
+                                        <NoResults>No errors occurred while generating this record</NoResults>
                                     )}
                                 </FormItem>
                             </div>
                         ) : (
-                            <div className="NoResults">Select a log entry</div>
+                            <NoResults>Select a log entry</NoResults>
                         )}
                     </div>
                 </Split>

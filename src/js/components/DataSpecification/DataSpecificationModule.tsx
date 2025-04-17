@@ -1,6 +1,7 @@
 import React from 'react';
 import TripleGroup from './TripleGroup';
 import Button from '@mui/material/Button';
+import NoResults from 'components/NoResults';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -62,7 +63,7 @@ const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
                 </div>
 
                 {groupedTriples.length === 0 ? (
-                    <div className="NoResults">This group does not contain triples.</div>
+                    <NoResults>This group does not contain triples.</NoResults>
                 ) : (
                     <div className="DataSpecificationTableBody TableBody">
                         {groupedTriples.map(element => (

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import Routes from '../../Routes';
 
-import '../../scss/index.scss';
 import LoadingOverlay from 'components/LoadingOverlay';
 import queryString from 'query-string';
 import { classNames } from '../../util';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Annotations from '../Annotations';
 import Button from '@mui/material/Button';
-
+import NoResults from 'components/NoResults';
 import AddAnnotationModal from '../../modals/AddAnnotationModal';
 import './StudyStructure.scss';
 import ConfirmModal from '../../modals/ConfirmModal';
@@ -130,7 +130,7 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
                 </div>
                 <div className="OptionGroupTableBody TableBody">
                     {options.length === 0 ? (
-                        <div className="NoResults">This option group does not contain options.</div>
+                        <NoResults>This option group does not contain options.</NoResults>
                     ) : (
                         <div>
                             {options.map(option => {

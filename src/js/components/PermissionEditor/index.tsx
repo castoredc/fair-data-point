@@ -14,6 +14,7 @@ import DataGrid from 'components/DataTable/DataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface PermissionEditorProps extends ComponentWithNotifications {
     user: UserType | null;
@@ -211,7 +212,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
         });
 
         return (
-            <>
+            <PageBody>
                 <AddUserModal
                     open={showModal.add}
                     onClose={() => this.closeModal('add')}
@@ -254,7 +255,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                         sx={{ '& .actionsCell': { pr: 1 } }}
                     />
                 </Box>
-            </>
+            </PageBody>
         );
     }
 }

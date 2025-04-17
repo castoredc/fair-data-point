@@ -7,6 +7,7 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface PreviewProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     type: string;
@@ -69,7 +70,7 @@ class Preview extends Component<PreviewProps, PreviewState> {
         }
 
         if (previews.modules.length === 0) {
-            return <div className="NoResults">This {getType(type)} does not have groups.</div>;
+            return <NoResults>This {getType(type)} does not have groups.</NoResults>;
         }
 
         const tabs = previews.modules.map(element => {

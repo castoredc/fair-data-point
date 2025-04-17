@@ -109,17 +109,11 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
                 flex: 1,
                 minWidth: 200,
             },
-            {
-                headerName: 'Status',
-                field: 'status',
-                width: 120,
-            },
         ];
 
         const rows = datasets.map(dataset => ({
             id: dataset.id,
             title: dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') || 'Untitled dataset' : 'Untitled dataset',
-            status: isGranted('edit', dataset.permissions) ? 'Active' : 'Locked',
             slug: dataset.slug,
         }));
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
 import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';
@@ -8,6 +9,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
 import SelectPage from 'components/SelectPage';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface SelectCatalogProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
 }
@@ -114,7 +116,7 @@ class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
                         );
                     })
                 ) : (
-                    <div className="NoResults">No catalogs found.</div>
+                    <NoResults>No catalogs found.</NoResults>
                 )}
 
                 {pagination && (

@@ -11,6 +11,8 @@ import { DataSpecificationOptionGroupType } from 'types/DataSpecificationOptionG
 import { getInitialValues, getSchema } from 'utils/MetadataFormHelper';
 import Stack from '@mui/material/Stack';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { Box } from '@mui/material';
+import NoResults from 'components/NoResults';
 
 interface MetadataFormProps extends ComponentWithNotifications {
     object: any;
@@ -262,8 +264,7 @@ class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
                         type={type}
                         objectId={object.id}
                     />
-
-                    <div className="NoResults">
+                    <NoResults>
                         This {type} does not have any metadata yet.
                         <br />
                         <br />
@@ -274,7 +275,7 @@ class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
                         >
                             Add metadata
                         </Button>
-                    </div>
+                    </NoResults>
                 </>
             );
         }
@@ -314,22 +315,18 @@ class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
                         return (
                             <Form>
                                 <div>
-                                    {forms.map(form => {
-                                        return (
-                                            <RenderedForm
-                                                key={form.id}
-                                                form={form}
-                                                validation={validation}
-                                                optionGroups={optionGroups}
-                                                languages={languages}
-                                                licenses={licenses}
-                                                countries={countries}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                                <div>
-                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                                    {forms.map(form => (
+                                        <RenderedForm
+                                            key={form.id}
+                                            form={form}
+                                            validation={validation}
+                                            optionGroups={optionGroups}
+                                            languages={languages}
+                                            licenses={licenses}
+                                            countries={countries}
+                                        />
+                                    ))}
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between', mt: 2 }}>
                                         <Button
                                             variant="outlined"
                                             startIcon={<AddIcon />}

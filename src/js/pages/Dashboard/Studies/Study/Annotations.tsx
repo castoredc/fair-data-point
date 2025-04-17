@@ -4,6 +4,7 @@ import OptionGroup from 'components/StudyStructure/OptionGroup';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 import { Divider, FormLabel } from '@mui/material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -82,7 +83,7 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
         });
 
         if (optionGroups && optionGroups.length === 0) {
-            return <div className="NoResults">This study does not have option groups.</div>;
+            return <NoResults>This study does not have option groups.</NoResults>;
         }
 
         return (
