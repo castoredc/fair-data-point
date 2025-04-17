@@ -121,7 +121,7 @@ class PersonForm extends Component<PersonFormProps, PersonFormState> {
                                 </FormItem>
                             )}
 
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button type="submit" disabled={isSubmitting} variant="contained">
                                 Save details
                             </Button>
                         </Form>

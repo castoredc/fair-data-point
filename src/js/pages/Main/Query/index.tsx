@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import Header from '../../../components/Layout/Header';
 import LoadingOverlay from 'components/LoadingOverlay';
-import { classNames, localizedText } from '../../../util';
+import { localizedText } from '../../../util';
 import Yasqe from '@triply/yasqe';
-import './Query.scss';
 import SPARQLDataTable from '../../../components/Yasr/SPARQLDataTable';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import Split from '../../../components/Layout/Split';
 import { apiClient } from 'src/js/network';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import Button from '@mui/material/Button';
+import { Button, Stack, Alert, AlertTitle, Box } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import Stack from '@mui/material/Stack';
-import { Alert, AlertTitle } from '@mui/material';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface QueryProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
@@ -233,64 +230,116 @@ class Query extends Component<QueryProps, QueryState> {
             showEditor,
             executionTime,
         } = this.state;
-        const { location, user, embedded } = this.props;
 
+        const { location, user, embedded } = this.props;
         const title = hasDistribution && !isLoading ? localizedText(distribution?.metadata.title, 'en') : 'Query';
         const executedWithoutErrors = queryExecuted && !error;
 
         return (
-            <Layout className="Query" embedded={embedded} fullWidth>
+            <Layout embedded={embedded} fullWidth>
                 <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true} />
-
-                <MainBody isLoading={isLoading} className="QueryComponent">
-                    <Split sizes={[40, 60]}>
-                        <div className="QueryTools">
-                            <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query" />
-                            <Stack direction="row" sx={{ justifyContent: 'center' }}>
-                                <div className="ResultCount">
-                                    {executedWithoutErrors && (
-                                        <>
-                                            <strong>{rows.length}</strong> results
-                                            in <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong>{' '}
-                                            seconds
-                                        </>
-                                    )}
-                                </div>
-                                <div>
-                                    {executedWithoutErrors && (
-                                        <Button
-                                            onClick={this.toggleEditor}
-                                            variant="outlined"
-                                            className="ShowHideButton"
-                                        >
-                                            {showEditor ? 'Hide' : 'Show'} query editor
-                                        </Button>
-                                    )}
-                                </div>
-                                <Button onClick={this.runQuery} startIcon={<PlayArrowIcon />} className="ExecuteButton"
-                                        variant="contained">
-                                    Run query
-                                </Button>
+                <MainBody isLoading={isLoading}>
+                    <Box height="100vh" display="flex" flexDirection="column" overflow="hidden" width="100%">
+                        <Split sizes={[40, 60]}>
+                            <Stack height="100%">
+                                <Box
+                                    flex={1}
+                                    id="query"
+                                    className={showEditor ? undefined : 'Hide'}
+                                    sx={{
+                                        '& .yasqe': {
+                                            transition: 'all 0.8s ease',
+                                            height: '100%',
+                                            borderRadius: 3,
+                                        },
+                                        '& .yasqe_queryButton': {
+                                            display: 'none !important',
+                                        },
+                                        '& .yasgui .controlbar': {
+                                            display: 'none',
+                                        },
+                                        '& .CodeMirror': {
+                                            fontFamily: '"Fira Code", monospace',
+                                            fontSize: 13,
+                                            height: '100% !important',
+                                            borderRadius: 4,
+                                        },
+                                        '&.Hide .yasqe': {
+                                            maxHeight: '0 !important',
+                                        }
+                                    }}
+                                />
+                                <Box mt={1} mb={0}>
+                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                        <Box sx={{ lineHeight: '30px' }}>
+                                            {executedWithoutErrors && (
+                                                <>
+                                                    <strong>{rows.length}</strong> results
+                                                    in <strong>{(Number(executionTime) / 1000.0).toFixed(2)}</strong>{' '}
+                                                    seconds
+                                                </>
+                                            )}
+                                        </Box>
+                                        <Stack direction="row" spacing={2}>
+                                            {executedWithoutErrors && (
+                                                <Button
+                                                    onClick={this.toggleEditor}
+                                                    variant="outlined"
+                                                >
+                                                    {showEditor ? 'Hide' : 'Show'} query editor
+                                                </Button>
+                                            )}
+                                            <Button
+                                                variant="contained"
+                                                startIcon={<PlayArrowIcon />}
+                                                onClick={() => this.yasqe.query()}
+                                                disabled={isExecutingQuery}
+                                            >
+                                                {localizedText('Execute query')}
+                                            </Button>
+                                        </Stack>
+                                    </Stack>
+                                </Box>
                             </Stack>
-                        </div>
-
-                        <div className="QueryResults">
-                            {isExecutingQuery && <LoadingOverlay accessibleLabel="Loading" />}
-                            {executedWithoutErrors && (
-                                <SPARQLDataTable vars={columns} bindings={rows} prefixes={prefixes}
-                                                 fullUrl={distribution?.fullUrl} />
-                            )}
-
-                            {error && <Alert severity="error">
-                                <AlertTitle>An error occurred, please check your query and try again</AlertTitle>
-                                {message}
-                            </Alert>}
-                        </div>
-                    </Split>
+                            <Box height="100%" sx={{
+                                '& .DataTableWrapper': {
+                                    height: '100%',
+                                    borderRadius: 1,
+                                    overflow: 'hidden',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                },
+                                '& a': {
+                                    textDecoration: 'none'
+                                }
+                            }}>
+                                {isExecutingQuery && <LoadingOverlay accessibleLabel="Loading" />}
+                                {queryExecuted && (
+                                    <Box sx={{ height: '100%' }}>
+                                        {error ? (
+                                            <Alert severity="error">
+                                                <AlertTitle>Error</AlertTitle>
+                                                {message}
+                                            </Alert>
+                                        ) : (
+                                            <Box className="DataTableWrapper">
+                                                <SPARQLDataTable
+                                                    vars={columns}
+                                                    bindings={rows}
+                                                    prefixes={prefixes}
+                                                    fullUrl={distribution?.fullUrl}
+                                                />
+                                            </Box>
+                                        )}
+                                    </Box>
+                                )}
+                            </Box>
+                        </Split>
+                    </Box>
                 </MainBody>
             </Layout>
         );
-    }
+}
 }
 
 export default withNotifications(Query);

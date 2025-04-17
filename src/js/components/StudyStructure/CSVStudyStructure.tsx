@@ -88,7 +88,7 @@ class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStruct
                     types={['study', 'report', 'survey']}
                 />
 
-                <div className="FormButtons">
+                <div>
                     <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
                         <span className="FieldCount">
                             {distributionContents.length} field{distributionContents.length !== 1 && 's'} selected

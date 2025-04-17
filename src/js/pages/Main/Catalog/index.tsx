@@ -28,7 +28,7 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
     const title = catalog ? localizedText(catalog.metadata.title, 'en') : null;
 
     return (
-        <Layout className="Catalog" embedded={embedded}>
+        <Layout embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoading}>

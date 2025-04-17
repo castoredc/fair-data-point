@@ -6,14 +6,24 @@ import { OrganizationType } from 'types/OrganizationType';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { TextField } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 
 interface DepartmentSelectProps extends FieldProps, ComponentWithNotifications {
     organization: OrganizationType;
 }
 
+interface DepartmentOption {
+    value: string;
+    label: string;
+    data: {
+        id: string;
+        name: string;
+        source: string;
+    };
+}
+
 type DepartmentSelectState = {
-    options: any;
+    options: DepartmentOption[];
     isLoading: boolean;
 };
 
@@ -120,26 +130,32 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
             <div>
                 {!manual && (
                     <FormItem label="Department">
-                        // TODO: Replace dropdown
-                        {/*<Dropdown*/}
-                        {/*    name="organization"*/}
-                        {/*    options={options}*/}
-
-                        {/*    isDisabled={disabled}*/}
-                        {/*    onChange={(*/}
-                        {/*        value: ReactSelectTypes.OnChangeValue<DefaultOptionType, false>,*/}
-                        {/*        action: ReactSelectTypes.ActionMeta<DefaultOptionType>,*/}
-                        {/*    ) => {*/}
-                        {/*        const department = value && options.find((option: DefaultOptionType) => value.value === option.value);*/}
-                        {/*        form.setFieldValue(field.name, {*/}
-                        {/*            ...department.data,*/}
-                        {/*            source: 'database',*/}
-                        {/*        });*/}
-                        {/*    }}*/}
-                        {/*    getOptionLabel={({ label }) => label}*/}
-                        {/*    getOptionValue={({ value }) => value}*/}
-                        {/*    value={value.id && options.find((option: DefaultOptionType) => value.id === option.value)}*/}
-                        {/*/>*/}
+                        <Autocomplete
+                            options={options}
+                            loading={this.state.isLoading}
+                            disabled={disabled}
+                            noOptionsText={options.length === 0 ? "Loading departments..." : "No departments found"}
+                            value={value.id ? options.find(option => option.value === value.id) : null}
+                            onChange={(event, newValue) => {
+                                if (newValue) {
+                                    form.setFieldValue(field.name, {
+                                        ...newValue.data,
+                                        source: 'database',
+                                    });
+                                }
+                            }}
+                            getOptionLabel={(option) => option.label}
+                            isOptionEqualToValue={(option, value) => option.value === value.value}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    fullWidth
+                                    placeholder="Select a department"
+                                />
+                            )}
+                            disableClearable={true}
+                            sx={{ width: 400 }}
+                        />
 
                         <Button variant="text" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
                             I cannot find my department
@@ -160,6 +176,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                                 }}
                                 disabled={disabled}
                                 autoFocus={value.source === 'manual'}
+                                sx={{ width: 400 }}
                             />
 
                             {organization.source !== 'manual' && (

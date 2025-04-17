@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StudiesDataTable from 'components/DataTable/StudiesDataTable';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
+import PageButtons from 'components/Layout/PageButtons';
 
 import * as H from 'history';
 import PageBody from 'components/Layout/Dashboard/PageBody';
@@ -18,18 +18,15 @@ class Studies extends Component<StudiesProps> {
 
         return (
             <PageBody>
-                <div className="PageButtons">
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-                        <Button
-                            startIcon={<AddIcon />}
-                            className="AddButton"
-                            onClick={() => history.push('/dashboard/catalogs/' + catalog + '/studies/add')}
-                            variant="contained"
-                        >
-                            Add study
-                        </Button>
-                    </Stack>
-                </div>
+                <PageButtons>
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={() => history.push('/dashboard/catalogs/' + catalog + '/studies/add')}
+                        variant="contained"
+                    >
+                        Add study
+                    </Button>
+                </PageButtons>
 
                 <StudiesDataTable history={history} catalog={catalog} />
             </PageBody>

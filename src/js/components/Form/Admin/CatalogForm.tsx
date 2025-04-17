@@ -125,7 +125,7 @@ class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
                   }) => {
                     return (
                         <Form>
-                            <div className="FormContent">
+                            <div>
                                 <FormItem label="Slug"
                                           tooltip="The unique identifying part of a web address, typically at the end of the URL">
                                     <Field component={Input} name="slug" serverError={validation} />
@@ -153,7 +153,7 @@ class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
                             </div>
 
                             {catalog ? (
-                                <div className="FormButtons">
+                                <div>
                                     <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                         <Button
                                             disabled={isSubmitting}

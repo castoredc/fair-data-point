@@ -236,7 +236,7 @@ class DistributionForm extends Component<DistributionFormProps, DistributionForm
 
                     return (
                         <Form>
-                            <div className="FormContent">
+                            <div>
                                 <FormItem label="Distribution type">
                                     <Field component={Choice} options={distributionTypes} name="type" />
                                 </FormItem>
@@ -431,7 +431,7 @@ class DistributionForm extends Component<DistributionFormProps, DistributionForm
                                 )}
                             </div>
 
-                            <div className="FormButtons">
+                            <div>
                                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                     {distribution ? (
                                         <Button

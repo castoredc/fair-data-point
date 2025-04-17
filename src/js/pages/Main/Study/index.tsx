@@ -27,7 +27,7 @@ const Study: React.FC<StudyProps> = ({ user, embedded, location, match }) => {
     }
 
     return (
-        <Layout className="Study" embedded={embedded}>
+        <Layout embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoadingStudy}>
@@ -44,8 +44,7 @@ const Study: React.FC<StudyProps> = ({ user, embedded, location, match }) => {
 
                         <AssociatedItemsBar items={study.count} current="dataset" />
 
-                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null}
-                                     className="MainCol" />
+                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
                     </>
                 )}
             </MainBody>

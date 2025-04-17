@@ -120,7 +120,7 @@ class AffiliationsForm extends Component<AffiliationsFormProps, AffiliationsForm
                         return (
                             <Form>
                                 {isLoading && <LoadingOverlay accessibleLabel="Submitting affiliations" />}
-                                <div className="FormContent">
+                                <div>
                                     {/* @ts-ignore */}
                                     <FieldArray
                                         name="affiliations"
@@ -154,9 +154,9 @@ class AffiliationsForm extends Component<AffiliationsFormProps, AffiliationsForm
                                     />
                                 </div>
 
-                                <div className="FormButtons">
+                                <div>
                                     <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                                        <Button type="submit" disabled={isLoading}>
+                                        <Button type="submit" disabled={isLoading} variant="contained">
                                             Save details
                                         </Button>
                                     </Stack>

@@ -313,7 +313,7 @@ class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
                       }) => {
                         return (
                             <Form>
-                                <div className="FormContent">
+                                <div>
                                     {forms.map(form => {
                                         return (
                                             <RenderedForm
@@ -328,7 +328,7 @@ class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
                                         );
                                     })}
                                 </div>
-                                <div className="FormButtons">
+                                <div>
                                     <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                         <Button
                                             variant="outlined"

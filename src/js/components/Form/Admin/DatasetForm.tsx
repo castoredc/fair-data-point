@@ -128,7 +128,7 @@ class DatasetForm extends Component<DatasetFormProps, DatasetFormState> {
                   }) => {
                     return (
                         <Form>
-                            <div className="FormContent">
+                            <div>
                                 {dataset.study && (
                                     <FormItem label="Study">
                                         <div className="StudyLink">
@@ -181,7 +181,7 @@ class DatasetForm extends Component<DatasetFormProps, DatasetFormState> {
                                 </FormItem>
                             </div>
 
-                            <div className="FormButtons">
+                            <div>
                                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                     <Button
                                         disabled={isSubmitting}

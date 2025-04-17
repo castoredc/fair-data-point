@@ -127,7 +127,7 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
             <PageBody>
                 {isLoading && <LoadingOverlay accessibleLabel="Loading datasets" />}
 
-                <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
+                <Stack direction="row" justifyContent="flex-end" mb={2}>
                     <Button
                         startIcon={<AddIcon />}
                         disabled={isLoading}
@@ -138,7 +138,7 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
                     </Button>
                 </Stack>
 
-                <Box sx={{ height: 400, width: '100%' }}>
+                <Box height={400} width="100%">
                     <DataGrid
                         disableRowSelectionOnClick
                         rows={rows}

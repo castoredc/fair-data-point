@@ -84,7 +84,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
     const form = (
         <FormikProvider value={formProps}>
             <Form>
-                <div className="FormContent">
+                <div>
                     <FormItem label="Name">
                         <Field component={Input} name="name" serverError={validation} />
                     </FormItem>
@@ -107,7 +107,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 </div>
 
                 {props.edcServer ? (
-                    <div className="FormButtons">
+                    <div>
                         <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                             <Button
                                 disabled={isSubmitting}

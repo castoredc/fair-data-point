@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DocumentTitle from '../../components/DocumentTitle';
-import './Login.scss';
+import LoginContainer from '../../components/Login/LoginContainer';
 import queryString from 'query-string';
 import LoginForm from '../../components/Form/LoginForm';
 import { apiClient } from 'src/js/network';
@@ -123,26 +123,20 @@ class Login extends Component<LoginProps, LoginState> {
         }
 
         return (
-            <div className="Login TopLevelContainer">
+            <LoginContainer
+                logo={<div>Logo</div>}
+                title="FAIR Data Point"
+            >
                 <DocumentTitle title="FAIR Data Point | Log in" />
-
-                <div className="Skip" />
-
-                <div className="LoginContainer">
-                    <div className="LoginLogo">
-                        Logo
-                    </div>
-
-                    <LoginForm
-                        path={path}
-                        selectedServerId={selectedServer}
-                        serverLocked={serverLocked}
-                        servers={servers}
-                        catalog={catalog}
-                        view={view}
-                    />
-                </div>
-            </div>
+                <LoginForm
+                    path={path}
+                    selectedServerId={selectedServer}
+                    serverLocked={serverLocked}
+                    servers={servers}
+                    catalog={catalog}
+                    view={view}
+                />
+            </LoginContainer>
         );
     }
 }
