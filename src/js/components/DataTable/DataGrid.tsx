@@ -1,16 +1,15 @@
 import { DataGrid as MuiDataGrid, DataGridProps as MuiDataGridProps, GridOverlay } from '@mui/x-data-grid';
-import { Alert, Box, CircularProgress, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import React from 'react';
 
-interface DataGridProps extends MuiDataGridProps {
-    emptyStateContent?: string;
+interface DataGridProps extends Omit<MuiDataGridProps, 'slots'> {
+    emptyStateContent?: React.ReactNode | (() => React.ReactNode);
     accessibleName?: string;
     loading?: boolean;
     error?: string | null;
 }
 
-
-const CustomNoRowsOverlay = ({ content }: { content: string }) => (
+const CustomNoRowsOverlay = ({ content }: { content: React.ReactNode | (() => React.ReactNode) }) => (
     <GridOverlay>
         <Box
             sx={{
@@ -19,12 +18,10 @@ const CustomNoRowsOverlay = ({ content }: { content: string }) => (
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
-                p: 2
+                p: 2,
             }}
         >
-            <Typography color="text.secondary" align="center">
-                {content}
-            </Typography>
+            {typeof content === 'function' ? content() : content}
         </Box>
     </GridOverlay>
 );
@@ -38,7 +35,7 @@ const CustomLoadingOverlay = () => (
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
-                p: 2
+                p: 2,
             }}
         >
             <CircularProgress size={32} />
@@ -55,7 +52,7 @@ const CustomErrorOverlay = ({ error }: { error: string }) => (
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
-                p: 2
+                p: 2,
             }}
         >
             <Alert severity="error" sx={{ maxWidth: 400 }}>
@@ -65,18 +62,17 @@ const CustomErrorOverlay = ({ error }: { error: string }) => (
     </GridOverlay>
 );
 
-const DataGrid: React.FC<DataGridProps> = ({ 
-    emptyStateContent = 'No data available', 
-    rows, 
-    columns, 
-    loading,
-    error,
-    ...rest 
-}) => {
-    const components = {
-        NoRowsOverlay: () => <CustomNoRowsOverlay content={emptyStateContent} />,
-        ...(loading && { LoadingOverlay: CustomLoadingOverlay }),
-        ...(error && { ErrorOverlay: () => <CustomErrorOverlay error={error} /> })
+const DataGrid: React.FC<DataGridProps> = ({
+                                               emptyStateContent = 'No data available',
+                                               rows,
+                                               columns,
+                                               loading,
+                                               error,
+                                               ...rest
+                                           }) => {
+    const slots = {
+        noRowsOverlay: () => <CustomNoRowsOverlay content={emptyStateContent} />,
+        loadingOverlay: loading ? CustomLoadingOverlay : undefined,
     };
 
     return (
@@ -85,9 +81,8 @@ const DataGrid: React.FC<DataGridProps> = ({
                 rows={rows}
                 columns={columns}
                 loading={loading}
-                error={error}
-                components={components}
-                disableSelectionOnClick
+                slots={slots}
+                disableRowSelectionOnClick
                 {...rest}
             />
         </Box>

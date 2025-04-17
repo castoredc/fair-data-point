@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import LoadingOverlay from 'components/LoadingOverlay';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
-import FormHeading from '../FormHeading';
 import { Field, Form, Formik } from 'formik';
 import Choice from 'components/Input/Formik/Choice';
 import Select from 'components/Input/Formik/Select';
@@ -14,7 +13,7 @@ import * as H from 'history';
 import { apiClient } from 'src/js/network';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Alert, Divider } from '@mui/material';
+import { Alert, Card, CardContent, Typography } from '@mui/material';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface DistributionFormProps extends ComponentWithNotifications {
@@ -236,56 +235,12 @@ class DistributionForm extends Component<DistributionFormProps, DistributionForm
 
                     return (
                         <Form>
-                            <div className="FormContent">
-                                <FormItem label="Distribution type">
-                                    <Field component={Choice} options={distributionTypes} name="type" />
-                                </FormItem>
-
-                                <Divider />
-
-                                {values.type === 'csv' && (
-                                    <>
-                                        <FormHeading label="CSV Distribution" />
-                                        <FormItem>
-                                            <Field
-                                                component={SingleChoice}
-                                                labelText="Include all data"
-                                                name="includeAllData"
-                                                details="Rather than using a pre-defined data dictionary, all data from the study will be included in the distribution"
-                                            />
+                            <Card variant="outlined" sx={{ mb: 2 }}>
+                                <CardContent>
+                                    <div>
+                                        <FormItem label="Distribution type">
+                                            <Field component={Choice} options={distributionTypes} name="type" />
                                         </FormItem>
-                                    </>
-                                )}
-
-                                {values.type === 'rdf' && (
-                                    <>
-                                        <FormHeading label="RDF Distribution" />
-                                        <Stack direction="row">
-                                            <FormItem label="Data model">
-                                                <Field
-                                                    component={Select}
-                                                    options={dataModels}
-                                                    name="dataModel"
-                                                    details="The pre-defined semantic data model describing all relations between data elements"
-                                                />
-                                            </FormItem>
-                                            <FormItem label="Data model version">
-                                                {currentDataModel && (
-                                                    <Field
-                                                        component={Select}
-                                                        options={currentDataModel.versions}
-                                                        name="dataModelVersion"
-                                                        // value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
-                                                    />
-                                                )}
-                                            </FormItem>
-                                        </Stack>
-                                    </>
-                                )}
-
-                                {values.type !== '' && (
-                                    <>
-                                        <Divider />
 
                                         <FormItem
                                             label="Slug"
@@ -310,88 +265,157 @@ class DistributionForm extends Component<DistributionFormProps, DistributionForm
                                             <Field component={Select} options={licenses} name="license" />
                                         </FormItem>
 
-                                        {distribution && (
-                                            <>
-                                                <FormItem
-                                                    label="Publish distribution metadata"
-                                                    details="When enabled, the metadata of this distribution will be publicly accessible on the internet"
-                                                >
+                                        <FormItem
+                                            label="Publish distribution metadata"
+                                            details="When enabled, the metadata of this distribution will be publicly accessible on the internet"
+                                        >
+                                            <Field
+                                                component={Choice}
+                                                options={[
+                                                    {
+                                                        label: 'Yes',
+                                                        value: true,
+                                                    },
+                                                    {
+                                                        label: 'No',
+                                                        value: false,
+                                                    },
+                                                ]}
+                                                collapse
+                                                name="published"
+                                            />
+                                        </FormItem>
+
+
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            {values.type === 'csv' && (
+                                <Card variant="outlined" sx={{ mb: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            CSV Distribution
+                                        </Typography>
+
+                                        <div>
+                                            <FormItem>
+                                                <Field
+                                                    component={SingleChoice}
+                                                    label="Include all data"
+                                                    name="includeAllData"
+                                                    details="Rather than using a pre-defined data dictionary, all data from the study will be included in the distribution"
+                                                />
+                                            </FormItem>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+
+                            {values.type === 'rdf' && (
+                                <Card variant="outlined" sx={{ mb: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            RDF Distribution
+                                        </Typography>
+
+                                        <div>
+                                            <Stack direction="row">
+                                                <FormItem label="Data model">
                                                     <Field
-                                                        component={Choice}
-                                                        options={[
-                                                            {
-                                                                label: 'Yes',
-                                                                value: true,
-                                                            },
-                                                            {
-                                                                label: 'No',
-                                                                value: false,
-                                                            },
-                                                        ]}
-                                                        collapse
-                                                        name="published"
+                                                        component={Select}
+                                                        options={dataModels}
+                                                        name="dataModel"
+                                                        details="The pre-defined semantic data model describing all relations between data elements"
                                                     />
                                                 </FormItem>
-
-                                                <FormHeading label="Data" />
-
-                                                <FormItem
-                                                    label="Publish distribution data"
-                                                    details="When enabled, the data of this distribution will be publicly accessible on the internet"
-                                                >
-                                                    <Field
-                                                        component={Choice}
-                                                        options={[
-                                                            {
-                                                                label: 'Yes',
-                                                                value: true,
-                                                            },
-                                                            {
-                                                                label: 'No',
-                                                                value: false,
-                                                            },
-                                                        ]}
-                                                        collapse
-                                                        name="public"
-                                                    />
+                                                <FormItem label="Data model version">
+                                                    {currentDataModel && (
+                                                        <Field
+                                                            component={Select}
+                                                            options={currentDataModel.versions}
+                                                            name="dataModelVersion"
+                                                            // value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
+                                                        />
+                                                    )}
                                                 </FormItem>
+                                            </Stack>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                                {values.public === true && (
-                                                    <Alert severity="info">
-                                                        Please note that this enables data access to everyone, without
-                                                        any access control.
-                                                    </Alert>
-                                                )}
+                            <Card variant="outlined" sx={{ mb: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        Data
+                                    </Typography>
 
-                                                <FormItem
-                                                    label="Cache distribution data"
-                                                    details="When enabled, the data of this distribution will be cached to enable querying and faster downloading"
-                                                >
-                                                    <Field
-                                                        component={Choice}
-                                                        options={[
-                                                            {
-                                                                label: 'Yes',
-                                                                value: true,
-                                                            },
-                                                            {
-                                                                label: 'No',
-                                                                value: false,
-                                                            },
-                                                        ]}
-                                                        collapse
-                                                        name="cached"
-                                                    />
-                                                </FormItem>
-                                            </>
+                                    <div>
+                                        <FormItem
+                                            label="Publish distribution data"
+                                            details="When enabled, the data of this distribution will be publicly accessible on the internet"
+                                        >
+                                            <Field
+                                                component={Choice}
+                                                options={[
+                                                    {
+                                                        label: 'Yes',
+                                                        value: true,
+                                                    },
+                                                    {
+                                                        label: 'No',
+                                                        value: false,
+                                                    },
+                                                ]}
+                                                collapse
+                                                name="public"
+                                            />
+                                        </FormItem>
+
+                                        {values.public === true && (
+                                            <Alert severity="info">
+                                                Please note that this enables data access to everyone,
+                                                without
+                                                any access control.
+                                            </Alert>
                                         )}
 
-                                        <FormHeading label="Castor EDC API Credentials" />
+                                        <FormItem
+                                            label="Cache distribution data"
+                                            details="When enabled, the data of this distribution will be cached to enable querying and faster downloading"
+                                        >
+                                            <Field
+                                                component={Choice}
+                                                options={[
+                                                    {
+                                                        label: 'Yes',
+                                                        value: true,
+                                                    },
+                                                    {
+                                                        label: 'No',
+                                                        value: false,
+                                                    },
+                                                ]}
+                                                collapse
+                                                name="cached"
+                                            />
+                                        </FormItem>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card variant="outlined" sx={{ mb: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        Castor EDC API Credentials
+                                    </Typography>
+
+                                    <div>
 
                                         <FormItem>
                                             <Field
                                                 component={SingleChoice}
-                                                labelText="Use API User"
+                                                label="Use API User"
                                                 name="useApiUser"
                                                 details="An external user (which should be added to the study) will be used to access the data, required for cached distributions"
                                             />
@@ -401,7 +425,8 @@ class DistributionForm extends Component<DistributionFormProps, DistributionForm
                                             <div>
                                                 {values.apiUserEncrypted ? (
                                                     <div>
-                                                        <p>The API Credentials for this distribution are encrypted.</p>
+                                                        <p>The API Credentials for this distribution are
+                                                            encrypted.</p>
 
                                                         <Button color="error"
                                                                 onClick={() => setFieldValue('apiUserEncrypted', false)}>
@@ -420,18 +445,19 @@ class DistributionForm extends Component<DistributionFormProps, DistributionForm
                                                             </FormItem>
 
                                                             <FormItem label="Client Secret">
-                                                                <Field component={Input} name="clientSecret" />
+                                                                <Field component={Input}
+                                                                       name="clientSecret" />
                                                             </FormItem>
                                                         </Stack>
                                                     </div>
                                                 )}
                                             </div>
                                         )}
-                                    </>
-                                )}
-                            </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
 
-                            <div className="FormButtons">
+                            <div>
                                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                     {distribution ? (
                                         <Button

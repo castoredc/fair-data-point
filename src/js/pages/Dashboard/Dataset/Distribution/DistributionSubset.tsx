@@ -4,6 +4,7 @@ import DistributionContentsDependencyEditor from 'components/DependencyEditor/Di
 import { formatQuery } from 'react-querybuilder';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface DistributionSubsetProps extends ComponentWithNotifications {
     distribution: any;
@@ -182,7 +183,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
         }
 
         return (
-            <div className="PageContainer">
+            <PageBody>
                 <DistributionContentsDependencyEditor
                     prefixes={[]}
                     institutes={institutes}
@@ -192,7 +193,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
                     valueNodes={distribution.type === 'rdf' ? nodes?.value : null}
                     save={this.handleSave}
                 />
-            </div>
+            </PageBody>
         );
     }
 }

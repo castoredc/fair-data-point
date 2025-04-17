@@ -2,9 +2,8 @@ import React, { ChangeEvent, FC } from 'react';
 
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { TimePicker as MuiTimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider, TimePicker as MuiTimePicker } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 
 interface TimePickerProps extends FieldProps {
     readOnly?: boolean;

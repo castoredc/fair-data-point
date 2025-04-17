@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { 
+import {
     Box,
     Button,
     IconButton,
@@ -10,7 +10,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -24,6 +24,7 @@ import { useNotifications } from 'components/WithNotifications';
 interface AgentPickerPropsProps extends FieldProps {
     serverError?: any;
     countries: CountryType[];
+    label: string;
 }
 
 const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>, notifications) => {
@@ -56,7 +57,7 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
     form.setFieldValue(field.name, newData);
 };
 
-const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, serverError }) => {
+const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, serverError, label }) => {
     const [showModal, setShowModal] = useState(false);
     const notifications = useNotifications();
 
@@ -67,6 +68,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
         <Box sx={{ width: '100%' }}>
             <PublisherModal
                 open={showModal}
+                label={label}
                 onClose={() => setShowModal(false)}
                 handleSave={agent => {
                     handleAdd(agent, field, form, notifications);
@@ -75,14 +77,14 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                 countries={countries}
             />
 
-            <TableContainer 
-                component={Paper} 
+            <TableContainer
+                component={Paper}
                 variant="outlined"
-                sx={{ 
+                sx={{
                     mb: 2,
                     '& .MuiTableCell-root': {
-                        py: 1.5
-                    }
+                        py: 1.5,
+                    },
                 }}
             >
                 <Table size="small">
@@ -108,13 +110,13 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                             }
 
                             return (
-                                <TableRow 
+                                <TableRow
                                     key={index}
                                     sx={{
                                         '&:last-child td, &:last-child th': { border: 0 },
                                         '&:hover': {
-                                            bgcolor: 'action.hover'
-                                        }
+                                            bgcolor: 'action.hover',
+                                        },
                                     }}
                                 >
                                     <TableCell>{name}</TableCell>
@@ -124,11 +126,11 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                                         <IconButton
                                             size="small"
                                             onClick={() => handleRemove(field, form, index)}
-                                            sx={{ 
+                                            sx={{
                                                 color: 'error.main',
                                                 '&:hover': {
-                                                    bgcolor: 'error.lighter'
-                                                }
+                                                    bgcolor: 'error.lighter',
+                                                },
                                             }}
                                         >
                                             <ClearIcon fontSize="small" />
@@ -157,7 +159,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                     onClick={() => setShowModal(true)}
                     sx={{ px: 3 }}
                 >
-                    Add Agent
+                    Add new
                 </Button>
             </Box>
         </Box>

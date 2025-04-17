@@ -84,7 +84,7 @@ class MetadataModelForm extends Component<MetadataModelFormProps, MetadataModelF
                       }) => {
                         return (
                             <Form>
-                                <div className="FormContent">
+                                <div>
                                     <FormItem label="Title">
                                         <Field component={Input} name="title" serverError={validation} />
                                     </FormItem>
@@ -95,7 +95,7 @@ class MetadataModelForm extends Component<MetadataModelFormProps, MetadataModelF
                                 </div>
 
                                 {metadataModel ? (
-                                    <div className="FormButtons">
+                                    <div>
                                         <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                             <Button
                                                 disabled={isSubmitting}

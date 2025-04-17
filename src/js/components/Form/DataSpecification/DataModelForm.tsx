@@ -83,7 +83,7 @@ class DataModelForm extends Component<DataModelFormProps, DataModelFormState> {
                       }) => {
                         return (
                             <Form>
-                                <div className="FormContent">
+                                <div>
                                     <FormItem label="Title">
                                         <Field component={Input} name="title" serverError={validation} />
                                     </FormItem>
@@ -94,7 +94,7 @@ class DataModelForm extends Component<DataModelFormProps, DataModelFormState> {
                                 </div>
 
                                 {dataModel ? (
-                                    <div className="FormButtons">
+                                    <div>
                                         <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                             <Button
                                                 disabled={isSubmitting}

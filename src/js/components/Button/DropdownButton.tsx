@@ -1,20 +1,20 @@
-import React, { FC, useState, MouseEvent } from 'react';
-import { 
+import React, { FC, MouseEvent, useState } from 'react';
+import {
     Button,
     IconButton,
-    Menu,
-    MenuItem,
     ListItemIcon,
     ListItemText,
+    Menu,
+    MenuItem,
     useMediaQuery,
-    useTheme
+    useTheme,
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface DropdownButtonItem {
     label: string;
-    icon?: string;
+    icon?: React.ReactNode;
     destination: string;
 }
 
@@ -25,12 +25,12 @@ interface DropdownButtonProps {
     buttonType?: 'primary' | 'secondary' | 'text';
 }
 
-const DropdownButton: FC<DropdownButtonProps> = ({ 
-    text, 
-    items, 
-    icon = 'account',
-    buttonType = 'primary' 
-}) => {
+const DropdownButton: FC<DropdownButtonProps> = ({
+                                                     text,
+                                                     items,
+                                                     icon = 'account',
+                                                     buttonType = 'primary',
+                                                 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const theme = useTheme();
@@ -71,26 +71,26 @@ const DropdownButton: FC<DropdownButtonProps> = ({
                             minWidth: 200,
                             '& .MuiMenuItem-root': {
                                 py: 1,
-                                px: 2
-                            }
-                        }
+                                px: 2,
+                            },
+                        },
                     }}
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                     {items.map((item, index) => (
-                        <MenuItem 
-                            key={index} 
+                        <MenuItem
+                            key={index}
                             onClick={() => handleItemClick(item)}
                             sx={{
                                 '&:hover': {
-                                    bgcolor: 'action.hover'
-                                }
+                                    bgcolor: 'action.hover',
+                                },
                             }}
                         >
                             {item.icon && (
                                 <ListItemIcon>
-                                    <AccountCircleIcon fontSize="small" />
+                                    {item.icon} aaa
                                 </ListItemIcon>
                             )}
                             <ListItemText primary={item.label} />
@@ -124,26 +124,26 @@ const DropdownButton: FC<DropdownButtonProps> = ({
                         minWidth: 200,
                         '& .MuiMenuItem-root': {
                             py: 1,
-                            px: 2
-                        }
-                    }
+                            px: 2,
+                        },
+                    },
                 }}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
                 {items.map((item, index) => (
-                    <MenuItem 
-                        key={index} 
+                    <MenuItem
+                        key={index}
                         onClick={() => handleItemClick(item)}
                         sx={{
                             '&:hover': {
-                                bgcolor: 'action.hover'
-                            }
+                                bgcolor: 'action.hover',
+                            },
                         }}
                     >
                         {item.icon && (
                             <ListItemIcon>
-                                <AccountCircleIcon fontSize="small" />
+                                {item.icon}
                             </ListItemIcon>
                         )}
                         <ListItemText primary={item.label} />

@@ -18,6 +18,7 @@ interface SelectProps extends FieldProps {
 
 interface AsyncSelectProps extends SelectProps {
     cachedOptions: DefaultOptionType[];
+    filterOptions?: (options: DefaultOptionType[], state: any) => DefaultOptionType[];
 }
 
 export function isMultipleOption<DefaultOptionType>(
@@ -45,7 +46,7 @@ const Select: FC<SelectProps> = ({
         <>
             <Autocomplete
                 value={options && options.find((option: DefaultOptionType) => field.value === option.value)}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} size="small" />}
                 onChange={(event: any, newValue: SingleValue | MultiValue) => {
                     const returnValue = newValue && (isMultipleOption(newValue) ? newValue.map(rawValue => rawValue.value) : newValue.value);
 
@@ -76,9 +77,9 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
                                                       onChange,
                                                       autoFocus,
                                                       serverError,
-                                                      loadOptions,
                                                       cachedOptions,
                                                       options,
+                                                      filterOptions,
                                                       ...rest
                                                   }) => {
     const touched = form.touched[field.name];
@@ -88,10 +89,10 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
     return (
         <div className="Select">
             <Autocomplete
-                filterOptions={loadOptions}
+                filterOptions={filterOptions}
                 options={cachedOptions}
                 openOnFocus={true}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} size="small" />}
                 value={field.value}
                 onChange={(event: any, newValue: SingleValue | MultiValue) => {
                     const returnValue = newValue && (isMultipleOption(newValue) ? newValue.map(rawValue => rawValue.value) : newValue.value);

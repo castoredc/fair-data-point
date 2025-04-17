@@ -132,7 +132,7 @@ class DistributionContentsRdf extends Component<DistributionContentsRdfProps, Di
                                 >
                                     {dataModel.versions.map((version: any) => {
                                         const label = distribution.dataModel.id === version.id ? `${version.version} (active)` : version.version;
-                                        return <MenuItem value={version.id}>{label}</MenuItem>
+                                        return <MenuItem value={version.id}>{label}</MenuItem>;
                                     })}
                                 </Select>
                             </div>

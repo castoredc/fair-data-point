@@ -11,6 +11,7 @@ interface UriInputProps extends FieldProps {
     serverError?: any;
     multiline?: boolean;
     prefixes: PrefixType[];
+    fullWidth?: boolean;
 }
 
 const UriInput: FC<UriInputProps> = ({
@@ -23,6 +24,7 @@ const UriInput: FC<UriInputProps> = ({
                                          serverError,
                                          multiline,
                                          prefixes,
+                                         fullWidth,
                                      }) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
@@ -63,6 +65,7 @@ const UriInput: FC<UriInputProps> = ({
                 // readOnly={readOnly}
                 autoFocus={autoFocus}
                 multiline={multiline}
+                fullWidth={fullWidth}
             />
 
             <FieldErrors field={field} serverErrors={serverErrors} />

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 type FormGroupProps = {
     label: string;
@@ -14,12 +14,12 @@ const FormGroup: FC<FormGroupProps> = ({ label, children }) => {
                     {label}
                 </Typography>
             </Box>
-            <Paper 
-                elevation={0} 
-                sx={{ 
+            <Paper
+                elevation={0}
+                sx={{
                     p: 3,
                     bgcolor: 'background.paper',
-                    borderRadius: 2
+                    borderRadius: 2,
                 }}
             >
                 {children}

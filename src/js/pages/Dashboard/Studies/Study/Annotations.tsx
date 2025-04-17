@@ -4,7 +4,8 @@ import OptionGroup from 'components/StudyStructure/OptionGroup';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { Divider, FormLabel } from '@mui/material';
+import NoResults from 'components/NoResults';
+import { Divider, FormLabel, Stack } from '@mui/material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -63,9 +64,9 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
             });
     };
 
-    updateSelection = option => {
+    updateSelection = event => {
         this.setState({
-            selectedOptionGroup: option.value,
+            selectedOptionGroup: event.target.value,
         });
     };
 
@@ -82,20 +83,35 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
         });
 
         if (optionGroups && optionGroups.length === 0) {
-            return <div className="NoResults">This study does not have option groups.</div>;
+            return <NoResults>This study does not have option groups.</NoResults>;
         }
 
         return (
             <PageBody>
-                <FormLabel>Option group</FormLabel>
-                <Select
-                    onChange={this.updateSelection}
-                    value={selectedOptionGroup}
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        mb: 2,
+                    }}
                 >
-                    {optionGroups.map(optionGroup => {
-                        return <MenuItem value={optionGroup.id}>{optionGroup.name}</MenuItem>
-                    })}
-                </Select>
+                    <FormLabel>Option group</FormLabel>
+                    <Select
+                        onChange={this.updateSelection}
+                        value={selectedOptionGroup}
+                        sx={{ width: 400 }}
+                    >
+                        {optionGroups.map(optionGroup => {
+                            return <MenuItem
+                                key={optionGroup.id}
+                                value={optionGroup.id}>
+                                {optionGroup.name}
+                            </MenuItem>;
+                        })}
+                    </Select>
+                </Stack>
 
                 <Divider />
 

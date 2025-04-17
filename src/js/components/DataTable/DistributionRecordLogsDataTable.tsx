@@ -11,8 +11,10 @@ import { Typography } from '@mui/material';
 import DataGrid from 'components/DataTable/DataGrid';
 import { GridColDef, GridRowParams } from '@mui/x-data-grid';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface Log {
+    id: string;
     record: { id: string };
     status: 'error' | 'success' | 'not_updated' | 'partially';
     createdAt: string;
@@ -107,7 +109,7 @@ class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDa
             });
     };
 
-    handlePagination = (currentPage: number, pageSize: number ) => {
+    handlePagination = (currentPage: number, pageSize: number) => {
         const { pagination } = this.state;
 
         this.setState(
@@ -158,6 +160,7 @@ class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDa
         ];
 
         const rows = logs.map((log, index) => ({
+            id: log.id,
             record: log.record.id,
             status: <DistributionGenerationStatus status={log.status} />,
             createdAt: moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
@@ -210,12 +213,12 @@ class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDa
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="NoResults">No errors occurred while generating this record</div>
+                                        <NoResults>No errors occurred while generating this record</NoResults>
                                     )}
                                 </FormItem>
                             </div>
                         ) : (
-                            <div className="NoResults">Select a log entry</div>
+                            <NoResults>Select a log entry</NoResults>
                         )}
                     </div>
                 </Split>

@@ -1,10 +1,8 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { classNames, isURL } from '../../util';
-import Tags from '../Tags';
+import { isURL } from '../../util';
 import { LocationState } from 'history';
 import ListItemButton from '@mui/material/ListItemButton';
-import { Divider } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 
@@ -43,27 +41,6 @@ const ListItem: FC<ListItemProps> = ({
                                          tags = [],
                                          disabled = false,
                                      }) => {
-    if (selectable && onClick) {
-        return (
-            <a
-                href="#"
-                className={classNames('ListItem', 'Selectable', active && 'Active', className)}
-                onClick={e => {
-                    e.preventDefault();
-                    onClick(e);
-                }}
-            >
-                {icon && (
-                    <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                        {icon}
-                    </span>
-                )}
-                <span className="ListItemTitle">{title}</span>
-                <span className="ListItemDescription">{description}</span>
-            </a>
-        );
-    }
-
     const children = (
         <>
             <ListItemText
@@ -89,13 +66,13 @@ const ListItem: FC<ListItemProps> = ({
 
     if (isURL(link) || newWindow) {
         button = <ListItemButton
-                component="a"
-                href={link}
-                onClick={onClick}
-                target="_blank"
-            >
-                {children}
-            </ListItemButton>;
+            component="a"
+            href={link}
+            onClick={onClick}
+            target="_blank"
+        >
+            {children}
+        </ListItemButton>;
     } else {
         button = <ListItemButton
             component={Link}
@@ -103,14 +80,11 @@ const ListItem: FC<ListItemProps> = ({
             // className="ListItem"
             onClick={onClick}>
             {children}
-        </ListItemButton>
+        </ListItemButton>;
     }
 
     // @ts-ignore
-    return <>
-        {button}
-        <Divider />
-    </>;
+    return button;
 };
 
 export default ListItem;

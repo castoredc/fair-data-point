@@ -3,6 +3,10 @@
 import React, { FC } from 'react';
 import { RuleGroupProps as QueryBuilderRuleGroupProps } from 'react-querybuilder/types/types';
 import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
 
 interface RuleGroupProps extends QueryBuilderRuleGroupProps {
 }
@@ -25,8 +29,8 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
 
     const hasParentGroup = () => !!parentId;
 
-    const onCombinatorChange = value => {
-        onPropChange('combinator', value, id);
+    const onCombinatorChange = event => {
+        onPropChange('combinator', event.target.value, id);
     };
 
     const onNotToggleChange = checked => {
@@ -57,42 +61,21 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
     };
 
     const level = getLevel(id);
-
-    const length = rules.length - 1;
-
-    if (combinator === undefined) {
-        combinator = 'and';
-    }
+    const finalCombinator = combinator || 'and';
 
     return (
-        <div className={`RuleGroup`} data-rule-group-id={id} data-level={level}>
-            <div className={`RuleGroup-header`}>
-                <Stack direction="row" alignment="normal" sx={{ justifyContent: 'space-between' }}>
-                    <Stack direction="row">
-                        {showCombinatorsBetweenRules ? null : (
-                            <div className="RuleGroupCombinator">
-                                <controls.combinatorSelector
-                                    options={combinators}
-                                    value={combinator}
-                                    title={translations.combinators.title}
-                                    className={`RuleGroup-combinators`}
-                                    handleOnChange={onCombinatorChange}
-                                    rules={rules}
-                                    level={level}
-                                />
-                            </div>
-                        )}
-                        {!showNotToggle ? null : (
-                            <controls.notToggle
-                                className={`RuleGroup-notToggle`}
-                                title={translations.notToggle.title}
-                                checked={not}
-                                handleOnChange={onNotToggleChange}
-                                level={level}
-                            />
-                        )}
-                    </Stack>
-                    <Stack direction="row">
+        <Card
+            variant="outlined"
+            sx={{
+                mb: 2,
+            }}
+            data-rule-group-id={id}
+            data-level={level}
+        >
+            <CardHeader
+                sx={{ p: 2 }}
+                action={
+                    <Stack direction="row" spacing={1}>
                         <controls.addRuleAction
                             label={translations.addRule.label}
                             title={translations.addRule.title}
@@ -109,7 +92,7 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
                             rules={rules}
                             level={level}
                         />
-                        {hasParentGroup() ? (
+                        {hasParentGroup() && (
                             <controls.removeGroupAction
                                 label={translations.removeGroup.label}
                                 title={translations.removeGroup.title}
@@ -118,48 +101,78 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
                                 rules={rules}
                                 level={level}
                             />
-                        ) : null}
+                        )}
                     </Stack>
-                </Stack>
-            </div>
-            {rules.map((r, idx) => (
-                <div className="RuleGroupRules" key={r.id}>
-                    {idx && showCombinatorsBetweenRules ? (
-                        <div className="RuleGroupCombinator">
-                            <controls.combinatorSelector
-                                options={combinators}
-                                value={combinator}
-                                title={translations.combinators.title}
-                                className={`RuleGroup-combinators betweenRules`}
-                                handleOnChange={onCombinatorChange}
-                                rules={rules}
+                }
+                title={
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        {!showCombinatorsBetweenRules && (
+                            <Box className="RuleGroupCombinator">
+                                <controls.combinatorSelector
+                                    options={combinators}
+                                    value={finalCombinator}
+                                    title={translations.combinators.title}
+                                    className={`RuleGroup-combinators`}
+                                    handleOnChange={onCombinatorChange}
+                                    rules={rules}
+                                    level={level}
+                                />
+                            </Box>
+                        )}
+                        {showNotToggle && (
+                            <controls.notToggle
+                                className={`RuleGroup-notToggle`}
+                                title={translations.notToggle.title}
+                                checked={not}
+                                handleOnChange={onNotToggleChange}
                                 level={level}
                             />
-                        </div>
-                    ) : null}
-                    {isRuleGroup(r) ? (
-                        <RuleGroup
-                            id={r.id}
-                            schema={schema}
-                            parentId={id}
-                            combinator={r.combinator}
-                            translations={translations}
-                            rules={r.rules}
-                            not={!!r.not}
-                        />
-                    ) : (
-                        <controls.rule
-                            id={r.id}
-                            field={r.field}
-                            value={r.value}
-                            operator={r.operator}
-                            schema={schema}
-                            parentId={id}
-                            translations={translations}
-                        />
-                    )}
-                </div>
-            ))}
-        </div>
+                        )}
+                    </Stack>
+                }
+            />
+            <CardContent sx={{ p: 2 }}>
+                <Stack spacing={2}>
+                    {rules.map((r, idx) => (
+                        <Box key={r.id}>
+                            {showCombinatorsBetweenRules && (
+                                <Box className="RuleGroupCombinator" sx={{ mb: 2 }}>
+                                    <controls.combinatorSelector
+                                        options={combinators}
+                                        value={finalCombinator}
+                                        title={translations.combinators.title}
+                                        className={`RuleGroup-combinators betweenRules`}
+                                        handleOnChange={onCombinatorChange}
+                                        rules={rules}
+                                        level={level}
+                                    />
+                                </Box>
+                            )}
+                            {isRuleGroup(r) ? (
+                                <RuleGroup
+                                    id={r.id}
+                                    schema={schema}
+                                    parentId={id}
+                                    combinator={r.combinator}
+                                    translations={translations}
+                                    rules={r.rules}
+                                    not={!!r.not}
+                                />
+                            ) : (
+                                <controls.rule
+                                    id={r.id}
+                                    field={r.field}
+                                    value={r.value}
+                                    operator={r.operator}
+                                    schema={schema}
+                                    parentId={id}
+                                    translations={translations}
+                                />
+                            )}
+                        </Box>
+                    ))}
+                </Stack>
+            </CardContent>
+        </Card>
     );
 };

@@ -93,7 +93,7 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
         >
             {({ values, setFieldValue, isValid, isSubmitting }) => (
                 <Form method="post">
-                    <div className="DependencyEditor">
+                    <div className="DependencyEditor" style={{ width: '700px' }}>
                         <QueryBuilder
                             query={values.query}
                             fields={fields}
@@ -104,20 +104,22 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                             }}
                             controlElements={{
                                 addGroupAction: props => (
-                                    <Button startIcon={<AddIcon />} onClick={props.handleOnClick}>
+                                    <Button startIcon={<AddIcon />} variant="contained" onClick={props.handleOnClick}>
                                         Group
                                     </Button>
                                 ),
                                 removeGroupAction: props => (
-                                    <Button startIcon={<DeleteIcon />} color="error" onClick={props.handleOnClick} />
+                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error"
+                                            onClick={props.handleOnClick} />
                                 ),
                                 addRuleAction: props => (
-                                    <Button startIcon={<AddIcon />} onClick={props.handleOnClick}>
+                                    <Button startIcon={<AddIcon />} variant="contained" onClick={props.handleOnClick}>
                                         Condition
                                     </Button>
                                 ),
                                 removeRuleAction: props => (
-                                    <Button startIcon={<DeleteIcon />} color="error" onClick={props.handleOnClick} />
+                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error"
+                                            onClick={props.handleOnClick} />
                                 ),
                                 combinatorSelector: props => {
                                     return <CombinatorSelector options={props.options} value={props.value}
@@ -143,7 +145,7 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
 
                     <br />
 
-                    <Button type="submit" disabled={isSubmitting}>
+                    <Button type="submit" variant="contained" disabled={isSubmitting}>
                         Save dependencies
                     </Button>
                 </Form>

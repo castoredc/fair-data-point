@@ -24,7 +24,8 @@ interface Distribution {
     permissions: string[];
 }
 
-interface DistributionsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
+interface DistributionsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 const Distributions: React.FC<DistributionsProps> = ({ match, history, notifications }) => {
     const [distributions, setDistributions] = useState<Distribution[]>([]);
@@ -60,14 +61,14 @@ const Distributions: React.FC<DistributionsProps> = ({ match, history, notificat
             field: 'displayTitle',
             headerName: 'Title',
             flex: 1,
-        }
+        },
     ];
 
     const rows = distributions.map(distribution => ({
         ...distribution,
         displayTitle: distribution.hasMetadata && distribution.metadata?.title
             ? localizedText(distribution.metadata.title, 'en') || 'Untitled distribution'
-            : 'Untitled distribution'
+            : 'Untitled distribution',
     }));
 
     return (
@@ -103,8 +104,8 @@ const Distributions: React.FC<DistributionsProps> = ({ match, history, notificat
                                 const rowId = theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900];
                                 const row = rows.find(r => r.id === rowId);
                                 return row ? (isGranted('edit', row.permissions) ? 1 : 0.5) : 1;
-                            }
-                        }
+                            },
+                        },
                     }}
                 />
             </Box>

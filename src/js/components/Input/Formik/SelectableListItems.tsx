@@ -1,9 +1,11 @@
 import React, { FC, FormEvent, InputHTMLAttributes } from 'react';
-import { classNames } from '../../../util';
 import CustomIcon from 'components/Icon/CustomIcon';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import _ from 'lodash';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 interface SelectableListItemsProps extends FieldProps {
     readOnly?: boolean;
@@ -74,20 +76,21 @@ const SelectableListItem: FC<ListItemProps> = ({
                                                    role,
                                                }) => {
     return (
-        <div className={classNames('ListItem', 'Selectable', active && 'Active')} role={role} onClick={handleChange}>
-            {icon && (
-                <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                    {icon}
-                </span>
-            )}
-            {customIcon && (
-                <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                    <CustomIcon type={customIcon} />
-                </span>
-            )}
-            <span className="ListItemTitle">{title}</span>
-            <span className="ListItemDescription">{description}</span>
-        </div>
+        <ListItemButton
+            selected={active}
+            onClick={handleChange}
+        >
+            {icon && <ListItemIcon>
+                {icon}
+            </ListItemIcon>}
+            {customIcon && <ListItemIcon>
+                <CustomIcon type={customIcon} />
+            </ListItemIcon>}
+            <ListItemText
+                primary={title}
+                secondary={description}
+            />
+        </ListItemButton>
     );
 };
 

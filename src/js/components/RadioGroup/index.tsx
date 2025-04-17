@@ -3,6 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import { Radio, RadioGroup as MuiRadioGroup } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 export type OptionValue = string | number;
 
@@ -25,20 +26,20 @@ interface RadioGroupProps {
 const RadioGroup: FC<RadioGroupProps> = ({ options, value, multiple, onChange, disabled, name }) => {
     const parsedValue = value && Array.isArray(value) ? value : [];
 
-    if(multiple) {
+    if (multiple) {
         return <FormGroup>
             {options.map((option) => {
                 const checked = parsedValue.includes(option.value);
 
                 return <FormControlLabel
                     key={option.value}
-                     control={
-                         <Checkbox checked={checked} onChange={onChange} name={option.value as string} />
-                     }
-                     label={option.label}
-                />
+                    control={
+                        <Checkbox checked={checked} onChange={onChange} name={option.value as string} />
+                    }
+                    label={option.label}
+                />;
             })}
-        </FormGroup>
+        </FormGroup>;
     }
 
     return <MuiRadioGroup
@@ -50,14 +51,21 @@ const RadioGroup: FC<RadioGroupProps> = ({ options, value, multiple, onChange, d
             return <FormControlLabel
                 key={option.value}
                 control={
-                    <Radio />
+                    <Radio
+                        sx={{
+                            '& .MuiSvgIcon-root': {
+                                fontSize: 18,
+                            },
+                        }} />
                 }
-                label={option.label}
+                label={<Typography sx={{
+                    fontSize: '0.875rem',
+                }}>{option.label}</Typography>}
                 value={option.value}
                 disabled={disabled}
-            />
+            />;
         })}
-    </MuiRadioGroup>
+    </MuiRadioGroup>;
 };
 
 export default RadioGroup;

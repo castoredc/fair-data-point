@@ -202,7 +202,7 @@ class DisplaySettingModal extends Component<DisplaySettingModalProps, DisplaySet
                                            name="displayType" />
                                 </FormItem>
 
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button type="submit" variant="contained" disabled={isSubmitting}>
                                     {title}
                                 </Button>
                             </Form>

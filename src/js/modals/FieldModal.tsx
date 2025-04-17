@@ -57,7 +57,7 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
             nodeData: null,
         };
 
-        if (data !== null) {
+        if (data !== null || data !== undefined) {
             newData = data;
         } else {
             newData.order = this.getOrderOptions().slice(-1)[0].value;
@@ -224,10 +224,10 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
                                 )}
 
                                 <FormItem>
-                                    <Field component={SingleChoice} labelText="Required" name="isRequired" />
+                                    <Field component={SingleChoice} label="Required" name="isRequired" />
                                 </FormItem>
 
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button type="submit" variant="contained" disabled={isSubmitting}>
                                     {title}
                                 </Button>
                             </Form>

@@ -84,7 +84,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
     const form = (
         <FormikProvider value={formProps}>
             <Form>
-                <div className="FormContent">
+                <div>
                     <FormItem label="Name">
                         <Field component={Input} name="name" serverError={validation} />
                     </FormItem>
@@ -96,7 +96,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                     </FormItem>
 
                     <FormItem>
-                        <Field component={SingleChoice} labelText="Default server?" name="default" />
+                        <Field component={SingleChoice} label="Default server?" name="default" />
                     </FormItem>
                     <FormItem label="Client ID">
                         <Field component={Input} name="clientId" serverError={validation} />
@@ -107,7 +107,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 </div>
 
                 {props.edcServer ? (
-                    <div className="FormButtons">
+                    <div>
                         <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                             <Button
                                 disabled={isSubmitting}

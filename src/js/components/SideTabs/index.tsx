@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Stack, Typography, Tabs, Tab, Paper } from '@mui/material';
+import { Box, Chip, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 
 type Tab = {
     type?: 'separator';
@@ -52,9 +52,8 @@ const SideTabs: FC<SideTabsProps> = ({
                     mr: 4,
                     display: 'flex',
                     flexDirection: 'column',
-                    mt: hasButtons ? '50px' : hasTabs ? '4.8rem' : title ? 0 : '50px',
                     borderRight: 1,
-                    borderColor: 'divider'
+                    borderColor: 'divider',
                 }}
             >
                 {(title || actions) && (
@@ -80,13 +79,14 @@ const SideTabs: FC<SideTabsProps> = ({
                             minHeight: 48,
                             alignItems: 'flex-start',
                             textAlign: 'left',
-                            px: 2
-                        }
+                            px: 2,
+                        },
                     }}
                 >
                     {tabs.map((tab, index) => {
                         if (typeof tab.type !== 'undefined' && tab.type === 'separator') {
-                            return <Box key={`sidetabs-${index}`} sx={{ my: 1, borderTop: 1, borderColor: 'divider' }} />;
+                            return <Box key={`sidetabs-${index}`}
+                                        sx={{ my: 1, borderTop: 1, borderColor: 'divider' }} />;
                         } else {
                             return (
                                 <Tab
@@ -99,28 +99,33 @@ const SideTabs: FC<SideTabsProps> = ({
                                                     {tab.number}
                                                 </Typography>
                                             )}
-                                            <Typography 
-                                                variant="body2" 
-                                                component="span" 
-                                                sx={{ 
+                                            <Typography
+                                                variant="body2"
+                                                component="span"
+                                                sx={{
                                                     flex: 1,
                                                     textAlign: 'left',
                                                     whiteSpace: 'normal',
-                                                    wordBreak: 'break-word'
+                                                    wordBreak: 'break-word',
                                                 }}
                                             >
                                                 {tab.title}
                                             </Typography>
                                             {tab.badge && (
-                                                <Box component="span">
-                                                    {tab.badge}
-                                                </Box>
+                                                <Chip
+                                                    size="small"
+                                                    sx={{
+                                                        textTransform: 'uppercase',
+                                                        fontSize: '0.5rem',
+                                                    }}
+                                                    label={tab.badge}
+                                                />
                                             )}
                                         </Stack>
                                     }
                                     sx={{
                                         width: '100%',
-                                        justifyContent: 'flex-start'
+                                        justifyContent: 'flex-start',
                                     }}
                                 />
                             );
@@ -128,8 +133,8 @@ const SideTabs: FC<SideTabsProps> = ({
                     })}
                 </Tabs>
             </Paper>
-            <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
-                {tabs[activeTab].content}
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+                {tabs[activeTab] !== undefined && tabs[activeTab].content}
             </Box>
         </Box>
     );

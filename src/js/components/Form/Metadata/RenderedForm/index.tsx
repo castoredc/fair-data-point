@@ -18,7 +18,7 @@ type RenderedFormProps = {
 
 const RenderedForm: FC<RenderedFormProps> = ({ form, validation, optionGroups, languages, licenses, countries }) => {
     return (
-        <Card variant="outlined">
+        <Card variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {form.title}

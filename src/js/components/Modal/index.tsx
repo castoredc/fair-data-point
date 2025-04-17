@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ open, title, onClose, children, customWid
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: customWidth ?? 400,
+        width: customWidth ?? 465,
         p: 4,
     };
 

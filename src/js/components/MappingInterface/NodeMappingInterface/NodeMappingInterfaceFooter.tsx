@@ -26,7 +26,7 @@ const NodeMappingInterfaceFooter: React.FC<NodeMappingInterfaceFooterProps> = ({
                                                                                }) => {
     if (dataTransformation && step === 'elements') {
         return (
-            <div className="FormButtons">
+            <div>
                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                     <span>
                         The data will be transformed to <b>{valueDescription}</b>.
@@ -45,7 +45,7 @@ const NodeMappingInterfaceFooter: React.FC<NodeMappingInterfaceFooterProps> = ({
         );
     } else if (dataTransformation && step === 'syntax') {
         return (
-            <div className="FormButtons">
+            <div>
                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                     <Button variant="outlined" onClick={() => setStep('elements')} disabled={isLoading}>
                         Back
@@ -59,7 +59,7 @@ const NodeMappingInterfaceFooter: React.FC<NodeMappingInterfaceFooterProps> = ({
         );
     } else {
         return (
-            <div className="FormButtons">
+            <div>
                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                     <span>
                         Only {fieldDescription} supporting <b>{valueDescription}</b> can be selected.

@@ -8,11 +8,13 @@ import { apiClient } from 'src/js/network';
 import { Permissions } from 'components/PermissionEditor/Permissions';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { Box } from '@mui/material';
 import LoadingOverlay from 'components/LoadingOverlay';
 import DataGrid from 'components/DataTable/DataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface PermissionEditorProps extends ComponentWithNotifications {
     user: UserType | null;
@@ -45,7 +47,6 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
 
     openModal = (type, data) => {
         const { showModal } = this.state;
-        console.log(data);
 
         this.setState({
             showModal: {
@@ -173,7 +174,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             {
                 field: 'actions',
                 headerName: '',
-                width: 80,
+                flex: 1,
                 sortable: false,
                 disableColumnMenu: true,
                 align: 'right',
@@ -204,13 +205,13 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             return {
                 id: permission.user.id,
                 name: permission.user.name,
-                type: Permissions[permission.type].labelText,
+                type: Permissions[permission.type].label,
                 data: permission,
             };
         });
 
         return (
-            <div className="PageBody">
+            <PageBody>
                 <AddUserModal
                     open={showModal.add}
                     onClose={() => this.closeModal('add')}
@@ -233,26 +234,27 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                     </ConfirmModal>
                 )}
 
-                <div className="PageButtons">
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={() => this.openModal('add', null)}
-                            variant="contained"
-                        >
-                            Add user
-                        </Button>
-                    </Stack>
-                </div>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={() => this.openModal('add', null)}
+                        variant="contained"
+                    >
+                        Add user
+                    </Button>
+                </Stack>
 
-                <DataGrid
-                    disableRowSelectionOnClick
-                    accessibleName="Permissions"
-                    emptyStateContent={`There are no users added yet`}
-                    rows={rows}
-                    columns={columns}
-                />
-            </div>
+                <Box sx={{ height: 400, width: '100%' }}>
+                    <DataGrid
+                        disableRowSelectionOnClick
+                        accessibleName="Permissions"
+                        emptyStateContent={`There are no users added yet`}
+                        rows={rows}
+                        columns={columns}
+                        // sx={{ '& .actionsCell': { pr: 1 } }}
+                    />
+                </Box>
+            </PageBody>
         );
     }
 }

@@ -52,11 +52,13 @@ const DataGridContainer: FC<DataGridContainerProps> = ({
                 {pagination && (
                     <TablePagination
                         onPageChange={handlePageChange ? (event, page) => {
-                            handlePageChange(page, pagination.perPage)
-                        } : () => {}}
+                            handlePageChange(page, pagination.perPage);
+                        } : () => {
+                        }}
                         onRowsPerPageChange={handlePageChange ? (event) => {
-                            handlePageChange(pagination.currentPage, parseInt(event.target.value))
-                        } : () => {}}
+                            handlePageChange(pagination.currentPage, parseInt(event.target.value));
+                        } : () => {
+                        }}
                         rowsPerPage={pagination.perPage}
                         page={pagination.currentPage - 1}
                         count={pagination.totalResults}

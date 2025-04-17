@@ -1,11 +1,9 @@
 import React, { Component, createRef } from 'react';
 import LoadingOverlay from 'components/LoadingOverlay';
 import DataGridHelper from './DataGridHelper';
-import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
 import { localizedText } from '../../util';
-import DataGrid from 'components/DataTable/DataGrid';
-import { GridColDef, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -73,12 +71,16 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
         apiClient
             .get(catalog ? `/api/catalog/${catalog}/study` : '/api/study', { params: filters })
             .then(response => {
-                this.setState({
+                // Only update total results from API response, keep other pagination values as is
+                this.setState(prevState => ({
                     studies: response.data.results,
-                    pagination: DataGridHelper.parseResults(response.data),
+                    pagination: {
+                        ...prevState.pagination,
+                        totalResults: response.data.totalResults,
+                    },
                     isLoadingStudies: false,
                     hasLoadedStudies: true,
-                });
+                }));
             })
             .catch(error => {
                 this.setState({ isLoadingStudies: false });
@@ -91,17 +93,21 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
             });
     };
 
-    handlePagination = (currentPage: number, pageSize: number ) => {
-        this.setState(
-            prevState => ({
-                pagination: {
-                    ...prevState.pagination,
-                    currentPage: currentPage + 1,
-                    perPage: pageSize,
-                },
-            }),
-            this.getStudies,
-        );
+    handlePagination = (model: { page: number; pageSize: number }) => {
+        const { pagination } = this.state;
+        // Only update if values actually changed
+        if (pagination.currentPage !== model.page || pagination.perPage !== model.pageSize) {
+            this.setState(
+                prevState => ({
+                    pagination: {
+                        ...prevState.pagination,
+                        currentPage: model.page,
+                        perPage: model.pageSize,
+                    },
+                }),
+                this.getStudies,
+            );
+        }
     };
 
     handleClick = (params: GridRowParams) => {
@@ -156,24 +162,29 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
             published: item.published,
         }));
 
+        console.log(pagination);
+
         return (
             <div className="DataTableContainer">
                 <div className="TableCol">
-                    <DataGridContainer
-                        pagination={pagination}
-                        handlePageChange={this.handlePagination}
-                        fullHeight
-                        isLoading={isLoadingStudies}
-                        forwardRef={this.tableRef}
-                    >
+                    <div ref={this.tableRef}>
                         <DataGrid
                             disableRowSelectionOnClick
-                            emptyStateContent="No studies found"
+                            getRowId={(row) => row.id}
                             onRowClick={this.handleClick}
                             rows={rows}
                             columns={columns}
+                            paginationMode="server"
+                            rowCount={pagination.totalResults}
+                            loading={isLoadingStudies}
+                            pageSizeOptions={[10, 25, 50]}
+                            paginationModel={{
+                                page: pagination.currentPage,
+                                pageSize: pagination.perPage,
+                            }}
+                            onPaginationModelChange={this.handlePagination}
                         />
-                    </DataGridContainer>
+                    </div>
                 </div>
             </div>
         );

@@ -7,7 +7,7 @@ import { PrefixType } from 'types/PrefixType';
 import { InstituteType } from 'types/InstituteType';
 import { findOptionByValue } from '../../util';
 import Stack from '@mui/material/Stack';
-import { IconButton, TextField } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RuleProps extends QueryBuilderRuleProps {
@@ -33,39 +33,45 @@ export const Rule: React.FC<RuleProps> = ({
 
     return (
         <div className={`rule`} data-rule-id={id} data-level={level}>
-            <Stack direction="row">
-                <FieldSelector
-                    value={field}
-                    options={fields}
-                    handleOnChange={(value: string) => {
-                        onPropChange('field', value, id);
-                    }}
-                />
-
-                <OperatorSelector
-                    value={operator}
-                    options={getOperators(field)}
-                    handleOnChange={(value: string) => {
-                        onPropChange('operator', value, id);
-                    }}
-                />
-
-                {fieldData ? (
-                    <ValueEditor
-                        prefixes={prefixes}
-                        institutes={institutes}
-                        field={field}
-                        fieldData={fieldData}
-                        operator={operator}
-                        handleOnChange={(value: any) => {
-                            onPropChange('value', value, id);
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
+                <Box sx={{ width: '160px' }}>
+                    <FieldSelector
+                        value={field}
+                        options={fields}
+                        handleOnChange={event => {
+                            onPropChange('field', event.target.value, id);
                         }}
-                        level={level}
-                        value={value}
                     />
-                ) : (
-                    <TextField className="ValueEditor" disabled />
-                )}
+                </Box>
+
+                <Box sx={{ width: '120px' }}>
+                    <OperatorSelector
+                        value={operator}
+                        options={getOperators(field)}
+                        handleOnChange={event => {
+                            onPropChange('operator', event.target.value, id);
+                        }}
+                    />
+                </Box>
+
+                <Box sx={{ flex: 1 }}>
+                    {fieldData ? (
+                        <ValueEditor
+                            prefixes={prefixes}
+                            institutes={institutes}
+                            field={field}
+                            fieldData={fieldData}
+                            operator={operator}
+                            handleOnChange={(value: any) => {
+                                onPropChange('value', value, id);
+                            }}
+                            level={level}
+                            value={value}
+                        />
+                    ) : (
+                        <TextField className="ValueEditor" disabled fullWidth />
+                    )}
+                </Box>
 
                 <IconButton
                     className="RemoveButton"

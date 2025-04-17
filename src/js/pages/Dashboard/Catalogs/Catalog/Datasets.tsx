@@ -59,14 +59,14 @@ const Datasets: React.FC<DatasetsProps> = ({ catalog, history, notifications }) 
             field: 'displayTitle',
             headerName: 'Title',
             flex: 1,
-        }
+        },
     ];
 
     const rows = datasets.map(dataset => ({
         ...dataset,
         displayTitle: dataset.hasMetadata && dataset.metadata?.title
             ? localizedText(dataset.metadata.title, 'en') || 'Untitled dataset'
-            : 'Untitled dataset'
+            : 'Untitled dataset',
     }));
 
     return (
@@ -102,8 +102,8 @@ const Datasets: React.FC<DatasetsProps> = ({ catalog, history, notifications }) 
                                 const rowId = theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900];
                                 const row = rows.find(r => r.id === rowId);
                                 return row ? (isGranted('edit', row.permissions) ? 1 : 0.5) : 1;
-                            }
-                        }
+                            },
+                        },
                     }}
                 />
             </Box>

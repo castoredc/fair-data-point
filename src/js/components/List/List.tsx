@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { classNames, localizedText } from '../../util';
+import { localizedText } from '../../util';
 import Pagination from '@mui/material/Pagination';
 import LoadingOverlay from 'components/LoadingOverlay';
 import DataGridHelper from '../DataTable/DataGridHelper';
@@ -8,6 +8,7 @@ import { apiClient } from 'src/js/network';
 import { CommonListProps } from 'components/List/types';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import { List as MuiList } from '@mui/material';
+import NoResults from 'components/NoResults';
 
 export interface Item {
     id: string;
@@ -136,12 +137,12 @@ class List extends Component<ListProps, CommonListState> {
                         ))}
                         <Pagination
                             onChange={this.handlePagination}
-                            page={pagination.currentPage - 1}
+                            page={pagination.currentPage}
                             count={pagination.totalResults}
                         />
                     </>
                 ) : (
-                    <div className="NoResults">{noResultsText}</div>
+                    <NoResults>{noResultsText}</NoResults>
                 )}
             </MuiList>
         );

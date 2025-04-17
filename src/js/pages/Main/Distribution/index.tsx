@@ -31,7 +31,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
     const title = distribution ? localizedText(distribution.metadata.title, 'en') : null;
 
     return (
-        <Layout className="Distribution" embedded={embedded}>
+        <Layout embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoading}>
@@ -93,7 +93,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                             )}
 
                             {isGranted('access_data', distribution.permissions) && (
-                                <div className="DistributionAccessButtons">
+                                <div>
                                     {'cached' in distribution && distribution.cached && (
                                         <ListItem
                                             link={distribution.relativeUrl + '/query'}

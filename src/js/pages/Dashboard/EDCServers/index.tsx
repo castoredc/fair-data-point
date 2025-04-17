@@ -27,7 +27,8 @@ interface EDCServer {
     default: boolean;
 }
 
-interface EDCServersProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
+interface EDCServersProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 type ModalType = 'add' | 'update' | 'remove';
 
@@ -136,7 +137,7 @@ const EDCServers: React.FC<EDCServersProps> = ({ history, location, user, notifi
         {
             field: 'actions',
             headerName: '',
-            width: 80,
+            flex: 1,
             sortable: false,
             disableColumnMenu: true,
             align: 'right',
@@ -164,16 +165,16 @@ const EDCServers: React.FC<EDCServersProps> = ({ history, location, user, notifi
 
     return (
         <DashboardPage>
-            <AddEDCServerModal 
-                open={showModal.add} 
-                onClose={closeModals} 
-                handleSave={handleUpdate} 
-            />
-            <UpdateEDCServerModal 
-                open={showModal.update} 
-                onClose={closeModals} 
+            <AddEDCServerModal
+                open={showModal.add}
+                onClose={closeModals}
                 handleSave={handleUpdate}
-                data={selectedServer} 
+            />
+            <UpdateEDCServerModal
+                open={showModal.update}
+                onClose={closeModals}
+                handleSave={handleUpdate}
+                data={selectedServer}
             />
 
             <ConfirmModal

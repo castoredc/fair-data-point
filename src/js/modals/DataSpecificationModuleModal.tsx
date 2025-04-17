@@ -193,7 +193,7 @@ class DataSpecificationModuleModal extends Component<DataModelModuleModalProps, 
                                         <FormItem>
                                             <Field
                                                 component={SingleChoice}
-                                                labelText="Repeated"
+                                                label="Repeated"
                                                 name="repeated"
                                                 serverError={validation}
                                                 details="This group should be repeated for every instance of a specific survey or report"
@@ -212,7 +212,7 @@ class DataSpecificationModuleModal extends Component<DataModelModuleModalProps, 
                                         <>
                                             <Field
                                                 component={SingleChoice}
-                                                labelText="Dependent"
+                                                label="Dependent"
                                                 name="dependent"
                                                 serverError={validation}
                                                 details="This group will only be rendered when certain criteria are met"

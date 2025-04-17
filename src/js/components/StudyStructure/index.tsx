@@ -6,6 +6,7 @@ import StudyStructureNavigator from './StudyStructureNavigator';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import PageTabs from 'components/PageTabs';
+import NoResults from 'components/NoResults';
 
 interface StudyStructureProps extends ComponentWithNotifications {
     studyId: string;
@@ -156,7 +157,7 @@ class StudyStructure extends Component<StudyStructureProps, StudyStructureState>
 
         const cannotBeSelected = (
             <div className="StudyStructureType">
-                <div className="NoResults">This type cannot be selected.</div>
+                <NoResults>This type cannot be selected.</NoResults>
             </div>
         );
 

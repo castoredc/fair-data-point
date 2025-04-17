@@ -84,7 +84,7 @@ class Agent extends Component<AgentProps, AgentState> {
         const breadcrumbs = getBreadCrumbs(location, { agent });
 
         return (
-            <Layout className="Agent" embedded={embedded}>
+            <Layout embedded={embedded}>
                 <Header user={user} embedded={embedded} title={title} />
 
                 <MainBody isLoading={isLoading}>

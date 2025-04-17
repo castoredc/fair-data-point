@@ -56,7 +56,7 @@ class LoginModal extends Component<LoginModalProps, LoginModalState> {
         const { servers, isLoading } = this.state;
 
         return (
-            <Modal open={show} onClose={handleClose} title="Log in" customWidth="50rem" isLoading={isLoading}>
+            <Modal open={show} onClose={handleClose} title="Log in" customWidth="35rem" isLoading={isLoading}>
                 <LoginForm path={path} modal={true} selectedServerId={server} serverLocked={!!server} servers={servers}
                            view={view} />
             </Modal>

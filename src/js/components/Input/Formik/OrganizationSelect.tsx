@@ -7,18 +7,26 @@ import FieldErrors from 'components/Input/Formik/Errors';
 import { apiClient } from 'src/js/network';
 import Stack from '@mui/material/Stack';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { TextField } from '@mui/material';
+import { Autocomplete, CircularProgress, TextField } from '@mui/material';
 
 interface OrganizationSelectProps extends FieldProps, ComponentWithNotifications {
     country: string;
     departmentField: string;
 }
 
+interface OrganizationOption {
+    label: string;
+    value: string;
+    source: string;
+    data: {
+        city: string;
+    };
+}
+
 type OrganizationSelectState = {
-    cachedOptions: {
-        label: string,
-        value: string
-    }[];
+    cachedOptions: OrganizationOption[];
+    loading: boolean;
+    inputValue: string;
 };
 
 class OrganizationSelect extends Component<OrganizationSelectProps, OrganizationSelectState> {
@@ -27,6 +35,8 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
 
         this.state = {
             cachedOptions: [],
+            loading: false,
+            inputValue: '',
         };
     }
 
@@ -103,25 +113,54 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                 <Stack direction="row">
                     {!manual && (
                         <FormItem label="Organization / Institution">
-                            // TODO: Replace dropdown
-                            {/*<Dropdown*/}
-                            {/*    name="organization"*/}
-                            {/*    loadOptions={this.loadOrganizations}*/}
-                            {/*    options={cachedOptions}*/}
-
-                            {/*    isDisabled={disabled}*/}
-                            {/*    onChange={this.handleOrganizationSelect}*/}
-                            {/*    components={{ DropdownIndicator: AsyncDropdownIndicator }}*/}
-                            {/*    getOptionLabel={({ label }) => label}*/}
-                            {/*    getOptionValue={({ value }) => value}*/}
-                            {/*    openMenuOnClick={false}*/}
-                            {/*    value={{*/}
-                            {/*        source: value.source,*/}
-                            {/*        value: value.id,*/}
-                            {/*        label: value.name,*/}
-                            {/*        city: value.city,*/}
-                            {/*    }}*/}
-                            {/*/>*/}
+                            <Autocomplete
+                                options={cachedOptions}
+                                loading={this.state.loading}
+                                disabled={disabled}
+                                noOptionsText={this.state.inputValue ? 'No results found' : 'Type to search'}
+                                value={value.id ? {
+                                    label: value.name,
+                                    value: value.id,
+                                    source: value.source,
+                                    data: { city: value.city },
+                                } : undefined}
+                                onChange={(event, newValue) => {
+                                    if (newValue) {
+                                        this.handleOrganizationSelect(newValue);
+                                    }
+                                }}
+                                onInputChange={(event, newInputValue) => {
+                                    this.setState({ inputValue: newInputValue });
+                                    if (newInputValue) {
+                                        this.setState({ loading: true });
+                                        this.loadOrganizations(newInputValue, (options) => {
+                                            this.setState({ loading: false });
+                                        });
+                                    }
+                                }}
+                                getOptionLabel={(option) => option.label}
+                                isOptionEqualToValue={(option, value) => option.value === value.value}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        placeholder="Search for an organization"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {this.state.loading ?
+                                                        <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                        size="small"
+                                    />
+                                )}
+                                disableClearable={true}
+                                sx={{ width: 400 }}
+                            />
 
                             <Button variant="text" className="CannotFind" onClick={this.toggleManual}
                                     disabled={disabled}>
@@ -131,7 +170,7 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                     )}
 
                     {manual && (
-                        <>
+                        <Stack direction="column" spacing={2}>
                             <FormItem label="Organization / Institution Name">
                                 <TextField
                                     value={value.name}
@@ -142,12 +181,8 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                                         });
                                     }}
                                     autoFocus
+                                    sx={{ width: 400 }}
                                 />
-
-                                <Button variant="text" className="CannotFind" onClick={this.toggleManual}
-                                        disabled={disabled}>
-                                    Search for an organization
-                                </Button>
                             </FormItem>
                             <FormItem label="City">
                                 <TextField
@@ -158,9 +193,15 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                                             city: event.target.value,
                                         });
                                     }}
+                                    sx={{ width: 400 }}
                                 />
                             </FormItem>
-                        </>
+
+                            <Button variant="text" className="CannotFind" onClick={this.toggleManual}
+                                    disabled={disabled}>
+                                Search for an organization
+                            </Button>
+                        </Stack>
                     )}
                 </Stack>
 

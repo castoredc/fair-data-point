@@ -20,7 +20,6 @@ export const debounce = (fn, delay) => {
 export const identity = x => x;
 
 export const log = (value, prefix = '') => {
-    console.log(prefix, value);
     return value;
 };
 

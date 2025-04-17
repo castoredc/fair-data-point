@@ -18,6 +18,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import Permissions from 'pages/Dashboard/Dataset/Distribution/Permissions';
 import NoPermission from 'pages/ErrorPages/NoPermission';
+import NoResults from 'components/NoResults';
 import { apiClient } from 'src/js/network';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
 import PageBody from 'components/Layout/Dashboard/PageBody';
@@ -209,6 +210,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                     location={location}
                     items={sidebarItems}
                     history={history}
+                    user={user}
                 />
 
                 <Body>
@@ -286,7 +288,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                                     return <DistributionContentsRdf dataset={dataset} distribution={distribution} />;
                                 }
 
-                                return <div className="NoResults">This distribution does not have contents.</div>;
+                                return <NoResults>This distribution does not have contents.</NoResults>;
                             }}
                         />
 

@@ -107,7 +107,7 @@ class Prefixes extends Component<PrefixesProps, PrefixesState> {
             {
                 field: 'actions',
                 headerName: '',
-                width: 80,
+                flex: 1,
                 sortable: false,
                 disableColumnMenu: true,
                 align: 'right',
@@ -135,9 +135,14 @@ class Prefixes extends Component<PrefixesProps, PrefixesState> {
         ];
 
         const rows = prefixes.map(item => {
-            const data = { id: item.id, prefix: item.prefix, uri: item.uri };
+            const data = {
+                id: item.id,
+                prefix: item.prefix,
+                uri: item.uri,
+            };
 
             return {
+                id: item.id,
                 prefix: item.prefix,
                 uri: item.uri,
                 data: data,

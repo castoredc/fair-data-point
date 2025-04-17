@@ -3,12 +3,9 @@ import { FieldProps } from 'formik';
 import { apiClient } from 'src/js/network';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { ConceptList } from './ConceptList';
-import { AddConceptRow } from './AddConceptRow';
 import { OntologyType } from 'types/OntologyType';
 import { OntologyConceptSearchType } from 'types/OntologyConceptSearchType';
 import { ComponentWithNotifications, useNotifications } from 'components/WithNotifications';
-import Stack from '@mui/material/Stack';
-import { Box } from '@mui/material';
 
 interface OntologyConceptFormBlockProps extends FieldProps, ComponentWithNotifications {
     serverError?: any;
@@ -50,8 +47,6 @@ const OntologyConceptFormBlock: FC<OntologyConceptFormBlockProps> = ({
     const addConcept = useCallback(
         (concept: OntologyConceptSearchType | null, selectedOntology: OntologyType | null) => {
             if (!concept || !selectedOntology) return;
-
-            console.log(concept);
 
             const newConcept = {
                 code: concept.code,

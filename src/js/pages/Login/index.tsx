@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DocumentTitle from '../../components/DocumentTitle';
-import './Login.scss';
+import LoginContainer from '../../components/Login/LoginContainer';
 import queryString from 'query-string';
 import LoginForm from '../../components/Form/LoginForm';
 import { apiClient } from 'src/js/network';
@@ -8,6 +8,8 @@ import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';
 import LoadingOverlay from 'components/LoadingOverlay';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Container from '@mui/material/Container';
+import Logo from 'components/Logo';
 
 interface LoginProps extends ComponentWithNotifications {
     match: {
@@ -123,16 +125,11 @@ class Login extends Component<LoginProps, LoginState> {
         }
 
         return (
-            <div className="Login TopLevelContainer">
+            <LoginContainer
+                logo={<Logo color="#124ea4" />}
+            >
                 <DocumentTitle title="FAIR Data Point | Log in" />
-
-                <div className="Skip" />
-
-                <div className="LoginContainer">
-                    <div className="LoginLogo">
-                        Logo
-                    </div>
-
+                <Container maxWidth="sm">
                     <LoginForm
                         path={path}
                         selectedServerId={selectedServer}
@@ -141,8 +138,8 @@ class Login extends Component<LoginProps, LoginState> {
                         catalog={catalog}
                         view={view}
                     />
-                </div>
-            </div>
+                </Container>
+            </LoginContainer>
         );
     }
 }
