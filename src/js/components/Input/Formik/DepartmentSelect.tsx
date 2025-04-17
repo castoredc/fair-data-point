@@ -16,10 +16,13 @@ interface DepartmentOption {
     value: string;
     label: string;
     data: {
-        id: string;
+        id: string | null;
         name: string;
         source: string;
     };
+    id?: string | null;
+    name?: string;
+    source?: string;
 }
 
 type DepartmentSelectState = {
@@ -135,7 +138,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                             loading={this.state.isLoading}
                             disabled={disabled}
                             noOptionsText={options.length === 0 ? "Loading departments..." : "No departments found"}
-                            value={value.id ? options.find(option => option.value === value.id) : null}
+                            value={value.id ? options.find(option => option.value === value.id) : undefined}
                             onChange={(event, newValue) => {
                                 if (newValue) {
                                     form.setFieldValue(field.name, {

@@ -2,11 +2,12 @@ import React, { ChangeEvent, FC } from 'react';
 
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { format, setHours, setMinutes, setSeconds } from 'date-fns';
+import { format, setHours, setMinutes, setSeconds, parseISO } from 'date-fns';
 import Stack from '@mui/material/Stack';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import moment from 'moment';
 
 interface DateAndTimePickerProps extends FieldProps {
     readOnly?: boolean;
@@ -31,24 +32,25 @@ const DateAndTimePicker: FC<DateAndTimePickerProps> = ({ field, form, meta, read
             <Stack direction="row">
                 <DatePicker
                     name={`${field.name}_date`}
-                    value={date}
-                    onChange={(date, event) => {
-                        const formattedDate = format(date, 'yyyy-MM-dd');
-                        field.onChange({ target: { name: field.name, value: `${formattedDate};${time}` } });
+                    value={date ? moment(date) : null}
+                    onChange={(newDate) => {
+                        if (newDate) {
+                            const formattedDate = format(newDate.toDate(), 'yyyy-MM-dd');
+                            field.onChange({ target: { name: field.name, value: `${formattedDate};${time}` } });
+                        }
                     }}
-                    // invalid={touched && !!errors}
                     readOnly={readOnly}
                 />
 
                 <TimePicker
                     name={`${field.name}_time`}
-                    value={time !== '' && setSeconds(setMinutes(setHours(new Date(), Number(time.split(':')[0])), Number(time.split(':')[1])), 0)}
-                    onChange={(time, event) => {
-                        const formattedTime = format(time, 'HH:mm');
-                        field.onChange({ target: { name: field.name, value: `${date};${formattedTime}` } });
+                    value={time ? moment(setSeconds(setMinutes(setHours(new Date(), Number(time.split(':')[0])), Number(time.split(':')[1])), 0)) : null}
+                    onChange={(newTime) => {
+                        if (newTime) {
+                            const formattedTime = format(newTime.toDate(), 'HH:mm');
+                            field.onChange({ target: { name: field.name, value: `${date};${formattedTime}` } });
+                        }
                     }}
-                    // onBlur={field.onBlur}
-                    // invalid={touched && !!errors}
                     readOnly={readOnly}
                 />
             </Stack>

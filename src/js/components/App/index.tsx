@@ -8,7 +8,9 @@ import { classNames } from '../../util';
 import { UserType } from 'types/UserType';
 import { apiClient } from 'src/js/network';
 import WithNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { theme } from '../../theme';
 
 interface AppState {
     isLoading: boolean;
@@ -60,12 +62,9 @@ class App extends Component<ComponentWithNotifications, AppState> {
         const params = queryString.parse(window.location.search);
         const embedded = typeof params.embed !== 'undefined';
 
-        const theme = createTheme({
-
-        });
-
         return (
             <ThemeProvider theme={theme}>
+                <CssBaseline />
                 <div className={classNames('App', embedded && 'Embedded')}>
                     {isLoading ? <LoadingOverlay accessibleLabel="Loading" /> : <Routes user={user} embedded={embedded} />}
                 </div>

@@ -18,6 +18,7 @@ interface SelectProps extends FieldProps {
 
 interface AsyncSelectProps extends SelectProps {
     cachedOptions: DefaultOptionType[];
+    filterOptions?: (options: DefaultOptionType[], state: any) => DefaultOptionType[];
 }
 
 export function isMultipleOption<DefaultOptionType>(
@@ -76,9 +77,9 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
                                                       onChange,
                                                       autoFocus,
                                                       serverError,
-                                                      loadOptions,
                                                       cachedOptions,
                                                       options,
+                                                      filterOptions,
                                                       ...rest
                                                   }) => {
     const touched = form.touched[field.name];
@@ -88,7 +89,7 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
     return (
         <div className="Select">
             <Autocomplete
-                filterOptions={loadOptions}
+                filterOptions={filterOptions}
                 options={cachedOptions}
                 openOnFocus={true}
                 renderInput={(params) => <TextField {...params} />}
