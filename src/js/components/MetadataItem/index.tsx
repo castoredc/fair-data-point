@@ -4,12 +4,13 @@ import MetadataItemContainer from 'components/MetadataItem/MetadataItemContainer
 import Language from 'components/MetadataItem/Language';
 import License from 'components/MetadataItem/License';
 import OntologyConcept from 'components/MetadataItem/OntologyConcept';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Country from 'components/MetadataItem/Country';
 import { OntologyConceptType } from 'types/OntologyConceptType';
 import moment from 'moment';
 import { AgentListItemType } from 'types/AgentListType';
 import Agent from 'components/MetadataItem/Agent';
+import { Box, Link, Stack } from '@mui/material';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 interface MetadataItemProps {
     title: string;
@@ -29,82 +30,97 @@ interface MetadataItemValueProps {
 const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, value }) => {
     switch (type) {
         case 'heading':
-            return <div>{dataType === 'langString' ? localizedText(value, 'en') : value}</div>;
+            return <Box>{dataType === 'langString' ? localizedText(value, 'en') : value}</Box>;
         case 'description':
-            return <div>{dataType === 'langString' ? localizedText(value, 'en') : value}</div>;
+            return <Box>{dataType === 'langString' ? localizedText(value, 'en') : value}</Box>;
         case 'paragraph':
-            return <div>{dataType === 'langString' ? localizedText(value, 'en') : value}</div>;
+            return <Box>{dataType === 'langString' ? localizedText(value, 'en') : value}</Box>;
         case 'ontologyConcepts':
             return (
-                <div>
-                    {value.map((ontologyConcept: OntologyConceptType) => {
-                        return (
-                            <OntologyConcept
-                                code={ontologyConcept.code}
-                                displayName={ontologyConcept.displayName}
-                                ontology={ontologyConcept.ontology}
-                                url={ontologyConcept.url}
-                            />
-                        );
-                    })}
-                </div>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                    {value.map((ontologyConcept: OntologyConceptType) => (
+                        <OntologyConcept
+                            key={ontologyConcept.code}
+                            code={ontologyConcept.code}
+                            displayName={ontologyConcept.displayName}
+                            ontology={ontologyConcept.ontology}
+                            url={ontologyConcept.url}
+                        />
+                    ))}
+                </Stack>
             );
         case 'date':
-            return <div>{value}</div>;
+            return <Box>{value}</Box>;
         case 'time':
-            return <div>{value}</div>;
+            return <Box>{value}</Box>;
         case 'dateTime':
             const { date, time } = {
                 date: value ? value.split(';')[0] : '',
                 time: value ? value.split(';')[1] : '',
             };
             return (
-                <div>
+                <Box>
                     {date && moment(date).format('DD-MM-YYYY')} {time}
-                </div>
+                </Box>
             );
         case 'yesNo':
-            return <div>{value}</div>;
+            return <Box>{value}</Box>;
         case 'list':
             return (
-                <div className="List">
-                    {value.map(item => {
-                        return item;
-                    })}
-                </div>
+                <Stack spacing={1}>
+                    {value.map((item, index) => (
+                        <Box key={index}>{item}</Box>
+                    ))}
+                </Stack>
             );
         case 'language':
             return <Language code={value} />;
         case 'license':
             return <License slug={value} />;
         case 'country':
-            return (
-                <div>
-                    return <Country code={value} />;
-                </div>
-            );
+            return <Country code={value} />;
         case 'agents':
             return (
-                <div>
-                    {value.map((agent: AgentListItemType) => {
-                        return <Agent type={agent.type} id={agent.id} name={agent.name} />;
-                    })}
-                </div>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                    {value.map((agent: AgentListItemType) => (
+                        <Agent key={agent.id} type={agent.type} id={agent.id} name={agent.name} />
+                    ))}
+                </Stack>
             );
         case 'image':
             return (
-                <div>
-                    <img src={value} />
-                </div>
+                <Box 
+                    component="img" 
+                    src={value}
+                    sx={{
+                        maxWidth: '100%',
+                        height: 'auto',
+                        borderRadius: 1
+                    }}
+                />
             );
         case 'link':
             return (
-                <div className="Link">
-                    <a href={value} target="_blank">
+                <Stack 
+                    direction="row" 
+                    spacing={0.5} 
+                    alignItems="center"
+                >
+                    <Link 
+                        href={value} 
+                        target="_blank"
+                        sx={{ 
+                            color: 'text.secondary',
+                            textDecoration: 'none',
+                            '&:hover': {
+                                textDecoration: 'underline'
+                            }
+                        }}
+                    >
                         {value}
-                    </a>
-                    <OpenInNewIcon width="10px" height="10px" />
-                </div>
+                    </Link>
+                    <OpenInNewIcon sx={{ fontSize: '0.875rem', color: 'text.secondary' }} />
+                </Stack>
             );
     }
 
