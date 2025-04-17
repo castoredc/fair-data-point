@@ -1,6 +1,5 @@
 import React from 'react';
 
-import './MetadataItem.scss';
 import useGetLicense from '../../hooks/useGetLicense';
 
 interface LicenseProps {

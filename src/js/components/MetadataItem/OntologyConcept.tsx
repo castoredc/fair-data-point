@@ -1,6 +1,5 @@
 import React from 'react';
 
-import './MetadataItem.scss';
 import { OntologyType } from 'types/OntologyType';
 import Tooltip from '@mui/material/Tooltip';
 
