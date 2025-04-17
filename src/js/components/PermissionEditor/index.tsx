@@ -8,6 +8,7 @@ import { apiClient } from 'src/js/network';
 import { Permissions } from 'components/PermissionEditor/Permissions';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { Box } from '@mui/material';
 import LoadingOverlay from 'components/LoadingOverlay';
 import DataGrid from 'components/DataTable/DataGrid';
 import { GridColDef } from '@mui/x-data-grid';
@@ -210,7 +211,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
         });
 
         return (
-            <div className="PageBody">
+            <>
                 <AddUserModal
                     open={showModal.add}
                     onClose={() => this.closeModal('add')}
@@ -233,26 +234,27 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                     </ConfirmModal>
                 )}
 
-                <div className="PageButtons">
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={() => this.openModal('add', null)}
-                            variant="contained"
-                        >
-                            Add user
-                        </Button>
-                    </Stack>
-                </div>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={() => this.openModal('add', null)}
+                        variant="contained"
+                    >
+                        Add user
+                    </Button>
+                </Stack>
 
-                <DataGrid
-                    disableRowSelectionOnClick
-                    accessibleName="Permissions"
-                    emptyStateContent={`There are no users added yet`}
-                    rows={rows}
-                    columns={columns}
-                />
-            </div>
+                <Box sx={{ height: 400, width: '100%' }}>
+                    <DataGrid
+                        disableRowSelectionOnClick
+                        accessibleName="Permissions"
+                        emptyStateContent={`There are no users added yet`}
+                        rows={rows}
+                        columns={columns}
+                        sx={{ '& .actionsCell': { pr: 1 } }}
+                    />
+                </Box>
+            </>
         );
     }
 }

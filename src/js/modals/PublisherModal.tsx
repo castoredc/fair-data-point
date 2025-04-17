@@ -11,9 +11,10 @@ type PublisherModalProps = {
     onClose: () => void;
     handleSave: (publisher) => void;
     countries: CountryType[];
+    label: string,
 };
 
-const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, countries }) => {
+const PublisherModal: FC<PublisherModalProps> = ({ open, label, onClose, handleSave, countries }) => {
     const [type, setType] = useState('person');
 
     const handleSubmit = (values, { setSubmitting }) => {
@@ -44,7 +45,7 @@ const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, co
         }
     };
 
-    const title = 'Add publisher';
+    const title = `Add ${label}`;
 
     return (
         <Modal open={open} title={title} onClose={onClose}>

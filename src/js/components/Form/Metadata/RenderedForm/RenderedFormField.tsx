@@ -98,8 +98,7 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({
                     name={field.id}
                     countries={countries}
                     serverError={validation}
-
-
+                    label={field.title}
                 />
             );
         default:

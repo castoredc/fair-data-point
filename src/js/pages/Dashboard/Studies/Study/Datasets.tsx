@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import LoadingOverlay from 'components/LoadingOverlay';
-import ListItem from 'components/ListItem';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import * as H from 'history';
 import { localizedText } from '../../../../util';
@@ -10,6 +9,10 @@ import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import Stack from '@mui/material/Stack';
+import { Box } from '@mui/material';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import NoResults from 'components/NoResults';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface DatasetsProps extends ComponentWithNotifications {
@@ -97,16 +100,36 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
 
     render() {
         const { isLoading, datasets } = this.state;
-        const { studyId } = this.props;
+        const { studyId, history } = this.props;
+
+        const columns: GridColDef[] = [
+            {
+                headerName: 'Title',
+                field: 'title',
+                flex: 1,
+                minWidth: 200,
+            },
+            {
+                headerName: 'Status',
+                field: 'status',
+                width: 120,
+            },
+        ];
+
+        const rows = datasets.map(dataset => ({
+            id: dataset.id,
+            title: dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') || 'Untitled dataset' : 'Untitled dataset',
+            status: isGranted('edit', dataset.permissions) ? 'Active' : 'Locked',
+            slug: dataset.slug,
+        }));
 
         return (
             <PageBody>
-                {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
+                {isLoading && <LoadingOverlay accessibleLabel="Loading datasets" />}
 
-                <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
                     <Button
                         startIcon={<AddIcon />}
-                        className="AddButton"
                         disabled={isLoading}
                         onClick={this.handleCreate}
                         variant="contained"
@@ -115,27 +138,18 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
                     </Button>
                 </Stack>
 
-                <div>
-                    {datasets.length === 0 && <div className="NoResults">This study does not have datasets.</div>}
-
-                    {datasets.map(dataset => {
-                        let title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
-
-                        if (title === '') {
-                            title = 'Untitled dataset';
-                        }
-
-                        return (
-                            <ListItem
-                                key={dataset.id}
-                                selectable={false}
-                                disabled={!isGranted('edit', dataset.permissions)}
-                                link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`}
-                                title={title}
-                            />
-                        );
-                    })}
-                </div>
+                <Box sx={{ height: 400, width: '100%' }}>
+                    <DataGrid
+                        disableRowSelectionOnClick
+                        rows={rows}
+                        columns={columns}
+                        accessibleName="Datasets"
+                        emptyStateContent={()=> <NoResults>This study does not have datasets.</NoResults>}
+                        onRowClick={(params) => {
+                            history.push(`/dashboard/studies/${studyId}/datasets/${params.row.slug}`);
+                        }}
+                    />
+                </Box>
             </PageBody>
         );
     }

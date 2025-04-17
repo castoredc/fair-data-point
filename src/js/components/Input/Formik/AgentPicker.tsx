@@ -24,6 +24,7 @@ import { useNotifications } from 'components/WithNotifications';
 interface AgentPickerPropsProps extends FieldProps {
     serverError?: any;
     countries: CountryType[];
+    label: string;
 }
 
 const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>, notifications) => {
@@ -56,7 +57,7 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
     form.setFieldValue(field.name, newData);
 };
 
-const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, serverError }) => {
+const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, serverError, label }) => {
     const [showModal, setShowModal] = useState(false);
     const notifications = useNotifications();
 
@@ -67,6 +68,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
         <Box sx={{ width: '100%' }}>
             <PublisherModal
                 open={showModal}
+                label={label}
                 onClose={() => setShowModal(false)}
                 handleSave={agent => {
                     handleAdd(agent, field, form, notifications);
@@ -157,7 +159,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                     onClick={() => setShowModal(true)}
                     sx={{ px: 3 }}
                 >
-                    Add Agent
+                    Add new
                 </Button>
             </Box>
         </Box>

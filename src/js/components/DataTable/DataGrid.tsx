@@ -2,15 +2,15 @@ import { DataGrid as MuiDataGrid, DataGridProps as MuiDataGridProps, GridOverlay
 import { Alert, Box, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 
-interface DataGridProps extends MuiDataGridProps {
-    emptyStateContent?: string;
+interface DataGridProps extends Omit<MuiDataGridProps, 'slots'> {
+    emptyStateContent?: React.ReactNode | (() => React.ReactNode);
     accessibleName?: string;
     loading?: boolean;
     error?: string | null;
 }
 
 
-const CustomNoRowsOverlay = ({ content }: { content: string }) => (
+const CustomNoRowsOverlay = ({ content }: { content: React.ReactNode | (() => React.ReactNode) }) => (
     <GridOverlay>
         <Box
             sx={{
@@ -22,9 +22,7 @@ const CustomNoRowsOverlay = ({ content }: { content: string }) => (
                 p: 2
             }}
         >
-            <Typography color="text.secondary" align="center">
-                {content}
-            </Typography>
+            {typeof content === 'function' ? content() : content}
         </Box>
     </GridOverlay>
 );
@@ -73,10 +71,9 @@ const DataGrid: React.FC<DataGridProps> = ({
     error,
     ...rest 
 }) => {
-    const components = {
-        NoRowsOverlay: () => <CustomNoRowsOverlay content={emptyStateContent} />,
-        ...(loading && { LoadingOverlay: CustomLoadingOverlay }),
-        ...(error && { ErrorOverlay: () => <CustomErrorOverlay error={error} /> })
+    const slots = {
+        noRowsOverlay: () => <CustomNoRowsOverlay content={emptyStateContent} />,
+        loadingOverlay: loading ? CustomLoadingOverlay : undefined,
     };
 
     return (
@@ -85,9 +82,15 @@ const DataGrid: React.FC<DataGridProps> = ({
                 rows={rows}
                 columns={columns}
                 loading={loading}
-                error={error}
-                components={components}
-                disableSelectionOnClick
+                slots={slots}
+                disableRowSelectionOnClick
+                sx={{
+                    border: 'none',
+                    '& .MuiDataGrid-cell:focus': {
+                        outline: 'none',
+                    },
+                    ...rest.sx,
+                }}
                 {...rest}
             />
         </Box>
