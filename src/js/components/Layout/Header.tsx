@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
-import { classNames, localizedText } from '../../util';
+import { localizedText } from '../../util';
 import DocumentTitle from '../DocumentTitle';
 import { Link } from 'react-router-dom';
-import '../../pages/Main/Main.scss';
 import Breadcrumbs from '../Breadcrumbs';
-import './Header.scss';
-import Button from '@mui/material/Button';
 import LoginModal from '../../modals/LoginModal';
 import { BreadcrumbsType } from 'types/BreadcrumbType';
 import { UserType } from 'types/UserType';
-import Stack from '@mui/material/Stack';
+import { 
+    AppBar,
+    Box,
+    Button,
+    Container,
+    IconButton,
+    Stack,
+    Toolbar,
+    Tooltip,
+    Typography
+} from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Container, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 
 interface HeaderProps {
     embedded?: boolean;
@@ -160,7 +164,7 @@ class Header extends Component<HeaderProps, HeaderState> {
         const menuItems = user && user.isAdmin ? [...adminMenuItems, ...defaultMenuItems] : defaultMenuItems;
 
         return (
-            <header className={classNames(className, embedded && 'Embedded', mobile ? 'Mobile' : 'Desktop')}>
+            <Box component="header">
                 <LoginModal
                     show={showModal}
                     handleClose={this.closeModal}
@@ -170,32 +174,61 @@ class Header extends Component<HeaderProps, HeaderState> {
                 />
                 {title && <DocumentTitle title={title} />}
                 {!embedded && (
-                    <div className="Header">
-                        <div className={classNames('Spacing', forceSmallHeader && 'Small')} />
-                        {!mobile && (
-                            <div
-                                className={classNames('MainHeader', smallHeader && 'Small', forceSmallHeader && 'Small')}
-                            >
+                    <Box>
+                        <AppBar 
+                            position="static" 
+                            sx={{
+                                height: mobile ? 56 : forceSmallHeader || smallHeader ? 64 : 80,
+                                bgcolor: 'primary.main'
+                            }}
+                        >
+                            <Toolbar sx={{ height: '100%' }}>
                                 <Container>
-                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                                        <div className="HeaderLogoCol">
-                                            <Link to="/fdp">
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', height: '100%' }}>
+                                        {mobile && breadcrumbs?.previous && (
+                                            <Box>
+                                                <Link
+                                                    to={{
+                                                        pathname: breadcrumbs.previous.path,
+                                                        state: breadcrumbs.previous.state,
+                                                    }}
+                                                    style={{ textDecoration: 'none' }}
+                                                >
+                                                    <Tooltip title={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}>
+                                                        <IconButton color="inherit">
+                                                            <ArrowBackIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Link>
+                                            </Box>
+                                        )}
+                                        <Box>
+                                            <Link to="/fdp" style={{ textDecoration: 'none', color: 'inherit' }}>
                                                 Logo
                                             </Link>
-                                        </div>
-                                        <div className="HeaderUserCol">
+                                        </Box>
+                                        <Box>
                                             {user ? (
-                                                <div>
+                                                <Box>
                                                     {/*<DropdownButton*/}
                                                     {/*    text={user.details ? user.details.fullName : ''}*/}
                                                     {/*    items={menuItems}*/}
                                                     {/*    icon="account"*/}
                                                     {/*    buttonType="primary"*/}
                                                     {/*/>*/}
-                                                </div>
+                                                </Box>
+                                            ) : mobile ? (
+                                                <IconButton
+                                                    color="inherit"
+                                                    href={'/login?path=' + encodeURIComponent(window.location.pathname)}
+                                                    onClick={this.openModal}
+                                                >
+                                                    <AccountCircleIcon />
+                                                </IconButton>
                                             ) : (
                                                 <Button
-                                                    target="_blank"
+                                                    variant="outlined"
+                                                    color="inherit"
                                                     href={'/login?path=' + encodeURIComponent(window.location.pathname)}
                                                     startIcon={<AccountCircleIcon />}
                                                     onClick={this.openModal}
@@ -203,78 +236,51 @@ class Header extends Component<HeaderProps, HeaderState> {
                                                     Log in
                                                 </Button>
                                             )}
-                                        </div>
+                                        </Box>
                                     </Stack>
                                 </Container>
-                            </div>
-                        )}
+                            </Toolbar>
+                        </AppBar>
                         {!mobile && breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs.crumbs} />}
-                        {mobile && (
-                            <div className="MobileHeader">
-                                <Container>
-                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                                        <div className="HeaderBackCol">
-                                            {breadcrumbs && breadcrumbs.previous && (
-                                                <Link
-                                                    to={{
-                                                        pathname: breadcrumbs.previous.path,
-                                                        state: breadcrumbs.previous.state,
-                                                    }}
-                                                >
-                                                    <Tooltip
-                                                        title={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}>
-                                                        <IconButton>
-                                                            <ArrowBackIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </Link>
-                                            )}
-                                        </div>
-                                        <div className="HeaderLogoCol">
-                                            <Link to="/fdp">
-                                                Logo
-                                            </Link>
-                                        </div>
-                                        <div className="HeaderUserCol">
-                                            {user ? (
-                                                <div>
-                                                    {/*<DropdownButton*/}
-                                                    {/*    iconDescription={user.details ? user.details.fullName : ''}*/}
-                                                    {/*    items={menuItems}*/}
-                                                    {/*    icon="account"*/}
-                                                    {/*    buttonType="primary"*/}
-                                                    {/*    hideDropdown={true}*/}
-                                                    {/*/>*/}
-                                                </div>
-                                            ) : (
-                                                <IconButton
-                                                    target="_blank"
-                                                    href={'/login?path=' + encodeURIComponent(window.location.pathname)}
-                                                    onClick={this.openModal}
-                                                >
-                                                    <AccountCircleIcon />
-                                                </IconButton>
-                                            )}
-                                        </div>
-                                    </Stack>
-                                </Container>
-                            </div>
-                        )}
-                    </div>
+                    </Box>
                 )}
                 {!hideTitle && (
-                    <div className="InformationHeader">
+                    <Box sx={{ mt: 5, mb: 2 }}>
                         <Container>
                             {badge && (
-                                <div>
-                                    <span className="InformationBadge">{badge}</span>
-                                </div>
+                                <Box sx={{ mb: 1 }}>
+                                    <Typography 
+                                        component="span"
+                                        sx={{
+                                            px: 1,
+                                            py: 0.5,
+                                            borderRadius: 1,
+                                            bgcolor: 'grey.100',
+                                            color: 'text.secondary',
+                                            fontSize: '0.875rem'
+                                        }}
+                                    >
+                                        {badge}
+                                    </Typography>
+                                </Box>
                             )}
-                            <Typography variant="h3" component="h1">{title}</Typography>
+                            <Typography 
+                                variant="h3" 
+                                component="h1"
+                                sx={{
+                                    color: 'text.primary',
+                                    fontSize: '2.1rem',
+                                    lineHeight: 1.33,
+                                    fontWeight: 500,
+                                    maxWidth: '64rem'
+                                }}
+                            >
+                                {title}
+                            </Typography>
                         </Container>
-                    </div>
+                    </Box>
                 )}
-            </header>
+            </Box>
         );
     }
 }
