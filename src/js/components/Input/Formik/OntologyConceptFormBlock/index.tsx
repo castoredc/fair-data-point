@@ -87,23 +87,10 @@ const OntologyConceptFormBlock: FC<OntologyConceptFormBlockProps> = ({
     return (
         <>
             <div className="OntologyConceptFormBlock">
-                <Stack direction="row" spacing={2}>
-                    <Box sx={{ width: 150 }}>
-                        Ontology
-                    </Box>
-                    <Box sx={{ width: 400 }}>
-                        Concept
-                    </Box>
-                </Stack>
-
                 <ConceptList
                     concepts={formValue}
                     ontologies={ontologies}
                     onRemoveConcept={removeConcept}
-                />
-
-                <AddConceptRow
-                    ontologyOptions={ontologyOptions}
                     onAddConcept={addConcept}
                 />
             </div>
