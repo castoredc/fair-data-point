@@ -20,25 +20,25 @@ const DashboardSideBar: React.FC<DashboardSideBarProps> = ({ location, history, 
         location={location}
         items={[
             {
-                to: '/dashboard/studies/',
+                to: '/dashboard/studies',
                 exact: true,
                 title: 'Studies',
                 icon: <BiotechIcon />,
             },
             {
-                to: '/dashboard/catalogs/',
+                to: '/dashboard/catalogs',
                 exact: true,
                 title: 'Catalogs',
                 icon: <InventoryIcon />,
             },
             {
-                to: '/dashboard/data-models/',
+                to: '/dashboard/data-models',
                 exact: true,
                 title: 'Data models',
                 icon: <AccountTreeIcon />,
             },
             {
-                to: '/dashboard/metadata-models/',
+                to: '/dashboard/metadata-models',
                 exact: true,
                 title: 'Metadata models',
                 icon: <AccountTreeIcon />,

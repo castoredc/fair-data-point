@@ -9,7 +9,6 @@ interface DataGridProps extends Omit<MuiDataGridProps, 'slots'> {
     error?: string | null;
 }
 
-
 const CustomNoRowsOverlay = ({ content }: { content: React.ReactNode | (() => React.ReactNode) }) => (
     <GridOverlay>
         <Box
@@ -78,21 +77,14 @@ const DataGrid: React.FC<DataGridProps> = ({
 
     return (
         <Box sx={{ width: '100%', height: '100%' }}>
-            <MuiDataGrid
-                rows={rows}
-                columns={columns}
-                loading={loading}
-                slots={slots}
-                disableRowSelectionOnClick
-                sx={{
-                    border: 'none',
-                    '& .MuiDataGrid-cell:focus': {
-                        outline: 'none',
-                    },
-                    ...rest.sx,
-                }}
-                {...rest}
-            />
+                <MuiDataGrid
+                    rows={rows}
+                    columns={columns}
+                    loading={loading}
+                    slots={slots}
+                    disableRowSelectionOnClick
+                    {...rest}
+                />
         </Box>
     );
 };

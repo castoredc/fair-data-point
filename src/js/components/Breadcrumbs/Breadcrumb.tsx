@@ -23,7 +23,8 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ title, to }) => {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        display: 'block'
+                        display: 'block',
+                        fontSize: 14,
                     }}
                 >
                     {title}

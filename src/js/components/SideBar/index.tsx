@@ -3,7 +3,7 @@ import { Link, matchPath } from 'react-router-dom';
 import BackButton from '../BackButton';
 import FormItem from '../Form/FormItem';
 import * as H from 'history';
-import { Box, Divider, styled } from '@mui/material';
+import { Box, Divider, Stack, styled } from '@mui/material';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -41,7 +41,7 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
             sx={{
                 display: { xs: 'none', md: 'block' },
                 [`& .${drawerClasses.paper}`]: {
-                    backgroundColor: 'background.paper',
+                    backgroundColor: 'grey.50',
                 },
             }}
         >
@@ -60,19 +60,18 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
                     <Divider />
                 </>
             )}
-            <Box
-                sx={{
-                    overflow: 'auto',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
-            >
+            <Stack sx={{ flexGrow: 1, py: 1, px: 2, justifyContent: 'space-between' }}>
                 <List dense>
                     {items.map((item, index) => {
                         if (typeof item.type !== 'undefined') {
                             if (item.type === 'separator') {
-                                return <Divider key={`sitebar-item-${index}`} />;
+                                return <Divider
+                                    key={`sitebar-item-${index}`}
+                                    sx={{
+                                        mt: 1,
+                                        mb: 1,
+                                    }}
+                                />;
                             } else if (item.type === 'component') {
                                 return item.contents;
                             } else if (item.type === 'version' && onVersionChange) {
@@ -105,13 +104,13 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
                                 <ListItem
                                     key={`sitebar-item-${index}`}
                                     disablePadding
-                                    sx={{ display: 'block' }}
+                                    sx={{ display: 'block', mb: 0.5 }}
                                 >
                                     <ListItemButton
-                                        selected={item.active}
+                                        selected={active}
                                         component={Link}
                                         to={item.disabled ? '#' : item.to}
-                                        // className={classNames('SideBarNavItem', item.active && 'Active', active && 'Active', item.disabled && 'Disabled')}
+                                        disabled={item.disabled}
                                     >
                                         <ListItemIcon>
                                             {item.icon && item.icon}
@@ -123,7 +122,7 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
                         }
                     })}
                 </List>
-            </Box>
+            </Stack>
         </Drawer>
     );
 };

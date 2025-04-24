@@ -33,9 +33,19 @@ const AssociatedItemsBar: React.FC<AssociatedItemsBarProps> = ({ items, current,
                 <Tab
                     disabled={current !== item.type && item.count === 0}
                     label={(
-                        <Badge badgeContent={item.count}  color="primary">
-                            {item.type}
-                        </Badge>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {Item[item.type as keyof typeof Item]}
+                            <Badge 
+                                badgeContent={item.count} 
+                                color="primary"
+                                sx={{ 
+                                    '& .MuiBadge-badge': {
+                                        position: 'relative',
+                                        transform: 'none',
+                                    }
+                                }}
+                            />
+                        </div>
                     )}
                 />
             ))}
@@ -44,3 +54,10 @@ const AssociatedItemsBar: React.FC<AssociatedItemsBarProps> = ({ items, current,
 };
 
 export default AssociatedItemsBar;
+
+const Item = {
+    study: 'Studies',
+    catalog: 'Catalogs',
+    dataset: 'Datasets',
+    distribution: 'Distributions',
+};

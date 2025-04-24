@@ -11,7 +11,7 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
     return (
-        <Paper elevation={0} sx={{ bgcolor: 'grey.100', borderBottom: 1, borderColor: 'grey.300', py: 1 }}>
+        <Paper elevation={0} sx={{ bgcolor: 'grey.100', py: 1, borderRadius: 0 }}>
             <Container>
                 <MuiBreadcrumbs
                     separator={<NavigateNextIcon fontSize="small" />}
