@@ -103,7 +103,7 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
             {
                 field: 'actions',
                 headerName: '',
-                width: 80,
+                flex: 1,
                 sortable: false,
                 disableColumnMenu: true,
                 align: 'right',

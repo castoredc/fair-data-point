@@ -64,9 +64,9 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
             });
     };
 
-    updateSelection = option => {
+    updateSelection = event => {
         this.setState({
-            selectedOptionGroup: option.value,
+            selectedOptionGroup: event.target.value,
         });
     };
 

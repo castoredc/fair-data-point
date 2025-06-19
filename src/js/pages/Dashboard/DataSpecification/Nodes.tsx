@@ -257,7 +257,7 @@ class Nodes extends Component<NodesProps, NodesState> {
                                         {
                                             field: 'actions',
                                             headerName: '',
-                                            width: 80,
+                                            flex: 1,
                                             sortable: false,
                                             disableColumnMenu: true,
                                             align: 'right',
@@ -311,7 +311,7 @@ class Nodes extends Component<NodesProps, NodesState> {
                                         {
                                             field: 'actions',
                                             headerName: '',
-                                            width: 80,
+                                            flex: 1,
                                             sortable: false,
                                             disableColumnMenu: true,
                                             align: 'right',
@@ -366,7 +366,7 @@ class Nodes extends Component<NodesProps, NodesState> {
                                         {
                                             field: 'actions',
                                             headerName: '',
-                                            width: 80,
+                                            flex: 1,
                                             sortable: false,
                                             disableColumnMenu: true,
                                             align: 'right',
@@ -432,7 +432,7 @@ class Nodes extends Component<NodesProps, NodesState> {
                                         {
                                             field: 'actions',
                                             headerName: '',
-                                            width: 80,
+                                            flex: 1,
                                             sortable: false,
                                             disableColumnMenu: true,
                                             align: 'right',

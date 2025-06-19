@@ -107,7 +107,7 @@ class Prefixes extends Component<PrefixesProps, PrefixesState> {
             {
                 field: 'actions',
                 headerName: '',
-                width: 80,
+                flex: 1,
                 sortable: false,
                 disableColumnMenu: true,
                 align: 'right',

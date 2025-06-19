@@ -151,18 +151,21 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
             });
     };
 
-    handleVersionChange = (version) => {
-        const { currentVersion } = this.state;
-        const { history } = this.props;
+    handleVersionChange = (versionId) => {
+        console.log(versionId);
 
-        const newVersion = version.label;
+        const { currentVersion, versions } = this.state;
+        const { history } = this.props;
+        const selectedVersion = versions.find(version => version.value === versionId);
+
+        const newVersion = selectedVersion.label;
         const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + newVersion + '/');
 
         if (window.location.pathname !== newUrl) {
             history.push(newUrl);
         } else {
             this.setState({
-                currentVersion: version,
+                currentVersion: selectedVersion,
             });
         }
     };

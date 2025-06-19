@@ -20,7 +20,7 @@ interface SideBarProps {
     location: H.Location;
     items: any;
     back?: any;
-    onVersionChange?: (event: SelectChangeEvent) => void;
+    onVersionChange?: (version) => void;
     history: H.History;
     user: UserType | null;
 }
@@ -84,8 +84,8 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
                                               key={`sitebar-item-${index}`}>
                                         <div className="Select">
                                             <Select
-                                                onChange={onVersionChange}
-                                                value={item.current}
+                                                onChange={(event: SelectChangeEvent) => onVersionChange(event.target.value)}
+                                                value={item.current.value}
                                                 fullWidth
                                             >
                                                 {item.versions.map((version: any) => {
