@@ -75,7 +75,7 @@ class Study extends Component<StudyProps, StudyState> {
     }
 
     render() {
-        const { history, location, match } = this.props;
+        const { history, location, match, user } = this.props;
         const { isLoading, study } = this.state;
 
         if (isLoading) {
@@ -129,6 +129,7 @@ class Study extends Component<StudyProps, StudyState> {
                         },
                     ]}
                     history={history}
+                    user={user}
                 />
 
                 <Body>

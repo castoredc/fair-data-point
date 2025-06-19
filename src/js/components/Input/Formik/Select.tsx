@@ -46,7 +46,7 @@ const Select: FC<SelectProps> = ({
         <>
             <Autocomplete
                 value={options && options.find((option: DefaultOptionType) => field.value === option.value)}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} size="small" />}
                 onChange={(event: any, newValue: SingleValue | MultiValue) => {
                     const returnValue = newValue && (isMultipleOption(newValue) ? newValue.map(rawValue => rawValue.value) : newValue.value);
 
@@ -92,7 +92,7 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
                 filterOptions={filterOptions}
                 options={cachedOptions}
                 openOnFocus={true}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} size="small" />}
                 value={field.value}
                 onChange={(event: any, newValue: SingleValue | MultiValue) => {
                     const returnValue = newValue && (isMultipleOption(newValue) ? newValue.map(rawValue => rawValue.value) : newValue.value);

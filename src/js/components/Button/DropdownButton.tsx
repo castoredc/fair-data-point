@@ -14,7 +14,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface DropdownButtonItem {
     label: string;
-    icon?: string;
+    icon?: React.ReactNode;
     destination: string;
 }
 
@@ -90,7 +90,7 @@ const DropdownButton: FC<DropdownButtonProps> = ({
                         >
                             {item.icon && (
                                 <ListItemIcon>
-                                    <AccountCircleIcon fontSize="small" />
+                                    {item.icon} aaa
                                 </ListItemIcon>
                             )}
                             <ListItemText primary={item.label} />
@@ -143,7 +143,7 @@ const DropdownButton: FC<DropdownButtonProps> = ({
                     >
                         {item.icon && (
                             <ListItemIcon>
-                                <AccountCircleIcon fontSize="small" />
+                                {item.icon}
                             </ListItemIcon>
                         )}
                         <ListItemText primary={item.label} />

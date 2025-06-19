@@ -20,6 +20,8 @@ import {
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DropdownButton from '../Button/DropdownButton';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 interface HeaderProps {
     embedded?: boolean;
@@ -152,12 +154,12 @@ class Header extends Component<HeaderProps, HeaderState> {
         const defaultMenuItems = [
             {
                 destination: '/dashboard',
-                icon: 'settings',
+                icon: <SettingsIcon fontSize="small" />,
                 label: 'Dashboard',
             },
             {
                 destination: '/logout',
-                icon: 'logOut',
+                icon: <LogoutIcon fontSize="small" />,
                 label: 'Log out',
             },
         ];

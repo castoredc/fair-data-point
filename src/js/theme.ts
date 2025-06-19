@@ -42,7 +42,7 @@ const tokens = {
         300: '#778ca6',  // Tertiary border
         400: '#617495',  // Tertiary text
         500: '#36486a',  // Secondary text
-        600: '#0f2141',  // Primary text
+        600: '#616d82',  // Primary text
         800: '#0a1528',  // Heading text
     },
     secondary: {
@@ -142,17 +142,17 @@ export const theme = createTheme({
     typography: {
         fontFamily: 'Lato, -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif',
         h1: {
-            fontSize: '2.5rem',
+            fontSize: '1.3rem',
             fontWeight: 700, // bold
             lineHeight: 1.15, // narrow
         },
         h2: {
-            fontSize: '2rem',
+            fontSize: '1rem',
             fontWeight: 700, // bold
             lineHeight: 1.15, // narrow
         },
         h3: {
-            fontSize: '1.75rem',
+            fontSize: '0.9rem',
             fontWeight: 600, // semibold
             lineHeight: 1.33, // base
         },
@@ -466,6 +466,9 @@ export const theme = createTheme({
                         },
                     },
                 }),
+                columnHeader: {
+                    backgroundColor: tokens.neutral[50]
+                },
                 cell: ({ theme }) => ({ borderTopColor: (theme.vars || theme).palette.divider }),
                 menu: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
@@ -553,6 +556,16 @@ export const theme = createTheme({
                 columnHeaderDraggableContainer: { paddingRight: 2 },
             },
         },
+        MuiListItemButton: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    borderRadius: (theme.vars || theme).shape.borderRadius,
+                    border: '1px solid',
+                    borderColor: tokens.neutral[100],
+                    marginBottom: 4,
+                }),
+            }
+        }
     },
     shape: {
         borderRadius: 8,

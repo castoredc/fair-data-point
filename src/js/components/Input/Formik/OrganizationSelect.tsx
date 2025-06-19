@@ -154,6 +154,7 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                                                 </React.Fragment>
                                             ),
                                         }}
+                                        size="small"
                                     />
                                 )}
                                 disableClearable={true}

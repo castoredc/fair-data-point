@@ -141,6 +141,7 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                         },
                     ]}
                     history={history}
+                    user={user}
                 />
 
                 <Body>

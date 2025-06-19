@@ -210,6 +210,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                     location={location}
                     items={sidebarItems}
                     history={history}
+                    user={user}
                 />
 
                 <Body>

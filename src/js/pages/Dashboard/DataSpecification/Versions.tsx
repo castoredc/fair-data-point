@@ -90,6 +90,7 @@ class Versions extends Component<VersionsProps, VersionsState> {
 
         const rows = dataSpecification.versions.map(version => {
             return {
+                id: version.id,
                 version: version.version,
                 moduleCount: version.count.modules,
                 nodeCount: version.count.nodes,

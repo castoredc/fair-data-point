@@ -19,32 +19,6 @@ class Dashboard extends Component<DashboardProps> {
                 <Container maxWidth={false}>
                     <DashboardRoutes user={user} />
                 </Container>
-                {/*<CastorBar*/}
-                {/*    items={[*/}
-                {/*        {*/}
-                {/*            destination: () => history.push('/dashboard/studies'),*/}
-                {/*            label: 'Castor',*/}
-                {/*            type: 'brand',*/}
-                {/*        },*/}
-                {/*        {*/}
-                {/*            items: [*/}
-                {/*                {*/}
-                {/*                    isTitle: true,*/}
-                {/*                    label: 'Account',*/}
-                {/*                },*/}
-                {/*                {*/}
-                {/*                    destination: '/logout',*/}
-                {/*                    icon: 'logOut',*/}
-                {/*                    label: 'Log out',*/}
-                {/*                },*/}
-                {/*            ],*/}
-                {/*            label: 'Account',*/}
-                {/*            type: 'account',*/}
-                {/*        },*/}
-                {/*    ]}*/}
-                {/*    label="Castor navigation"*/}
-                {/*    horizontalNav*/}
-                {/*/>*/}
             </Box>
         );
     }

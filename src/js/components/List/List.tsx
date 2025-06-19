@@ -137,7 +137,7 @@ class List extends Component<ListProps, CommonListState> {
                         ))}
                         <Pagination
                             onChange={this.handlePagination}
-                            page={pagination.currentPage - 1}
+                            page={pagination.currentPage}
                             count={pagination.totalResults}
                         />
                     </>

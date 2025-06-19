@@ -80,7 +80,7 @@ class AddUserModal extends Component<AddUserModalProps, AddUserModalState> {
                                     <Field component={Choice} collapse name="type" options={permissions} />
                                 </FormItem>
 
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button type="submit" disabled={isSubmitting} variant="contained">
                                     {edit ? `Edit permissions` : 'Add user'}
                                 </Button>
                             </Form>

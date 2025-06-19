@@ -86,10 +86,7 @@ const ListItem: FC<ListItemProps> = ({
     }
 
     // @ts-ignore
-    return <>
-        {button}
-        <Divider />
-    </>;
+    return button;
 };
 
 export default ListItem;

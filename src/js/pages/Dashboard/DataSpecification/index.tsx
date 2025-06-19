@@ -434,7 +434,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                             icon: <WidgetsIcon />,
                         },
                         {
-                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes/internal',
                             title: 'Nodes',
                             icon: <PolylineIcon />,
                         },
@@ -487,6 +487,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                         },
                     ]}
                     history={history}
+                    user={user}
                 />
                 <Body>
                     <Header title={dataSpecification.title} />

@@ -143,6 +143,7 @@ class Dataset extends Component<DatasetProps, DatasetState> {
                         },
                     ]}
                     history={history}
+                    user={user}
                 />
 
                 <Body>

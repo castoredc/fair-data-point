@@ -161,6 +161,7 @@ class DistributionLogsDataTable extends Component<DistributionLogsDataTableProps
         ];
 
         const rows = logs.map((log, index) => ({
+            id: log.id,
             createdAt: moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
             status: (
                 <DistributionGenerationStatus status={log.status} />

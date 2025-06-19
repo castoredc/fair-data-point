@@ -110,6 +110,7 @@ class Nodes extends Component<NodesProps, NodesState> {
 
         const internalNodeRows = nodes.internal.map(item => {
             return {
+                id: item.id,
                 title: item.title,
                 value: item.value,
                 repeated: item.repeated,
@@ -119,6 +120,7 @@ class Nodes extends Component<NodesProps, NodesState> {
 
         const externalNodeRows = nodes.external.map(item => {
             return {
+                id: item.id,
                 title: item.title,
                 short: item.value.prefixedValue,
                 uri: item.value.value,
@@ -128,6 +130,7 @@ class Nodes extends Component<NodesProps, NodesState> {
 
         const literalNodeRows = nodes.literal.map(item => {
             return {
+                id: item.id,
                 title: item.title,
                 value: item.value.value,
                 dataType: item.value.dataType,
@@ -152,6 +155,7 @@ class Nodes extends Component<NodesProps, NodesState> {
             }
 
             return {
+                id: item.id,
                 title: item.title,
                 type: ucfirst(item.value.value),
                 dataType: dataType ? dataType.label : '',

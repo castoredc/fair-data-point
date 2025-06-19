@@ -154,6 +154,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                                     {...params}
                                     fullWidth
                                     placeholder="Select a department"
+                                    size="small"
                                 />
                             )}
                             disableClearable={true}

@@ -45,121 +45,118 @@ const LoginForm: FC<LoginFormProps> = ({
 
                 return (
                     <Form>
-                        <Container maxWidth="sm">
-                            <Stack spacing={4}>
-                                {catalog ? (
-                                    <Box>
-                                        {!modal && (
-                                            <Typography 
-                                                variant="h4" 
-                                                component="h1"
-                                                sx={{ 
-                                                    mb: 3,
-                                                    fontWeight: 500,
-                                                    color: 'text.primary'
-                                                }}
-                                            >
-                                                {localizedText(catalog.name, 'en')}
-                                            </Typography>
-                                        )}
-
-                                        <Stack spacing={2}>
-                                            <Typography>
-                                                To enter your study in the {localizedText(catalog.name, 'en')} you must be a
-                                                registered user.
-                                            </Typography>
-                                            <Typography>
-                                                Please log in with your account and allow the application to
-                                                access your information.
-                                            </Typography>
-                                            {!catalog.accessingData && (
-                                                <Typography>
-                                                    The application only accesses high-level information from your study and
-                                                    will not download nor upload any data to your study.
-                                                </Typography>
-                                            )}
-                                        </Stack>
-                                    </Box>
-                                ) : (
-                                    <Box>
-                                        {!modal && (
-                                            <Typography 
-                                                variant="h4" 
-                                                component="h1"
-                                                sx={{ 
-                                                    mb: 3,
-                                                    fontWeight: 500,
-                                                    color: 'text.primary'
-                                                }}
-                                            >
-                                                {brand}
-                                            </Typography>
-                                        )}
-
-                                        <Stack spacing={2}>
-                                            {!modal && (
-                                                <Typography>
-                                                    You need to be a registered user in order to access this {viewName}.
-                                                </Typography>
-                                            )}
-                                            {modal && view !== 'generic' && view !== null && (
-                                                <Typography>
-                                                    You need to be a registered user in order to access this {viewName}.
-                                                </Typography>
-                                            )}
-                                            <Typography>
-                                                Please log in with your account and allow the application to
-                                                access your information.
-                                            </Typography>
-                                        </Stack>
-                                    </Box>
-                                )}
-
-                                {!serverLocked && (
-                                    <Box 
-                                        sx={{
-                                            bgcolor: 'background.paper',
-                                            borderRadius: 1,
-                                            p: 3
-                                        }}
-                                    >
-                                        <Typography 
-                                            sx={{ 
-                                                mb: 2,
+                        <Stack spacing={4}>
+                            {catalog ? (
+                                <Box>
+                                    {!modal && (
+                                        <Typography
+                                            variant="h4"
+                                            component="h1"
+                                            sx={{
+                                                mb: 3,
                                                 fontWeight: 500,
                                                 color: 'text.primary'
                                             }}
                                         >
-                                            My study is located on a Castor server in
+                                            {localizedText(catalog.name, 'en')}
                                         </Typography>
-                                        <Field
-                                            component={SelectableListItems}
-                                            name="server"
-                                            options={servers.map(server => ({
-                                                title: server.name,
-                                                value: server.id,
-                                                customIcon: 'flag' + server.flag.toUpperCase(),
-                                            }))}
-                                        />
-                                    </Box>
-                                )}
+                                    )}
 
-                                <Box sx={{ textAlign: 'center' }}>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        size="large"
-                                        disabled={values.server === null}
-                                        sx={{ 
-                                            minWidth: 200,
-                                            py: 1.5
+                                    <Stack spacing={2}>
+                                        <Typography>
+                                            To enter your study in the {localizedText(catalog.name, 'en')} you must be a
+                                            registered user.
+                                        </Typography>
+                                        <Typography>
+                                            Please log in with your account and allow the application to
+                                            access your information.
+                                        </Typography>
+                                        {!catalog.accessingData && (
+                                            <Typography>
+                                                The application only accesses high-level information from your study and
+                                                will not download nor upload any data to your study.
+                                            </Typography>
+                                        )}
+                                    </Stack>
+                                </Box>
+                            ) : (
+                                <Box>
+                                    {!modal && (
+                                        <Typography
+                                            variant="h4"
+                                            component="h1"
+                                            sx={{
+                                                mb: 3,
+                                                fontWeight: 500,
+                                                color: 'text.primary'
+                                            }}
+                                        >
+                                            {brand}
+                                        </Typography>
+                                    )}
+
+                                    <Stack spacing={2}>
+                                        {!modal && (
+                                            <Typography>
+                                                You need to be a registered user in order to access this {viewName}.
+                                            </Typography>
+                                        )}
+                                        {modal && view !== 'generic' && view !== null && (
+                                            <Typography>
+                                                You need to be a registered user in order to access this {viewName}.
+                                            </Typography>
+                                        )}
+                                        <Typography>
+                                            Please log in with your account and allow the application to
+                                            access your information.
+                                        </Typography>
+                                    </Stack>
+                                </Box>
+                            )}
+
+                            {!serverLocked && (
+                                <Box
+                                    sx={{
+                                        bgcolor: 'background.paper',
+                                        borderRadius: 1,
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            mb: 2,
+                                            fontWeight: 500,
+                                            color: 'text.primary'
                                         }}
                                     >
-                                        Log in with Castor
-                                    </Button>
+                                        My study is located on a Castor server in
+                                    </Typography>
+                                    <Field
+                                        component={SelectableListItems}
+                                        name="server"
+                                        options={servers.map(server => ({
+                                            title: server.name,
+                                            value: server.id,
+                                            customIcon: 'flag' + server.flag.toUpperCase(),
+                                        }))}
+                                    />
                                 </Box>
-                            </Stack>
-                        </Container>
+                            )}
+
+                            <Box sx={{ textAlign: 'center' }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    size="large"
+                                    disabled={values.server === null}
+                                    sx={{
+                                        minWidth: 200,
+                                        py: 1.5
+                                    }}
+                                >
+                                    Log in with Castor
+                                </Button>
+                            </Box>
+                        </Stack>
                     </Form>
                 );
             }}

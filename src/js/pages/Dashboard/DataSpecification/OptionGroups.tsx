@@ -139,6 +139,7 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
             };
 
             return {
+                id: item.id,
                 title: item.title,
                 data: data,
             };

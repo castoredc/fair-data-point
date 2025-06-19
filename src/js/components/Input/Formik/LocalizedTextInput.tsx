@@ -69,7 +69,7 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                                 />
                                 <Autocomplete
                                     options={languages}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    renderInput={(params) => <TextField {...params} size="small" />}
                                     onChange={(event: any, newValue) => {
                                         handleChange(field, form, index, 'language', newValue.value);
                                     }}

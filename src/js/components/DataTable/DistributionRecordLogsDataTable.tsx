@@ -15,6 +15,7 @@ import { Box } from '@mui/material';
 import NoResults from 'components/NoResults';
 
 interface Log {
+    id: string;
     record: { id: string };
     status: 'error' | 'success' | 'not_updated' | 'partially';
     createdAt: string;
@@ -160,6 +161,7 @@ class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDa
         ];
 
         const rows = logs.map((log, index) => ({
+            id: log.id,
             record: log.record.id,
             status: <DistributionGenerationStatus status={log.status} />,
             createdAt: moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),

@@ -11,6 +11,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface Dataset {
+    id: string;
     hasMetadata?: boolean;
     metadata?: {
         title: string;
@@ -196,6 +197,7 @@ class DatasetsDataTable extends Component<DatasetsDataTableProps, DatasetsDataTa
 
         const rows = datasets.map((item, index) => {
             return {
+                id: item.id,
                 title: item.hasMetadata ? localizedText(item.metadata?.title, 'en') : '(no title)',
                 description: item.hasMetadata ? localizedText(item.metadata?.description, 'en') : '',
                 language: item.hasMetadata ? item.metadata?.language : '',

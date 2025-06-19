@@ -8,6 +8,7 @@ import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';
 import LoadingOverlay from 'components/LoadingOverlay';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Container from '@mui/material/Container';
 
 interface LoginProps extends ComponentWithNotifications {
     match: {
@@ -128,14 +129,16 @@ class Login extends Component<LoginProps, LoginState> {
                 title="FAIR Data Point"
             >
                 <DocumentTitle title="FAIR Data Point | Log in" />
-                <LoginForm
-                    path={path}
-                    selectedServerId={selectedServer}
-                    serverLocked={serverLocked}
-                    servers={servers}
-                    catalog={catalog}
-                    view={view}
-                />
+                <Container maxWidth="sm">
+                    <LoginForm
+                        path={path}
+                        selectedServerId={selectedServer}
+                        serverLocked={serverLocked}
+                        servers={servers}
+                        catalog={catalog}
+                        view={view}
+                    />
+                </Container>
             </LoginContainer>
         );
     }

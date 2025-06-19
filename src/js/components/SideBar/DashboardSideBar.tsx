@@ -64,6 +64,7 @@ const DashboardSideBar: React.FC<DashboardSideBarProps> = ({ location, history, 
                 : []),
         ]}
         history={history}
+        user={user}
     />;
 };
 

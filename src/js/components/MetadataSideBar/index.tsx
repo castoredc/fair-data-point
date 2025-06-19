@@ -21,7 +21,13 @@ const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) =>
     return (
         <div className="MetadataSideBar">
             {metadata.contents.sidebar.map(item => {
-                return <MetadataItem title={item.title} type={item.type} dataType={item.dataType} value={item.value} />;
+                return <MetadataItem
+                    key={`sidebar-${item.order}`}
+                    title={item.title}
+                    type={item.type}
+                    dataType={item.dataType}
+                    value={item.value}
+                />;
             })}
 
             <Button startIcon={<OpenInNewIcon />} variant="text" onClick={() => setOpen(true)} className="ViewMetadata">

@@ -175,7 +175,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             {
                 field: 'actions',
                 headerName: '',
-                width: 80,
+                flex: 1,
                 sortable: false,
                 disableColumnMenu: true,
                 align: 'right',
@@ -252,7 +252,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                         emptyStateContent={`There are no users added yet`}
                         rows={rows}
                         columns={columns}
-                        sx={{ '& .actionsCell': { pr: 1 } }}
+                        // sx={{ '& .actionsCell': { pr: 1 } }}
                     />
                 </Box>
             </PageBody>
