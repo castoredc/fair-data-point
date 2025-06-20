@@ -11,6 +11,7 @@ import UriInput from 'components/Input/Formik/UriInput';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface TripleModalProps extends ComponentWithNotifications {
@@ -133,70 +134,79 @@ class TripleModal extends Component<TripleModalProps, TripleModalState> {
                         return (
                             <Form>
                                 <FormItem label="Subject">
-                                    <Stack direction="row">
-                                        <FormItem label="Type">
-                                            <Field
-                                                component={Select}
-                                                options={tripleTypes[type].subject}
-                                                serverError={validation}
-                                                name="subjectType"
-                                                width="tiny"
-
-                                            />
-                                        </FormItem>
-
-                                        {subjectSelectable && (
-                                            <FormItem label="Node">
+                                    <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                                        <Box sx={{ width: 150 }}>
+                                            <FormItem label="Type">
                                                 <Field
                                                     component={Select}
-                                                    options={subjectOptions}
+                                                    options={tripleTypes[type].subject}
                                                     serverError={validation}
-                                                    name="subjectValue"
+                                                    name="subjectType"
                                                     width="small"
-
+                                                    sx={{ width: '100%' }}
                                                 />
                                             </FormItem>
+                                        </Box>
+
+                                        {subjectSelectable && (
+                                            <Box sx={{ flex: 1 }}>
+                                                <FormItem label="Node">
+                                                    <Field
+                                                        component={Select}
+                                                        options={subjectOptions}
+                                                        serverError={validation}
+                                                        name="subjectValue"
+                                                        width="small"
+                                                        sx={{ width: '100%' }}
+                                                    />
+                                                </FormItem>
+                                            </Box>
                                         )}
                                     </Stack>
                                 </FormItem>
 
                                 <FormItem label="Predicate">
                                     <FormItem label="URI">
-                                        <Field
-                                            component={UriInput}
-                                            name="predicateValue"
-                                            serverError={validation}
-                                            width="100%"
-                                            inputSize="100%"
-                                            prefixes={prefixes}
-                                        />
+                                        <Box sx={{ width: '100%' }}>
+                                            <Field
+                                                component={UriInput}
+                                                options={prefixes}
+                                                serverError={validation}
+                                                name="predicateValue"
+                                                fullWidth
+                                            />
+                                        </Box>
                                     </FormItem>
                                 </FormItem>
 
                                 <FormItem label="Object">
-                                    <Stack direction="row">
-                                        <FormItem label="Type">
-                                            <Field
-                                                component={Select}
-                                                options={tripleTypes[type].object}
-                                                serverError={validation}
-                                                name="objectType"
-                                                width="tiny"
-
-                                            />
-                                        </FormItem>
-
-                                        {objectSelectable && (
-                                            <FormItem label="Node">
+                                    <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                                        <Box sx={{ width: 150 }}>
+                                            <FormItem label="Type">
                                                 <Field
                                                     component={Select}
-                                                    options={objectOptions}
+                                                    options={tripleTypes[type].object}
                                                     serverError={validation}
-                                                    name="objectValue"
+                                                    name="objectType"
                                                     width="small"
-
+                                                    sx={{ width: '100%' }}
                                                 />
                                             </FormItem>
+                                        </Box>
+
+                                        {objectSelectable && (
+                                            <Box sx={{ flex: 1 }}>
+                                                <FormItem label="Node">
+                                                    <Field
+                                                        component={Select}
+                                                        options={objectOptions}
+                                                        serverError={validation}
+                                                        name="objectValue"
+                                                        width="small"
+                                                        sx={{ width: '100%' }}
+                                                    />
+                                                </FormItem>
+                                            </Box>
                                         )}
                                     </Stack>
                                 </FormItem>

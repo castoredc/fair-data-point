@@ -13,6 +13,7 @@ import { apiClient } from '../../../network';
 import { getType } from '../../../util';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import NoResults from 'components/NoResults';
+import IconButton from '@mui/material/IconButton';
 
 interface ModulesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     modules: any;
@@ -234,7 +235,13 @@ class Modules extends Component<ModulesProps, ModulesState> {
                     <SideTabs
                         hasButtons
                         title="Groups"
-                        actions={<Button startIcon={<AddIcon />} onClick={() => this.openModuleModal(null)} />}
+                        actions={(
+                            <IconButton
+                                onClick={() => this.openModuleModal(null)}
+                            >
+                                <AddIcon />
+                            </IconButton>
+                        )}
                         initialTab={initialTab}
                         url={`/dashboard/${type}s/${dataSpecification.id}/${match.params.version}/modules`}
                         tabs={modules.map(element => {

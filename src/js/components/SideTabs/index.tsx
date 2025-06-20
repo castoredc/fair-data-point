@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Stack, Typography, Tabs, Tab, Paper } from '@mui/material';
+import { Box, Stack, Typography, Tabs, Tab, Paper, Chip } from '@mui/material';
 
 type Tab = {
     type?: 'separator';
@@ -52,7 +52,6 @@ const SideTabs: FC<SideTabsProps> = ({
                     mr: 4,
                     display: 'flex',
                     flexDirection: 'column',
-                    mt: hasButtons ? '50px' : hasTabs ? '4.8rem' : title ? 0 : '50px',
                     borderRight: 1,
                     borderColor: 'divider'
                 }}
@@ -112,9 +111,14 @@ const SideTabs: FC<SideTabsProps> = ({
                                                 {tab.title}
                                             </Typography>
                                             {tab.badge && (
-                                                <Box component="span">
-                                                    {tab.badge}
-                                                </Box>
+                                                <Chip
+                                                    size="small"
+                                                    sx={{
+                                                        textTransform: 'uppercase',
+                                                        fontSize: '0.5rem',
+                                                    }}
+                                                    label={tab.badge}
+                                                />
                                             )}
                                         </Stack>
                                     }
@@ -128,8 +132,8 @@ const SideTabs: FC<SideTabsProps> = ({
                     })}
                 </Tabs>
             </Paper>
-            <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
-                {tabs[activeTab].content}
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+                {tabs[activeTab] !== undefined && tabs[activeTab].content}
             </Box>
         </Box>
     );
