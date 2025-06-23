@@ -50,7 +50,7 @@ services:
             - '%env(DB_CREATOR_PASS)%'
             - '%env(DB_PORT)%'
             - '%env(bool:USE_SSL)%'
-            - '%kernel.project_dir%/certs/DigiCertGlobalRootCA.crt.pem'
+            - '%kernel.project_dir%/certs/ca-certificates.crt'
 
     App\Service\Distribution\TripleStoreBasedDistributionService:
         arguments:
