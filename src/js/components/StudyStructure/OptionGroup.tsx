@@ -17,8 +17,21 @@ interface OptionGroupProps extends ComponentWithNotifications {
 }
 
 interface OptionGroupState {
-    showModal: any;
-    modalData: any;
+    showModal: {
+        add: boolean;
+        remove: boolean;
+    };
+    modalData: {
+        add: {
+            id: string;
+            title: string;
+            parent: string;
+        } | null;
+        remove: {
+            annotation: any;
+            option: any;
+        } | null;
+    };
 }
 
 class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
@@ -36,7 +49,7 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
         };
     }
 
-    openModal = (type, data) => {
+    openModal = (type: 'add' | 'remove', data: any) => {
         const { modalData, showModal } = this.state;
 
         this.setState({
@@ -51,7 +64,7 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
         });
     };
 
-    closeModal = type => {
+    closeModal = (type: 'add' | 'remove') => {
         const { modalData, showModal } = this.state;
 
         this.setState({
@@ -70,12 +83,15 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
         const { studyId, onUpdate, notifications } = this.props;
         const { modalData } = this.state;
 
+        if (!modalData.remove) {
+            return;
+        }
+
         apiClient
             .delete(`/api/study/${studyId}/annotations/${modalData.remove.annotation.id}`)
             .then(() => {
                 notifications.show('The annotation was successfully removed', {
                     variant: 'success',
-
                 });
 
                 this.closeModal('remove');
@@ -92,13 +108,15 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
 
         return (
             <>
-                <AddAnnotationModal
-                    open={showModal.add}
-                    entity={modalData.add}
-                    onClose={() => this.closeModal('add')}
-                    studyId={studyId}
-                    onSaved={onUpdate}
-                />
+                {modalData.add && (
+                    <AddAnnotationModal
+                        open={showModal.add}
+                        entity={modalData.add}
+                        onClose={() => this.closeModal('add')}
+                        studyId={studyId}
+                        onSaved={onUpdate}
+                    />
+                )}
 
                 {modalData.remove && (
                     <ConfirmModal
