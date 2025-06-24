@@ -178,9 +178,7 @@ class AddAnnotationModal extends Component<AddAnnotationModalProps, AddAnnotatio
                                         loadOptions={(inputValue, callback) =>
                                             this.loadConcepts(values.ontology, values.includeIndividuals, inputValue, callback)
                                         }
-                                        // onChange={this.handleConceptChange}
-                                        isDisabled={values.ontology === null}
-
+                                        disabled={values.ontology === null}
                                         serverError={validation}
                                     />
 

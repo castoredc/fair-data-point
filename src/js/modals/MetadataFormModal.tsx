@@ -195,4 +195,4 @@ const resourceTypes = [
     { value: 'study', label: ResourceType.study },
 ];
 
-export default withNotifications(MetadataModelFormSchema);
+export default withNotifications(MetadataFormModal);

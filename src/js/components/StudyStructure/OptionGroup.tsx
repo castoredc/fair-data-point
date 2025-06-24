@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
+import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import Annotations from '../Annotations';
-import Button from '@mui/material/Button';
 import NoResults from 'components/NoResults';
 import AddAnnotationModal from '../../modals/AddAnnotationModal';
 import './StudyStructure.scss';
 import ConfirmModal from '../../modals/ConfirmModal';
 import { apiClient } from 'src/js/network';
-import Stack from '@mui/material/Stack';
-import AddIcon from '@mui/icons-material/Add';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface OptionGroupProps extends ComponentWithNotifications {
@@ -92,7 +91,7 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
         const { showModal, modalData } = this.state;
 
         return (
-            <div className="OptionGroupTable LargeTable">
+            <>
                 <AddAnnotationModal
                     open={showModal.add}
                     entity={modalData.add}
@@ -117,23 +116,30 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
                     </ConfirmModal>
                 )}
 
-                <div className="OptionGroupTableHeader TableHeader">
-                    <div className="OptionGroupTableOption">Option</div>
-                    <div className="OptionGroupTableValue">Value</div>
-                    <div className="OptionGroupTableAnnotations">
-                        <div className="Annotation">
-                            <div className="OntologyName">Ontology</div>
-                            <div className="ConceptDisplayName">Display name</div>
-                            <div className="ConceptCode">Concept ID</div>
-                        </div>
-                    </div>
-                </div>
-                <div className="OptionGroupTableBody TableBody">
-                    {options.length === 0 ? (
-                        <NoResults>This option group does not contain options.</NoResults>
-                    ) : (
-                        <div>
-                            {options.map(option => {
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Option</TableCell>
+                            <TableCell>Value</TableCell>
+                            <TableCell>
+                                <Box display="flex" gap={2}>
+                                    <Box flex={1}>Ontology</Box>
+                                    <Box flex={2}>Display name</Box>
+                                    <Box flex={1}>Concept ID</Box>
+                                </Box>
+                            </TableCell>
+                            <TableCell>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {options.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={4}>
+                                    <NoResults>This option group does not contain options.</NoResults>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            options.map(option => {
                                 const data = {
                                     type: 'field_option',
                                     id: option.id,
@@ -142,10 +148,10 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
                                 };
 
                                 return (
-                                    <div className="OptionGroupItem" key={option.id}>
-                                        <div className="OptionGroupTableOption">{option.name}</div>
-                                        <div className="OptionGroupTableValue">{option.value}</div>
-                                        <div className="OptionGroupTableAnnotations">
+                                    <TableRow key={option.id}>
+                                        <TableCell>{option.name}</TableCell>
+                                        <TableCell>{option.value}</TableCell>
+                                        <TableCell>
                                             <Annotations
                                                 annotations={option.annotations}
                                                 handleRemove={annotation =>
@@ -155,27 +161,23 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
                                                     })
                                                 }
                                             />
-
-                                            <div className="OptionGroupTableButton">
-                                                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                                                    <Button
-                                                        onClick={() => {
-                                                            this.openModal('add', data);
-                                                        }}
-                                                        startIcon={<AddIcon />}
-                                                        variant="outlined"
-
-                                                    />
-                                                </Stack>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                onClick={() => {
+                                                    this.openModal('add', data);
+                                                }}
+                                                startIcon={<AddIcon />}
+                                                variant="outlined"
+                                            />
+                                        </TableCell>
+                                    </TableRow>
                                 );
-                            })}
-                        </div>
-                    )}
-                </div>
-            </div>
+                            })
+                        )}
+                    </TableBody>
+                </Table>
+            </>
         );
     }
 }

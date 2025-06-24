@@ -28,7 +28,7 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
-                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+            <Stack direction="row" sx={{ justifyContent: 'flex-end' , pb: 2}} spacing={1}>
                     <Button startIcon={<EditIcon />} variant="outlined" onClick={openFormModal}>
                         Edit form
                     </Button>
@@ -54,6 +54,7 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
                         const node = nodes.value.find(node => node.id === field.node);
 
                         return {
+                            id: field.id,
                             order: field.order,
                             title: field.title,
                             node: node.title,
@@ -111,13 +112,13 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
                                     items={[
                                         {
                                             destination: () => {
-                                                openFieldModal(params.row.field);
+                                                openFieldModal(params.row.data);
                                             },
                                             label: 'Edit field',
                                         },
                                         {
                                             destination: () => {
-                                                openRemoveFieldModal(params.row.field);
+                                                openRemoveFieldModal(params.row.data);
                                             },
                                             label: 'Delete field',
                                         },

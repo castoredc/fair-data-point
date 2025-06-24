@@ -128,7 +128,7 @@ class ImportExport extends Component<ImportExportProps, ImportExportState> {
         const ImportSchema = Yup.object().shape({
             file: Yup.mixed().required('Please upload a file'),
             version: Yup.string()
-                .required()
+                .required('Please enter a valid version number (X.X.X)')
                 .test('isValidVersion', 'Please enter a valid version number (X.X.X)', value => {
                     if (value === undefined) {
                         return false;
@@ -171,7 +171,7 @@ class ImportExport extends Component<ImportExportProps, ImportExportState> {
                               }) => {
                                 return (
                                     <Form>
-                                        <Typography variant="h4">
+                                        <Typography variant="h4" sx={{ mb: 2 }}>
                                             Import model
                                         </Typography>
 
@@ -186,8 +186,10 @@ class ImportExport extends Component<ImportExportProps, ImportExportState> {
                                             <Field component={Input} name="version" value={values.version} />
                                         </FormItem>
 
-                                        <Button type="submit" startIcon={<UploadIcon />}
-                                                disabled={values.file === null || isSubmitting}>
+                                        <Button
+                                            type="submit" startIcon={<UploadIcon />}
+                                            disabled={values.file === null || isSubmitting}
+                                        >
                                             Import model
                                         </Button>
                                     </Form>
@@ -196,11 +198,11 @@ class ImportExport extends Component<ImportExportProps, ImportExportState> {
                         </Formik>
                     </div>
                     <div>
-                        <Typography variant="h4">
+                        <Typography variant="h4" sx={{ mb: 2 }}>
                             Export model
                         </Typography>
 
-                        <Button onClick={this.export} startIcon={<DownloadIcon />} disabled={isExporting}>
+                        <Button onClick={this.export} variant="outlined" startIcon={<DownloadIcon />} disabled={isExporting}>
                             Export model
                         </Button>
                     </div>

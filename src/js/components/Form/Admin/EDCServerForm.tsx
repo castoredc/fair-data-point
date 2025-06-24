@@ -96,7 +96,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                     </FormItem>
 
                     <FormItem>
-                        <Field component={SingleChoice} labelText="Default server?" name="default" />
+                        <Field component={SingleChoice} label="Default server?" name="default" />
                     </FormItem>
                     <FormItem label="Client ID">
                         <Field component={Input} name="clientId" serverError={validation} />

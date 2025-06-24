@@ -27,7 +27,6 @@ const DatePicker: FC<DatePickerProps> = ({
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
     const value = (field.value !== null && field.value !== '') ? moment(field.value) : null;
-    console.log(value);
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -36,7 +35,6 @@ const DatePicker: FC<DatePickerProps> = ({
                 value={value}
                 onChange={(newValue) => {
                     const formattedDate = newValue?.format('YYYY-MM-DD');
-                    console.log(formattedDate);
                     field.onChange({ target: { name: field.name, value: formattedDate } });
                 }}
                 readOnly={readOnly}

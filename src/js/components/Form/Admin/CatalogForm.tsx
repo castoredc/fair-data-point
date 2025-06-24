@@ -145,7 +145,7 @@ class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
                                 <FormItem>
                                     <Field
                                         component={SingleChoice}
-                                        labelText="Accepts submissions"
+                                        label="Accepts submissions"
                                         name="acceptSubmissions"
                                         details="When selected, others will be able to add their study to this catalog"
                                     />

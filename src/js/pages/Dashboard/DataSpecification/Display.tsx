@@ -113,6 +113,7 @@ class Display extends Component<DisplayProps, DisplayState> {
                     const node = nodes.value.find(node => node.id === item.node);
 
                     return {
+                        id: item.id,
                         title: item.title,
                         node: node.title,
                         type: MetadataDisplayType[item.type],

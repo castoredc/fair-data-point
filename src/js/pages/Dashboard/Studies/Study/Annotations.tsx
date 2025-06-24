@@ -94,7 +94,11 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
                     value={selectedOptionGroup}
                 >
                     {optionGroups.map(optionGroup => {
-                        return <MenuItem value={optionGroup.id}>{optionGroup.name}</MenuItem>
+                        return <MenuItem
+                            key={optionGroup.id}
+                            value={optionGroup.id}>
+                            {optionGroup.name}
+                        </MenuItem>
                     })}
                 </Select>
 

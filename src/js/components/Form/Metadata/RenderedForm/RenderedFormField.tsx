@@ -71,7 +71,7 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({
         case 'dateAndTimePicker':
             return <Field component={DateAndTimePicker} name={field.id} serverError={validation} />;
         case 'checkbox':
-            return <Field component={SingleChoice} name={field.id} labelText={field.title} details={field.description}
+            return <Field component={SingleChoice} name={field.id} label={field.title} details={field.description}
                           serverError={validation} />;
         case 'checkboxes':
             return <Field component={Choice} name={field.id} options={options} serverError={validation}

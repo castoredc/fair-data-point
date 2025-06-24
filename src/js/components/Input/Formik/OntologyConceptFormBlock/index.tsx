@@ -51,8 +51,6 @@ const OntologyConceptFormBlock: FC<OntologyConceptFormBlockProps> = ({
         (concept: OntologyConceptSearchType | null, selectedOntology: OntologyType | null) => {
             if (!concept || !selectedOntology) return;
 
-            console.log(concept);
-
             const newConcept = {
                 code: concept.code,
                 url: concept.url,

@@ -47,7 +47,6 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
 
     openModal = (type, data) => {
         const { showModal } = this.state;
-        console.log(data);
 
         this.setState({
             showModal: {

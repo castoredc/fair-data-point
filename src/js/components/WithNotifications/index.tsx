@@ -11,8 +11,8 @@ export const useNotifications = () => {
     };
 };
 
-export default function withNotifications(WrappedComponent) {
-    return function NotificationsWrapper(props) {
+export default function withNotifications<P extends object>(WrappedComponent: React.ComponentType<P & ComponentWithNotifications>) {
+    return function NotificationsWrapper(props: P) {
         const notifications = useNotifications();
 
         return <WrappedComponent {...props} notifications={notifications} />;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from '@mui/material/Button';
 import Modal from 'components/Modal';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 type ConfirmModalProps = {
     show?: boolean;
@@ -82,16 +83,16 @@ class ConfirmModal extends Component<ConfirmModalProps & ShowProps, ConfirmModal
             >
                 {children}
 
-                <div>
+                <Box sx={{ mt: 2 }}>
                     <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                        <Button variant="outlined" onClick={this.handleConfirm}>
+                        <Button variant={variant ? variant : 'contained'} color={color} onClick={this.handleConfirm}>
                             {action}
                         </Button>
-                        <Button onClick={this.handleCancel}>
+                        <Button variant="outlined" onClick={this.handleCancel}>
                             Cancel
                         </Button>
                     </Stack>
-                </div>
+                </Box>
             </Modal>
         );
 

@@ -181,7 +181,7 @@ class NodeModal extends Component<AddNodeModalProps, AddNodeModalState> {
                                     <FormItem>
                                         <Field
                                             component={SingleChoice}
-                                            labelText="Repeated"
+                                            label="Repeated"
                                             serverError={validation}
                                             name="repeated"
                                             details="This node should be repeated for every instance of a specific survey or report"
@@ -189,7 +189,7 @@ class NodeModal extends Component<AddNodeModalProps, AddNodeModalState> {
                                     </FormItem>
                                 )}
 
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button type="submit" variant="contained" disabled={isSubmitting}>
                                     {title}
                                 </Button>
                             </Form>

@@ -86,6 +86,7 @@ class DataSpecificationVersionModal extends Component<DataModelVersionModalProps
                     onClick={() => {
                         handleSave(versionType ? versionType : '');
                     }}
+                    variant="contained"
                 >
                     Save metadata
                 </Button>

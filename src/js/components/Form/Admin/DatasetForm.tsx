@@ -15,6 +15,8 @@ import Stack from '@mui/material/Stack';
 import LoadingOverlay from 'components/LoadingOverlay';
 import WithNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import BiotechIcon from '@mui/icons-material/Biotech';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Card, CardContent, Avatar, Box, Grid, Typography, Stack } from '@mui/material';
 
 interface DatasetFormProps extends ComponentWithNotifications {
     dataset?: any;
@@ -131,27 +133,48 @@ class DatasetForm extends Component<DatasetFormProps, DatasetFormState> {
                             <div>
                                 {dataset.study && (
                                     <FormItem label="Study">
-                                        <div className="StudyLink">
-                                            <div className="StudyIcon">
-                                                <BiotechIcon />
-                                            </div>
-                                            <div className="StudyDetails">
-                                                <div className="StudyName">
-                                                    <dl>
-                                                        <dt>Title</dt>
-                                                        <dd>
-                                                            {studyTitle}
-                                                        </dd>
-                                                        <dt>Study name</dt>
-                                                        <dd>{dataset.study.name}</dd>
-                                                    </dl>
-                                                </div>
-                                                {/* @ts-ignore */}
-                                                <Link to={`/dashboard/studies/${dataset.study.id}`}>
-                                                    <Button variant="outlined">Open study</Button>
-                                                </Link>
-                                            </div>
-                                        </div>
+                                        <Card variant="outlined" sx={{ bgcolor: 'background.paper', maxWidth: 400, p: 0 }}>
+                                            <CardContent>
+                                                <Stack spacing={2}>
+                                                    <Stack direction="row" spacing={3} alignItems="flex-start">
+                                                        <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}>
+                                                            <BiotechIcon />
+                                                        </Avatar>
+                                                        <Stack spacing={2} sx={{ flexGrow: 1 }}>
+                                                            <Box>
+                                                                <Typography variant="subtitle2" color="text.secondary"
+                                                                            gutterBottom>
+                                                                    Title
+                                                                </Typography>
+                                                                <Typography variant="body1">
+                                                                    {studyTitle}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Box>
+                                                                <Typography variant="subtitle2" color="text.secondary"
+                                                                            gutterBottom>
+                                                                    Study name
+                                                                </Typography>
+                                                                <Typography variant="body1">
+                                                                    {dataset.study.name}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Link to={`/dashboard/studies/${dataset.study.id}`} style={{
+                                                                textDecoration: 'none',
+                                                                alignSelf: 'flex-start',
+                                                            }}>
+                                                                <Button
+                                                                    variant="outlined"
+                                                                    endIcon={<ArrowForwardIcon />}
+                                                                >
+                                                                    Open study
+                                                                </Button>
+                                                            </Link>
+                                                        </Stack>
+                                                    </Stack>
+                                                </Stack>
+                                            </CardContent>
+                                        </Card>
                                     </FormItem>
                                 )}
 
@@ -174,7 +197,7 @@ class DatasetForm extends Component<DatasetFormProps, DatasetFormState> {
                                 <FormItem>
                                     <Field
                                         component={SingleChoice}
-                                        labelText="Publish dataset"
+                                        label="Publish dataset"
                                         name="published"
                                         details="When selected, others will be able to view metadata of this dataset"
                                     />

@@ -152,8 +152,6 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
     };
 
     handleVersionChange = (versionId) => {
-        console.log(versionId);
-
         const { currentVersion, versions } = this.state;
         const { history } = this.props;
         const selectedVersion = versions.find(version => version.value === versionId);
