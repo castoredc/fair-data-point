@@ -11,7 +11,6 @@ import * as Yup from 'yup';
 import { apiClient } from 'src/js/network';
 import Select from 'components/Input/Formik/Select';
 import { Link } from 'react-router-dom';
-import Stack from '@mui/material/Stack';
 import LoadingOverlay from 'components/LoadingOverlay';
 import WithNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import BiotechIcon from '@mui/icons-material/Biotech';

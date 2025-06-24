@@ -205,7 +205,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             return {
                 id: permission.user.id,
                 name: permission.user.name,
-                type: Permissions[permission.type].labelText,
+                type: Permissions[permission.type].label,
                 data: permission,
             };
         });

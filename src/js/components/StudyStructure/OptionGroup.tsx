@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Box } from '@mui/material';
+import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Annotations from '../Annotations';
 import NoResults from 'components/NoResults';
 import AddAnnotationModal from '../../modals/AddAnnotationModal';
@@ -23,6 +24,7 @@ interface OptionGroupState {
     };
     modalData: {
         add: {
+            type: string;
             id: string;
             title: string;
             parent: string;
@@ -139,11 +141,12 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
                         <TableRow>
                             <TableCell>Option</TableCell>
                             <TableCell>Value</TableCell>
-                            <TableCell>
+                            <TableCell colSpan={3}>
                                 <Box display="flex" gap={2}>
                                     <Box flex={1}>Ontology</Box>
                                     <Box flex={2}>Display name</Box>
                                     <Box flex={1}>Concept ID</Box>
+                                    <Box sx={{ width: '40px' }}></Box>
                                 </Box>
                             </TableCell>
                             <TableCell>Actions</TableCell>
@@ -169,7 +172,7 @@ class OptionGroup extends Component<OptionGroupProps, OptionGroupState> {
                                     <TableRow key={option.id}>
                                         <TableCell>{option.name}</TableCell>
                                         <TableCell>{option.value}</TableCell>
-                                        <TableCell>
+                                        <TableCell colSpan={3}>
                                             <Annotations
                                                 annotations={option.annotations}
                                                 handleRemove={annotation =>

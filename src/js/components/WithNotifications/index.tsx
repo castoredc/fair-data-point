@@ -12,11 +12,15 @@ export const useNotifications = () => {
 };
 
 export default function withNotifications<P extends object>(WrappedComponent: React.ComponentType<P & ComponentWithNotifications>) {
-    return function NotificationsWrapper(props: P) {
+    // Explicitly type the wrapper to include ComponentWithNotifications
+    const NotificationsWrapper: React.FC<Omit<P, keyof ComponentWithNotifications>> = (props) => {
         const notifications = useNotifications();
 
-        return <WrappedComponent {...props} notifications={notifications} />;
+        // Cast the combined props to satisfy TypeScript
+        return <WrappedComponent {...(props as P)} notifications={notifications} />;
     };
+
+    return NotificationsWrapper;
 }
 
 export interface ComponentWithNotifications {

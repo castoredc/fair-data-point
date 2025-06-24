@@ -5,7 +5,7 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import NoResults from 'components/NoResults';
-import { Divider, FormLabel } from '@mui/material';
+import { Divider, FormLabel, Stack } from '@mui/material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -88,19 +88,30 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
 
         return (
             <PageBody>
-                <FormLabel>Option group</FormLabel>
-                <Select
-                    onChange={this.updateSelection}
-                    value={selectedOptionGroup}
+                <Stack
+                    direction="row"
+                     spacing={2}
+                     sx={{
+                         justifyContent: "flex-start",
+                         alignItems: "center",
+                         mb: 2,
+                     }}
                 >
-                    {optionGroups.map(optionGroup => {
-                        return <MenuItem
-                            key={optionGroup.id}
-                            value={optionGroup.id}>
-                            {optionGroup.name}
-                        </MenuItem>
-                    })}
-                </Select>
+                    <FormLabel>Option group</FormLabel>
+                    <Select
+                        onChange={this.updateSelection}
+                        value={selectedOptionGroup}
+                        sx={{ width: 400 }}
+                    >
+                        {optionGroups.map(optionGroup => {
+                            return <MenuItem
+                                key={optionGroup.id}
+                                value={optionGroup.id}>
+                                {optionGroup.name}
+                            </MenuItem>
+                        })}
+                    </Select>
+                </Stack>
 
                 <Divider />
 
