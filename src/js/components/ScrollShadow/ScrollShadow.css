@@ -1,0 +1,20 @@
+.ScrollShadow {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+
+.ScrollShadow:before,
+.ScrollShadow:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.ScrollShadow:before {
+  top: 0;
+  z-index: 1;
+}

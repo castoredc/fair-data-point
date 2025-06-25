@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import moment from 'moment/moment';
 import MetadataItemContainer from 'components/MetadataItem/MetadataItemContainer';
 import MetadataItem from 'components/MetadataItem';
-import './MetadataSideBar.scss';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Modal from 'components/Modal';
 import Tooltip from '@mui/material/Tooltip';

@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 
-import './Annotations.scss';
 import Annotation from './Annotation';
 
 interface AnnotationsProps {

@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../pages/Main/Main.scss';
 import { classNames } from '../../util';
 import LoadingOverlay from 'components/LoadingOverlay';
 import { Container } from '@mui/material';

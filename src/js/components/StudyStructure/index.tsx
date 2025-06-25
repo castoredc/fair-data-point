@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './StudyStructure.scss';
 import LoadingOverlay from 'components/LoadingOverlay';
 import FieldListItem from '../ListItem/FieldListItem';
 import StudyStructureNavigator from './StudyStructureNavigator';

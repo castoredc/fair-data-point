@@ -6,7 +6,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import QueryBuilder, { Field } from 'react-querybuilder';
 import { Rule } from '../QueryBuilder/Rule';
 import { ValueEditor } from '../QueryBuilder/ValueEditor';
-import './DependencyEditor.scss';
 import { findOptionByValue } from '../../util';
 import CombinatorSelector from 'components/QueryBuilder/CombinatorSelector';
 import FieldSelector from 'components/QueryBuilder/FieldSelector';

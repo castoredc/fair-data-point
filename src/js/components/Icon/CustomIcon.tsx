@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { classNames } from '../../util';
 import icons from './icons';
-import './Icon.scss';
 
 const SIZE = 16;
 

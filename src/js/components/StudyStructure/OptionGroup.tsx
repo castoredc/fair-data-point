@@ -4,7 +4,6 @@ import AddIcon from '@mui/icons-material/Add';
 import Annotations from '../Annotations';
 import NoResults from 'components/NoResults';
 import AddAnnotationModal from '../../modals/AddAnnotationModal';
-import './StudyStructure.scss';
 import ConfirmModal from '../../modals/ConfirmModal';
 import { apiClient } from 'src/js/network';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
