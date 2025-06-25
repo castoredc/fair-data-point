@@ -1,11 +1,9 @@
-import React, { Component, RefObject } from 'react';
+import React, { Component, createRef } from 'react';
 import LoadingOverlay from 'components/LoadingOverlay';
 import { DataType, ValueType } from '../MetadataItem/EnumMappings';
 import DataGridHelper from './DataGridHelper';
-import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
-import DataGrid from 'components/DataTable/DataGrid';
-import { GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import CheckIcon from '@mui/icons-material/Check';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -33,6 +31,7 @@ interface Mapping {
 interface Pagination {
     currentPage: number;
     perPage: number;
+    totalResults: number;
 }
 
 interface DataModelMappingsDataTableProps extends ComponentWithNotifications {
@@ -52,7 +51,7 @@ interface DataModelMappingsDataTableState {
 }
 
 class DataModelMappingsDataTable extends Component<DataModelMappingsDataTableProps, DataModelMappingsDataTableState> {
-    private tableRef: RefObject<HTMLDivElement>;
+    private tableRef: React.RefObject<HTMLDivElement>;
 
     constructor(props: DataModelMappingsDataTableProps) {
         super(props);
@@ -63,7 +62,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
             pagination: DataGridHelper.getDefaultState(25),
         };
 
-        this.tableRef = React.createRef();
+        this.tableRef = createRef<HTMLDivElement>();
     }
 
     componentDidMount() {
@@ -72,9 +71,12 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
     }
 
     componentDidUpdate(prevProps: DataModelMappingsDataTableProps) {
-        const { lastHandledMapping, versionId, type } = this.props;
+        const { versionId, type } = this.props;
 
-        if (type !== prevProps.type || versionId !== prevProps.versionId || lastHandledMapping !== prevProps.lastHandledMapping) {
+        // Only refresh the mappings if the version or type changes
+        // Removed lastHandledMapping check to prevent continuous updates
+        if (type !== prevProps.type || versionId !== prevProps.versionId) {
+            console.log('updated');
             this.getMappings(type);
         }
     }
@@ -117,28 +119,30 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
             });
     };
 
-    handlePagination = (currentPage: number, pageSize: number ) => {
+    handlePagination = (model: { page: number; pageSize: number }) => {
         const { pagination } = this.state;
-
-        this.setState(
-            {
-                pagination: {
-                    ...pagination,
-                    currentPage: currentPage + 1,
-                    perPage: pageSize,
-                },
-            },
-            () => {
-                this.getMappings(this.props.type);
-            },
-        );
+        const newPage = model.page + 1; // Convert 0-based to 1-based
+        
+        // Only update if values actually changed
+        if (pagination.currentPage !== newPage || pagination.perPage !== model.pageSize) {
+            this.setState(
+                prevState => ({
+                    pagination: {
+                        ...prevState.pagination,
+                        currentPage: newPage,
+                        perPage: model.pageSize,
+                    },
+                }),
+                () => this.getMappings(this.props.type)
+            );
+        }
     };
 
     handleClick = (params: GridRowParams) => {
         const { mappings } = this.state;
         const { onClick } = this.props;
 
-        const mapping = mappings[params.id];
+        const mapping = mappings[parseInt(params.id as string)];
         onClick(mapping);
     };
 
@@ -158,6 +162,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
                 const dataType = item.node?.value.dataType ? DataType[item.node?.value.dataType] : '';
 
                 return {
+                    id: String(index),
                     mapped: !!item.elements,
                     title: item.node?.title,
                     valueType: valueType,
@@ -173,6 +178,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
             });
         } else if (type === 'module') {
             rows = mappings.map((item, index) => ({
+                id: String(index),
                 mapped: !!item.element,
                 title: item.module?.displayName,
                 mappedElement: item.element ? item.element.label : '',
@@ -183,27 +189,33 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
         }
 
         return (
-            <DataGridContainer
-                pagination={pagination}
-                handlePageChange={this.handlePagination}
-                fullHeight
-                isLoading={isLoadingMappings}
-                forwardRef={this.tableRef}
-            >
-                <DataGrid
-                    disableRowSelectionOnClick
-                    accessibleName="Mappings"
-                    emptyStateContent="No mappings found"
-                    onRowClick={this.handleClick}
-                    rows={rows}
-                    columns={columns[type]}
-                />
-            </DataGridContainer>
+            <div className="DataTableContainer">
+                <div className="TableCol">
+                    <div ref={this.tableRef}>
+                        <DataGrid
+                            disableRowSelectionOnClick
+                            getRowId={(row) => row.id}
+                            onRowClick={this.handleClick}
+                            rows={rows}
+                            columns={columns[type]}
+                            paginationMode="server"
+                            rowCount={pagination.totalResults}
+                            loading={isLoadingMappings}
+                            pageSizeOptions={[10, 25, 50]}
+                            paginationModel={{
+                                page: pagination.currentPage - 1, // Convert 1-based to 0-based
+                                pageSize: pagination.perPage
+                            }}
+                            onPaginationModelChange={this.handlePagination}
+                        />
+                    </div>
+                </div>
+            </div>
         );
     }
 }
 
-const columns = {
+const columns: { [key: string]: GridColDef[] } = {
     node: [
         {
             headerName: '',
