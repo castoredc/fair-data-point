@@ -12,6 +12,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DropdownButton from '../Button/DropdownButton';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
+import Logo from 'components/Logo';
 
 interface HeaderProps {
     embedded?: boolean;
@@ -202,7 +203,12 @@ class Header extends Component<HeaderProps, HeaderState> {
                                         )}
                                         <Box>
                                             <Link to="/fdp" style={{ textDecoration: 'none', color: 'inherit' }}>
-                                                Logo
+                                                <Logo
+                                                    color="white"
+                                                    sx={{
+                                                        height: 24
+                                                    }}
+                                                />
                                             </Link>
                                         </Box>
                                         <Box>
@@ -225,7 +231,7 @@ class Header extends Component<HeaderProps, HeaderState> {
                                                 </IconButton>
                                             ) : (
                                                 <Button
-                                                    variant="outlined"
+                                                    variant="text"
                                                     color="inherit"
                                                     href={'/login?path=' + encodeURIComponent(window.location.pathname)}
                                                     startIcon={<AccountCircleIcon />}

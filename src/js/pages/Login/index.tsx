@@ -9,6 +9,7 @@ import { ServerType } from 'types/ServerType';
 import LoadingOverlay from 'components/LoadingOverlay';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import Container from '@mui/material/Container';
+import Logo from 'components/Logo';
 
 interface LoginProps extends ComponentWithNotifications {
     match: {
@@ -125,8 +126,7 @@ class Login extends Component<LoginProps, LoginState> {
 
         return (
             <LoginContainer
-                logo={<div>Logo</div>}
-                title="FAIR Data Point"
+                logo={<Logo color="#124ea4" />}
             >
                 <DocumentTitle title="FAIR Data Point | Log in" />
                 <Container maxWidth="sm">
