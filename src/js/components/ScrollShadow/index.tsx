@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { classNames, cloneIfComposite } from '../../util';
 import EventListener from '../EventListener';
-import './ScrollShadow.scss';
+import './ScrollShadow.css';
 
 type ScrollShadowProps = {
     children: React.ReactNode;

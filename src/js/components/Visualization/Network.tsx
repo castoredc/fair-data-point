@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { classNames } from '../../util';
-import './Network.scss';
+import './Network.css';
 
 type VisNetworkProps = {
     className?: string;

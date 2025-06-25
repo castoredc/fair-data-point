@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import './CodeEditor.scss';
+import 'codemirror/lib/codemirror.css';
 import CodeMirror, { EditorFromTextArea } from 'codemirror';
 import { FormLabel } from '@mui/material';
 

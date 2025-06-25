@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import './DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
 import { RuleGroup } from '../QueryBuilder/RuleGroup';
 import { Rule } from '../QueryBuilder/Rule';

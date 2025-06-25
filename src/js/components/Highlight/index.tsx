@@ -1,7 +1,7 @@
 import React from 'react';
 import Prism from 'prismjs/components/prism-core';
 import 'prismjs/themes/prism.css';
-import './Highlight.scss';
+import './Highlight.css';
 import { turtle } from './turtle';
 
 interface HighlightProps {

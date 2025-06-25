@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import './Dashboard.scss';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 

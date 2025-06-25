@@ -21,7 +21,7 @@ Encore
     .addEntry('app', './src/js/index.tsx')
 
     // Use Sass/SCSS files (node-sass, sass-loader)
-    .enableSassLoader()
+    // .enableSassLoader()
 
     .enableTypeScriptLoader()
 

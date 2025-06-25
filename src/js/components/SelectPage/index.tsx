@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import BackButton from 'components/BackButton';
 import DocumentTitle from 'components/DocumentTitle';
-import './SelectPage.scss';
 import * as H from 'history';
 import { Divider, Typography } from '@mui/material';
 import MuiCard from '@mui/material/Card';

@@ -15,6 +15,8 @@ import { AlertTitle } from '@mui/material';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockOutlineIcon from '@mui/icons-material/LockOutline';
 
 interface DistributionProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -99,7 +101,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                             link={distribution.relativeUrl + '/query'}
                                             title="Query the data"
                                             description="Use SPARQL queries to extract specific information from this distribution."
-                                            icon={isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock'}
+                                            icon={isGranted('access_data', distribution.permissions) ? <LockOpenIcon /> : <LockOutlineIcon />}
                                             smallIcon={true}
                                             newWindow
                                         />
@@ -110,7 +112,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                             link={distribution.accessUrl}
                                             title="Access the data"
                                             description="Get access to the distribution."
-                                            icon={isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock'}
+                                            icon={isGranted('access_data', distribution.permissions) ? <LockOpenIcon /> : <LockOutlineIcon />}
                                             smallIcon={true}
                                             newWindow
                                         />
@@ -121,7 +123,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                             link={distribution.downloadUrl}
                                             title="Download the data"
                                             description="Get a downloadable file for this distribution."
-                                            icon={isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock'}
+                                            icon={isGranted('access_data', distribution.permissions) ? <LockOpenIcon /> : <LockOutlineIcon />}
                                             smallIcon={true}
                                             newWindow
                                         />
