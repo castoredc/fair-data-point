@@ -89,32 +89,32 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
             );
         case 'image':
             return (
-                <Box 
-                    component="img" 
+                <Box
+                    component="img"
                     src={value}
                     sx={{
                         maxWidth: '100%',
                         height: 'auto',
-                        borderRadius: 1
+                        borderRadius: 1,
                     }}
                 />
             );
         case 'link':
             return (
-                <Stack 
-                    direction="row" 
-                    spacing={0.5} 
+                <Stack
+                    direction="row"
+                    spacing={0.5}
                     alignItems="center"
                 >
-                    <Link 
-                        href={value} 
+                    <Link
+                        href={value}
                         target="_blank"
-                        sx={{ 
+                        sx={{
                             color: 'text.secondary',
                             textDecoration: 'none',
                             '&:hover': {
-                                textDecoration: 'underline'
-                            }
+                                textDecoration: 'underline',
+                            },
                         }}
                     >
                         {value}

@@ -202,7 +202,8 @@ class ImportExport extends Component<ImportExportProps, ImportExportState> {
                             Export model
                         </Typography>
 
-                        <Button onClick={this.export} variant="outlined" startIcon={<DownloadIcon />} disabled={isExporting}>
+                        <Button onClick={this.export} variant="outlined" startIcon={<DownloadIcon />}
+                                disabled={isExporting}>
                             Export model
                         </Button>
                     </div>

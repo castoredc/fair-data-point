@@ -6,7 +6,7 @@ import Breadcrumbs from '../Breadcrumbs';
 import LoginModal from '../../modals/LoginModal';
 import { BreadcrumbsType } from 'types/BreadcrumbType';
 import { UserType } from 'types/UserType';
-import { 
+import {
     AppBar,
     Box,
     Button,
@@ -15,7 +15,7 @@ import {
     Stack,
     Toolbar,
     Tooltip,
-    Typography
+    Typography,
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -178,16 +178,20 @@ class Header extends Component<HeaderProps, HeaderState> {
                 {title && <DocumentTitle title={title} />}
                 {!embedded && (
                     <Box>
-                        <AppBar 
-                            position="static" 
+                        <AppBar
+                            position="static"
                             sx={{
                                 height: mobile ? 56 : forceSmallHeader || smallHeader ? 64 : 80,
-                                bgcolor: 'primary.main'
+                                bgcolor: 'primary.main',
                             }}
                         >
                             <Toolbar sx={{ height: '100%' }}>
                                 <Container>
-                                    <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', height: '100%' }}>
+                                    <Stack direction="row" sx={{
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        height: '100%',
+                                    }}>
                                         {mobile && breadcrumbs?.previous && (
                                             <Box>
                                                 <Link
@@ -197,7 +201,8 @@ class Header extends Component<HeaderProps, HeaderState> {
                                                     }}
                                                     style={{ textDecoration: 'none' }}
                                                 >
-                                                    <Tooltip title={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}>
+                                                    <Tooltip
+                                                        title={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}>
                                                         <IconButton color="inherit">
                                                             <ArrowBackIcon />
                                                         </IconButton>
@@ -252,7 +257,7 @@ class Header extends Component<HeaderProps, HeaderState> {
                         <Container>
                             {badge && (
                                 <Box sx={{ mb: 1 }}>
-                                    <Typography 
+                                    <Typography
                                         component="span"
                                         sx={{
                                             px: 1,
@@ -260,22 +265,22 @@ class Header extends Component<HeaderProps, HeaderState> {
                                             borderRadius: 1,
                                             bgcolor: 'grey.100',
                                             color: 'text.secondary',
-                                            fontSize: '0.875rem'
+                                            fontSize: '0.875rem',
                                         }}
                                     >
                                         {badge}
                                     </Typography>
                                 </Box>
                             )}
-                            <Typography 
-                                variant="h3" 
+                            <Typography
+                                variant="h3"
                                 component="h1"
                                 sx={{
                                     color: 'text.primary',
                                     fontSize: '2.1rem',
                                     lineHeight: 1.33,
                                     fontWeight: 500,
-                                    maxWidth: '64rem'
+                                    maxWidth: '64rem',
                                 }}
                             >
                                 {title}

@@ -138,7 +138,7 @@ class Prefixes extends Component<PrefixesProps, PrefixesState> {
             const data = {
                 id: item.id,
                 prefix: item.prefix,
-                uri: item.uri
+                uri: item.uri,
             };
 
             return {

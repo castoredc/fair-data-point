@@ -27,7 +27,8 @@ interface Catalog {
     };
 }
 
-interface CatalogsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
+interface CatalogsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 const Catalogs: React.FC<CatalogsProps> = ({ history, location, user, notifications }) => {
     const [catalogs, setCatalogs] = useState<Catalog[]>([]);
@@ -39,9 +40,9 @@ const Catalogs: React.FC<CatalogsProps> = ({ history, location, user, notificati
     });
 
     const columns: GridColDef<Catalog>[] = [
-        { 
-            field: 'displayTitle', 
-            headerName: 'Title', 
+        {
+            field: 'displayTitle',
+            headerName: 'Title',
             flex: 1,
         },
     ];
@@ -61,9 +62,9 @@ const Catalogs: React.FC<CatalogsProps> = ({ history, location, user, notificati
             const mappedCatalogs: Catalog[] = response.data.results.map((catalog: any) => ({
                 id: catalog.id,
                 ...catalog,
-                displayTitle: catalog.hasMetadata 
-                    ? localizedText(catalog.metadata?.title, 'en') 
-                    : '(no title)'
+                displayTitle: catalog.hasMetadata
+                    ? localizedText(catalog.metadata?.title, 'en')
+                    : '(no title)',
             }));
             setCatalogs(mappedCatalogs);
         } catch (error: any) {

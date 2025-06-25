@@ -15,21 +15,21 @@ interface FormItemProps {
 }
 
 const FormItem: FC<FormItemProps> = ({
-    label,
-    children,
-    hidden,
-    inline,
-    align = 'left',
-    tooltip,
-    details,
-    isRequired,
-}) => {
+                                         label,
+                                         children,
+                                         hidden,
+                                         inline,
+                                         align = 'left',
+                                         tooltip,
+                                         details,
+                                         isRequired,
+                                     }) => {
     if (hidden) {
         return null;
     }
 
     return (
-        <Box 
+        <Box
             sx={{
                 mb: 2,
                 ...(inline && {
@@ -37,39 +37,39 @@ const FormItem: FC<FormItemProps> = ({
                     alignItems: 'center',
                     '& > *:first-of-type': {
                         mr: 2,
-                        minWidth: '200px'
-                    }
-                })
+                        minWidth: '200px',
+                    },
+                }),
             }}
         >
             {label && (
                 <Box sx={{ mb: 1 }}>
-                    <Stack 
-                        direction="row" 
-                        spacing={1} 
+                    <Stack
+                        direction="row"
+                        spacing={1}
                         alignItems="center"
                         sx={{
                             textAlign: align,
-                            width: '100%'
+                            width: '100%',
                         }}
                     >
-                        <FormLabel 
+                        <FormLabel
                             component="label"
                             sx={{
                                 color: 'text.primary',
                                 fontSize: '0.875rem',
                                 fontWeight: 500,
-                                lineHeight: 1.5
+                                lineHeight: 1.5,
                             }}
                         >
                             {label}
                             {isRequired && (
                                 <Tooltip title="This field is required">
-                                    <Typography 
-                                        component="span" 
-                                        sx={{ 
+                                    <Typography
+                                        component="span"
+                                        sx={{
                                             color: 'error.main',
-                                            ml: 0.5
+                                            ml: 0.5,
                                         }}
                                     >
                                         *
@@ -79,23 +79,23 @@ const FormItem: FC<FormItemProps> = ({
                         </FormLabel>
                         {tooltip && (
                             <Tooltip title={tooltip}>
-                                <InfoIcon 
-                                    sx={{ 
+                                <InfoIcon
+                                    sx={{
                                         fontSize: '1rem',
                                         color: 'action.active',
-                                        cursor: 'help'
-                                    }} 
+                                        cursor: 'help',
+                                    }}
                                 />
                             </Tooltip>
                         )}
                     </Stack>
                     {details && (
-                        <Typography 
-                            variant="caption" 
-                            sx={{ 
+                        <Typography
+                            variant="caption"
+                            sx={{
                                 display: 'block',
                                 mt: 0.5,
-                                color: 'text.secondary'
+                                color: 'text.secondary',
                             }}
                         >
                             {details}
@@ -103,15 +103,15 @@ const FormItem: FC<FormItemProps> = ({
                     )}
                 </Box>
             )}
-            <Box 
+            <Box
                 sx={{
                     width: '100%',
                     ...(align === 'center' && {
-                        textAlign: 'center'
+                        textAlign: 'center',
                     }),
                     ...(align === 'right' && {
-                        textAlign: 'right'
-                    })
+                        textAlign: 'right',
+                    }),
                 }}
             >
                 {children}

@@ -21,7 +21,8 @@ interface MetadataModel {
     permissions: string[];
 }
 
-interface MetadataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
+interface MetadataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 const MetadataModels: React.FC<MetadataModelsProps> = ({ history, location, user, notifications }) => {
     const [metadataModels, setMetadataModels] = useState<MetadataModel[]>([]);
@@ -29,9 +30,9 @@ const MetadataModels: React.FC<MetadataModelsProps> = ({ history, location, user
     const [error, setError] = useState<string | null>(null);
 
     const columns: GridColDef<MetadataModel>[] = [
-        { 
-            field: 'title', 
-            headerName: 'Title', 
+        {
+            field: 'title',
+            headerName: 'Title',
             flex: 1,
         },
     ];
@@ -47,7 +48,7 @@ const MetadataModels: React.FC<MetadataModelsProps> = ({ history, location, user
                 .map((model: any) => ({
                     id: model.id,
                     title: model.title || 'Untitled model',
-                    permissions: model.permissions
+                    permissions: model.permissions,
                 }));
             setMetadataModels(mappedModels);
         } catch (error: any) {

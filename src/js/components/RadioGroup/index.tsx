@@ -53,10 +53,10 @@ const RadioGroup: FC<RadioGroupProps> = ({ options, value, multiple, onChange, d
                 control={
                     <Radio
                         sx={{
-                        '& .MuiSvgIcon-root': {
-                            fontSize: 18,
-                        },
-                    }} />
+                            '& .MuiSvgIcon-root': {
+                                fontSize: 18,
+                            },
+                        }} />
                 }
                 label={<Typography sx={{
                     fontSize: '0.875rem',

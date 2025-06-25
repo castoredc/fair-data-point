@@ -5,7 +5,8 @@ import UserDetailsForm from 'components/Form/Agent/UserDetailsForm';
 import { WizardHeader } from 'components/Layout/WizardLayout';
 import { Box } from '@mui/material';
 
-interface UserDetailsProps extends AuthorizedRouteComponentProps {}
+interface UserDetailsProps extends AuthorizedRouteComponentProps {
+}
 
 const UserDetails: React.FC<UserDetailsProps> = ({ user, history }) => {
     if (user === null) {

@@ -68,13 +68,13 @@ const ListItem: FC<ListItemProps> = ({
 
     if (isURL(link) || newWindow) {
         button = <ListItemButton
-                component="a"
-                href={link}
-                onClick={onClick}
-                target="_blank"
-            >
-                {children}
-            </ListItemButton>;
+            component="a"
+            href={link}
+            onClick={onClick}
+            target="_blank"
+        >
+            {children}
+        </ListItemButton>;
     } else {
         button = <ListItemButton
             component={Link}
@@ -82,7 +82,7 @@ const ListItem: FC<ListItemProps> = ({
             // className="ListItem"
             onClick={onClick}>
             {children}
-        </ListItemButton>
+        </ListItemButton>;
     }
 
     // @ts-ignore

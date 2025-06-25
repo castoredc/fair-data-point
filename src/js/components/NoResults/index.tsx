@@ -7,7 +7,7 @@ interface NoResultsProps {
 
 const NoResults: React.FC<NoResultsProps> = ({ children }) => {
     return (
-        <Box sx={{ 
+        <Box sx={{
             textAlign: 'center',
             py: 6,
             width: '100%',

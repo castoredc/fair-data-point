@@ -90,12 +90,12 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
             <PageBody>
                 <Stack
                     direction="row"
-                     spacing={2}
-                     sx={{
-                         justifyContent: "flex-start",
-                         alignItems: "center",
-                         mb: 2,
-                     }}
+                    spacing={2}
+                    sx={{
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        mb: 2,
+                    }}
                 >
                     <FormLabel>Option group</FormLabel>
                     <Select
@@ -108,7 +108,7 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
                                 key={optionGroup.id}
                                 value={optionGroup.id}>
                                 {optionGroup.name}
-                            </MenuItem>
+                            </MenuItem>;
                         })}
                     </Select>
                 </Stack>

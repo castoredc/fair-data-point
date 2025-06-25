@@ -11,10 +11,10 @@ class Dashboard extends Component<DashboardProps> {
         const { history, user } = this.props;
 
         return (
-            <Box sx={{ 
+            <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: '100vh'
+                minHeight: '100vh',
             }}>
                 <Container maxWidth={false}>
                     <DashboardRoutes user={user} />

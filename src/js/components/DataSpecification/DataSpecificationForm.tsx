@@ -28,7 +28,7 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
-            <Stack direction="row" sx={{ justifyContent: 'flex-end' , pb: 2}} spacing={1}>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end', pb: 2 }} spacing={1}>
                     <Button startIcon={<EditIcon />} variant="outlined" onClick={openFormModal}>
                         Edit form
                     </Button>

@@ -14,15 +14,15 @@ import { Components } from '@mui/material/styles';
 
 // Augment the theme components to include MUI X DataGrid
 declare module '@mui/material/styles' {
-  interface Components<Theme = unknown> {
-    MuiDataGrid?: {
-      defaultProps?: Record<string, any>;
-      styleOverrides?: {
-        root?: Record<string, any>;
-        [key: string]: any;
-      };
-    };
-  }
+    interface Components<Theme = unknown> {
+        MuiDataGrid?: {
+            defaultProps?: Record<string, any>;
+            styleOverrides?: {
+                root?: Record<string, any>;
+                [key: string]: any;
+            };
+        };
+    }
 }
 
 // Color tokens
@@ -74,7 +74,7 @@ const tokens = {
     white: '#ffffff',
     black: {
         100: '#cfd6e2',
-    }
+    },
 };
 
 export const theme = createTheme({
@@ -467,7 +467,7 @@ export const theme = createTheme({
                     },
                 }),
                 columnHeader: {
-                    backgroundColor: tokens.neutral[50]
+                    backgroundColor: tokens.neutral[50],
                 },
                 cell: ({ theme }) => ({ borderTopColor: (theme.vars || theme).palette.divider }),
                 menu: ({ theme }) => ({
@@ -564,8 +564,8 @@ export const theme = createTheme({
                     borderColor: tokens.neutral[100],
                     marginBottom: 4,
                 }),
-            }
-        }
+            },
+        },
     },
     shape: {
         borderRadius: 8,

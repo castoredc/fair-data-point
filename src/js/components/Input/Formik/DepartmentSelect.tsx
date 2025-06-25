@@ -137,7 +137,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                             options={options}
                             loading={this.state.isLoading}
                             disabled={disabled}
-                            noOptionsText={options.length === 0 ? "Loading departments..." : "No departments found"}
+                            noOptionsText={options.length === 0 ? 'Loading departments...' : 'No departments found'}
                             value={value.id ? options.find(option => option.value === value.id) : undefined}
                             onChange={(event, newValue) => {
                                 if (newValue) {

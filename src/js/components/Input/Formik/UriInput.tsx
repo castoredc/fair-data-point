@@ -24,7 +24,7 @@ const UriInput: FC<UriInputProps> = ({
                                          serverError,
                                          multiline,
                                          prefixes,
-                                         fullWidth   
+                                         fullWidth,
                                      }) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];

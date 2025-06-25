@@ -20,7 +20,8 @@ interface DataModel {
     title: string;
 }
 
-interface DataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
+interface DataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 const DataModels: React.FC<DataModelsProps> = ({ history, location, user, notifications }) => {
     const [dataModels, setDataModels] = useState<DataModel[]>([]);
@@ -28,9 +29,9 @@ const DataModels: React.FC<DataModelsProps> = ({ history, location, user, notifi
     const [error, setError] = useState<string | null>(null);
 
     const columns: GridColDef<DataModel>[] = [
-        { 
-            field: 'title', 
-            headerName: 'Title', 
+        {
+            field: 'title',
+            headerName: 'Title',
             flex: 1,
         },
     ];
@@ -43,7 +44,7 @@ const DataModels: React.FC<DataModelsProps> = ({ history, location, user, notifi
             const response = await apiClient.get('/api/data-model/my');
             const mappedModels: DataModel[] = response.data.map((model: any) => ({
                 id: model.id,
-                title: model.title || 'Untitled model'
+                title: model.title || 'Untitled model',
             }));
             setDataModels(mappedModels);
         } catch (error: any) {

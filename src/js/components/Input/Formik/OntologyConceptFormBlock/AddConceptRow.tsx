@@ -1,12 +1,12 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { 
-    Autocomplete, 
+import {
+    Autocomplete,
     Box,
-    Checkbox, 
-    CircularProgress, 
-    FormControlLabel, 
+    Checkbox,
+    CircularProgress,
+    FormControlLabel,
     Paper,
-    TextField
+    TextField,
 } from '@mui/material';
 import { isMultipleOption } from 'components/Input/Formik/Select';
 import { OntologyType } from 'types/OntologyType';
@@ -98,11 +98,11 @@ export const AddConceptRow: FC<AddConceptRowProps> = ({
 
     return (
         <Box
-            sx={{ 
+            sx={{
                 py: 2,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 2
+                gap: 2,
             }}
         >
             <Autocomplete

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { 
+import {
     Box,
     IconButton,
     Paper,
@@ -9,7 +9,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { OntologyType } from 'types/OntologyType';
@@ -35,14 +35,14 @@ export const ConceptList: FC<ConceptListProps> = ({
                                                       onAddConcept,
                                                   }) => {
     return (
-        <TableContainer 
-            component={Paper} 
+        <TableContainer
+            component={Paper}
             variant="outlined"
-            sx={{ 
+            sx={{
                 mb: 2,
                 '& .MuiTableCell-root': {
-                    py: 1.5
-                }
+                    py: 1.5,
+                },
             }}
         >
             <Table size="small">
@@ -62,13 +62,13 @@ export const ConceptList: FC<ConceptListProps> = ({
                                 : concept.ontology;
 
                         return (
-                            <TableRow 
+                            <TableRow
                                 key={index}
                                 sx={{
                                     '&:last-child td, &:last-child th': { border: 0 },
                                     '&:hover': {
-                                        bgcolor: 'action.hover'
-                                    }
+                                        bgcolor: 'action.hover',
+                                    },
                                 }}
                             >
                                 <TableCell>{ontology?.name ?? ''}</TableCell>
@@ -78,11 +78,11 @@ export const ConceptList: FC<ConceptListProps> = ({
                                     <IconButton
                                         size="small"
                                         onClick={() => onRemoveConcept(index)}
-                                        sx={{ 
+                                        sx={{
                                             color: 'error.main',
                                             '&:hover': {
-                                                bgcolor: 'error.lighter'
-                                            }
+                                                bgcolor: 'error.lighter',
+                                            },
                                         }}
                                     >
                                         <ClearIcon fontSize="small" />
@@ -102,7 +102,7 @@ export const ConceptList: FC<ConceptListProps> = ({
                     )}
                     <TableRow>
                         <TableCell colSpan={4} sx={{ border: 0 }}>
-                            <AddConceptRow 
+                            <AddConceptRow
                                 ontologyOptions={ontologies}
                                 onAddConcept={onAddConcept}
                             />

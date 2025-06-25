@@ -17,7 +17,7 @@ interface TabPanelProps {
     value: string;
 }
 
-const TabPanel: FC<TabPanelProps> = ({index, value, children}) => {
+const TabPanel: FC<TabPanelProps> = ({ index, value, children }) => {
     return (
         <div
             role="tabpanel"
@@ -28,7 +28,7 @@ const TabPanel: FC<TabPanelProps> = ({index, value, children}) => {
             {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
         </div>
     );
-}
+};
 
 const PageTabs: FC<TabsProps> = ({ tabs, selected, onChange }) => {
     return (
@@ -36,7 +36,7 @@ const PageTabs: FC<TabsProps> = ({ tabs, selected, onChange }) => {
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs onChange={(event: React.SyntheticEvent, value: any) => onChange(value)} value={selected}>
                     {Object.keys(tabs).map((key) => {
-                        return <Tab label={tabs[key].title} value={key} />
+                        return <Tab label={tabs[key].title} value={key} />;
                     })}
                 </Tabs>
             </Box>
@@ -44,7 +44,7 @@ const PageTabs: FC<TabsProps> = ({ tabs, selected, onChange }) => {
             {Object.keys(tabs).map((key) => {
                 return <TabPanel key={key} value={selected} index={key}>
                     {tabs[key].content}
-                </TabPanel>
+                </TabPanel>;
             })}
         </div>
     );

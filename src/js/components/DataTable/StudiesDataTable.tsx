@@ -77,7 +77,7 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
                     studies: response.data.results,
                     pagination: {
                         ...prevState.pagination,
-                        totalResults: response.data.totalResults
+                        totalResults: response.data.totalResults,
                     },
                     isLoadingStudies: false,
                     hasLoadedStudies: true,
@@ -181,7 +181,7 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
                             pageSizeOptions={[10, 25, 50]}
                             paginationModel={{
                                 page: pagination.currentPage,
-                                pageSize: pagination.perPage
+                                pageSize: pagination.perPage,
                             }}
                             onPaginationModelChange={this.handlePagination}
                         />

@@ -7,15 +7,15 @@ import FieldErrors from 'components/Input/Formik/Errors';
 import { replaceAt } from '../../../util';
 import { FormikProps } from 'formik/dist/types';
 import ClearIcon from '@mui/icons-material/Clear';
-import { 
-    IconButton, 
-    TextField, 
-    Table, 
-    TableBody, 
-    TableCell, 
-    TableHead, 
+import {
+    IconButton,
+    TextField,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
     TableRow,
-    Paper
+    Paper,
 } from '@mui/material';
 
 interface OptionGroupOptionInputProps extends FieldProps {

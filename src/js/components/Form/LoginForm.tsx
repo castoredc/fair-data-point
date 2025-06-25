@@ -19,15 +19,15 @@ interface LoginFormProps {
 }
 
 const LoginForm: FC<LoginFormProps> = ({
-    catalog,
-    path,
-    servers,
-    selectedServerId,
-    serverLocked = false,
-    modal = false,
-    brand = 'FAIR Data Point',
-    view,
-}) => {
+                                           catalog,
+                                           path,
+                                           servers,
+                                           selectedServerId,
+                                           serverLocked = false,
+                                           modal = false,
+                                           brand = 'FAIR Data Point',
+                                           view,
+                                       }) => {
     const serverIds = servers.map(server => server.id);
     const defaultServer = servers.filter(server => server.default)[0].id;
 
@@ -55,7 +55,7 @@ const LoginForm: FC<LoginFormProps> = ({
                                             sx={{
                                                 mb: 3,
                                                 fontWeight: 500,
-                                                color: 'text.primary'
+                                                color: 'text.primary',
                                             }}
                                         >
                                             {localizedText(catalog.name, 'en')}
@@ -88,7 +88,7 @@ const LoginForm: FC<LoginFormProps> = ({
                                             sx={{
                                                 mb: 3,
                                                 fontWeight: 500,
-                                                color: 'text.primary'
+                                                color: 'text.primary',
                                             }}
                                         >
                                             {brand}
@@ -125,7 +125,7 @@ const LoginForm: FC<LoginFormProps> = ({
                                         sx={{
                                             mb: 2,
                                             fontWeight: 500,
-                                            color: 'text.primary'
+                                            color: 'text.primary',
                                         }}
                                     >
                                         My study is located on a Castor server in
@@ -150,7 +150,7 @@ const LoginForm: FC<LoginFormProps> = ({
                                     disabled={values.server === null}
                                     sx={{
                                         minWidth: 200,
-                                        py: 1.5
+                                        py: 1.5,
                                     }}
                                 >
                                     Log in with Castor

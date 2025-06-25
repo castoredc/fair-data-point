@@ -122,7 +122,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
     handlePagination = (model: { page: number; pageSize: number }) => {
         const { pagination } = this.state;
         const newPage = model.page + 1; // Convert 0-based to 1-based
-        
+
         // Only update if values actually changed
         if (pagination.currentPage !== newPage || pagination.perPage !== model.pageSize) {
             this.setState(
@@ -133,7 +133,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
                         perPage: model.pageSize,
                     },
                 }),
-                () => this.getMappings(this.props.type)
+                () => this.getMappings(this.props.type),
             );
         }
     };
@@ -204,7 +204,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
                             pageSizeOptions={[10, 25, 50]}
                             paginationModel={{
                                 page: pagination.currentPage - 1, // Convert 1-based to 0-based
-                                pageSize: pagination.perPage
+                                pageSize: pagination.perPage,
                             }}
                             onPaginationModelChange={this.handlePagination}
                         />

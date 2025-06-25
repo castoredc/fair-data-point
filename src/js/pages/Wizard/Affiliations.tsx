@@ -6,7 +6,8 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { WizardHeader } from 'components/Layout/WizardLayout';
 import { Box } from '@mui/material';
 
-interface AffiliationsProps extends AuthorizedRouteComponentProps {}
+interface AffiliationsProps extends AuthorizedRouteComponentProps {
+}
 
 interface AffiliationsState {
     isSaved: boolean;

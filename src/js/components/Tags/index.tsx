@@ -8,14 +8,14 @@ type TagsProps = {
 
 const Tags: React.FC<TagsProps> = ({ tags }) => {
     return (
-        <Stack 
-            direction="row" 
-            spacing={1.5} 
+        <Stack
+            direction="row"
+            spacing={1.5}
             flexWrap="wrap"
-            sx={{ 
+            sx={{
                 '& > *': {
-                    mb: 0.75
-                }
+                    mb: 0.75,
+                },
             }}
         >
             {tags.map((tag, index) => (
@@ -29,8 +29,8 @@ const Tags: React.FC<TagsProps> = ({ tags }) => {
                         color: 'text.primary',
                         borderColor: 'divider',
                         '&:hover': {
-                            bgcolor: 'action.hover'
-                        }
+                            bgcolor: 'action.hover',
+                        },
                     }}
                 />
             ))}

@@ -10,14 +10,14 @@ interface MetadataItemContainerProps {
 }
 
 const MetadataItemContainer: React.FC<MetadataItemContainerProps> = ({
-    label,
-    className,
-    table,
-    children,
-    hideLabel = false,
-}) => {
+                                                                         label,
+                                                                         className,
+                                                                         table,
+                                                                         children,
+                                                                         hideLabel = false,
+                                                                     }) => {
     return (
-        <Box 
+        <Box
             sx={{
                 mb: 2,
                 ...(table && {
@@ -27,31 +27,31 @@ const MetadataItemContainer: React.FC<MetadataItemContainerProps> = ({
                         py: 1,
                         px: 2,
                         borderBottom: 1,
-                        borderColor: 'divider'
-                    }
-                })
+                        borderColor: 'divider',
+                    },
+                }),
             }}
         >
             {!hideLabel && (
-                <Typography 
+                <Typography
                     component="div"
                     sx={{
                         fontSize: '0.875rem',
                         fontWeight: 600,
                         lineHeight: 1.43,
                         color: 'text.primary',
-                        mb: 0.5
+                        mb: 0.5,
                     }}
                 >
                     {label}
                 </Typography>
             )}
-            <Typography 
+            <Typography
                 component="div"
                 sx={{
                     fontSize: '1rem',
                     lineHeight: 1.5,
-                    color: 'text.secondary'
+                    color: 'text.secondary',
                 }}
             >
                 {children}

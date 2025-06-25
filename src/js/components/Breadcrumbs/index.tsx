@@ -17,16 +17,16 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
                     separator={<NavigateNextIcon fontSize="small" />}
                     sx={{ '& .MuiBreadcrumbs-li': { display: 'flex' } }}
                 >
-                {breadcrumbs.map(crumb => (
-                    <Breadcrumb
-                        key={crumb.type}
-                        to={{
-                            pathname: crumb.path,
-                            state: crumb.state,
-                        }}
-                        title={localizedText(crumb.title, 'en')}
-                    />
-                ))}
+                    {breadcrumbs.map(crumb => (
+                        <Breadcrumb
+                            key={crumb.type}
+                            to={{
+                                pathname: crumb.path,
+                                state: crumb.state,
+                            }}
+                            title={localizedText(crumb.title, 'en')}
+                        />
+                    ))}
                 </MuiBreadcrumbs>
             </Container>
         </Paper>

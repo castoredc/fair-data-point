@@ -117,12 +117,12 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                                 options={cachedOptions}
                                 loading={this.state.loading}
                                 disabled={disabled}
-                                noOptionsText={this.state.inputValue ? "No results found" : "Type to search"}
+                                noOptionsText={this.state.inputValue ? 'No results found' : 'Type to search'}
                                 value={value.id ? {
                                     label: value.name,
                                     value: value.id,
                                     source: value.source,
-                                    data: { city: value.city }
+                                    data: { city: value.city },
                                 } : undefined}
                                 onChange={(event, newValue) => {
                                     if (newValue) {
@@ -149,7 +149,8 @@ class OrganizationSelect extends Component<OrganizationSelectProps, Organization
                                             ...params.InputProps,
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {this.state.loading ?
+                                                        <CircularProgress color="inherit" size={20} /> : null}
                                                     {params.InputProps.endAdornment}
                                                 </React.Fragment>
                                             ),

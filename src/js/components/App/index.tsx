@@ -66,7 +66,8 @@ class App extends Component<ComponentWithNotifications, AppState> {
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <div className={classNames('App', embedded && 'Embedded')}>
-                    {isLoading ? <LoadingOverlay accessibleLabel="Loading" /> : <Routes user={user} embedded={embedded} />}
+                    {isLoading ? <LoadingOverlay accessibleLabel="Loading" /> :
+                        <Routes user={user} embedded={embedded} />}
                 </div>
             </ThemeProvider>
         );

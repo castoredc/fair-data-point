@@ -132,7 +132,8 @@ class DatasetForm extends Component<DatasetFormProps, DatasetFormState> {
                             <div>
                                 {dataset.study && (
                                     <FormItem label="Study">
-                                        <Card variant="outlined" sx={{ bgcolor: 'background.paper', maxWidth: 400, p: 0 }}>
+                                        <Card variant="outlined"
+                                              sx={{ bgcolor: 'background.paper', maxWidth: 400, p: 0 }}>
                                             <CardContent>
                                                 <Stack spacing={2}>
                                                     <Stack direction="row" spacing={3} alignItems="flex-start">

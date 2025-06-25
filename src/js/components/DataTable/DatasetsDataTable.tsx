@@ -127,7 +127,7 @@ class DatasetsDataTable extends Component<DatasetsDataTableProps, DatasetsDataTa
             });
     };
 
-    handlePagination = (currentPage: number, pageSize: number ) => {
+    handlePagination = (currentPage: number, pageSize: number) => {
         const { pagination } = this.state;
 
         this.setState(

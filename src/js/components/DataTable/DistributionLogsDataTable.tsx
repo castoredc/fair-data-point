@@ -108,7 +108,7 @@ class DistributionLogsDataTable extends Component<DistributionLogsDataTableProps
             });
     };
 
-    handlePagination = (currentPage: number, pageSize: number ) => {
+    handlePagination = (currentPage: number, pageSize: number) => {
         const { pagination } = this.state;
 
         this.setState(

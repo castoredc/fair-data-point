@@ -53,7 +53,7 @@ const SideTabs: FC<SideTabsProps> = ({
                     display: 'flex',
                     flexDirection: 'column',
                     borderRight: 1,
-                    borderColor: 'divider'
+                    borderColor: 'divider',
                 }}
             >
                 {(title || actions) && (
@@ -79,13 +79,14 @@ const SideTabs: FC<SideTabsProps> = ({
                             minHeight: 48,
                             alignItems: 'flex-start',
                             textAlign: 'left',
-                            px: 2
-                        }
+                            px: 2,
+                        },
                     }}
                 >
                     {tabs.map((tab, index) => {
                         if (typeof tab.type !== 'undefined' && tab.type === 'separator') {
-                            return <Box key={`sidetabs-${index}`} sx={{ my: 1, borderTop: 1, borderColor: 'divider' }} />;
+                            return <Box key={`sidetabs-${index}`}
+                                        sx={{ my: 1, borderTop: 1, borderColor: 'divider' }} />;
                         } else {
                             return (
                                 <Tab
@@ -98,14 +99,14 @@ const SideTabs: FC<SideTabsProps> = ({
                                                     {tab.number}
                                                 </Typography>
                                             )}
-                                            <Typography 
-                                                variant="body2" 
-                                                component="span" 
-                                                sx={{ 
+                                            <Typography
+                                                variant="body2"
+                                                component="span"
+                                                sx={{
                                                     flex: 1,
                                                     textAlign: 'left',
                                                     whiteSpace: 'normal',
-                                                    wordBreak: 'break-word'
+                                                    wordBreak: 'break-word',
                                                 }}
                                             >
                                                 {tab.title}
@@ -124,7 +125,7 @@ const SideTabs: FC<SideTabsProps> = ({
                                     }
                                     sx={{
                                         width: '100%',
-                                        justifyContent: 'flex-start'
+                                        justifyContent: 'flex-start',
                                     }}
                                 />
                             );

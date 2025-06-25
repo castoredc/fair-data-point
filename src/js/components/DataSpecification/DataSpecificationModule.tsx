@@ -13,7 +13,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
 } from '@mui/material';
 
 type Triple = {
@@ -42,7 +42,7 @@ const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
-                <Stack direction="row" sx={{ justifyContent: 'flex-end' , pb: 2}} spacing={1}>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end', pb: 2 }} spacing={1}>
                     <Button startIcon={<EditIcon />} variant="outlined" onClick={openModuleModal}>
                         Edit group
                     </Button>

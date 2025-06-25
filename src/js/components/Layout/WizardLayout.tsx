@@ -47,9 +47,9 @@ export const WizardHeader: React.FC<WizardHeaderProps> = ({ title, description }
 };
 
 export const WizardBrand: React.FC<{ logo: React.ReactNode; text: string }> = ({
-    logo,
-    text,
-}) => {
+                                                                                   logo,
+                                                                                   text,
+                                                                               }) => {
     const theme = useTheme();
 
     return (

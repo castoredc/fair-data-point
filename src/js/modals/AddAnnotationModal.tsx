@@ -140,7 +140,9 @@ const AddAnnotationModal: FC<AddAnnotationModalProps> = ({ open, onClose, entity
     }, [fetchConceptsDebounced]);
 
     // Form handlers
-    const handleSubmit = async (values: FormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+    const handleSubmit = async (values: FormValues, { setSubmitting }: {
+        setSubmitting: (isSubmitting: boolean) => void
+    }) => {
         try {
             if (!values.ontology || !values.concept) {
                 showError(new Error('Please select both ontology and concept'));

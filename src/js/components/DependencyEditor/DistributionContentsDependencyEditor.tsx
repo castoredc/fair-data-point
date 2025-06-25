@@ -109,7 +109,8 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                                     </Button>
                                 ),
                                 removeGroupAction: props => (
-                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error" onClick={props.handleOnClick} />
+                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error"
+                                            onClick={props.handleOnClick} />
                                 ),
                                 addRuleAction: props => (
                                     <Button startIcon={<AddIcon />} variant="contained" onClick={props.handleOnClick}>
@@ -117,7 +118,8 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                                     </Button>
                                 ),
                                 removeRuleAction: props => (
-                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error" onClick={props.handleOnClick} />
+                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error"
+                                            onClick={props.handleOnClick} />
                                 ),
                                 combinatorSelector: props => {
                                     return <CombinatorSelector options={props.options} value={props.value}

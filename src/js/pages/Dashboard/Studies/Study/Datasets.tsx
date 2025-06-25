@@ -138,7 +138,7 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
                         rows={rows}
                         columns={columns}
                         accessibleName="Datasets"
-                        emptyStateContent={()=> <NoResults>This study does not have datasets.</NoResults>}
+                        emptyStateContent={() => <NoResults>This study does not have datasets.</NoResults>}
                         onRowClick={(params) => {
                             history.push(`/dashboard/studies/${studyId}/datasets/${params.row.slug}`);
                         }}

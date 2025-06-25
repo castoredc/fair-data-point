@@ -266,7 +266,7 @@ class Query extends Component<QueryProps, QueryState> {
                                         },
                                         '&.Hide .yasqe': {
                                             maxHeight: '0 !important',
-                                        }
+                                        },
                                     }}
                                 />
                                 <Box mt={1} mb={0}>
@@ -307,11 +307,11 @@ class Query extends Component<QueryProps, QueryState> {
                                     borderRadius: 1,
                                     overflow: 'hidden',
                                     border: '1px solid',
-                                    borderColor: 'divider'
+                                    borderColor: 'divider',
                                 },
                                 '& a': {
-                                    textDecoration: 'none'
-                                }
+                                    textDecoration: 'none',
+                                },
                             }}>
                                 {isExecutingQuery && <LoadingOverlay accessibleLabel="Loading" />}
                                 {queryExecuted && (
@@ -339,7 +339,7 @@ class Query extends Component<QueryProps, QueryState> {
                 </MainBody>
             </Layout>
         );
-}
+    }
 }
 
 export default withNotifications(Query);

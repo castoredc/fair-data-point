@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { 
+import {
     Box,
     Button,
     IconButton,
@@ -10,7 +10,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -77,14 +77,14 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                 countries={countries}
             />
 
-            <TableContainer 
-                component={Paper} 
+            <TableContainer
+                component={Paper}
                 variant="outlined"
-                sx={{ 
+                sx={{
                     mb: 2,
                     '& .MuiTableCell-root': {
-                        py: 1.5
-                    }
+                        py: 1.5,
+                    },
                 }}
             >
                 <Table size="small">
@@ -110,13 +110,13 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                             }
 
                             return (
-                                <TableRow 
+                                <TableRow
                                     key={index}
                                     sx={{
                                         '&:last-child td, &:last-child th': { border: 0 },
                                         '&:hover': {
-                                            bgcolor: 'action.hover'
-                                        }
+                                            bgcolor: 'action.hover',
+                                        },
                                     }}
                                 >
                                     <TableCell>{name}</TableCell>
@@ -126,11 +126,11 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                                         <IconButton
                                             size="small"
                                             onClick={() => handleRemove(field, form, index)}
-                                            sx={{ 
+                                            sx={{
                                                 color: 'error.main',
                                                 '&:hover': {
-                                                    bgcolor: 'error.lighter'
-                                                }
+                                                    bgcolor: 'error.lighter',
+                                                },
                                             }}
                                         >
                                             <ClearIcon fontSize="small" />

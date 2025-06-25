@@ -28,7 +28,8 @@ interface Study {
     };
 }
 
-interface StudiesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {}
+interface StudiesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
 const Studies: React.FC<StudiesProps> = ({ history, location, user, notifications }) => {
     const [studies, setStudies] = useState<Study[]>([]);
@@ -41,9 +42,9 @@ const Studies: React.FC<StudiesProps> = ({ history, location, user, notification
     });
 
     const columns: GridColDef<Study>[] = [
-        { 
-            field: 'displayTitle', 
-            headerName: 'Title', 
+        {
+            field: 'displayTitle',
+            headerName: 'Title',
             flex: 1,
         },
     ];
@@ -63,9 +64,9 @@ const Studies: React.FC<StudiesProps> = ({ history, location, user, notification
             const mappedStudies: Study[] = response.data.results.map((study: any) => ({
                 id: study.id,
                 ...study,
-                displayTitle: study.hasMetadata 
+                displayTitle: study.hasMetadata
                     ? localizedText(study.metadata?.title, 'en') || 'Untitled study'
-                    : study.name || 'Untitled study'
+                    : study.name || 'Untitled study',
             }));
             setStudies(mappedStudies);
         } catch (error: any) {
@@ -97,7 +98,7 @@ const Studies: React.FC<StudiesProps> = ({ history, location, user, notification
                         isAdmin(user) ? (
                             <FormControlLabel
                                 control={
-                                    <Checkbox 
+                                    <Checkbox
                                         name="viewAll"
                                         onChange={handleView}
                                         checked={viewAll}

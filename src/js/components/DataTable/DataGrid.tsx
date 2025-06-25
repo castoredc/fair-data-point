@@ -18,7 +18,7 @@ const CustomNoRowsOverlay = ({ content }: { content: React.ReactNode | (() => Re
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
-                p: 2
+                p: 2,
             }}
         >
             {typeof content === 'function' ? content() : content}
@@ -35,7 +35,7 @@ const CustomLoadingOverlay = () => (
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
-                p: 2
+                p: 2,
             }}
         >
             <CircularProgress size={32} />
@@ -52,7 +52,7 @@ const CustomErrorOverlay = ({ error }: { error: string }) => (
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
-                p: 2
+                p: 2,
             }}
         >
             <Alert severity="error" sx={{ maxWidth: 400 }}>
@@ -62,14 +62,14 @@ const CustomErrorOverlay = ({ error }: { error: string }) => (
     </GridOverlay>
 );
 
-const DataGrid: React.FC<DataGridProps> = ({ 
-    emptyStateContent = 'No data available', 
-    rows, 
-    columns, 
-    loading,
-    error,
-    ...rest 
-}) => {
+const DataGrid: React.FC<DataGridProps> = ({
+                                               emptyStateContent = 'No data available',
+                                               rows,
+                                               columns,
+                                               loading,
+                                               error,
+                                               ...rest
+                                           }) => {
     const slots = {
         noRowsOverlay: () => <CustomNoRowsOverlay content={emptyStateContent} />,
         loadingOverlay: loading ? CustomLoadingOverlay : undefined,
@@ -77,14 +77,14 @@ const DataGrid: React.FC<DataGridProps> = ({
 
     return (
         <Box sx={{ width: '100%', height: '100%' }}>
-                <MuiDataGrid
-                    rows={rows}
-                    columns={columns}
-                    loading={loading}
-                    slots={slots}
-                    disableRowSelectionOnClick
-                    {...rest}
-                />
+            <MuiDataGrid
+                rows={rows}
+                columns={columns}
+                loading={loading}
+                slots={slots}
+                disableRowSelectionOnClick
+                {...rest}
+            />
         </Box>
     );
 };

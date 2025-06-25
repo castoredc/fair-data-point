@@ -26,8 +26,8 @@ const Split: React.FC<SplitProps> = ({ sizes, children }) => {
                         transition: theme => theme.transitions.create('opacity'),
                     },
                     '&:hover .chip': {
-                        opacity: 1
-                    }
+                        opacity: 1,
+                    },
                 },
                 '& .gutter.gutter-horizontal': {
                     cursor: 'col-resize',
@@ -36,9 +36,9 @@ const Split: React.FC<SplitProps> = ({ sizes, children }) => {
                     '& .chip': {
                         width: '3px',
                         height: '80%',
-                        margin: 'auto'
-                    }
-                }
+                        margin: 'auto',
+                    },
+                },
             }}
         >
             <SplitWrapper

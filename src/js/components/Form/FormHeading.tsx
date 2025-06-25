@@ -7,19 +7,19 @@ interface FormHeadingProps {
 
 const FormHeading: FC<FormHeadingProps> = ({ label }) => {
     return (
-        <Box 
-            sx={{ 
+        <Box
+            sx={{
                 mb: 4,
                 pb: 2,
                 borderBottom: 1,
-                borderColor: 'divider'
+                borderColor: 'divider',
             }}
         >
-            <Typography 
-                variant="h4" 
-                sx={{ 
+            <Typography
+                variant="h4"
+                sx={{
                     fontWeight: 500,
-                    color: 'text.primary'
+                    color: 'text.primary',
                 }}
             >
                 {label}

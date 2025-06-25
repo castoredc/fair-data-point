@@ -6,7 +6,7 @@ import {
     TableCell,
     TableRow,
     Table,
-    TableBody
+    TableBody,
 } from '@mui/material';
 
 const TripleGroup: React.FC<TripleGroupProps> = props => {

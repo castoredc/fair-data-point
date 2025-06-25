@@ -93,7 +93,7 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
                                                         value={version.value}
                                                     >
                                                         {version.label}
-                                                    </MenuItem>
+                                                    </MenuItem>;
                                                 })}
                                             </Select>
                                         </div>
@@ -131,16 +131,23 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
                     })}
                 </List>
             </Stack>
-            <Box sx={{ borderTop: '1px solid', borderColor: 'divider', p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{
+                borderTop: '1px solid',
+                borderColor: 'divider',
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+            }}>
                 <Avatar name={user?.details?.fullName} size="32px" round />
 
                 <Box sx={{ mr: 'auto' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                      {user?.details?.fullName}
-                  </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
+                        {user?.details?.fullName}
+                    </Typography>
                 </Box>
                 <IconButton component="a" href="/logout" color="primary" size="small">
-                  <Logout fontSize="small" />
+                    <Logout fontSize="small" />
                 </IconButton>
             </Box>
         </Drawer>
