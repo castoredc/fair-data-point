@@ -29,6 +29,7 @@ export interface PaginationState {
     currentPage: number;
     perPage: number;
     totalResults: number;
+    totalPages: number;
 }
 
 export interface CommonListState {
@@ -138,7 +139,7 @@ class List extends Component<ListProps, CommonListState> {
                         <Pagination
                             onChange={this.handlePagination}
                             page={pagination.currentPage}
-                            count={pagination.totalResults}
+                            count={pagination.totalPages}
                         />
                     </>
                 ) : (

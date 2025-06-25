@@ -61,7 +61,7 @@ const DataGridContainer: FC<DataGridContainerProps> = ({
                         }}
                         rowsPerPage={pagination.perPage}
                         page={pagination.currentPage - 1}
-                        count={pagination.totalResults}
+                        count={pagination.totalPages}
                     />
                 )}
             </div>

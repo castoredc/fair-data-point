@@ -122,7 +122,7 @@ class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
                     <Pagination
                         onChange={this.handlePagination}
                         page={pagination.currentPage - 1}
-                        count={pagination.totalResults}
+                        count={pagination.totalPages}
                     />
                 )}
             </SelectPage>
