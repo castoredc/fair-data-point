@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 
+import '../Form.scss';
 import FormItem from '../FormItem';
-import Button from '@mui/material/Button';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button } from '@castoredc/matter';
 import { PersonType } from 'types/PersonType';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import * as Yup from 'yup';
 import { FormikHelpers } from 'formik/dist/types';
 import { apiClient } from 'src/js/network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface PersonFormProps extends ComponentWithNotifications {
+type PersonFormProps = {
     email?: string;
     studyId?: string;
     handleSubmit: (values: any, formikHelpers: FormikHelpers<any>) => void;
@@ -24,7 +26,7 @@ type PersonFormState = {
     validation: any;
 };
 
-class PersonForm extends Component<PersonFormProps, PersonFormState> {
+export default class PersonForm extends Component<PersonFormProps, PersonFormState> {
     private timer: null | ReturnType<typeof setTimeout> = null;
 
     constructor(props) {
@@ -54,8 +56,6 @@ class PersonForm extends Component<PersonFormProps, PersonFormState> {
     }
 
     getPersonInformation = (email: string, callback?: (data: PersonType) => void) => {
-        const { notifications } = this.props;
-
         apiClient
             .get<PersonType>('/api/agent/person/email', { params: { email: email } })
             .then(response => {
@@ -69,7 +69,7 @@ class PersonForm extends Component<PersonFormProps, PersonFormState> {
                     },
                     () => {
                         callback && callback(initialValues);
-                    },
+                    }
                 );
             })
             .catch(error => {
@@ -88,7 +88,7 @@ class PersonForm extends Component<PersonFormProps, PersonFormState> {
                         },
                         () => {
                             callback && callback(initialValues);
-                        },
+                        }
                     );
                 } else {
                     this.setState(
@@ -97,10 +97,10 @@ class PersonForm extends Component<PersonFormProps, PersonFormState> {
                         },
                         () => {
                             callback && callback(initialValues);
-                        },
+                        }
                     );
 
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -191,11 +191,7 @@ class PersonForm extends Component<PersonFormProps, PersonFormState> {
                                 </div>
                             )}
 
-                            <Button
-                                type="submit"
-                                disabled={!checkedForExistingEmail || isLoading || isSubmitting}
-                                variant="contained"
-                            >
+                            <Button buttonType="primary" type="submit" disabled={!checkedForExistingEmail || isLoading || isSubmitting}>
                                 Add person
                             </Button>
                         </Form>
@@ -224,5 +220,3 @@ const PersonSchema = Yup.object().shape({
         .matches(/^\d{4}(-)\d{4}(-)\d{4}(-)\d{3}[\dX]$/i, 'Please enter a valid ORCID')
         .nullable(),
 });
-
-export default withNotifications(PersonForm);

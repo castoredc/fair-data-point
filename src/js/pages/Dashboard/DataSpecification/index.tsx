@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay } from '@castoredc/matter';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import Header from 'components/Layout/Dashboard/Header';
@@ -24,21 +26,8 @@ import OptionGroups from 'pages/Dashboard/DataSpecification/OptionGroups';
 import Forms from 'pages/Dashboard/DataSpecification/Forms';
 import Display from 'pages/Dashboard/DataSpecification/Display';
 import { Types } from 'types/Types';
-import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import GroupsIcon from '@mui/icons-material/Groups';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import WidgetsIcon from '@mui/icons-material/Widgets';
-import LinkIcon from '@mui/icons-material/Link';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import ListIcon from '@mui/icons-material/List';
-import UploadIcon from '@mui/icons-material/Upload';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import PolylineIcon from '@mui/icons-material/Polyline';
 
-interface DataSpecificationProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface DataSpecificationProps extends AuthorizedRouteComponentProps {
     type: string;
 }
 
@@ -56,7 +45,7 @@ interface DataSpecificationState {
     types: Types;
 }
 
-class DataSpecification extends Component<DataSpecificationProps, DataSpecificationState> {
+export default class DataSpecification extends Component<DataSpecificationProps, DataSpecificationState> {
     constructor(props) {
         super(props);
 
@@ -97,9 +86,8 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
         }
     }
 
-    getDataSpecification = (callback = () => {
-    }) => {
-        const { type, match, notifications } = this.props;
+    getDataSpecification = (callback = () => {}) => {
+        const { type, match } = this.props;
 
         this.setState({
             isLoading: true,
@@ -135,7 +123,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                             this.getDisplaySettings();
                         }
                         this.getTypes();
-                    },
+                    }
                 );
             })
             .catch(error => {
@@ -147,30 +135,29 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the data model';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
-    handleVersionChange = (versionId) => {
-        const { currentVersion, versions } = this.state;
+    handleVersionChange = version => {
+        const { currentVersion } = this.state;
         const { history } = this.props;
-        const selectedVersion = versions.find(version => version.value === versionId);
 
-        const newVersion = selectedVersion.label;
+        const newVersion = version.label;
         const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + newVersion + '/');
 
         if (window.location.pathname !== newUrl) {
             history.push(newUrl);
         } else {
             this.setState({
-                currentVersion: selectedVersion,
+                currentVersion: version,
             });
         }
     };
 
     getModules = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -184,9 +171,9 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -197,7 +184,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
 
     getForms = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -211,9 +198,9 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -224,7 +211,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
 
     getDisplaySettings = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -238,9 +225,9 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -251,7 +238,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
 
     getNodes = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -272,13 +259,13 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the nodes';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     getPrefixes = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -299,13 +286,13 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the prefixes';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     getOptionGroups = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -326,13 +313,13 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the option groups';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     getTypes = () => {
         const { dataSpecification, currentVersion } = this.state;
-        const { type, notifications } = this.props;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -353,25 +340,13 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the types';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     render() {
         const { type, history, location, user } = this.props;
-        const {
-            isLoading,
-            dataSpecification,
-            versions,
-            currentVersion,
-            modules,
-            forms,
-            displaySettings,
-            nodes,
-            prefixes,
-            optionGroups,
-            types,
-        } =
+        const { isLoading, dataSpecification, versions, currentVersion, modules, forms, displaySettings, nodes, prefixes, optionGroups, types } =
             this.state;
 
         if (isLoading) {
@@ -385,7 +360,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
         const mainUrl = type === 'data-model' ? '/dashboard/data-models' : '/dashboard/metadata-models';
 
         return (
-            <DashboardPage>
+            <>
                 <DocumentTitle title={dataSpecification.title} />
 
                 <SideBar
@@ -400,23 +375,23 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                             to: mainUrl + '/' + dataSpecification.id,
                             exact: true,
                             title: ucfirst(getType(type)),
-                            icon: <AccountTreeIcon />,
+                            icon: 'structure',
                         },
                         {
                             to: mainUrl + '/' + dataSpecification.id + '/versions',
                             exact: true,
                             title: 'Versions',
-                            icon: <ContentCopyIcon />,
+                            customIcon: 'versions',
                         },
                         ...(isGranted('manage', dataSpecification.permissions)
                             ? [
-                                {
-                                    to: mainUrl + '/' + dataSpecification.id + '/permissions',
-                                    exact: true,
-                                    title: 'Permissions',
-                                    icon: <GroupsIcon />,
-                                },
-                            ]
+                                  {
+                                      to: mainUrl + '/' + dataSpecification.id + '/permissions',
+                                      exact: true,
+                                      title: 'Permissions',
+                                      icon: 'usersLight',
+                                  },
+                              ]
                             : []),
                         {
                             type: 'separator',
@@ -432,50 +407,50 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                         {
                             to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/modules',
                             title: 'Groups',
-                            icon: <WidgetsIcon />,
+                            customIcon: 'modules',
                         },
                         {
-                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes/internal',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes',
                             title: 'Nodes',
-                            icon: <PolylineIcon />,
+                            customIcon: 'node',
                         },
                         {
                             to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/prefixes',
                             exact: true,
                             title: 'Prefixes',
-                            icon: <LinkIcon />,
+                            customIcon: 'prefix',
                         },
                         {
                             type: 'separator',
                         },
                         ...(type === 'metadata-model'
                             ? [
-                                {
-                                    to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/option-group',
-                                    exact: true,
-                                    title: 'Option groups',
-                                    icon: <RadioButtonCheckedIcon />,
-                                },
-                                {
-                                    to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/forms',
-                                    title: 'Forms',
-                                    icon: <AssignmentIcon />,
-                                },
-                                {
-                                    to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/display',
-                                    title: 'Display',
-                                    icon: <ListIcon />,
-                                },
-                                {
-                                    type: 'separator',
-                                },
-                            ]
+                                  {
+                                      to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/option-group',
+                                      exact: true,
+                                      title: 'Option groups',
+                                      icon: 'radioOptions',
+                                  },
+                                  {
+                                      to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/forms',
+                                      title: 'Forms',
+                                      icon: 'survey',
+                                  },
+                                  {
+                                      to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/display',
+                                      title: 'Display',
+                                      icon: 'list',
+                                  },
+                                  {
+                                      type: 'separator',
+                                  },
+                              ]
                             : []),
                         {
                             to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/import-export',
                             exact: true,
                             title: 'Import/export',
-                            icon: <UploadIcon />,
+                            icon: 'upload',
                         },
                         {
                             type: 'separator',
@@ -484,11 +459,10 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                             to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/preview',
                             exact: true,
                             title: 'Preview',
-                            icon: <VisibilityIcon />,
+                            customIcon: 'preview',
                         },
                     ]}
                     history={history}
-                    user={user}
                 />
                 <Body>
                     <Header title={dataSpecification.title} />
@@ -497,8 +471,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                         <Route
                             path={['/dashboard/data-models/:model', '/dashboard/metadata-models/:model']}
                             exact
-                            render={props => <DataSpecificationDetails type={type} dataSpecification={dataSpecification}
-                                                                       user={user} {...props} />}
+                            render={props => <DataSpecificationDetails type={type} dataSpecification={dataSpecification} user={user} {...props} />}
                         />
                         <Route
                             path={['/dashboard/data-models/:model/versions', '/dashboard/metadata-models/:model/versions']}
@@ -654,8 +627,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                             path={['/dashboard/data-models/:model/:version/preview', '/dashboard/metadata-models/:model/:version/preview']}
                             exact
                             render={props => (
-                                <Preview type={type} dataSpecification={dataSpecification}
-                                         version={currentVersion.value} user={user} {...props} />
+                                <Preview type={type} dataSpecification={dataSpecification} version={currentVersion.value} user={user} {...props} />
                             )}
                         />
                         <Route
@@ -679,9 +651,7 @@ class DataSpecification extends Component<DataSpecificationProps, DataSpecificat
                         <Route component={NotFound} />
                     </Switch>
                 </Body>
-            </DashboardPage>
+            </>
         );
     }
 }
-
-export default withNotifications(DataSpecification);

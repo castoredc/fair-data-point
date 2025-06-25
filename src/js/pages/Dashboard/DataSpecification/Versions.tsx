@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import { Button, CellText, DataGrid, Stack } from '@castoredc/matter';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import DataSpecificationVersionModal from 'modals/DataSpecificationVersionModal';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
-import { getType } from '../../../util';
-import DataGrid from 'components/DataTable/DataGrid';
-import Stack from '@mui/material/Stack';
-import { GridColDef } from '@mui/x-data-grid';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { getType, ucfirst } from '../../../util';
 
-interface VersionsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface VersionsProps extends AuthorizedRouteComponentProps {
     type: string;
     getDataSpecification: () => void;
     dataSpecification: any;
@@ -21,7 +18,7 @@ interface VersionsState {
     showModal: boolean;
 }
 
-class Versions extends Component<VersionsProps, VersionsState> {
+export default class Versions extends Component<VersionsProps, VersionsState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,16 +39,15 @@ class Versions extends Component<VersionsProps, VersionsState> {
     };
 
     createNewVersion = version => {
-        const { type, dataSpecification, getDataSpecification, notifications } = this.props;
+        const { type, dataSpecification, getDataSpecification } = this.props;
 
         apiClient
             .post('/api/' + type + '/' + dataSpecification.id + '/v', {
                 type: version,
             })
             .then(response => {
-                notifications.show('A new version was successfully created', {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title="A new version was successfully created" />, {
+                    position: 'top-right',
                 });
 
                 this.closeModal();
@@ -63,7 +59,7 @@ class Versions extends Component<VersionsProps, VersionsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while creating a new version';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -73,27 +69,26 @@ class Versions extends Component<VersionsProps, VersionsState> {
 
         const latestVersion = dataSpecification.versions.slice(-1)[0].version;
 
-        const columns: GridColDef[] = [
+        const columns = [
             {
-                headerName: 'Version',
-                field: 'version',
+                Header: 'Version',
+                accessor: 'version',
             },
             {
-                headerName: 'Groups',
-                field: 'moduleCount',
+                Header: 'Groups',
+                accessor: 'moduleCount',
             },
             {
-                headerName: 'Nodes',
-                field: 'nodeCount',
+                Header: 'Nodes',
+                accessor: 'nodeCount',
             },
         ];
 
         const rows = dataSpecification.versions.map(version => {
             return {
-                id: version.id,
-                version: version.version,
-                moduleCount: version.count.modules,
-                nodeCount: version.count.nodes,
+                version: <CellText>{version.version}</CellText>,
+                moduleCount: <CellText>{version.count.modules}</CellText>,
+                nodeCount: <CellText>{version.count.nodes}</CellText>,
             };
         });
 
@@ -110,15 +105,15 @@ class Versions extends Component<VersionsProps, VersionsState> {
                 />
 
                 <div className="PageButtons">
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-                        <Button startIcon={<AddIcon />} onClick={this.openModal}>
+                    <Stack distribution="trailing" alignment="end">
+                        <Button icon="add" onClick={this.openModal}>
                             Create version
                         </Button>
                     </Stack>
                 </div>
 
                 <DataGrid
-                    disableRowSelectionOnClick
+                    accessibleName={`${ucfirst(getType(type))} versions`}
                     emptyStateContent={`This ${getType(type)} does not have any versions`}
                     rows={rows}
                     columns={columns}
@@ -127,5 +122,3 @@ class Versions extends Component<VersionsProps, VersionsState> {
         );
     }
 }
-
-export default withNotifications(Versions);

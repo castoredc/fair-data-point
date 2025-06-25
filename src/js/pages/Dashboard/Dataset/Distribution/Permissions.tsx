@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { isGranted } from 'utils/PermissionHelper';
 import PermissionEditor from 'components/PermissionEditor';
@@ -19,13 +19,10 @@ const Permissions: FC<PermissionsProps> = ({ distribution, getDistribution, user
         return <NoPermission text="You do not have access to this page" />;
     }
 
-    const [selectedTab, setSelectedTab] = useState('metadata');
-
     return (
         <PageBody>
             <PageTabs
-                selected={selectedTab}
-                onChange={setSelectedTab}
+                persistInactiveTabContent={true}
                 tabs={{
                     metadata: {
                         title: 'Metadata',

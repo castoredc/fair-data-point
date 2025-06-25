@@ -10,7 +10,7 @@ interface DetailsProps extends AuthorizedRouteComponentProps {
     study?: string;
 }
 
-class Details extends Component<DetailsProps> {
+export default class Details extends Component<DetailsProps> {
     render() {
         const { distribution, catalog, dataset, study, history } = this.props;
 
@@ -23,5 +23,3 @@ class Details extends Component<DetailsProps> {
         );
     }
 }
-
-export default Details;

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import Button from '@mui/material/Button';
-import Modal from 'components/Modal';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, Modal } from '@castoredc/matter';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -9,9 +10,8 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
 import { apiClient } from '../network';
 import { Types } from 'types/Types';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface FieldModalProps extends ComponentWithNotifications {
+type FieldModalProps = {
     open: boolean;
     onClose: () => void;
     data: any;
@@ -29,7 +29,7 @@ type FieldModalState = {
     initialValues: any;
 };
 
-class FieldModal extends Component<FieldModalProps, FieldModalState> {
+export default class FieldModal extends Component<FieldModalProps, FieldModalState> {
     constructor(props) {
         super(props);
 
@@ -57,7 +57,7 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
             nodeData: null,
         };
 
-        if (data !== null || data !== undefined) {
+        if (data !== null) {
             newData = data;
         } else {
             newData.order = this.getOrderOptions().slice(-1)[0].value;
@@ -99,7 +99,7 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { modelId, versionId, onSaved, data, form, notifications } = this.props;
+        const { modelId, versionId, onSaved, data, form } = this.props;
 
         apiClient
             .post('/api/metadata-model/' + modelId + '/v/' + versionId + '/form/' + form.id + '/field' + (data ? `/${data.id}` : ''), values)
@@ -114,9 +114,9 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);
@@ -130,20 +130,9 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
         const title = data ? `Edit field` : `Add field`;
 
         return (
-            <Modal open={open} title={title} onClose={onClose}>
-                <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit}
-                        enableReinitialize>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          setValues,
-                          setFieldValue,
-                      }) => {
+            <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
+                <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         const isPlainValue = values.nodeData && values.nodeData.value === 'plain';
                         const isAnnotatedValue = values.nodeData && values.nodeData.value === 'annotated';
                         const orderOptions = this.getOrderOptions();
@@ -177,13 +166,11 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
                                 </FormItem>
 
                                 <FormItem label="Position">
-                                    <Field component={Select} options={orderOptions} name="order"
-                                           serverError={validation} />
+                                    <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
                                 <FormItem label="Description">
-                                    <Field component={Input} name="description" serverError={validation}
-                                           multiline={true} />
+                                    <Field component={Input} name="description" serverError={validation} multiline={true} />
                                 </FormItem>
 
                                 <FormItem label="Node">
@@ -218,16 +205,15 @@ class FieldModal extends Component<FieldModalProps, FieldModalState> {
 
                                 {isAnnotatedValue && optionGroupFields.includes(values.fieldType) && (
                                     <FormItem label="Option group">
-                                        <Field component={Select} options={optionGroupItems} serverError={validation}
-                                               name="optionGroup" />
+                                        <Field component={Select} options={optionGroupItems} serverError={validation} name="optionGroup" />
                                     </FormItem>
                                 )}
 
                                 <FormItem>
-                                    <Field component={SingleChoice} label="Required" name="isRequired" />
+                                    <Field component={SingleChoice} labelText="Required" name="isRequired" />
                                 </FormItem>
 
-                                <Button type="submit" variant="contained" disabled={isSubmitting}>
+                                <Button buttonType="primary" type="submit" disabled={isSubmitting}>
                                     {title}
                                 </Button>
                             </Form>
@@ -265,5 +251,3 @@ const NodeSchema = Yup.object().shape({
 });
 
 const optionGroupFields = ['checkboxes', 'radioButtons', 'dropdown'];
-
-export default withNotifications(FieldModal);

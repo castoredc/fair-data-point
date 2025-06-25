@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import DataModelMappingsDataTable from 'components/DataTable/DataModelMappingsDataTable';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Dropdown as CastorDropdown, LoadingOverlay, Stack } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
 import MappingInterface from 'components/MappingInterface';
 import Split from 'components/Layout/Split';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import PageTabs from 'components/PageTabs';
-import Stack from '@mui/material/Stack';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
-interface DistributionContentsRdfProps extends ComponentWithNotifications {
+interface DistributionContentsRdfProps {
     distribution: any;
     dataset: string;
 }
@@ -27,7 +25,7 @@ interface DistributionContentsRdfState {
     selectedType: 'node' | 'module';
 }
 
-class DistributionContentsRdf extends Component<DistributionContentsRdfProps, DistributionContentsRdfState> {
+export default class DistributionContentsRdf extends Component<DistributionContentsRdfProps, DistributionContentsRdfState> {
     constructor(props: DistributionContentsRdfProps) {
         super(props);
         this.state = {
@@ -46,7 +44,7 @@ class DistributionContentsRdf extends Component<DistributionContentsRdfProps, Di
     }
 
     getDataModel = () => {
-        const { distribution, notifications } = this.props;
+        const { distribution } = this.props;
 
         this.setState({
             isLoadingDataModel: true,
@@ -71,7 +69,7 @@ class DistributionContentsRdf extends Component<DistributionContentsRdfProps, Di
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the data model';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -104,37 +102,34 @@ class DistributionContentsRdf extends Component<DistributionContentsRdfProps, Di
     };
 
     render() {
-        const {
-            selectedMapping,
-            addedMapping,
-            isLoadingDataModel,
-            dataModel,
-            currentVersion,
-            selectedType,
-        } = this.state;
+        const { selectedMapping, addedMapping, isLoadingDataModel, dataModel, currentVersion, selectedType } = this.state;
         const { distribution, dataset } = this.props;
 
         if (isLoadingDataModel || currentVersion === null) {
             return <LoadingOverlay accessibleLabel="Loading distribution" />;
         }
 
+        const versions = dataModel.versions.map((version: any) => {
+            const label = distribution.dataModel.id === version.id ? `${version.version} (active)` : version.version;
+            return { value: version.id, label: label };
+        });
+
         return (
             <PageBody>
                 <div className="PageButtons" style={{ flex: '0 0 60px' }}>
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                    <Stack distribution="trailing" alignment="end">
                         <FormItem label="Data model version" inline align="right">
                             <div className="Select">
-                                <Select
+                                <CastorDropdown
                                     onChange={e => {
-                                        this.handleVersionChange(e.target.value);
+                                        this.handleVersionChange(e.value);
                                     }}
-                                    value={currentVersion}
-                                >
-                                    {dataModel.versions.map((version: any) => {
-                                        const label = distribution.dataModel.id === version.id ? `${version.version} (active)` : version.version;
-                                        return <MenuItem value={version.id}>{label}</MenuItem>;
-                                    })}
-                                </Select>
+                                    value={versions.find(({ value }) => value === currentVersion)}
+                                    options={versions}
+                                    menuPlacement="auto"
+                                    width="tiny"
+                                    menuPosition="fixed"
+                                />
                             </div>
                         </FormItem>
                     </Stack>
@@ -196,5 +191,3 @@ class DistributionContentsRdf extends Component<DistributionContentsRdfProps, Di
         );
     }
 }
-
-export default withNotifications(DistributionContentsRdf);

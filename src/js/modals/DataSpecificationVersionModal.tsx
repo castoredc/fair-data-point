@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import Button from '@mui/material/Button';
+import { Button, Choice, Modal } from '@castoredc/matter';
 import { getType } from '../util';
-import Modal from 'components/Modal';
-import RadioGroup from 'components/RadioGroup';
-import { FormLabel } from '@mui/material';
 
 type DataModelVersionModalProps = {
     type: string;
@@ -19,7 +16,7 @@ type DataModelVersionModalState = {
     newVersion: string | null;
 };
 
-class DataSpecificationVersionModal extends Component<DataModelVersionModalProps, DataModelVersionModalState> {
+export default class DataSpecificationVersionModal extends Component<DataModelVersionModalProps, DataModelVersionModalState> {
     constructor(props) {
         super(props);
 
@@ -60,20 +57,17 @@ class DataSpecificationVersionModal extends Component<DataModelVersionModalProps
         const { versionType, newVersion } = this.state;
 
         return (
-            <Modal open={show} onClose={handleClose} title="Create version">
-                <FormLabel>
-                    Please indicate to what extent you are making changes in the {getType(type)}
-                </FormLabel>
-
-                <RadioGroup
+            <Modal open={show} onClose={handleClose} title="Create version" accessibleName="Create version">
+                <Choice
                     options={[
-                        { value: 'major', label: 'Major changes' },
-                        { value: 'minor', label: 'Minor changes' },
-                        { value: 'patch', label: 'Patch' },
+                        { value: 'major', labelText: 'Major changes' },
+                        { value: 'minor', labelText: 'Minor changes' },
+                        { value: 'patch', labelText: 'Patch' },
                     ]}
                     value={versionType ? versionType : undefined}
                     name="versionType"
                     onChange={this.handleChange}
+                    labelText={`Please indicate to what extent you are making changes in the ${getType(type)}`}
                 />
 
                 <FormItem label="Latest version">{latestVersion}</FormItem>
@@ -86,7 +80,6 @@ class DataSpecificationVersionModal extends Component<DataModelVersionModalProps
                     onClick={() => {
                         handleSave(versionType ? versionType : '');
                     }}
-                    variant="contained"
                 >
                     Save metadata
                 </Button>
@@ -94,5 +87,3 @@ class DataSpecificationVersionModal extends Component<DataModelVersionModalProps
         );
     }
 }
-
-export default DataSpecificationVersionModal;

@@ -12,7 +12,6 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
-use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
@@ -91,10 +90,6 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
         foreach ($latestVersion->getElements() as $node) {
             if ($node instanceof RecordNode) {
                 $newNode = new RecordNode($newVersion, $node->getResourceType());
-            } elseif ($node instanceof InternalIriNode) {
-                $newNode = new InternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
-                $newNode->setSlug($node->getSlug());
-                $newNode->setIsRepeated($node->isRepeated());
             } elseif ($node instanceof ExternalIriNode) {
                 $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIri($node->getIri());

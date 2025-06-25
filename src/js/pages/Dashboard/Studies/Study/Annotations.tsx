@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { Dropdown, FormLabel, LoadingOverlay, Separator } from '@castoredc/matter';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import OptionGroup from 'components/StudyStructure/OptionGroup';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import NoResults from 'components/NoResults';
-import { Divider, FormLabel, Stack } from '@mui/material';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
-interface AnnotationsProps extends ComponentWithNotifications {
+interface AnnotationsProps {
     studyId: string;
 }
 
@@ -20,7 +17,7 @@ interface AnnotationsState {
     selectedOptionGroup: string;
 }
 
-class Annotations extends Component<AnnotationsProps, AnnotationsState> {
+export default class Annotations extends Component<AnnotationsProps, AnnotationsState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,7 +33,7 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
     }
 
     getOptionGroups = () => {
-        const { studyId, notifications } = this.props;
+        const { studyId } = this.props;
         const { selectedOptionGroup } = this.state;
         this.setState({
             isLoading: true,
@@ -53,9 +50,9 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -64,9 +61,9 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
             });
     };
 
-    updateSelection = event => {
+    updateSelection = option => {
         this.setState({
-            selectedOptionGroup: event.target.value,
+            selectedOptionGroup: option.value,
         });
     };
 
@@ -78,47 +75,35 @@ class Annotations extends Component<AnnotationsProps, AnnotationsState> {
             return <LoadingOverlay accessibleLabel="Loading option groups" />;
         }
 
+        const options = optionGroups.map(optionGroup => {
+            return { value: optionGroup.id, label: optionGroup.name };
+        });
+
         const optionGroup = optionGroups.find(optionGroup => {
             return optionGroup.id === selectedOptionGroup;
         });
 
         if (optionGroups && optionGroups.length === 0) {
-            return <NoResults>This study does not have option groups.</NoResults>;
+            return <div className="NoResults">This study does not have option groups.</div>;
         }
 
         return (
             <PageBody>
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        mb: 2,
-                    }}
-                >
-                    <FormLabel>Option group</FormLabel>
-                    <Select
-                        onChange={this.updateSelection}
-                        value={selectedOptionGroup}
-                        sx={{ width: 400 }}
-                    >
-                        {optionGroups.map(optionGroup => {
-                            return <MenuItem
-                                key={optionGroup.id}
-                                value={optionGroup.id}>
-                                {optionGroup.name}
-                            </MenuItem>;
-                        })}
-                    </Select>
-                </Stack>
+                <FormLabel>Option group</FormLabel>
+                <Dropdown
+                    options={options}
+                    menuPlacement={'auto'}
+                    menuPosition="fixed"
+                    getOptionLabel={({ label }) => label}
+                    getOptionValue={({ value }) => value}
+                    onChange={this.updateSelection}
+                    value={selectedOptionGroup ? { value: optionGroup.id, label: optionGroup.name } : undefined}
+                />
 
-                <Divider />
+                <Separator spacing="comfortable" />
 
                 {optionGroup && <OptionGroup studyId={studyId} onUpdate={this.getOptionGroups} {...optionGroup} />}
             </PageBody>
         );
     }
 }
-
-export default withNotifications(Annotations);

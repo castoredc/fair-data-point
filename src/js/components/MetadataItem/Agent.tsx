@@ -1,5 +1,6 @@
 import React from 'react';
 
+import './MetadataItem.scss';
 import { GenericAgentType } from 'types/AgentListType';
 
 type AgentProps = GenericAgentType;

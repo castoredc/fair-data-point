@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import FormItem from '../Form/FormItem';
-import Button from '@mui/material/Button';
+import { Button, Heading } from '@castoredc/matter';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { apiClient } from '../../network';
 import Choice from 'components/Input/Formik/Choice';
 import Select from 'components/Input/Formik/Select';
-import { Typography } from '@mui/material';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface ModuleMappingInterfaceProps extends ComponentWithNotifications {
+interface ModuleMappingInterfaceProps {
     mapping: any;
     dataset: string;
     distribution: any;
@@ -27,7 +27,7 @@ interface FormValues {
     element: string | null;
 }
 
-class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, ModuleMappingInterfaceState> {
+export default class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, ModuleMappingInterfaceState> {
     constructor(props: ModuleMappingInterfaceProps) {
         super(props);
 
@@ -37,7 +37,7 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
     }
 
     handleSubmit = (values: FormValues) => {
-        const { mapping, dataset, distribution, versionId, onSave, notifications } = this.props;
+        const { mapping, dataset, distribution, versionId, onSave } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -50,9 +50,8 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
             })
             .then(() => {
                 this.setState({ isLoading: false });
-                notifications.show('The mapping was successfully saved.', {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title="The mapping was successfully saved." />, {
+                    position: 'top-right',
                 });
                 onSave();
             })
@@ -62,7 +61,7 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while saving the mapping';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -82,12 +81,9 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
 
         return (
             <>
-                <Typography variant="h5">
-                    {`${mapping.element ? `Edit` : `Add`} mapping for ${mapping.module.displayName}`}
-                </Typography>
+                <Heading type="Panel">{`${mapping.element ? `Edit` : `Add`} mapping for ${mapping.module.displayName}`}</Heading>
 
-                <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={this.handleSubmit}
-                        enableReinitialize>
+                <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, handleChange, setFieldValue, errors, touched }) => {
                         const structureItems = values.type !== '' && values.type !== null ? structure[values.type] : [];
 
@@ -102,8 +98,8 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
                                     <Field
                                         component={Choice}
                                         options={[
-                                            { value: 'report', label: 'Report' },
-                                            { value: 'survey', label: 'Survey' },
+                                            { value: 'report', labelText: 'Report' },
+                                            { value: 'survey', labelText: 'Survey' },
                                         ]}
                                         collapse
                                         name="type"
@@ -115,14 +111,10 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
                                 </FormItem>
 
                                 <FormItem label="Element">
-                                    <Field component={Select} options={options} name="element" />
+                                    <Field component={Select} options={options} name="element" menuPosition="fixed" />
                                 </FormItem>
 
-                                <Button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    variant="contained"
-                                >
+                                <Button type="submit" disabled={isLoading}>
                                     {mapping && mapping.element ? 'Edit mapping' : 'Add mapping'}
                                 </Button>
                             </Form>
@@ -133,5 +125,3 @@ class ModuleMappingInterface extends Component<ModuleMappingInterfaceProps, Modu
         );
     }
 }
-
-export default withNotifications(ModuleMappingInterface);

@@ -1,10 +1,12 @@
 import React from 'react';
+import './FieldListItem.scss';
+import { FieldIcons } from '../Icon/FieldIcons';
 import { classNames } from '../../util';
+import { Icon } from '@castoredc/matter';
 
 interface Exportable {
     exportable: boolean;
     dataTypes: string[];
-
     [key: string]: any;
 }
 
@@ -24,19 +26,19 @@ interface FieldListItemProps {
 }
 
 const FieldListItem: React.FC<FieldListItemProps> = ({
-                                                         id,
-                                                         type,
-                                                         label,
-                                                         stepNumber,
-                                                         number,
-                                                         variableName,
-                                                         selected,
-                                                         onSelect,
-                                                         exportable,
-                                                         dataFormat,
-                                                         dataType,
-                                                         dataTransformation,
-                                                     }) => {
+    id,
+    type,
+    label,
+    stepNumber,
+    number,
+    variableName,
+    selected,
+    onSelect,
+    exportable,
+    dataFormat,
+    dataType,
+    dataTransformation,
+}) => {
     let isExportable = exportable.exportable;
 
     if (isExportable && dataTransformation) {
@@ -56,8 +58,7 @@ const FieldListItem: React.FC<FieldListItemProps> = ({
                 {stepNumber}.{number}
             </div>
             <div className="FieldIcon">
-                // TODO: Field icons
-                {/*<Icon type={FieldIcons[type]} height="12" width="12" />*/}
+                <Icon type={FieldIcons[type]} height="12" width="12" />
             </div>
             <div className="FieldLabel">
                 {label}

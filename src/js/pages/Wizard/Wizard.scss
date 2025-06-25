@@ -1,0 +1,54 @@
+@import '../../scss/colors';
+
+.Wizard {
+    padding: 4.8rem 2rem 2rem 2rem;
+    max-width: 980px;
+    margin: auto;
+
+    .WizardBrand {
+        margin-bottom: 40px;
+
+        > * {
+            display: inline-block;
+        }
+
+        .WizardBrandLogo .Logo {
+            height: 32px;
+            width: auto;
+
+            path {
+                fill: $azul;
+            }
+        }
+
+        .WizardBrandText {
+            font-size: 16px;
+            font-weight: 600;
+            color: $neutral-800;
+            margin-left: 24px;
+            padding-left: 24px;
+            border-left: 1px solid $neutral-80;
+            line-height: 32px;
+        }
+    }
+
+    header {
+        margin: 50px 0;
+        border-bottom: 1px solid $neutral-30;
+        padding-bottom: 50px;
+
+        h1 {
+            font-size: 32px;
+        }
+
+        .Description {
+            font-size: 16px;
+            font-weight: 600;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.31;
+            letter-spacing: normal;
+            color: $neutral-800;
+        }
+    }
+}

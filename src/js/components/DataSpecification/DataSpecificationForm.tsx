@@ -1,12 +1,6 @@
 import React, { FC } from 'react';
+import { ActionsCell, Button, CellText, DataGrid, IconCell, Stack } from '@castoredc/matter';
 import { MetadataFieldType } from 'components/MetadataItem/EnumMappings';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import DataGrid from 'components/DataTable/DataGrid';
-import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
-import CheckIcon from '@mui/icons-material/Check';
 
 export interface DataSpecificationFormProps {
     fields: any[];
@@ -18,23 +12,22 @@ export interface DataSpecificationFormProps {
 }
 
 const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
-                                                                   fields,
-                                                                   openFormModal,
-                                                                   openFieldModal,
-                                                                   openRemoveFieldModal,
-                                                                   optionGroups,
-                                                                   nodes,
-                                                               }) => {
+    fields,
+    openFormModal,
+    openFieldModal,
+    openRemoveFieldModal,
+    optionGroups,
+    nodes,
+}) => {
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
-                <Stack direction="row" sx={{ justifyContent: 'flex-end', pb: 2 }} spacing={1}>
-                    <Button startIcon={<EditIcon />} variant="outlined" onClick={openFormModal}>
+                <Stack distribution="trailing">
+                    <Button icon="edit" buttonType="secondary" onClick={openFormModal}>
                         Edit form
                     </Button>
                     <Button
-                        variant="contained"
-                        startIcon={<AddIcon />}
+                        icon="add"
                         onClick={() => {
                             openFieldModal(null);
                         }}
@@ -46,7 +39,6 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
 
             <div className="DataSpecificationTable LargeTable">
                 <DataGrid
-                    disableRowSelectionOnClick
                     accessibleName="Internal nodes"
                     emptyStateContent={`This form does not contain fields`}
                     rows={fields.map(field => {
@@ -54,77 +46,73 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
                         const node = nodes.value.find(node => node.id === field.node);
 
                         return {
-                            id: field.id,
-                            order: field.order,
-                            title: field.title,
-                            node: node.title,
-                            fieldType: MetadataFieldType[field.fieldType],
-                            optionGroup: optionGroup ? optionGroup.title : '',
-                            required: field.isRequired,
-                            data: field,
-                        };
-                    })}
-                    columns={[
-                        {
-                            headerName: '',
-                            field: 'order',
-                            maxWidth: 34,
-                            minWidth: 34,
-                            width: 34,
-                        },
-                        {
-                            headerName: 'Title',
-                            field: 'title',
-                        },
-                        {
-                            headerName: 'Node',
-                            field: 'node',
-                        },
-                        {
-                            headerName: 'Field type',
-                            field: 'fieldType',
-                        },
-                        {
-                            headerName: 'Option group',
-                            field: 'optionGroup',
-                        },
-                        {
-                            headerName: 'Required',
-                            field: 'required',
-                            resizable: false,
-                            // isInteractive: true,
-                            width: 80,
-                            renderCell: (params) => {
-                                return params.row.isRequired ? <CheckIcon /> : '';
-                            },
-                        },
-                        {
-                            field: 'actions',
-                            headerName: '',
-                            flex: 1,
-                            sortable: false,
-                            disableColumnMenu: true,
-                            align: 'right',
-                            cellClassName: 'actionsCell',
-                            renderCell: (params) => {
-                                return <RowActionsMenu
-                                    row={params.row}
+                            order: <CellText>{field.order}</CellText>,
+                            title: <CellText>{field.title}</CellText>,
+                            node: <CellText>{node.title}</CellText>,
+                            fieldType: <CellText>{MetadataFieldType[field.fieldType]}</CellText>,
+                            optionGroup: <CellText>{optionGroup ? optionGroup.title : ''}</CellText>,
+                            required: field.isRequired ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                            menu: (
+                                <ActionsCell
                                     items={[
                                         {
                                             destination: () => {
-                                                openFieldModal(params.row.data);
+                                                openFieldModal(field);
                                             },
                                             label: 'Edit field',
                                         },
                                         {
                                             destination: () => {
-                                                openRemoveFieldModal(params.row.data);
+                                                openRemoveFieldModal(field);
                                             },
                                             label: 'Delete field',
                                         },
                                     ]}
-                                />;
-                            },
+                                />
+                            ),
+                        };
+                    })}
+                    anchorRightColumns={1}
+                    columns={[
+                        {
+                            Header: '',
+                            accessor: 'order',
+                            maxWidth: 34,
+                            minWidth: 34,
+                            width: 34,
+                        },
+                        {
+                            Header: 'Title',
+                            accessor: 'title',
+                        },
+                        {
+                            Header: 'Node',
+                            accessor: 'node',
+                        },
+                        {
+                            Header: 'Field type',
+                            accessor: 'fieldType',
+                        },
+                        {
+                            Header: 'Option group',
+                            accessor: 'optionGroup',
+                        },
+                        {
+                            Header: 'Required',
+                            accessor: 'required',
+                            disableResizing: true,
+                            isInteractive: true,
+                            width: 80,
+                        },
+                        {
+                            accessor: 'menu',
+                            disableGroupBy: true,
+                            disableResizing: true,
+                            isInteractive: true,
+                            isSticky: true,
+                            maxWidth: 34,
+                            minWidth: 34,
+                            width: 34,
                         },
                     ]}
                 />

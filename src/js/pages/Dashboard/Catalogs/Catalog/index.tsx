@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { localizedText } from '../../../../util';
 import { Route, Switch } from 'react-router-dom';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { LoadingOverlay } from '@castoredc/matter';
 import DocumentTitle from 'components/DocumentTitle';
 import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import CatalogForm from 'components/Form/Admin/CatalogForm';
 import AddStudy from 'pages/Dashboard/Catalogs/Catalog/AddStudy';
 import Studies from 'pages/Dashboard/Catalogs/Catalog/Studies';
@@ -20,23 +22,15 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
-import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import DescriptionIcon from '@mui/icons-material/Description';
-import GroupsIcon from '@mui/icons-material/Groups';
-import BiotechIcon from '@mui/icons-material/Biotech';
-import DatasetIcon from '@mui/icons-material/Dataset';
 
-interface CatalogProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
-}
+interface CatalogProps extends AuthorizedRouteComponentProps {}
 
 interface CatalogState {
     catalog: any;
     isLoading: boolean;
 }
 
-class Catalog extends Component<CatalogProps, CatalogState> {
+export default class Catalog extends Component<CatalogProps, CatalogState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,8 +44,6 @@ class Catalog extends Component<CatalogProps, CatalogState> {
     }
 
     getCatalog = () => {
-        const { notifications } = this.props;
-
         this.setState({
             isLoading: true,
         });
@@ -70,9 +62,9 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred while loading the catalog', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred while loading the catalog" />);
                 }
             });
     };
@@ -92,7 +84,7 @@ class Catalog extends Component<CatalogProps, CatalogState> {
         const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : 'Untitled catalog';
 
         return (
-            <DashboardPage>
+            <>
                 <DocumentTitle title={title} />
 
                 <SideBar
@@ -106,23 +98,23 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                             to: '/dashboard/catalogs/' + catalog.slug,
                             exact: true,
                             title: 'Catalog',
-                            icon: <InventoryIcon />,
+                            customIcon: 'catalog',
                         },
                         {
                             to: '/dashboard/catalogs/' + catalog.slug + '/metadata',
                             exact: true,
                             title: 'Metadata',
-                            icon: <DescriptionIcon />,
+                            customIcon: 'metadata',
                         },
                         ...(isGranted('manage', catalog.permissions)
                             ? [
-                                {
-                                    to: '/dashboard/catalogs/' + catalog.slug + '/permissions',
-                                    exact: true,
-                                    title: 'Permissions',
-                                    icon: <GroupsIcon />,
-                                },
-                            ]
+                                  {
+                                      to: '/dashboard/catalogs/' + catalog.slug + '/permissions',
+                                      exact: true,
+                                      title: 'Permissions',
+                                      icon: 'usersLight',
+                                  },
+                              ]
                             : []),
                         {
                             type: 'separator',
@@ -131,17 +123,16 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                             to: '/dashboard/catalogs/' + catalog.slug + '/datasets',
                             exact: true,
                             title: 'Datasets',
-                            icon: <DatasetIcon />,
+                            customIcon: 'dataset',
                         },
                         {
                             to: '/dashboard/catalogs/' + catalog.slug + '/studies',
                             exact: true,
                             title: 'Studies',
-                            icon: <BiotechIcon />,
+                            icon: 'study',
                         },
                     ]}
                     history={history}
-                    user={user}
                 />
 
                 <Body>
@@ -162,8 +153,7 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <MetadataForm type="catalog" object={catalog} onCreate={this.getCatalog}
-                                                  onSave={this.getCatalog} />
+                                    <MetadataForm type="catalog" object={catalog} onCreate={this.getCatalog} onSave={this.getCatalog} />
                                 </PageBody>
                             )}
                         />
@@ -190,10 +180,8 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                             exact
                             render={props => <AddStudy {...props} catalog={catalog.slug} user={user} />}
                         />
-                        <Route path="/dashboard/catalogs/:catalog/studies" exact
-                               render={props => <Studies {...props} catalog={catalog.slug} />} />
-                        <Route path="/dashboard/catalogs/:catalog/datasets" exact
-                               render={props => <Datasets {...props} catalog={catalog.slug} />} />
+                        <Route path="/dashboard/catalogs/:catalog/studies" exact render={props => <Studies {...props} catalog={catalog.slug} />} />
+                        <Route path="/dashboard/catalogs/:catalog/datasets" exact render={props => <Datasets {...props} catalog={catalog.slug} />} />
                         <Route
                             path="/dashboard/catalogs/:catalog/datasets/add"
                             exact
@@ -202,9 +190,7 @@ class Catalog extends Component<CatalogProps, CatalogState> {
                         <Route component={NotFound} />
                     </Switch>
                 </Body>
-            </DashboardPage>
+            </>
         );
     }
 }
-
-export default withNotifications(Catalog);

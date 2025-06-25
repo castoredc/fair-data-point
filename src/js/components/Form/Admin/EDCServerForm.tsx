@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
-import Button from '@mui/material/Button';
-
+import '../Form.scss';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import { Field, Form, FormikProvider, useFormik } from 'formik';
@@ -10,8 +12,6 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import { apiClient } from 'src/js/network';
 import { ServerType } from 'types/ServerType';
 import { EDCServerDefaultData, EDCServerSchema } from 'components/Form/Admin/form';
-import Stack from '@mui/material/Stack';
-import { useNotifications } from 'components/WithNotifications';
 
 interface EDCServerFormProps {
     edcServer?: ServerType;
@@ -22,7 +22,6 @@ const EDCServerForm = (props: EDCServerFormProps) => {
     const [initialValues, setInitialValues] = useState(props.edcServer ? mergeData(EDCServerDefaultData, props.edcServer) : EDCServerDefaultData);
     const [validation, setValidation] = useState();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const notifications = useNotifications();
 
     const handleFormSubmit = (values, { setSubmitting }) => {
         // setIsSubmitting updates our internal EDCServerForm state, setSubmitting is Formik's.
@@ -38,9 +37,8 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // New server:
                 if (!props.edcServer && response.data.id) {
                     const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`;
-                    notifications.show(message, {
-                        variant: 'success',
-
+                    toast.success(<ToastItem type="success" title={message} />, {
+                        position: 'top-right',
                     });
 
                     props.handleSubmit(response.data);
@@ -51,9 +49,8 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // Existing server:
                 if (props.edcServer && props.edcServer.id) {
                     const message = `The EDC Server ${response.data.name} was updated successfully`;
-                    notifications.show(message, {
-                        variant: 'success',
-
+                    toast.success(<ToastItem type="success" title={message} />, {
+                        position: 'top-right',
                     });
 
                     props.handleSubmit(response.data);
@@ -68,7 +65,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 if (error.response && error.response.status === 400) {
                     setValidation(error.response.data.fields);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -84,7 +81,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
     const form = (
         <FormikProvider value={formProps}>
             <Form>
-                <div>
+                <div className="FormContent">
                     <FormItem label="Name">
                         <Field component={Input} name="name" serverError={validation} />
                     </FormItem>
@@ -96,7 +93,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                     </FormItem>
 
                     <FormItem>
-                        <Field component={SingleChoice} label="Default server?" name="default" />
+                        <Field component={SingleChoice} labelText="Default server?" name="default" />
                     </FormItem>
                     <FormItem label="Client ID">
                         <Field component={Input} name="clientId" serverError={validation} />
@@ -107,24 +104,16 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 </div>
 
                 {props.edcServer ? (
-                    <div>
-                        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                            <Button
-                                disabled={isSubmitting}
-                                type="submit"
-                                variant="contained"
-                            >
+                    <div className="FormButtons">
+                        <Stack distribution="trailing">
+                            <Button disabled={isSubmitting} type="submit">
                                 Update EDC server
                             </Button>
                         </Stack>
                     </div>
                 ) : (
                     <footer>
-                        <Button
-                            disabled={isSubmitting}
-                            type="submit"
-                            variant="contained"
-                        >
+                        <Button disabled={isSubmitting} type="submit">
                             Add EDC server
                         </Button>
                     </footer>

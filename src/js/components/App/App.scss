@@ -1,0 +1,15 @@
+@import '../../scss/colors.scss';
+
+.App {
+    position: relative;
+    min-height: 100vh;
+}
+
+.ButtonBar {
+    margin-bottom: 10px;
+    height: 40px;
+
+    &.Right {
+        text-align: right;
+    }
+}

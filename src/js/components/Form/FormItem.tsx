@@ -1,122 +1,56 @@
 import React, { FC } from 'react';
-import { Box, FormLabel, Stack, Tooltip, Typography } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import { classNames } from '../../util';
+import { FormLabel, Tooltip } from '@castoredc/matter';
+import { InfoIcon } from '@castoredc/matter-icons';
 
 interface FormItemProps {
     label?: string;
     children: React.ReactNode;
     hidden?: boolean;
     inline?: boolean;
-    align?: 'left' | 'center' | 'right';
+    align?: string;
     className?: string;
     tooltip?: string;
     details?: string;
     isRequired?: boolean;
 }
 
-const FormItem: FC<FormItemProps> = ({
-                                         label,
-                                         children,
-                                         hidden,
-                                         inline,
-                                         align = 'left',
-                                         tooltip,
-                                         details,
-                                         isRequired,
-                                     }) => {
-    if (hidden) {
-        return null;
+const FormItem: FC<FormItemProps> = ({ label, children, hidden, inline, align, className, tooltip, details, isRequired }) => {
+    let alignClass = '';
+
+    if (align === 'left') {
+        alignClass = 'AlignLeft';
+    } else if (align === 'center') {
+        alignClass = 'AlignCenter';
+    } else if (align === 'right') {
+        alignClass = 'AlignRight';
     }
 
     return (
-        <Box
-            sx={{
-                mb: 2,
-                ...(inline && {
-                    display: 'flex',
-                    alignItems: 'center',
-                    '& > *:first-of-type': {
-                        mr: 2,
-                        minWidth: '200px',
-                    },
-                }),
-            }}
-        >
+        <div className={classNames('FormItem', inline && alignClass, hidden && 'Hidden', inline && 'Inline', className)}>
             {label && (
-                <Box sx={{ mb: 1 }}>
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{
-                            textAlign: align,
-                            width: '100%',
-                        }}
-                    >
-                        <FormLabel
-                            component="label"
-                            sx={{
-                                color: 'text.primary',
-                                fontSize: '0.875rem',
-                                fontWeight: 500,
-                                lineHeight: 1.5,
-                            }}
-                        >
-                            {label}
-                            {isRequired && (
-                                <Tooltip title="This field is required">
-                                    <Typography
-                                        component="span"
-                                        sx={{
-                                            color: 'error.main',
-                                            ml: 0.5,
-                                        }}
-                                    >
-                                        *
-                                    </Typography>
-                                </Tooltip>
-                            )}
-                        </FormLabel>
-                        {tooltip && (
-                            <Tooltip title={tooltip}>
-                                <InfoIcon
-                                    sx={{
-                                        fontSize: '1rem',
-                                        color: 'action.active',
-                                        cursor: 'help',
-                                    }}
-                                />
+                <div className="FormItemLabel">
+                    <FormLabel>
+                        {label}
+                        {isRequired && (
+                            <Tooltip content="This field is required">
+                                <span className="RequiredIndicator">*</span>
                             </Tooltip>
                         )}
-                    </Stack>
-                    {details && (
-                        <Typography
-                            variant="caption"
-                            sx={{
-                                display: 'block',
-                                mt: 0.5,
-                                color: 'text.secondary',
-                            }}
-                        >
-                            {details}
-                        </Typography>
-                    )}
-                </Box>
+                        {tooltip && (
+                            <>
+                                &nbsp;
+                                <Tooltip content={tooltip}>
+                                    <InfoIcon />
+                                </Tooltip>
+                            </>
+                        )}
+                    </FormLabel>
+                    {details && <div className="FormItemDetails">{details}</div>}
+                </div>
             )}
-            <Box
-                sx={{
-                    width: '100%',
-                    ...(align === 'center' && {
-                        textAlign: 'center',
-                    }),
-                    ...(align === 'right' && {
-                        textAlign: 'right',
-                    }),
-                }}
-            >
-                {children}
-            </Box>
-        </Box>
+            <div className="FormItemContent">{children}</div>
+        </div>
     );
 };
 

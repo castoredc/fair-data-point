@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
 import { Form, Formik } from 'formik';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Button } from '@castoredc/matter';
 import QueryBuilder, { Field } from 'react-querybuilder';
 import { Rule } from '../QueryBuilder/Rule';
 import { ValueEditor } from '../QueryBuilder/ValueEditor';
@@ -33,14 +31,14 @@ interface DistributionContentsDependencyEditorProps {
 }
 
 const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEditorProps> = ({
-                                                                                                 prefixes,
-                                                                                                 institutes,
-                                                                                                 handleChange,
-                                                                                                 save,
-                                                                                                 value,
-                                                                                                 type,
-                                                                                                 valueNodes,
-                                                                                             }) => {
+    prefixes,
+    institutes,
+    handleChange,
+    save,
+    value,
+    type,
+    valueNodes,
+}) => {
     let fields: Field[] = [
         {
             label: 'Record details',
@@ -93,7 +91,7 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
         >
             {({ values, setFieldValue, isValid, isSubmitting }) => (
                 <Form method="post">
-                    <div className="DependencyEditor" style={{ width: '700px' }}>
+                    <div className="DependencyEditor">
                         <QueryBuilder
                             query={values.query}
                             fields={fields}
@@ -104,39 +102,33 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                             }}
                             controlElements={{
                                 addGroupAction: props => (
-                                    <Button startIcon={<AddIcon />} variant="contained" onClick={props.handleOnClick}>
+                                    <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
                                         Group
                                     </Button>
                                 ),
                                 removeGroupAction: props => (
-                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error"
-                                            onClick={props.handleOnClick} />
+                                    <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete group" />
                                 ),
                                 addRuleAction: props => (
-                                    <Button startIcon={<AddIcon />} variant="contained" onClick={props.handleOnClick}>
+                                    <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
                                         Condition
                                     </Button>
                                 ),
                                 removeRuleAction: props => (
-                                    <Button startIcon={<DeleteIcon />} variant="contained" color="error"
-                                            onClick={props.handleOnClick} />
+                                    <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete condition" />
                                 ),
                                 combinatorSelector: props => {
-                                    return <CombinatorSelector options={props.options} value={props.value}
-                                                               handleOnChange={props.handleOnChange} />;
+                                    return <CombinatorSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
                                 fieldSelector: props => {
-                                    return <FieldSelector options={props.options} value={props.value}
-                                                          handleOnChange={props.handleOnChange} />;
+                                    return <FieldSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
                                 operatorSelector: props => {
-                                    return <OperatorSelector options={props.options} value={props.value}
-                                                             handleOnChange={props.handleOnChange} />;
+                                    return <OperatorSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
                                 ruleGroup: props => <RuleGroup {...props} />,
                                 rule: props => <Rule prefixes={prefixes} institutes={institutes} {...props} />,
-                                valueEditor: props => <ValueEditor prefixes={prefixes}
-                                                                   institutes={institutes} {...props} />,
+                                valueEditor: props => <ValueEditor prefixes={prefixes} institutes={institutes} {...props} />,
                             }}
                             operators={operators}
                             getOperators={getOperators}
@@ -145,7 +137,7 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
 
                     <br />
 
-                    <Button type="submit" variant="contained" disabled={isSubmitting}>
+                    <Button type="submit" disabled={isSubmitting}>
                         Save dependencies
                     </Button>
                 </Form>

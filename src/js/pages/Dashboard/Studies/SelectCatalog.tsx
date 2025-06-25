@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import Pagination from '@mui/material/Pagination';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay, Pagination } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import { localizedText } from '../../../util';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
 import SelectPage from 'components/SelectPage';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import NoResults from 'components/NoResults';
 
-interface SelectCatalogProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
-}
+interface SelectCatalogProps extends AuthorizedRouteComponentProps {}
 
 interface SelectCatalogState {
     catalogs: any;
@@ -19,7 +17,7 @@ interface SelectCatalogState {
     pagination: any;
 }
 
-class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
+export default class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
     constructor(props) {
         super(props);
 
@@ -31,7 +29,6 @@ class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
     }
 
     getCatalogs = () => {
-        const { notifications } = this.props;
         const { pagination } = this.state;
 
         this.setState({
@@ -59,27 +56,27 @@ class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
 
-    handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
+    handlePagination = paginationCount => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: value,
-                    perPage: pagination.pageSize,
+                    currentPage: paginationCount.currentPage + 1,
+                    perPage: paginationCount.pageSize,
                 },
             },
             () => {
                 this.getCatalogs();
-            },
+            }
         );
     };
 
@@ -110,24 +107,24 @@ class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
                                 key={catalog.id}
                                 title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
                                 link={`/dashboard/studies/add/${catalog.slug}`}
-                                icon="catalog"
+                                customIcon="catalog"
                             />
                         );
                     })
                 ) : (
-                    <NoResults>No catalogs found.</NoResults>
+                    <div className="NoResults">No catalogs found.</div>
                 )}
 
                 {pagination && (
                     <Pagination
+                        accessibleName="Pagination"
                         onChange={this.handlePagination}
-                        page={pagination.currentPage - 1}
-                        count={pagination.totalResults}
+                        pageSize={pagination.perPage}
+                        currentPage={pagination.currentPage - 1}
+                        totalItems={pagination.totalResults}
                     />
                 )}
             </SelectPage>
         );
     }
 }
-
-export default withNotifications(SelectCatalog);

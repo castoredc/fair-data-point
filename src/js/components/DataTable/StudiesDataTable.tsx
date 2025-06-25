@@ -1,14 +1,14 @@
 import React, { Component, createRef } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { CellText, DataGrid, Heading, Icon, IconCell, LoadingOverlay } from '@castoredc/matter';
+import './DataTable.scss';
 import DataGridHelper from './DataGridHelper';
+import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
 import { localizedText } from '../../util';
-import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-interface StudiesDataTableProps extends ComponentWithNotifications {
+interface StudiesDataTableProps {
     catalog?: string;
     hideCatalog?: string;
     lastHandledStudy?: any;
@@ -23,7 +23,7 @@ interface StudiesDataTableState {
     pagination: any;
 }
 
-class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTableState> {
+export default class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTableState> {
     private tableRef: React.RefObject<HTMLDivElement>;
 
     constructor(props: StudiesDataTableProps) {
@@ -52,7 +52,7 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
 
     getStudies = () => {
         const { pagination, hasLoadedStudies } = this.state;
-        const { catalog, hideCatalog, notifications } = this.props;
+        const { catalog, hideCatalog } = this.props;
 
         this.setState({ isLoadingStudies: true });
 
@@ -71,16 +71,12 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
         apiClient
             .get(catalog ? `/api/catalog/${catalog}/study` : '/api/study', { params: filters })
             .then(response => {
-                // Only update total results from API response, keep other pagination values as is
-                this.setState(prevState => ({
+                this.setState({
                     studies: response.data.results,
-                    pagination: {
-                        ...prevState.pagination,
-                        totalResults: response.data.totalResults,
-                    },
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingStudies: false,
                     hasLoadedStudies: true,
-                }));
+                });
             })
             .catch(error => {
                 this.setState({ isLoadingStudies: false });
@@ -89,32 +85,28 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the studies';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
-    handlePagination = (model: { page: number; pageSize: number }) => {
-        const { pagination } = this.state;
-        // Only update if values actually changed
-        if (pagination.currentPage !== model.page || pagination.perPage !== model.pageSize) {
-            this.setState(
-                prevState => ({
-                    pagination: {
-                        ...prevState.pagination,
-                        currentPage: model.page,
-                        perPage: model.pageSize,
-                    },
-                }),
-                this.getStudies,
-            );
-        }
+    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
+        this.setState(
+            prevState => ({
+                pagination: {
+                    ...prevState.pagination,
+                    currentPage: paginationCount.currentPage + 1,
+                    perPage: paginationCount.pageSize,
+                },
+            }),
+            this.getStudies
+        );
     };
 
-    handleClick = (params: GridRowParams) => {
+    handleClick = (rowId: string) => {
         const { studies } = this.state;
         const { history, onClick } = this.props;
 
-        const study = studies[params.id];
+        const study = studies[rowId];
 
         if (onClick) {
             onClick(study);
@@ -131,64 +123,60 @@ class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTable
             return <LoadingOverlay accessibleLabel="Loading studies" />;
         }
 
-        const columns: GridColDef[] = [
+        const columns = [
             {
-                headerName: 'Name',
-                field: 'title',
+                Header: 'Name',
+                accessor: 'title',
                 width: 300,
             },
             {
-                headerName: 'Description',
-                field: 'description',
+                Header: 'Description',
+                accessor: 'description',
                 width: 500,
             },
             {
-                headerName: 'Published',
-                field: 'published',
-                resizable: false,
+                Header: <Icon description="Published" type="view" />,
+                accessor: 'published',
+                disableResizing: true,
                 width: 32,
-                renderCell: (params) => {
-                    return params.row.published ? <VisibilityIcon /> : <VisibilityOffIcon />;
-                },
             },
         ];
 
-        const rows = studies.filter((item) => {
-            return !item.catalogs.some((studyCatalog: any) => studyCatalog.slug === hideCatalog);
-        }).map((item, index) => ({
-            id: String(index),
-            title: item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-            description: item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-            published: item.published,
+        const rows = studies.map((item, index) => ({
+            __rowId: String(index),
+            title: <CellText>{item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}</CellText>,
+            description: <CellText>{item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}</CellText>,
+            published: item.published ? <IconCell icon={{ type: 'view' }} /> : undefined,
         }));
 
-        console.log(pagination);
+        const rowState = studies.reduce((acc, item, index) => {
+            acc[index] = {
+                disabled: item.catalogs.some((studyCatalog: any) => studyCatalog.slug === hideCatalog),
+            };
+            return acc;
+        }, {} as Record<number, { disabled: boolean }>);
 
         return (
             <div className="DataTableContainer">
                 <div className="TableCol">
-                    <div ref={this.tableRef}>
+                    <DataGridContainer
+                        pagination={pagination}
+                        handlePageChange={this.handlePagination}
+                        fullHeight
+                        isLoading={isLoadingStudies}
+                        forwardRef={this.tableRef}
+                    >
                         <DataGrid
-                            disableRowSelectionOnClick
-                            getRowId={(row) => row.id}
-                            onRowClick={this.handleClick}
+                            accessibleName="Studies"
+                            emptyStateContent="No studies found"
+                            onClick={this.handleClick}
                             rows={rows}
                             columns={columns}
-                            paginationMode="server"
-                            rowCount={pagination.totalResults}
-                            loading={isLoadingStudies}
-                            pageSizeOptions={[10, 25, 50]}
-                            paginationModel={{
-                                page: pagination.currentPage,
-                                pageSize: pagination.perPage,
-                            }}
-                            onPaginationModelChange={this.handlePagination}
+                            rowState={rowState}
                         />
-                    </div>
+                    </DataGridContainer>
                 </div>
             </div>
         );
     }
 }
-
-export default withNotifications(StudiesDataTable);

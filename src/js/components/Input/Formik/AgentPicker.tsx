@@ -1,50 +1,37 @@
 import React, { FC, useState } from 'react';
-import {
-    Box,
-    Button,
-    IconButton,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
+
+import { Button } from '@castoredc/matter';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
-import { FormikProps } from 'formik/dist/types';
 import { ucfirst } from '../../../util';
+import { FormikProps } from 'formik/dist/types';
 import PublisherModal from 'modals/PublisherModal';
 import { CountryType } from 'types/CountryType';
-import { useNotifications } from 'components/WithNotifications';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 
 interface AgentPickerPropsProps extends FieldProps {
     serverError?: any;
     countries: CountryType[];
-    label: string;
 }
 
-const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>, notifications) => {
+const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>) => {
     const newData = field.value;
 
     const exists =
         agent.id !== '' && agent.id === null
             ? !!newData.find(existingAgent => {
-                if (existingAgent.type !== agent.type) {
-                    return false;
-                }
+                  if (existingAgent.type !== agent.type) {
+                      return false;
+                  }
 
-                return existingAgent[existingAgent.type].id === agent[agent.type].id;
-            })
+                  return existingAgent[existingAgent.type].id === agent[agent.type].id;
+              })
             : false;
 
     if (!exists) {
         newData.push(agent);
     } else {
-        notifications.show('The agent was already associated with this metadata and was, therefore, not added again.', { variant: 'error' });
+        toast.error(<ToastItem type="error" title="The agent was already associated with this metadata and was, therefore, not added again." />);
     }
 
     form.setFieldValue(field.name, newData);
@@ -57,112 +44,66 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
     form.setFieldValue(field.name, newData);
 };
 
-const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, serverError, label }) => {
+const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, serverError }) => {
     const [showModal, setShowModal] = useState(false);
-    const notifications = useNotifications();
 
     const serverErrors = serverError[field.name];
     const value = field.value ? field.value : [];
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <div className="Input AgentPicker">
             <PublisherModal
                 open={showModal}
-                label={label}
                 onClose={() => setShowModal(false)}
                 handleSave={agent => {
-                    handleAdd(agent, field, form, notifications);
+                    handleAdd(agent, field, form);
                     setShowModal(false);
                 }}
                 countries={countries}
             />
 
-            <TableContainer
-                component={Paper}
-                variant="outlined"
-                sx={{
-                    mb: 2,
-                    '& .MuiTableCell-root': {
-                        py: 1.5,
-                    },
-                }}
-            >
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ fontWeight: 500 }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 500 }}>Type</TableCell>
-                            <TableCell sx={{ fontWeight: 500 }}>Additional information</TableCell>
-                            <TableCell align="right" sx={{ width: 70 }} />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {value.map((agent, index) => {
-                            let name = '';
-                            let additionalInfo = '';
+            <div className="Header Row">
+                <div className="Name">Name</div>
+                <div className="Type">Type</div>
+                <div className="AdditionalInformation">Additional information</div>
+            </div>
+            <div className="Agents">
+                {value.map((agent, index) => {
+                    let name = '';
+                    let additionalInfo = '';
 
-                            if (agent.type === 'organization') {
-                                name = agent.organization.name;
-                                additionalInfo = typeof agent.department !== 'undefined' ? agent.department.name : '';
-                            } else if (agent.type === 'person') {
-                                name = [agent.person.firstName, agent.person.middleName, agent.person.lastName].filter(Boolean).join(' ');
-                                additionalInfo = agent.person.orcid;
-                            }
+                    if (agent.type === 'organization') {
+                        name = agent.organization.name;
+                        additionalInfo = typeof agent.department !== 'undefined' ? agent.department.name : '';
+                    } else if (agent.type === 'person') {
+                        name = [agent.person.firstName, agent.person.middleName, agent.person.lastName].filter(Boolean).join(' ');
+                        additionalInfo = agent.person.orcid;
+                    }
 
-                            return (
-                                <TableRow
-                                    key={index}
-                                    sx={{
-                                        '&:last-child td, &:last-child th': { border: 0 },
-                                        '&:hover': {
-                                            bgcolor: 'action.hover',
-                                        },
-                                    }}
-                                >
-                                    <TableCell>{name}</TableCell>
-                                    <TableCell>{ucfirst(agent.type)}</TableCell>
-                                    <TableCell>{additionalInfo}</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton
-                                            size="small"
-                                            onClick={() => handleRemove(field, form, index)}
-                                            sx={{
-                                                color: 'error.main',
-                                                '&:hover': {
-                                                    bgcolor: 'error.lighter',
-                                                },
-                                            }}
-                                        >
-                                            <ClearIcon fontSize="small" />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                        {value.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={4} align="center" sx={{ py: 4 }}>
-                                    <Typography color="text.secondary">
-                                        No agents added yet
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
-            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-                <Button
-                    startIcon={<AddIcon />}
-                    variant="outlined"
-                    onClick={() => setShowModal(true)}
-                    sx={{ px: 3 }}
-                >
-                    Add new
+                    return (
+                        <div className="Row" key={index}>
+                            <div className="Name">{name}</div>
+                            <div className="Type">{ucfirst(agent.type)}</div>
+                            <div className="AdditionalInformation">{additionalInfo}</div>
+                            <div className="Buttons">
+                                <Button
+                                    buttonType="contentOnly"
+                                    icon="cross"
+                                    className="RemoveButton"
+                                    onClick={() => handleRemove(field, form, index)}
+                                    iconDescription="Remove"
+                                />
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            <div className="AddButton">
+                <Button icon="add" className="AddButton" buttonType="bare" onClick={() => setShowModal(true)}>
+                    Add
                 </Button>
-            </Box>
-        </Box>
+            </div>
+        </div>
     );
 };
 

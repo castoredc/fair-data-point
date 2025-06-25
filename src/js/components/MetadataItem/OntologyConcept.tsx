@@ -1,7 +1,8 @@
 import React from 'react';
 
+import './MetadataItem.scss';
 import { OntologyType } from 'types/OntologyType';
-import Tooltip from '@mui/material/Tooltip';
+import { Tooltip } from '@castoredc/matter';
 
 interface OntologyConceptProps {
     code: string;
@@ -13,7 +14,7 @@ interface OntologyConceptProps {
 const OntologyConcept: React.FC<OntologyConceptProps> = ({ code, displayName, ontology, url }) => {
     return (
         <div className="OntologyConcept">
-            <Tooltip title={`${ontology.name} · ${code}`}>
+            <Tooltip content={`${ontology.name} · ${code}`}>
                 <a href={url} target="_blank">
                     {displayName}
                 </a>

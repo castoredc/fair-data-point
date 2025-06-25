@@ -10,7 +10,6 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 import { localizedText } from '../../../util';
-import Grid from '@mui/material/Grid';
 
 interface FAIRDataPointMainProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -30,18 +29,16 @@ const FAIRDataPointMain: React.FC<FAIRDataPointMainProps> = ({ user, embedded, l
             <MainBody isLoading={isLoading}>
                 {fdp && (
                     <>
-                        <Grid container spacing={2}>
-                            <Grid size={8}>
-                                <MetadataDescription metadata={fdp.metadata} />
-                            </Grid>
-                            <Grid size={4}>
-                                <MetadataSideBar metadata={fdp.metadata} title={title} />
-                            </Grid>
-                        </Grid>
+                        <div className="MainCol">
+                            <MetadataDescription metadata={fdp.metadata} />
+                        </div>
+                        <div className="SideCol">
+                            <MetadataSideBar metadata={fdp.metadata} title={title} />
+                        </div>
 
                         <AssociatedItemsBar items={fdp.count} current="catalog" />
 
-                        <CatalogList embedded={embedded} />
+                        <CatalogList embedded={embedded} className="MainCol" />
                     </>
                 )}
             </MainBody>

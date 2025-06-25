@@ -31,8 +31,7 @@ const ScrollShadow: React.FC<ScrollShadowProps> = ({ children, className }) => {
     }, [updateShadows]);
 
     return (
-        <div
-            className={classNames(className, 'ScrollShadow', topShadow && 'topShadow', bottomShadow && 'bottomShadow')}>
+        <div className={classNames(className, 'ScrollShadow', topShadow && 'topShadow', bottomShadow && 'bottomShadow')}>
             <EventListener target={window} type="resize" listener={updateShadows} />
             <div className="scrollable" ref={scrollable} onScroll={updateShadows}>
                 {cloneIfComposite(children, { onUpdate: updateShadows })}

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay } from '@castoredc/matter';
 import ModuleMappingInterface from './ModuleMappingInterface';
 import NodeMappingInterface from './NodeMappingInterface';
 import { apiClient } from 'src/js/network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface MappingInterfaceProps extends ComponentWithNotifications {
+interface MappingInterfaceProps {
     studyId: string;
     dataset: any;
     distribution: any;
@@ -21,7 +22,7 @@ interface MappingInterfaceState {
     structure: any | null;
 }
 
-class MappingInterface extends Component<MappingInterfaceProps, MappingInterfaceState> {
+export default class MappingInterface extends Component<MappingInterfaceProps, MappingInterfaceState> {
     constructor(props: MappingInterfaceProps) {
         super(props);
         this.state = {
@@ -36,7 +37,7 @@ class MappingInterface extends Component<MappingInterfaceProps, MappingInterface
     }
 
     getStructure = () => {
-        const { studyId, notifications } = this.props;
+        const { studyId } = this.props;
 
         apiClient
             .get('/api/castor/study/' + studyId + '/structure')
@@ -48,9 +49,9 @@ class MappingInterface extends Component<MappingInterfaceProps, MappingInterface
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -92,5 +93,3 @@ class MappingInterface extends Component<MappingInterfaceProps, MappingInterface
         );
     }
 }
-
-export default withNotifications(MappingInterface);

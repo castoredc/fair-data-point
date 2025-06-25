@@ -1,0 +1,157 @@
+$large: 1260px;
+
+@mixin desktop {
+    @media (min-width: $large) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media (max-width: $large - 1) {
+        @content;
+    }
+}
+
+@mixin small {
+    @media (max-width: 960px) {
+        @content;
+    }
+}
+
+@mixin extraSmall {
+    @media (max-width: 480px) {
+        @content;
+    }
+}
+
+@mixin arrow($size, $color, $direction) {
+    $side: null;
+
+    @if $direction == top {
+        $side: bottom;
+    } @else if $direction == right {
+        $side: left;
+    } @else if $direction == bottom {
+        $side: top;
+    } @else {
+        $side: right;
+    }
+
+    content: '';
+    position: absolute;
+    border: solid transparent;
+    border-#{$side}-color: $color;
+    border-width: $size;
+}
+
+@mixin paper {
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgba(85, 85, 85, 0.35);
+}
+
+@mixin visuallyHidden {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+}
+
+@mixin button($type) {
+    white-space: nowrap;
+    box-sizing: border-box;
+    min-height: 32px;
+    border-radius: 3px;
+    padding: 4px 16px;
+    line-height: 1.57;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &[disabled],
+    &[disabled]:active {
+        opacity: 0.35;
+    }
+
+    &[disabled] {
+        cursor: default;
+    }
+
+    @if $type == primary {
+        background-color: $blue-400;
+        color: $white;
+        border: 1px solid $blue-400;
+        fill: $white;
+
+        &:hover,
+        &:focus {
+            background-color: $blue-700;
+            border: 1px solid $blue-700;
+        }
+
+        &:active {
+            opacity: 0.85;
+        }
+    } @else if $type == secondary {
+        background-color: $white;
+        color: $blue-400;
+        border: 1px solid $blue-400;
+        fill: $blue-400;
+
+        &:hover,
+        &:focus {
+            background-color: $blue-700;
+            border: 1px solid $blue-700;
+            fill: $white;
+            color: $white;
+        }
+
+        &:active {
+            background-color: $blue-400;
+            opacity: 0.85;
+            fill: $white;
+            color: $white;
+        }
+    } @else if $type == tertiary {
+        background-color: #fff;
+        border: 1px solid $n70;
+        color: $n600;
+        fill: $n600;
+
+        &:active {
+            color: $n900;
+            border: 1px solid $n600;
+            fill: $n900;
+        }
+
+        &:focus,
+        &:hover {
+            color: $n600;
+            border: 1px solid $n600;
+            fill: $n600;
+        }
+    } @else if $type == inverted {
+        background-color: transparent;
+        border: 1px solid transparent;
+        color: $blue-700;
+        fill: $blue-700;
+
+        &:focus,
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &:active {
+            text-decoration: underline;
+            color: $blue-400;
+        }
+    }
+}

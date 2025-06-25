@@ -1,60 +1,50 @@
 import React from 'react';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Box from '@mui/material/Box';
+import { OpenNewWindowIcon } from '@castoredc/matter-icons';
 
 export const Node = (title: string, type: string, value: any, repeated: boolean) => {
-    const nodeInfoStyle = {
-        fontSize: 'small',
-        color: 'text.secondary',
-    };
-
     return (
         <div>
             {title}
-            {type === 'internal' && (
-                <Box className="NodeInfo Slug" sx={nodeInfoStyle}>
-                    {repeated ? <span>/{value}/[instance_id]</span> : <span>/{value}</span>}
-                </Box>
-            )}
+            {type === 'internal' && <div className="NodeInfo Slug">{repeated ? <span>/{value}/[instance_id]</span> : <span>/{value}</span>}</div>}
             {type === 'external' && (
-                <Box className="NodeInfo PrefixedUri" sx={nodeInfoStyle}>
+                <div className="NodeInfo PrefixedUri">
                     <span>
                         {value.prefixedValue !== null ? value.prefixedValue : `...:${value.base}`}
                         &nbsp;
-                        <OpenInNewIcon sx={{ fontSize: 'inherit' }} />
+                        <OpenNewWindowIcon width="8px" height="8px" />
                     </span>
-                </Box>
+                </div>
             )}
             {type === 'value' && (
-                <Box className="NodeInfo Value" sx={nodeInfoStyle}>
+                <div className="NodeInfo Value">
                     <span>
                         {value.value === 'annotated' ? 'Annotated value' : `Plain value (${value.dataType})`}
                         {repeated && ' - repeated'}
                     </span>
-                </Box>
+                </div>
             )}
             {type === 'literal' && (
-                <Box className="NodeInfo Literal" sx={nodeInfoStyle}>
+                <div className="NodeInfo Literal">
                     <span>
                         {value.value} ({value.dataType})
                     </span>
-                </Box>
+                </div>
             )}
             {type === 'children' && (
-                <Box className="NodeInfo Literal" sx={nodeInfoStyle}>
+                <div className="NodeInfo Literal">
                     <span>
                         Children of type &nbsp;
-                        <OpenInNewIcon sx={{ fontSize: 'inherit' }} />
+                        <OpenNewWindowIcon width="8px" height="8px" />
                     </span>
-                </Box>
+                </div>
             )}
             {type === 'parents' && (
-                <Box className="NodeInfo Literal" sx={nodeInfoStyle}>
+                <div className="NodeInfo Literal">
                     <span>
                         Parents of type &nbsp;
-                        <OpenInNewIcon sx={{ fontSize: 'inherit' }} />
+                        <OpenNewWindowIcon width="8px" height="8px" />
                     </span>
-                </Box>
+                </div>
             )}
         </div>
     );

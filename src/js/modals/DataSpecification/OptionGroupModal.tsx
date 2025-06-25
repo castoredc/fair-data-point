@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import Button from '@mui/material/Button';
-import Modal from 'components/Modal';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, Modal } from '@castoredc/matter';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import { apiClient } from '../../network';
 import OptionGroupOptionInput from 'components/Input/Formik/OptionGroupOptionInput';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface OptionGroupModalProps extends ComponentWithNotifications {
+type OptionGroupModalProps = {
     type: string;
     show: boolean;
     handleClose: () => void;
@@ -24,7 +24,7 @@ type OptionGroupModalState = {
     initialValues: any;
 };
 
-class OptionGroupModal extends Component<OptionGroupModalProps, OptionGroupModalState> {
+export default class OptionGroupModal extends Component<OptionGroupModalProps, OptionGroupModalState> {
     constructor(props) {
         super(props);
 
@@ -45,7 +45,7 @@ class OptionGroupModal extends Component<OptionGroupModalProps, OptionGroupModal
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { type, modelId, versionId, onSaved, notifications } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
             .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/option-group' + (values.id ? '/' + values.id : ''), {
@@ -64,7 +64,7 @@ class OptionGroupModal extends Component<OptionGroupModalProps, OptionGroupModal
                         validation: error.response.data.fields,
                     });
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);
@@ -78,20 +78,9 @@ class OptionGroupModal extends Component<OptionGroupModalProps, OptionGroupModal
         const title = initialValues.id ? 'Edit option group' : 'Add option group';
 
         return (
-            <Modal open={show} onClose={handleClose} title={title}>
-                <Formik initialValues={initialValues} validationSchema={PrefixSchema} onSubmit={this.handleSubmit}
-                        enableReinitialize>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          setValues,
-                          setFieldValue,
-                      }) => {
+            <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
+                <Formik initialValues={initialValues} validationSchema={PrefixSchema} onSubmit={this.handleSubmit} enableReinitialize>
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         return (
                             <Form>
                                 <FormItem label="Name">
@@ -105,11 +94,7 @@ class OptionGroupModal extends Component<OptionGroupModalProps, OptionGroupModal
                                     <Field component={OptionGroupOptionInput} name="options" serverError={validation} />
                                 </FormItem>
 
-                                <Button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    variant="contained"
-                                >
+                                <Button type="submit" disabled={isSubmitting}>
                                     {values.id ? 'Edit option group' : 'Add option group'}
                                 </Button>
                             </Form>
@@ -140,9 +125,7 @@ const PrefixSchema = Yup.object().shape({
             Yup.object().shape({
                 title: Yup.string().required('Please enter a title'),
                 value: Yup.string().required('Please enter a value'),
-            }),
+            })
         )
         .nullable(),
 });
-
-export default withNotifications(OptionGroupModal);

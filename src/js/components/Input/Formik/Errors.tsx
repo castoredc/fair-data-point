@@ -1,13 +1,9 @@
 import React, { FC, Fragment } from 'react';
 import { ErrorMessage, FieldInputProps } from 'formik';
+import { Space, ValidationMessage } from '@castoredc/matter';
 import { isUndefined } from 'lodash';
-import { FormHelperText } from '@mui/material';
 
-const FieldErrors: FC<{ field: FieldInputProps<any>; serverErrors?: any; index?: number }> = ({
-                                                                                                  field,
-                                                                                                  serverErrors,
-                                                                                                  index,
-                                                                                              }) => {
+const FieldErrors: FC<{ field: FieldInputProps<any>; serverErrors?: any; index?: number }> = ({ field, serverErrors, index }) => {
     return (
         <>
             {/* @ts-ignore */}
@@ -17,13 +13,16 @@ const FieldErrors: FC<{ field: FieldInputProps<any>; serverErrors?: any; index?:
                     if (typeof msg === 'object') {
                         return Object.values(msg).map((message: string, index: number) => (
                             <Fragment key={index}>
-                                <FormHelperText error={true}>{message}</FormHelperText>
+                                {isUndefined(index) && <Space bottom="default" />}
+                                <ValidationMessage type="error">{message}</ValidationMessage>
+                                {!isUndefined(index) && <Space bottom="default" />}
                             </Fragment>
                         ));
                     } else {
                         return (
                             <>
-                                <FormHelperText error={true}>{msg}</FormHelperText>
+                                <Space bottom="default" />
+                                <ValidationMessage type="error">{msg}</ValidationMessage>
                             </>
                         );
                     }
@@ -31,11 +30,11 @@ const FieldErrors: FC<{ field: FieldInputProps<any>; serverErrors?: any; index?:
             />
 
             {serverErrors && (
-                <FormHelperText error={true}>
+                <ValidationMessage type="error">
                     {serverErrors.map((errorText, index) => (
                         <div key={index}>{errorText}</div>
                     ))}
-                </FormHelperText>
+                </ValidationMessage>
             )}
         </>
     );

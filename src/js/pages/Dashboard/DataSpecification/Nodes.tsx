@@ -1,22 +1,17 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
-import AddIcon from '@mui/icons-material/Add';
+import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, LoadingOverlay, Stack, ToastMessage } from '@castoredc/matter';
 import NodeModal from 'modals/NodeModal';
 import ConfirmModal from 'modals/ConfirmModal';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import PageTabs from 'components/PageTabs';
 import { getType, ucfirst } from '../../../util';
 import { Types } from 'types/Types';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import DataGrid from 'components/DataTable/DataGrid';
-import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import CheckIcon from '@mui/icons-material/Check';
 
-interface NodesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface NodesProps extends AuthorizedRouteComponentProps {
     type: string;
     nodes: any;
     getNodes: () => void;
@@ -32,7 +27,7 @@ interface NodesState {
     modalData: any;
 }
 
-class Nodes extends Component<NodesProps, NodesState> {
+export default class Nodes extends Component<NodesProps, NodesState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -76,26 +71,25 @@ class Nodes extends Component<NodesProps, NodesState> {
     };
 
     removeNode = () => {
-        const { type, dataSpecification, version, notifications } = this.props;
+        const { type, dataSpecification, version } = this.props;
         const { modalData } = this.state;
 
         apiClient
             .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version.value + '/node/' + modalData.type + `/${modalData.id}`)
             .then(() => {
-                notifications.show(`The ${modalData.title} node was successfully removed`, {
-                    variant: 'success',
-
+                toast.success(<ToastMessage type="success" title={`The ${modalData.title} node was successfully removed`} />, {
+                    position: 'top-right',
                 });
 
                 this.onSaved('remove');
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
 
                     this.onSaved('remove');
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -110,31 +104,79 @@ class Nodes extends Component<NodesProps, NodesState> {
 
         const internalNodeRows = nodes.internal.map(item => {
             return {
-                id: item.id,
-                title: item.title,
-                value: item.value,
-                repeated: item.repeated,
-                data: item,
+                title: <CellText>{item.title}</CellText>,
+                value: <CellText>{item.value}</CellText>,
+                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', item);
+                                },
+                                label: 'Edit node',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', item);
+                                },
+                                label: 'Delete node',
+                            },
+                        ]}
+                    />
+                ),
             };
         });
 
         const externalNodeRows = nodes.external.map(item => {
             return {
-                id: item.id,
-                title: item.title,
-                short: item.value.prefixedValue,
-                uri: item.value.value,
-                data: item,
+                title: <CellText>{item.title}</CellText>,
+                short: <CellText>{item.value.prefixedValue}</CellText>,
+                uri: <CellText>{item.value.value}</CellText>,
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', item);
+                                },
+                                label: 'Edit node',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', item);
+                                },
+                                label: 'Delete node',
+                            },
+                        ]}
+                    />
+                ),
             };
         });
 
         const literalNodeRows = nodes.literal.map(item => {
             return {
-                id: item.id,
-                title: item.title,
-                value: item.value.value,
-                dataType: item.value.dataType,
-                data: item,
+                title: <CellText>{item.title}</CellText>,
+                value: <CellText>{item.value.value}</CellText>,
+                dataType: <CellText>{item.value.dataType}</CellText>,
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', item);
+                                },
+                                label: 'Edit node',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', item);
+                                },
+                                label: 'Delete node',
+                            },
+                        ]}
+                    />
+                ),
             };
         });
 
@@ -143,9 +185,9 @@ class Nodes extends Component<NodesProps, NodesState> {
 
             let fieldType:
                 | {
-                value: string;
-                label: string;
-            }
+                      value: string;
+                      label: string;
+                  }
                 | undefined = undefined;
 
             if (item.value.fieldType && item.value.value === 'plain') {
@@ -155,22 +197,38 @@ class Nodes extends Component<NodesProps, NodesState> {
             }
 
             return {
-                id: item.id,
-                title: item.title,
-                type: ucfirst(item.value.value),
-                dataType: dataType ? dataType.label : '',
+                title: <CellText>{item.title}</CellText>,
+                type: <CellText>{ucfirst(item.value.value)}</CellText>,
+                dataType: <CellText>{dataType ? dataType.label : ''}</CellText>,
                 ...(type === 'data-model'
                     ? {
-                        repeated: item.repeated,
-                    }
+                          repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                      }
                     : {}),
                 ...(type === 'metadata-model'
                     ? {
-                        fieldType: fieldType ? fieldType.label : '',
-                        optionGroup: item.value.optionGroup ? item.value.optionGroup.title : '',
-                    }
+                          fieldType: <CellText>{fieldType ? fieldType.label : ''}</CellText>,
+                          optionGroup: <CellText>{item.value.optionGroup ? item.value.optionGroup.title : ''}</CellText>,
+                      }
                     : {}),
-                data: item,
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', item);
+                                },
+                                label: 'Edit node',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', item);
+                                },
+                                label: 'Delete node',
+                            },
+                        ]}
+                    />
+                ),
             };
         });
 
@@ -196,8 +254,7 @@ class Nodes extends Component<NodesProps, NodesState> {
                     <ConfirmModal
                         title="Delete node"
                         action="Delete node"
-                        variant="contained"
-                        color="error"
+                        variant="danger"
                         onConfirm={this.removeNode}
                         onCancel={() => {
                             this.closeModal('remove');
@@ -209,12 +266,8 @@ class Nodes extends Component<NodesProps, NodesState> {
                 )}
 
                 <div className="PageButtons">
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={() => this.openModal('add', null)}
-                            variant="contained"
-                        >
+                    <Stack distribution="trailing" alignment="end">
+                        <Button icon="add" onClick={() => this.openModal('add', null)}>
                             Add {selectedType} node
                         </Button>
                     </Stack>
@@ -231,57 +284,35 @@ class Nodes extends Component<NodesProps, NodesState> {
                             title: 'Internal',
                             content: (
                                 <DataGrid
-                                    disableRowSelectionOnClick
                                     accessibleName="Internal nodes"
                                     emptyStateContent={`This ${getType(type)} does not have internal nodes`}
                                     rows={internalNodeRows}
+                                    anchorRightColumns={1}
                                     columns={[
                                         {
-                                            headerName: 'Title',
-                                            field: 'title',
+                                            Header: 'Title',
+                                            accessor: 'title',
                                         },
                                         {
-                                            headerName: 'Slug',
-                                            field: 'value',
+                                            Header: 'Slug',
+                                            accessor: 'value',
                                         },
                                         {
-                                            headerName: 'Repeated',
-                                            field: 'repeated',
-                                            resizable: false,
-                                            // isInteractive: true,
+                                            Header: <Icon description="Repeated" type="tickSmall" />,
+                                            accessor: 'repeated',
+                                            disableResizing: true,
+                                            isInteractive: true,
                                             width: 32,
-                                            renderCell: (params) => {
-                                                return params.row.repeated ? <CheckIcon /> : '';
-                                            },
                                         },
                                         {
-                                            field: 'actions',
-                                            headerName: '',
-                                            flex: 1,
-                                            sortable: false,
-                                            disableColumnMenu: true,
-                                            align: 'right',
-                                            cellClassName: 'actionsCell',
-                                            renderCell: (params) => {
-                                                return <RowActionsMenu
-                                                    row={params.row}
-
-                                                    items={[
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('add', params.row.data);
-                                                            },
-                                                            label: 'Edit node',
-                                                        },
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('remove', params.row.data);
-                                                            },
-                                                            label: 'Delete node',
-                                                        },
-                                                    ]}
-                                                />;
-                                            },
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
                                         },
                                     ]}
                                 />
@@ -291,51 +322,32 @@ class Nodes extends Component<NodesProps, NodesState> {
                             title: 'External',
                             content: (
                                 <DataGrid
-                                    disableRowSelectionOnClick
                                     accessibleName="External nodes"
                                     emptyStateContent={`This ${getType(type)} does not have external nodes`}
                                     rows={externalNodeRows}
+                                    anchorRightColumns={1}
                                     columns={[
                                         {
-                                            headerName: 'Title',
-                                            field: 'title',
+                                            Header: 'Title',
+                                            accessor: 'title',
                                         },
                                         {
-                                            headerName: 'Short',
-                                            field: 'short',
+                                            Header: 'Short',
+                                            accessor: 'short',
                                         },
                                         {
-                                            headerName: 'URI',
-                                            field: 'uri',
+                                            Header: 'URI',
+                                            accessor: 'uri',
                                         },
                                         {
-                                            field: 'actions',
-                                            headerName: '',
-                                            flex: 1,
-                                            sortable: false,
-                                            disableColumnMenu: true,
-                                            align: 'right',
-                                            cellClassName: 'actionsCell',
-                                            renderCell: (params) => {
-                                                return <RowActionsMenu
-                                                    row={params.row}
-
-                                                    items={[
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('add', params.row.data);
-                                                            },
-                                                            label: 'Edit node',
-                                                        },
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('remove', params.row.data);
-                                                            },
-                                                            label: 'Delete node',
-                                                        },
-                                                    ]}
-                                                />;
-                                            },
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
                                         },
                                     ]}
                                 />
@@ -345,52 +357,32 @@ class Nodes extends Component<NodesProps, NodesState> {
                             title: 'Literal',
                             content: (
                                 <DataGrid
-                                    disableRowSelectionOnClick
                                     accessibleName="Literal nodes"
                                     emptyStateContent={`This ${getType(type)} does not have literal nodes`}
                                     rows={literalNodeRows}
-                                    // anchorRightColumns={1}
+                                    anchorRightColumns={1}
                                     columns={[
                                         {
-                                            headerName: 'Title',
-                                            field: 'title',
+                                            Header: 'Title',
+                                            accessor: 'title',
                                         },
                                         {
-                                            headerName: 'Value',
-                                            field: 'value',
+                                            Header: 'Value',
+                                            accessor: 'value',
                                         },
                                         {
-                                            headerName: 'Data type',
-                                            field: 'dataType',
+                                            Header: 'Data type',
+                                            accessor: 'dataType',
                                         },
                                         {
-                                            field: 'actions',
-                                            headerName: '',
-                                            flex: 1,
-                                            sortable: false,
-                                            disableColumnMenu: true,
-                                            align: 'right',
-                                            cellClassName: 'actionsCell',
-                                            renderCell: (params) => {
-                                                return <RowActionsMenu
-                                                    row={params.row}
-
-                                                    items={[
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('add', params.row.data);
-                                                            },
-                                                            label: 'Edit node',
-                                                        },
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('remove', params.row.data);
-                                                            },
-                                                            label: 'Delete node',
-                                                        },
-                                                    ]}
-                                                />;
-                                            },
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
                                         },
                                     ]}
                                 />
@@ -400,63 +392,43 @@ class Nodes extends Component<NodesProps, NodesState> {
                             title: 'Value',
                             content: (
                                 <DataGrid
-                                    disableRowSelectionOnClick
                                     accessibleName="Value nodes"
                                     emptyStateContent={`This ${getType(type)} does not have value nodes`}
                                     rows={valueNodeRows}
-                                    // anchorRightColumns={1}
+                                    anchorRightColumns={1}
                                     columns={[
                                         {
-                                            headerName: 'Title',
-                                            field: 'title',
+                                            Header: 'Title',
+                                            accessor: 'title',
                                         },
                                         {
-                                            headerName: 'Type of value',
-                                            field: 'type',
+                                            Header: 'Type of value',
+                                            accessor: 'type',
                                         },
                                         {
-                                            headerName: 'Data type',
-                                            field: 'dataType',
+                                            Header: 'Data type',
+                                            accessor: 'dataType',
                                         },
                                         ...(type === 'data-model'
                                             ? [
-                                                {
-                                                    headerName: 'Repeated',
-                                                    field: 'repeated',
-                                                    resizable: false,
-                                                    // isInteractive: true,
-                                                    width: 32,
-                                                },
-                                            ]
+                                                  {
+                                                      Header: <Icon description="Repeated" type="tickSmall" />,
+                                                      accessor: 'repeated',
+                                                      disableResizing: true,
+                                                      isInteractive: true,
+                                                      width: 32,
+                                                  },
+                                              ]
                                             : []),
                                         {
-                                            field: 'actions',
-                                            headerName: '',
-                                            flex: 1,
-                                            sortable: false,
-                                            disableColumnMenu: true,
-                                            align: 'right',
-                                            cellClassName: 'actionsCell',
-                                            renderCell: (params) => {
-                                                return <RowActionsMenu
-                                                    row={params.row}
-
-                                                    items={[
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('add', params.row.data);
-                                                            },
-                                                            label: 'Edit node',
-                                                        },
-                                                        {
-                                                            destination: () => {
-                                                                this.openModal('remove', params.row.data);
-                                                            },
-                                                            label: 'Delete node',
-                                                        },
-                                                    ]}
-                                                />;
-                                            },
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
                                         },
                                     ]}
                                 />
@@ -468,5 +440,3 @@ class Nodes extends Component<NodesProps, NodesState> {
         );
     }
 }
-
-export default withNotifications(Nodes);

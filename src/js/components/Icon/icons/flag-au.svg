@@ -17,12 +17,9 @@
         </mask>
         <use fill="#FFF" xlink:href="#a"/>
         <path fill="#0A17A7" d="M0 0h28v20H0z" mask="url(#b)"/>
-        <path fill="#FF2E3B" stroke="#FFF" stroke-width=".7" d="M12-1v2h0L8 4v1l7 7-8-6H5l-5 4V8l4-3V4l-5-4h2l4 3h2z"
-              mask="url(#b)"/>
+        <path fill="#FF2E3B" stroke="#FFF" stroke-width=".7" d="M12-1v2h0L8 4v1l7 7-8-6H5l-5 4V8l4-3V4l-5-4h2l4 3h2z" mask="url(#b)"/>
         <path fill="url(#c)" d="M0 3v3h5v4h2V6h5l1-1V4l-1-1H7V0H5v3H0z" mask="url(#b)"/>
         <path fill="url(#d)" d="M0 4h5V0h2v4h5v1H7v4H5V5H0z" mask="url(#b)"/>
-        <path fill="#FFF"
-              d="M6 16l-1 1v-1l-1-1h1l1-2 1 2h1l-1 1v1zM20 17l-1 1v-2h2v2zM20 5h-1V3h2v2zM24 9h-1V7h2v2zM16 10h-1V8l1 1 1-1v2zM22 12v-1 1z"
-              mask="url(#b)"/>
+        <path fill="#FFF" d="M6 16l-1 1v-1l-1-1h1l1-2 1 2h1l-1 1v1zM20 17l-1 1v-2h2v2zM20 5h-1V3h2v2zM24 9h-1V7h2v2zM16 10h-1V8l1 1 1-1v2zM22 12v-1 1z" mask="url(#b)"/>
     </g>
 </svg>

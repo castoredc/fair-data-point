@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import StudiesDataTable from 'components/DataTable/StudiesDataTable';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import PageButtons from 'components/Layout/PageButtons';
-
+import { Button, Stack } from '@castoredc/matter';
 import * as H from 'history';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 
@@ -12,26 +9,22 @@ interface StudiesProps {
     history: H.History;
 }
 
-class Studies extends Component<StudiesProps> {
+export default class Studies extends Component<StudiesProps> {
     render() {
         const { catalog, history } = this.props;
 
         return (
             <PageBody>
-                <PageButtons>
-                    <Button
-                        startIcon={<AddIcon />}
-                        onClick={() => history.push('/dashboard/catalogs/' + catalog + '/studies/add')}
-                        variant="contained"
-                    >
-                        Add study
-                    </Button>
-                </PageButtons>
+                <div className="PageButtons">
+                    <Stack distribution="trailing" alignment="end">
+                        <Button icon="add" className="AddButton" onClick={() => history.push('/dashboard/catalogs/' + catalog + '/studies/add')}>
+                            Add study
+                        </Button>
+                    </Stack>
+                </div>
 
                 <StudiesDataTable history={history} catalog={catalog} />
             </PageBody>
         );
     }
 }
-
-export default Studies;

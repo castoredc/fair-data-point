@@ -1,27 +1,47 @@
 import React, { Component } from 'react';
-import { Box, Container } from '@mui/material';
+import { CastorBar } from '@castoredc/matter';
+import './Dashboard.scss';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { DashboardRoutes } from 'pages/Dashboard/DashboardRoutes';
 
-interface DashboardProps extends AuthorizedRouteComponentProps {
-}
+interface DashboardProps extends AuthorizedRouteComponentProps {}
 
-class Dashboard extends Component<DashboardProps> {
+export default class Dashboard extends Component<DashboardProps> {
     render() {
         const { history, user } = this.props;
 
         return (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
-            }}>
-                <Container maxWidth={false}>
+            <div className="Dashboard">
+                <CastorBar
+                    items={[
+                        {
+                            destination: () => history.push('/dashboard/studies'),
+                            label: 'Castor',
+                            type: 'brand',
+                        },
+                        {
+                            items: [
+                                {
+                                    isTitle: true,
+                                    label: 'Account',
+                                },
+                                {
+                                    destination: '/logout',
+                                    icon: 'logOut',
+                                    label: 'Log out',
+                                },
+                            ],
+                            label: 'Account',
+                            type: 'account',
+                        },
+                    ]}
+                    label="Castor navigation"
+                    horizontalNav
+                />
+                <div className="Main">
                     <DashboardRoutes user={user} />
-                </Container>
-            </Box>
+                </div>
+            </div>
         );
     }
 }
-
-export default Dashboard;

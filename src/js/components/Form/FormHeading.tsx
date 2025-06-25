@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Heading } from '@castoredc/matter';
 
 interface FormHeadingProps {
     label: string;
@@ -7,24 +7,9 @@ interface FormHeadingProps {
 
 const FormHeading: FC<FormHeadingProps> = ({ label }) => {
     return (
-        <Box
-            sx={{
-                mb: 4,
-                pb: 2,
-                borderBottom: 1,
-                borderColor: 'divider',
-            }}
-        >
-            <Typography
-                variant="h4"
-                sx={{
-                    fontWeight: 500,
-                    color: 'text.primary',
-                }}
-            >
-                {label}
-            </Typography>
-        </Box>
+        <div className="FormHeading">
+            <Heading type="Subsection">{label}</Heading>
+        </div>
     );
 };
 

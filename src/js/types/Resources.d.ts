@@ -85,7 +85,6 @@ export interface RdfDistribution extends DistributionWithContents {
     downloadUrl: string;
     dataModel: DataModelVersion;
 }
-
 export interface CsvDistribution extends DistributionWithContents {
     downloadUrl: string;
     dataModel: DataDictionary;

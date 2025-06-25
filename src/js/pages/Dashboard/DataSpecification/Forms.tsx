@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './DataSpecificationModules.scss';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
 import SideTabs from 'components/SideTabs';
 import { AuthorizedRouteComponentProps } from 'components/Route';
@@ -12,10 +13,8 @@ import MetadataFormModal from 'modals/MetadataFormModal';
 import DataSpecificationForm from 'components/DataSpecification/DataSpecificationForm';
 import FieldModal from 'modals/FieldModal';
 import { Types } from 'types/Types';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import NoResults from 'components/NoResults';
 
-interface FormsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface FormsProps extends AuthorizedRouteComponentProps {
     forms: any;
     nodes: any;
     getForms: () => void;
@@ -33,7 +32,7 @@ interface FormsState {
     currentForm: any;
 }
 
-class Forms extends Component<FormsProps, FormsState> {
+export default class Forms extends Component<FormsProps, FormsState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -108,7 +107,7 @@ class Forms extends Component<FormsProps, FormsState> {
             },
             () => {
                 this.openModal('form');
-            },
+            }
         );
     };
 
@@ -120,7 +119,7 @@ class Forms extends Component<FormsProps, FormsState> {
             },
             () => {
                 this.openModal('field');
-            },
+            }
         );
     };
 
@@ -132,7 +131,7 @@ class Forms extends Component<FormsProps, FormsState> {
             },
             () => {
                 this.openModal('removeField');
-            },
+            }
         );
     };
 
@@ -149,7 +148,7 @@ class Forms extends Component<FormsProps, FormsState> {
     };
 
     removeField = () => {
-        const { type, dataSpecification, version, getForms, notifications } = this.props;
+        const { type, dataSpecification, version, getForms } = this.props;
         const { currentForm, fieldModalData } = this.state;
 
         apiClient
@@ -159,7 +158,7 @@ class Forms extends Component<FormsProps, FormsState> {
                 getForms();
             })
             .catch(error => {
-                notifications.show('An error occurred', { variant: 'error' });
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -208,8 +207,7 @@ class Forms extends Component<FormsProps, FormsState> {
                 <ConfirmModal
                     title="Delete field"
                     action="Delete field"
-                    variant="contained"
-                    color="error"
+                    variant="danger"
                     onConfirm={this.removeField}
                     onCancel={() => this.closeModal('removeField')}
                     show={showModal.removeField}
@@ -218,30 +216,29 @@ class Forms extends Component<FormsProps, FormsState> {
                 </ConfirmModal>
 
                 {forms.length === 0 ? (
-                    <NoResults>
-                        This {getType(type)} does not have forms.
+                    <div className="NoResults">
+                        This {getType(type)} does not have any forms.
                         <br />
                         <br />
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={() => this.openFormModal(null)}
-                            variant="contained"
-                        >
+                        <Button icon="add" onClick={() => this.openFormModal(null)}>
                             Add form
                         </Button>
-                    </NoResults>
+                    </div>
                 ) : (
                     <SideTabs
                         hasButtons
                         title="Forms"
-                        actions={<Button startIcon={<AddIcon />} onClick={() => this.openFormModal(null)} />}
+                        actions={<Button icon="add" iconDescription="Add form" onClick={() => this.openFormModal(null)} />}
                         initialTab={initialTab}
                         url={`/dashboard/${type}s/${dataSpecification.id}/${match.params.version}/forms`}
                         tabs={forms.map(element => {
+                            let icons = [] as any;
+
                             return {
                                 number: element.order,
                                 id: element.id,
                                 title: element.title,
+                                icons: icons,
                                 badge: element.resourceType,
                                 content: (
                                     <DataSpecificationForm
@@ -269,5 +266,3 @@ class Forms extends Component<FormsProps, FormsState> {
         );
     }
 }
-
-export default withNotifications(Forms);

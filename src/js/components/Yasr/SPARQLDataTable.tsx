@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
-import DataGrid from 'components/DataTable/DataGrid';
-import { GridColDef } from '@mui/x-data-grid';
+import { CellText, DataGrid, Link } from '@castoredc/matter';
 
 type SPARQLDataTableProps = {
     vars: string[];
@@ -10,19 +9,19 @@ type SPARQLDataTableProps = {
 };
 
 const SPARQLDataTable: React.FC<SPARQLDataTableProps> = ({ vars, bindings, prefixes, fullUrl }) => {
-    const getColumns = (): GridColDef[] => {
+    const getColumns = () => {
         return vars.map(variable => ({
-            headerName: variable,
-            field: variable,
+            Header: variable,
+            accessor: variable,
         }));
     };
 
     const getRows = () => {
         return bindings.map((binding, rowId) => {
-            const row = {};
+            const row: Record<string, JSX.Element> = {};
 
             vars.forEach(sparqlVar => {
-                row[sparqlVar] = sparqlVar in binding ? getCellContent(binding, sparqlVar) : '';
+                row[sparqlVar] = <CellText key={sparqlVar}>{sparqlVar in binding ? getCellContent(binding, sparqlVar) : ''}</CellText>;
             });
 
             return row;
@@ -52,9 +51,9 @@ const SPARQLDataTable: React.FC<SPARQLDataTableProps> = ({ vars, bindings, prefi
         return (
             <span>
                 {prefixed ? '' : '<'}
-                <a className="iri" href={href} target="_blank">
+                <Link className="iri" href={href} target="_blank">
                     {visibleString}
-                </a>
+                </Link>
                 {prefixed ? '' : '>'}
             </span>
         );
@@ -67,7 +66,7 @@ const SPARQLDataTable: React.FC<SPARQLDataTableProps> = ({ vars, bindings, prefi
         if (currentBinding.type === 'uri') {
             content = getUriLinkFromBinding(currentBinding);
         } else {
-            content = formatLiteral(currentBinding);
+            content = <span className="nonIri">{formatLiteral(currentBinding)}</span>;
         }
 
         return content;
@@ -103,7 +102,7 @@ const SPARQLDataTable: React.FC<SPARQLDataTableProps> = ({ vars, bindings, prefi
 
     return (
         <div className="DataTableWrapper">
-            <DataGrid disableRowSelectionOnClick accessibleName="SPARQL query results" columns={columns} rows={rows} />
+            <DataGrid accessibleName="SPARQL query results" columns={columns} rows={rows} />
         </div>
     );
 };

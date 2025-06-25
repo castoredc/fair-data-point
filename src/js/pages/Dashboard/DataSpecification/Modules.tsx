@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './DataSpecificationModules.scss';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button } from '@castoredc/matter';
 import DataSpecificationModuleModal from 'modals/DataSpecificationModuleModal';
 import TripleModal from 'modals/TripleModal';
 import ConfirmModal from 'modals/ConfirmModal';
@@ -11,11 +12,8 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import NoResults from 'components/NoResults';
-import IconButton from '@mui/material/IconButton';
 
-interface ModulesProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface ModulesProps extends AuthorizedRouteComponentProps {
     modules: any;
     nodes: any;
     prefixes: any;
@@ -32,7 +30,7 @@ interface ModulesState {
     currentModule: any;
 }
 
-class Modules extends Component<ModulesProps, ModulesState> {
+export default class Modules extends Component<ModulesProps, ModulesState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -107,7 +105,7 @@ class Modules extends Component<ModulesProps, ModulesState> {
             },
             () => {
                 this.openModal('module');
-            },
+            }
         );
     };
 
@@ -119,7 +117,7 @@ class Modules extends Component<ModulesProps, ModulesState> {
             },
             () => {
                 this.openModal('triple');
-            },
+            }
         );
     };
 
@@ -131,7 +129,7 @@ class Modules extends Component<ModulesProps, ModulesState> {
             },
             () => {
                 this.openModal('removeTriple');
-            },
+            }
         );
     };
 
@@ -148,7 +146,7 @@ class Modules extends Component<ModulesProps, ModulesState> {
     };
 
     removeTriple = () => {
-        const { type, dataSpecification, version, getModules, notifications } = this.props;
+        const { type, dataSpecification, version, getModules } = this.props;
         const { currentModule, tripleModalData } = this.state;
 
         apiClient
@@ -158,7 +156,7 @@ class Modules extends Component<ModulesProps, ModulesState> {
                 getModules();
             })
             .catch(error => {
-                notifications.show('An error occurred', { variant: 'error' });
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -209,8 +207,7 @@ class Modules extends Component<ModulesProps, ModulesState> {
                 <ConfirmModal
                     title="Delete triple"
                     action="Delete triple"
-                    variant="contained"
-                    color="error"
+                    variant="danger"
                     onConfirm={this.removeTriple}
                     onCancel={() => this.closeModal('removeTriple')}
                     show={showModal.removeTriple}
@@ -219,29 +216,19 @@ class Modules extends Component<ModulesProps, ModulesState> {
                 </ConfirmModal>
 
                 {modules.length === 0 ? (
-                    <NoResults>
-                        This {getType(type)} does not have modules.
+                    <div className="NoResults">
+                        This {getType(type)} does not have any groups.
                         <br />
                         <br />
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={() => this.openModuleModal(null)}
-                            variant="contained"
-                        >
-                            Add module
+                        <Button icon="add" onClick={() => this.openModuleModal(null)}>
+                            Add group
                         </Button>
-                    </NoResults>
+                    </div>
                 ) : (
                     <SideTabs
                         hasButtons
                         title="Groups"
-                        actions={(
-                            <IconButton
-                                onClick={() => this.openModuleModal(null)}
-                            >
-                                <AddIcon />
-                            </IconButton>
-                        )}
+                        actions={<Button icon="add" iconDescription="Add group" onClick={() => this.openModuleModal(null)} />}
                         initialTab={initialTab}
                         url={`/dashboard/${type}s/${dataSpecification.id}/${match.params.version}/modules`}
                         tabs={modules.map(element => {
@@ -294,5 +281,3 @@ class Modules extends Component<ModulesProps, ModulesState> {
         );
     }
 }
-
-export default withNotifications(Modules);

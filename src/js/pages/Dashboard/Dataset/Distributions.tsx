@@ -1,116 +1,105 @@
-import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import React, { Component } from 'react';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import ListItem from 'components/ListItem';
+import DataGridHelper from 'components/DataTable/DataGridHelper';
 import { localizedText } from '../../../util';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
-import Stack from '@mui/material/Stack';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import DataGrid from 'components/DataTable/DataGrid';
-import { GridColDef } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
 
-interface Distribution {
-    id: string;
-    slug: string;
-    hasMetadata: boolean;
-    metadata?: {
-        title: {
-            [key: string]: string;
+interface DistributionsProps extends AuthorizedRouteComponentProps {}
+
+interface DistributionsState {
+    distributions: any;
+    isLoading: boolean;
+    pagination: any;
+}
+
+export default class Distributions extends Component<DistributionsProps, DistributionsState> {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoading: true,
+            distributions: [],
+            pagination: DataGridHelper.getDefaultState(25),
         };
+    }
+
+    componentDidMount() {
+        this.getDistributions();
+    }
+
+    getDistributions = () => {
+        const { match } = this.props;
+        this.setState({
+            isLoading: true,
+        });
+
+        apiClient
+            .get('/api/dataset/' + match.params.dataset + '/distribution')
+            .then(response => {
+                this.setState({
+                    distributions: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
+                    isLoading: false,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                const message =
+                    error.response && typeof error.response.data.error !== 'undefined'
+                        ? error.response.data.error
+                        : 'An error occurred while loading the distributions';
+                toast.error(<ToastItem type="error" title={message} />);
+            });
     };
-    permissions: string[];
-}
 
-interface DistributionsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
-}
+    render() {
+        const { isLoading, distributions } = this.state;
+        const { match, history } = this.props;
 
-const Distributions: React.FC<DistributionsProps> = ({ match, history, notifications }) => {
-    const [distributions, setDistributions] = useState<Distribution[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+        const mainUrl = match.params.study
+            ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}`
+            : `/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
 
-    const mainUrl = match.params.study
-        ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}`
-        : `/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
+        return (
+            <PageBody>
+                {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
 
-    const getDistributions = async () => {
-        setLoading(true);
-        setError(null);
+                <Stack distribution="trailing" alignment="end">
+                    <Button icon="add" className="AddButton" disabled={isLoading} onClick={() => history.push(`${mainUrl}/distributions/add`)}>
+                        New distribution
+                    </Button>
+                </Stack>
 
-        try {
-            const response = await apiClient.get(`/api/dataset/${match.params.dataset}/distribution`);
-            setDistributions(response.data.results);
-        } catch (error: any) {
-            const message = error.response?.data?.error || 'An error occurred while loading the distributions';
-            setError(message);
-            notifications.show(message, { variant: 'error' });
-        } finally {
-            setLoading(false);
-        }
-    };
+                <div>
+                    {distributions.length === 0 && <div className="NoResults">This study does not have distributions.</div>}
 
-    useEffect(() => {
-        getDistributions();
-    }, [match.params.dataset]);
+                    {distributions.map(distribution => {
+                        let title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
 
-    const columns: GridColDef<Distribution>[] = [
-        {
-            field: 'displayTitle',
-            headerName: 'Title',
-            flex: 1,
-        },
-    ];
-
-    const rows = distributions.map(distribution => ({
-        ...distribution,
-        displayTitle: distribution.hasMetadata && distribution.metadata?.title
-            ? localizedText(distribution.metadata.title, 'en') || 'Untitled distribution'
-            : 'Untitled distribution',
-    }));
-
-    return (
-        <PageBody>
-            <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
-                <Button
-                    startIcon={<AddIcon />}
-                    disabled={loading}
-                    onClick={() => history.push(`${mainUrl}/distributions/add`)}
-                    variant="contained"
-                >
-                    New distribution
-                </Button>
-            </Stack>
-
-            <Box sx={{ height: 400, width: '100%' }}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    loading={loading}
-                    error={error}
-                    disableRowSelectionOnClick
-                    emptyStateContent="This study does not have distributions"
-                    onRowClick={(params) => {
-                        if (isGranted('edit', params.row.permissions)) {
-                            history.push(`${mainUrl}/distributions/${params.row.slug}`);
+                        if(title === '') {
+                            title = 'Untitled distribution'
                         }
-                    }}
-                    sx={{
-                        cursor: 'pointer',
-                        '& .MuiDataGrid-row': {
-                            opacity: (theme) => {
-                                const rowId = theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900];
-                                const row = rows.find(r => r.id === rowId);
-                                return row ? (isGranted('edit', row.permissions) ? 1 : 0.5) : 1;
-                            },
-                        },
-                    }}
-                />
-            </Box>
-        </PageBody>
-    );
-};
 
-export default withNotifications(Distributions);
+                        return (
+                            <ListItem
+                                selectable={false}
+                                disabled={!isGranted('edit', distribution.permissions)}
+                                link={`${mainUrl}/distributions/${distribution.slug}`}
+                                title={title}
+                            />
+                        );
+                    })}
+                </div>
+            </PageBody>
+        );
+    }
+}

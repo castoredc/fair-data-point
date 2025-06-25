@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import Button from '@mui/material/Button';
-import Modal from 'components/Modal';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, Modal, Stack } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
 import { classNames } from '../util';
 import { Field, Form, Formik } from 'formik';
@@ -10,10 +11,8 @@ import Select from 'components/Input/Formik/Select';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
 import { ResourceType } from 'components/MetadataItem/EnumMappings';
-import Stack from '@mui/material/Stack';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface MetadataFormModalProps extends ComponentWithNotifications {
+type MetadataFormModalProps = {
     show: boolean;
     data: any;
     orderOptions: any;
@@ -29,7 +28,7 @@ type MetadataFormModalState = {
     validation: any;
 };
 
-class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormModalState> {
+export default class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormModalState> {
     constructor(props) {
         super(props);
 
@@ -66,7 +65,7 @@ class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormMo
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { type, modelId, versionId, onSaved, notifications } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
             .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/form' + (values.id ? '/' + values.id : ''), values)
@@ -80,14 +79,14 @@ class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormMo
                         validation: error.response.data.fields,
                     });
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 setSubmitting(false);
             });
     };
 
     handleDelete = (id, callback) => {
-        const { type, modelId, versionId, onSaved, notifications } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
             .delete('/api/' + type + '/' + modelId + '/v/' + versionId + '/form/' + id)
@@ -96,7 +95,7 @@ class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormMo
                 onSaved();
             })
             .catch(error => {
-                notifications.show('An error occurred', { variant: 'error' });
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -106,20 +105,9 @@ class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormMo
 
         const title = initialValues.id ? 'Edit form' : 'Add form';
         return (
-            <Modal open={show} onClose={handleClose} title={title}>
-                <Formik initialValues={initialValues} onSubmit={this.handleSubmit}
-                        validationSchema={MetadataModelFormSchema}>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          setValues,
-                          setFieldValue,
-                      }) => {
+            <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
+                <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={MetadataModelFormSchema}>
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         return (
                             <Form>
                                 <FormItem label="Title">
@@ -127,8 +115,7 @@ class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormMo
                                 </FormItem>
 
                                 <FormItem label="Position">
-                                    <Field component={Select} options={orderOptions} name="order"
-                                           serverError={validation} />
+                                    <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
                                 <FormItem label="Type">
@@ -137,31 +124,25 @@ class MetadataFormModal extends Component<MetadataFormModalProps, MetadataFormMo
                                         options={resourceTypes}
                                         name="resourceType"
                                         serverError={validation}
-
+                                        menuPosition="fixed"
                                     />
                                 </FormItem>
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>
-                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                                    <Stack alignment="normal" distribution="equalSpacing">
                                         {values.id && (
                                             <ConfirmModal
                                                 title="Delete form"
                                                 action="Delete form"
-                                                variant="contained"
-                                                color="error"
+                                                variant="danger"
                                                 onConfirm={callback => this.handleDelete(values.id, callback)}
                                                 includeButton={true}
                                             >
-                                                Are you sure you want to delete
-                                                form <strong>{values.title}</strong>?<br />
+                                                Are you sure you want to delete form <strong>{values.title}</strong>?<br />
                                                 This will also delete all associated fields.
                                             </ConfirmModal>
                                         )}
-                                        <Button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            variant="contained"
-                                        >
+                                        <Button type="submit" disabled={isSubmitting}>
                                             {values.id ? 'Edit form' : 'Add form'}
                                         </Button>
                                     </Stack>
@@ -194,5 +175,3 @@ const resourceTypes = [
     { value: 'distribution', label: ResourceType.distribution },
     { value: 'study', label: ResourceType.study },
 ];
-
-export default withNotifications(MetadataFormModal);

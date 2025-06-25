@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay } from '@castoredc/matter';
 import DistributionContentsDependencyEditor from 'components/DependencyEditor/DistributionContentsDependencyEditor';
 import { formatQuery } from 'react-querybuilder';
 import { apiClient } from 'src/js/network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import PageBody from 'components/Layout/Dashboard/PageBody';
 
-interface DistributionSubsetProps extends ComponentWithNotifications {
+interface DistributionSubsetProps {
     distribution: any;
     dataset: string;
     match: {
@@ -32,7 +32,7 @@ interface DistributionSubsetState {
     validation?: any;
 }
 
-class DistributionSubset extends Component<DistributionSubsetProps, DistributionSubsetState> {
+export default class DistributionSubset extends Component<DistributionSubsetProps, DistributionSubsetState> {
     constructor(props: DistributionSubsetProps) {
         super(props);
         this.state = {
@@ -61,7 +61,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
     }
 
     getNodes = () => {
-        const { distribution, notifications } = this.props;
+        const { distribution } = this.props;
 
         this.setState({ isLoadingNodes: true });
 
@@ -73,12 +73,12 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
             .catch(error => {
                 this.setState({ isLoadingNodes: false });
                 const message = error.response?.data?.error || 'An error occurred while loading the nodes';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     getDataModel = () => {
-        const { distribution, notifications } = this.props;
+        const { distribution } = this.props;
 
         this.setState({ isLoadingDataModel: true });
 
@@ -93,12 +93,12 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
             .catch(error => {
                 this.setState({ isLoadingDataModel: false });
                 const message = error.response?.data?.error || 'An error occurred while loading the data model';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     getInstitutes = () => {
-        const { distribution, notifications } = this.props;
+        const { distribution } = this.props;
 
         this.setState({ isLoadingInstitutes: true });
 
@@ -109,14 +109,12 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
             })
             .catch(error => {
                 const message = error.response?.data?.error || 'An error occurred';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
                 this.setState({ isLoadingInstitutes: false });
             });
     };
 
     getContents = () => {
-        const { notifications } = this.props;
-
         this.setState({ isLoadingContents: true });
 
         apiClient
@@ -126,7 +124,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
             })
             .catch(error => {
                 const message = error.response?.data?.error || 'An error occurred while loading the distribution';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
                 this.setState({ isLoadingContents: false });
             });
     };
@@ -137,7 +135,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
 
     handleSave = () => {
         const { query } = this.state;
-        const { dataset, distribution, notifications } = this.props;
+        const { dataset, distribution } = this.props;
 
         const sqlQuery = formatQuery(query, 'sql') as string;
         const replaced = sqlQuery.replace(/\(|\)|and|or| /gi, '');
@@ -151,31 +149,22 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
             .then(() => {
                 this.setState({ isLoading: false, submitDisabled: false });
                 this.getContents();
-                notifications.show('The subset details are saved successfully', {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title="The subset details are saved successfully" />, {
+                    position: 'top-right',
                 });
             })
             .catch(error => {
                 if (error.response?.status === 400) {
                     this.setState({ validation: error.response.data.fields });
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 this.setState({ submitDisabled: false, isLoading: false });
             });
     };
 
     render() {
-        const {
-            isLoadingNodes,
-            isLoadingDataModel,
-            isLoadingInstitutes,
-            isLoadingContents,
-            nodes,
-            institutes,
-            contents,
-        } = this.state;
+        const { isLoadingNodes, isLoadingDataModel, isLoadingInstitutes, isLoadingContents, nodes, institutes, contents } = this.state;
         const { distribution } = this.props;
 
         if (isLoadingInstitutes || isLoadingContents) {
@@ -183,7 +172,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
         }
 
         return (
-            <PageBody>
+            <div className="PageContainer">
                 <DistributionContentsDependencyEditor
                     prefixes={[]}
                     institutes={institutes}
@@ -193,9 +182,7 @@ class DistributionSubset extends Component<DistributionSubsetProps, Distribution
                     valueNodes={distribution.type === 'rdf' ? nodes?.value : null}
                     save={this.handleSave}
                 />
-            </PageBody>
+            </div>
         );
     }
 }
-
-export default withNotifications(DistributionSubset);

@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
+
+import { FileSelector } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { VisuallyHiddenInput } from 'components/Input/VisuallyHiddenInput';
+import { ValidationMessageProps } from '@castoredc/matter/lib/types/src/ValidationMessage/ValidationMessage';
 
 interface FileProps extends FieldProps {
     readOnly?: boolean;
@@ -14,6 +14,8 @@ interface FileProps extends FieldProps {
     fileTypeValidationMessage?: (acceptedFileType: string) => string;
     multipleFilesValidationMessage?: string;
     validationMessageContent?: string;
+    validationMessageSize?: ValidationMessageProps['size'];
+    validationMessageType?: ValidationMessageProps['type'];
 }
 
 const File: FC<FileProps> = ({ field, form, meta, readOnly, onChange, serverError, ...rest }) => {
@@ -21,32 +23,21 @@ const File: FC<FileProps> = ({ field, form, meta, readOnly, onChange, serverErro
 
     return (
         <>
-            <Button
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-            >
-                Upload file
-
-                <VisuallyHiddenInput
-                    type="file"
-                    multiple
-                    name={field.name}
-                    onChange={
-                        onChange
-                            ? event => {
-                                const files = event.target.files;
-                                onChange(files);
-                                field.onChange({ target: { name: field.name, value: files } });
-                            }
-                            : field.onChange
-                    }
-                    onBlur={field.onBlur}
-                    readOnly={readOnly}
-                />
-            </Button>
+            <FileSelector
+                name={field.name}
+                onChange={
+                    onChange
+                        ? event => {
+                              const files = event.target.files;
+                              onChange(files);
+                              field.onChange({ target: { name: field.name, value: files } });
+                          }
+                        : field.onChange
+                }
+                onBlur={field.onBlur}
+                readOnly={readOnly}
+                {...rest}
+            />
 
             <FieldErrors field={field} serverErrors={serverErrors} />
         </>

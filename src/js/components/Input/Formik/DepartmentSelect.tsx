@@ -1,36 +1,23 @@
 import React, { Component } from 'react';
-import Button from '@mui/material/Button';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, DefaultOptionType, Dropdown, ReactSelectTypes, TextInput } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
 import { FieldProps } from 'formik';
 import { OrganizationType } from 'types/OrganizationType';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { apiClient } from 'src/js/network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { Autocomplete, TextField } from '@mui/material';
 
-interface DepartmentSelectProps extends FieldProps, ComponentWithNotifications {
+interface DepartmentSelectProps extends FieldProps {
     organization: OrganizationType;
 }
 
-interface DepartmentOption {
-    value: string;
-    label: string;
-    data: {
-        id: string | null;
-        name: string;
-        source: string;
-    };
-    id?: string | null;
-    name?: string;
-    source?: string;
-}
-
 type DepartmentSelectState = {
-    options: DepartmentOption[];
+    options: any;
     isLoading: boolean;
 };
 
-class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelectState> {
+export default class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelectState> {
     constructor(props) {
         super(props);
 
@@ -53,7 +40,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
     }
 
     getDepartments = () => {
-        const { organization, form, field, notifications } = this.props;
+        const { organization, form, field } = this.props;
 
         if (organization.id !== null && organization.source === 'database') {
             this.setState({
@@ -83,7 +70,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                                     source: 'manual',
                                 });
                             }
-                        },
+                        }
                     );
                 })
                 .catch(error => {
@@ -92,9 +79,9 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                     });
 
                     if (error.response && typeof error.response.data.error !== 'undefined') {
-                        notifications.show(error.response.data.error, { variant: 'error' });
+                        toast.error(<ToastItem type="error" title={error.response.data.error} />);
                     } else {
-                        notifications.show('An error occurred', { variant: 'error' });
+                        toast.error(<ToastItem type="error" title="An error occurred" />);
                     }
                 });
         } else {
@@ -104,7 +91,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                 },
                 () => {
                     form.setFieldValue(field.name, { ...defaultData, source: '' });
-                },
+                }
             );
         }
     };
@@ -133,35 +120,27 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
             <div>
                 {!manual && (
                     <FormItem label="Department">
-                        <Autocomplete
+                        <Dropdown
+                            name="organization"
                             options={options}
-                            loading={this.state.isLoading}
-                            disabled={disabled}
-                            noOptionsText={options.length === 0 ? 'Loading departments...' : 'No departments found'}
-                            value={value.id ? options.find(option => option.value === value.id) : undefined}
-                            onChange={(event, newValue) => {
-                                if (newValue) {
-                                    form.setFieldValue(field.name, {
-                                        ...newValue.data,
-                                        source: 'database',
-                                    });
-                                }
+                            menuPosition="fixed"
+                            isDisabled={disabled}
+                            onChange={(
+                                value: ReactSelectTypes.OnChangeValue<DefaultOptionType, false>,
+                                action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                            ) => {
+                                const department = value && options.find((option: DefaultOptionType) => value.value === option.value);
+                                form.setFieldValue(field.name, {
+                                    ...department.data,
+                                    source: 'database',
+                                });
                             }}
-                            getOptionLabel={(option) => option.label}
-                            isOptionEqualToValue={(option, value) => option.value === value.value}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    fullWidth
-                                    placeholder="Select a department"
-                                    size="small"
-                                />
-                            )}
-                            disableClearable={true}
-                            sx={{ width: 400 }}
+                            getOptionLabel={({ label }) => label}
+                            getOptionValue={({ value }) => value}
+                            value={value.id && options.find((option: DefaultOptionType) => value.id === option.value)}
                         />
 
-                        <Button variant="text" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
+                        <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
                             I cannot find my department
                         </Button>
                     </FormItem>
@@ -170,7 +149,7 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                 {manual && (
                     <>
                         <FormItem label="Department Name">
-                            <TextField
+                            <TextInput
                                 value={value.name}
                                 onChange={event => {
                                     form.setFieldValue(field.name, {
@@ -180,12 +159,10 @@ class DepartmentSelect extends Component<DepartmentSelectProps, DepartmentSelect
                                 }}
                                 disabled={disabled}
                                 autoFocus={value.source === 'manual'}
-                                sx={{ width: 400 }}
                             />
 
                             {organization.source !== 'manual' && (
-                                <Button variant="text" className="CannotFind" onClick={this.toggleManual}
-                                        disabled={disabled}>
+                                <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
                                     Search for a department
                                 </Button>
                             )}
@@ -204,5 +181,3 @@ const defaultData = {
     name: '',
     source: '',
 };
-
-export default withNotifications(DepartmentSelect);

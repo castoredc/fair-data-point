@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import Modal from 'components/Modal';
+import { Modal } from '@castoredc/matter';
 import PersonForm from '../components/Form/Agent/PersonForm';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { apiClient } from '../network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface ContactModalProps extends ComponentWithNotifications {
+type ContactModalProps = {
     email?: string | undefined;
     open: boolean;
     onClose: () => void;
@@ -13,13 +14,13 @@ interface ContactModalProps extends ComponentWithNotifications {
 
 type ContactModalState = {};
 
-class ContactModal extends Component<ContactModalProps, ContactModalState> {
+export default class ContactModal extends Component<ContactModalProps, ContactModalState> {
     constructor(props) {
         super(props);
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { studyId, onClose, notifications } = this.props;
+        const { studyId, onClose } = this.props;
 
         window.onbeforeunload = null;
 
@@ -35,9 +36,8 @@ class ContactModal extends Component<ContactModalProps, ContactModalState> {
                     isLoading: false,
                 });
 
-                notifications.show(`${name} was successfully added as study contact`, {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title={`${name} was successfully added as study contact`} />, {
+                    position: 'top-right',
                 });
 
                 onClose();
@@ -48,7 +48,7 @@ class ContactModal extends Component<ContactModalProps, ContactModalState> {
                         validation: error.response.data.fields,
                     });
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 this.setState(
                     {
@@ -56,7 +56,7 @@ class ContactModal extends Component<ContactModalProps, ContactModalState> {
                     },
                     () => {
                         setSubmitting(false);
-                    },
+                    }
                 );
             });
     };
@@ -68,12 +68,9 @@ class ContactModal extends Component<ContactModalProps, ContactModalState> {
         const title = edit ? `Edit contact` : 'Add contact';
 
         return (
-            <Modal open={open} title={title} onClose={onClose}>
+            <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
                 <PersonForm email={email} studyId={studyId} handleSubmit={this.handleSubmit} />
             </Modal>
         );
     }
 }
-
-
-export default withNotifications(ContactModal);

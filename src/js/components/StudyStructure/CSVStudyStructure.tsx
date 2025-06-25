@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import Button from '@mui/material/Button';
-
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, Stack } from '@castoredc/matter';
 import { Redirect } from 'react-router-dom';
 import { apiClient } from 'src/js/network';
 import StudyStructure from 'components/StudyStructure';
-import Stack from '@mui/material/Stack';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface CSVStudyStructureProps extends ComponentWithNotifications {
+interface CSVStudyStructureProps {
     studyId: string;
     catalog: string;
     dataset: string;
@@ -24,7 +23,7 @@ interface CSVStudyStructureState {
     selectedType: string;
 }
 
-class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStructureState> {
+export default class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStructureState> {
     constructor(props: CSVStudyStructureProps) {
         super(props);
         this.state = {
@@ -50,7 +49,7 @@ class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStruct
     };
 
     saveDistribution = () => {
-        const { catalog, dataset, distribution, notifications } = this.props;
+        const { catalog, dataset, distribution } = this.props;
         const { distributionContents } = this.state;
 
         this.setState({ submitDisabled: true });
@@ -65,7 +64,7 @@ class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStruct
             })
             .catch(error => {
                 const message = error.response?.data?.error || 'An error occurred while saving the distribution';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
 
                 this.setState({ submitDisabled: false });
             });
@@ -88,8 +87,8 @@ class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStruct
                     types={['study', 'report', 'survey']}
                 />
 
-                <div>
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                <div className="FormButtons">
+                    <Stack distribution="trailing" alignment="end">
                         <span className="FieldCount">
                             {distributionContents.length} field{distributionContents.length !== 1 && 's'} selected
                         </span>
@@ -102,5 +101,3 @@ class CSVStudyStructure extends Component<CSVStudyStructureProps, CSVStudyStruct
         );
     }
 }
-
-export default withNotifications(CSVStudyStructure);

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay } from '@castoredc/matter';
 import DataSpecificationModulePreview from 'components/DataSpecification/DataSpecificationModulePreview';
 import SideTabs from 'components/SideTabs';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import NoResults from 'components/NoResults';
 
-interface PreviewProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface PreviewProps extends AuthorizedRouteComponentProps {
     type: string;
     dataSpecification: any;
     version: any;
@@ -20,7 +20,7 @@ interface PreviewState {
     previews: any;
 }
 
-class Preview extends Component<PreviewProps, PreviewState> {
+export default class Preview extends Component<PreviewProps, PreviewState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,7 +34,7 @@ class Preview extends Component<PreviewProps, PreviewState> {
     }
 
     getPreviews = () => {
-        const { type, dataSpecification, version, notifications } = this.props;
+        const { type, dataSpecification, version } = this.props;
 
         this.setState({
             isLoading: true,
@@ -50,9 +50,9 @@ class Preview extends Component<PreviewProps, PreviewState> {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -70,7 +70,7 @@ class Preview extends Component<PreviewProps, PreviewState> {
         }
 
         if (previews.modules.length === 0) {
-            return <NoResults>This {getType(type)} does not have groups.</NoResults>;
+            return <div className="NoResults">This {getType(type)} does not have groups.</div>;
         }
 
         const tabs = previews.modules.map(element => {
@@ -133,5 +133,3 @@ class Preview extends Component<PreviewProps, PreviewState> {
         );
     }
 }
-
-export default withNotifications(Preview);

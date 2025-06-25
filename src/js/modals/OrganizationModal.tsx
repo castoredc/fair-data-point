@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import Modal from 'components/Modal';
+import { Modal } from '@castoredc/matter';
 import OrganizationForm from 'components/Form/Agent/OrganizationForm';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { apiClient } from '../network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface OrganizationModalProps extends ComponentWithNotifications {
+type OrganizationModalProps = {
     id?: string;
     open: boolean;
     onClose: () => void;
@@ -14,13 +15,13 @@ interface OrganizationModalProps extends ComponentWithNotifications {
 
 type OrganizationModalState = {};
 
-class OrganizationModal extends Component<OrganizationModalProps, OrganizationModalState> {
+export default class OrganizationModal extends Component<OrganizationModalProps, OrganizationModalState> {
     constructor(props) {
         super(props);
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { studyId, onClose, notifications } = this.props;
+        const { studyId, onClose } = this.props;
 
         window.onbeforeunload = null;
 
@@ -34,12 +35,12 @@ class OrganizationModal extends Component<OrganizationModalProps, OrganizationMo
                 country: values.country,
                 ...(values.organization.source !== 'database'
                     ? {
-                        name: values.organization.name,
-                        city: values.organization.city,
-                    }
+                          name: values.organization.name,
+                          city: values.organization.city,
+                      }
                     : {
-                        id: values.organization.id,
-                    }),
+                          id: values.organization.id,
+                      }),
             })
             .then(response => {
                 this.setState({
@@ -48,9 +49,8 @@ class OrganizationModal extends Component<OrganizationModalProps, OrganizationMo
 
                 onClose();
 
-                notifications.show(`The ${values.organization.name} center was successfully added.`, {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title={`The ${values.organization.name} center was successfully added.`} />, {
+                    position: 'top-right',
                 });
             })
             .catch(error => {
@@ -59,7 +59,7 @@ class OrganizationModal extends Component<OrganizationModalProps, OrganizationMo
                         validation: error.response.data.fields,
                     });
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 this.setState(
                     {
@@ -67,7 +67,7 @@ class OrganizationModal extends Component<OrganizationModalProps, OrganizationMo
                     },
                     () => {
                         setSubmitting(false);
-                    },
+                    }
                 );
             });
     };
@@ -79,11 +79,9 @@ class OrganizationModal extends Component<OrganizationModalProps, OrganizationMo
         const title = edit ? `Edit center` : 'Add organization';
 
         return (
-            <Modal open={open} title={title} onClose={onClose}>
+            <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
                 <OrganizationForm countries={countries} handleSubmit={this.handleSubmit} />
             </Modal>
         );
     }
 }
-
-export default withNotifications(OrganizationModal);

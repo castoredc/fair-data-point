@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { ActionsCell, CellText, LoadingOverlay, Separator, ToastMessage } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
@@ -9,10 +11,8 @@ import { MetadataDisplayType, ResourceType } from 'components/MetadataItem/EnumM
 import MetadataDisplaySetting from 'components/Form/DataSpecification/MetadataDisplaySetting';
 import { Types } from 'types/Types';
 import DisplaySettingModal from 'modals/DisplaySettingModal';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { Divider } from '@mui/material';
 
-interface DisplayProps extends AuthorizedRouteComponentProps, ComponentWithNotifications, ComponentWithNotifications {
+interface DisplayProps extends AuthorizedRouteComponentProps {
     type: string;
     nodes: any;
     displaySettings: any;
@@ -27,7 +27,7 @@ interface DisplayState {
     modalData: any;
 }
 
-class Display extends Component<DisplayProps, DisplayState> {
+export default class Display extends Component<DisplayProps, DisplayState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,26 +71,25 @@ class Display extends Component<DisplayProps, DisplayState> {
     };
 
     removeItem = () => {
-        const { type, dataSpecification, version, notifications } = this.props;
+        const { type, dataSpecification, version } = this.props;
         const { modalData } = this.state;
 
         apiClient
             .delete('/api/metadata-model/' + dataSpecification.id + '/v/' + version.value + '/display' + `/${modalData.id}`)
             .then(() => {
-                notifications.show(`The item was successfully removed`, {
-                    variant: 'success',
-
+                toast.success(<ToastMessage type="success" title={`The item was successfully removed`} />, {
+                    position: 'top-right',
                 });
 
                 this.onSaved('remove');
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
 
                     this.onSaved('remove');
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -113,11 +112,51 @@ class Display extends Component<DisplayProps, DisplayState> {
                     const node = nodes.value.find(node => node.id === item.node);
 
                     return {
-                        id: item.id,
-                        title: item.title,
-                        node: node.title,
-                        type: MetadataDisplayType[item.type],
-                        data: item,
+                        title: <CellText>{item.title}</CellText>,
+                        node: <CellText>{node.title}</CellText>,
+                        type: <CellText>{MetadataDisplayType[item.type]}</CellText>,
+                        menu: (
+                            <ActionsCell
+                                items={[
+                                    {
+                                        destination: () => {
+                                            this.openModal(
+                                                'add',
+                                                {
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    node: item.node,
+                                                    order: item.order,
+                                                    displayType: item.type,
+                                                    position: item.position,
+                                                    resourceType: item.resourceType,
+                                                },
+                                                position
+                                            );
+                                        },
+                                        label: 'Edit item',
+                                    },
+                                    {
+                                        destination: () => {
+                                            this.openModal(
+                                                'remove',
+                                                {
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    node: item.node,
+                                                    order: item.order,
+                                                    displayType: item.type,
+                                                    position: item.position,
+                                                    resourceType: item.resourceType,
+                                                },
+                                                position
+                                            );
+                                        },
+                                        label: 'Delete item',
+                                    },
+                                ]}
+                            />
+                        ),
                     };
                 });
             });
@@ -131,37 +170,27 @@ class Display extends Component<DisplayProps, DisplayState> {
                 content: (
                     <div>
                         <MetadataDisplaySetting
-                            position="title"
-                            label="Title"
+                            position="Title"
                             items={rows[resourceType].title}
-                            openModal={this.openModal}
+                            openModal={() => this.openModal('add', null, 'title')}
                         />
-
-                        <Divider />
-
+                        <Separator spacing="comfortable" />
                         <MetadataDisplaySetting
-                            position="description"
-                            label="Description"
+                            position="Description"
                             items={rows[resourceType].description}
-                            openModal={this.openModal}
+                            openModal={() => this.openModal('add', null, 'description')}
                         />
-
-                        <Divider />
-
+                        <Separator spacing="comfortable" />
                         <MetadataDisplaySetting
-                            position="sidebar"
-                            label="Sidebar"
+                            position="Sidebar"
                             items={rows[resourceType].sidebar}
-                            openModal={this.openModal}
+                            openModal={() => this.openModal('add', null, 'sidebar')}
                         />
-
-                        <Divider />
-
+                        <Separator spacing="comfortable" />
                         <MetadataDisplaySetting
-                            position="modal"
-                            label="Modal"
+                            position="Modal"
                             items={rows[resourceType].modal}
-                            openModal={this.openModal}
+                            openModal={() => this.openModal('add', null, 'modal')}
                         />
                     </div>
                 ),
@@ -190,8 +219,7 @@ class Display extends Component<DisplayProps, DisplayState> {
                     <ConfirmModal
                         title="Delete item"
                         action="Delete item"
-                        variant="contained"
-                        color="error"
+                        variant="danger"
                         onConfirm={this.removeItem}
                         onCancel={() => {
                             this.closeModal('remove');
@@ -214,5 +242,3 @@ class Display extends Component<DisplayProps, DisplayState> {
         );
     }
 }
-
-export default withNotifications(Display);

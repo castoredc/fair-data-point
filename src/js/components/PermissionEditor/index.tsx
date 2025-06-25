@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-import AddIcon from '@mui/icons-material/Add';
+import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '@castoredc/matter';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { PermissionOptionType, PermissionType } from 'types/PermissionType';
+import Avatar from 'react-avatar';
 import AddUserModal from 'modals/AddUserModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import { UserType } from 'types/UserType';
 import { apiClient } from 'src/js/network';
 import { Permissions } from 'components/PermissionEditor/Permissions';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { Box } from '@mui/material';
-import LoadingOverlay from 'components/LoadingOverlay';
-import DataGrid from 'components/DataTable/DataGrid';
-import { GridColDef } from '@mui/x-data-grid';
-import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import PageBody from 'components/Layout/Dashboard/PageBody';
 
-interface PermissionEditorProps extends ComponentWithNotifications {
+interface PermissionEditorProps {
     user: UserType | null;
     getObject: () => void;
     object: any;
@@ -31,7 +25,7 @@ interface PermissionEditorState {
     modalData: any;
 }
 
-class PermissionEditor extends Component<PermissionEditorProps, PermissionEditorState> {
+export default class PermissionEditor extends Component<PermissionEditorProps, PermissionEditorState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -74,7 +68,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
     }
 
     getPermissions = () => {
-        const { object, type, notifications } = this.props;
+        const { object, type } = this.props;
 
         this.setState({
             isLoading: true,
@@ -90,9 +84,9 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -102,7 +96,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { object, type, notifications } = this.props;
+        const { object, type } = this.props;
         const { modalData } = this.state;
 
         apiClient
@@ -110,9 +104,8 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             .then(response => {
                 setSubmitting(false);
 
-                notifications.show(`${response.data.user.name}'s permissions were successfully set`, {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title={`${response.data.user.name}'s permissions were successfully set`} />, {
+                    position: 'top-right',
                 });
 
                 this.closeModal('add');
@@ -122,23 +115,22 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                 setSubmitting(false);
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
 
     handleRevoke = () => {
-        const { object, type, notifications } = this.props;
+        const { object, type } = this.props;
         const { modalData } = this.state;
 
         apiClient
             .delete('/api/permissions/' + type + '/' + object.id + '/' + modalData.user.id)
             .then(() => {
-                notifications.show(`${modalData.user.name}'s permissions were successfully revoked`, {
-                    variant: 'success',
-
+                toast.success(<ToastItem type="success" title={`${modalData.user.name}'s permissions were successfully revoked`} />, {
+                    position: 'top-right',
                 });
 
                 this.closeModal('remove');
@@ -146,9 +138,9 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -161,57 +153,67 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
             return <LoadingOverlay accessibleLabel="Loading users" />;
         }
 
-        const columns: GridColDef[] = [
+        const columns = [
             {
-                headerName: 'Name',
-                field: 'name',
+                Header: 'Name',
+                accessor: 'name',
                 width: 280,
             },
             {
-                headerName: 'Permission',
-                field: 'type',
+                Header: 'Permission',
+                accessor: 'type',
             },
             {
-                field: 'actions',
-                headerName: '',
-                flex: 1,
-                sortable: false,
-                disableColumnMenu: true,
-                align: 'right',
-                cellClassName: 'actionsCell',
-                renderCell: (params) => {
-                    return <RowActionsMenu
-                        row={params.row}
-                        items={[
-                            {
-                                destination: () => {
-                                    this.openModal('add', params.row.data);
-                                },
-                                label: 'Edit permissions',
-                            },
-                            {
-                                destination: () => {
-                                    this.openModal('remove', params.row.data);
-                                },
-                                label: 'Revoke permissions',
-                            },
-                        ]}
-                    />;
-                },
+                accessor: 'menu',
+                disableGroupBy: true,
+                disableResizing: true,
+                isInteractive: true,
+                isSticky: true,
+                maxWidth: 34,
+                minWidth: 34,
+                width: 34,
             },
         ];
 
         const rows = assignedPermissions.map(permission => {
             return {
-                id: permission.user.id,
-                name: permission.user.name,
-                type: Permissions[permission.type].label,
-                data: permission,
+                name: (
+                    <CellText>
+                        <Stack wrap={false} withoutExternalMargins>
+                            {/* @ts-ignore */}
+                            <Avatar name={permission.user.name} size="34px" round />
+                            <span style={{ lineHeight: '34px' }}>{permission.user.name}</span>
+                        </Stack>
+                    </CellText>
+                ),
+                type: (
+                    <CellText>
+                        <span style={{ lineHeight: '34px' }}>{Permissions[permission.type].labelText}</span>
+                    </CellText>
+                ),
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', permission);
+                                },
+                                label: 'Edit permissions',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', permission);
+                                },
+                                label: 'Revoke permissions',
+                            },
+                        ]}
+                    />
+                ),
             };
         });
 
         return (
-            <PageBody>
+            <div className="PageBody">
                 <AddUserModal
                     open={showModal.add}
                     onClose={() => this.closeModal('add')}
@@ -224,8 +226,7 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                     <ConfirmModal
                         title="Revoke permissions"
                         action="Revoke permissions"
-                        variant="contained"
-                        color="error"
+                        variant="danger"
                         onConfirm={this.handleRevoke}
                         onCancel={() => this.closeModal('remove')}
                         show={showModal.remove}
@@ -234,29 +235,22 @@ class PermissionEditor extends Component<PermissionEditorProps, PermissionEditor
                     </ConfirmModal>
                 )}
 
-                <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
-                    <Button
-                        startIcon={<AddIcon />}
-                        onClick={() => this.openModal('add', null)}
-                        variant="contained"
-                    >
-                        Add user
-                    </Button>
-                </Stack>
+                <div className="PageButtons">
+                    <Stack distribution="trailing" alignment="end">
+                        <Button icon="add" onClick={() => this.openModal('add', null)}>
+                            Add user
+                        </Button>
+                    </Stack>
+                </div>
 
-                <Box sx={{ height: 400, width: '100%' }}>
-                    <DataGrid
-                        disableRowSelectionOnClick
-                        accessibleName="Permissions"
-                        emptyStateContent={`There are no users added yet`}
-                        rows={rows}
-                        columns={columns}
-                        // sx={{ '& .actionsCell': { pr: 1 } }}
-                    />
-                </Box>
-            </PageBody>
+                <DataGrid
+                    accessibleName="Permissions"
+                    emptyStateContent={`There are no users added yet`}
+                    rows={rows}
+                    columns={columns}
+                    anchorRightColumns={1}
+                />
+            </div>
         );
     }
 }
-
-export default withNotifications(PermissionEditor);

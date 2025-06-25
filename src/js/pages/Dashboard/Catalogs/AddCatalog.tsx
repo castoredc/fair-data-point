@@ -3,10 +3,9 @@ import CatalogForm from 'components/Form/Admin/CatalogForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import SelectPage from 'components/SelectPage';
 
-interface AddCatalogProps extends AuthorizedRouteComponentProps {
-}
+interface AddCatalogProps extends AuthorizedRouteComponentProps {}
 
-class AddCatalog extends Component<AddCatalogProps> {
+export default class AddCatalog extends Component<AddCatalogProps> {
     render() {
         const { history } = this.props;
         return (
@@ -23,5 +22,3 @@ class AddCatalog extends Component<AddCatalogProps> {
         );
     }
 }
-
-export default AddCatalog;

@@ -1,9 +1,6 @@
 import React from 'react';
 import { DistributionGenerationStatus } from '../MetadataItem/EnumMappings';
-import CheckIcon from '@mui/icons-material/Check';
-import RemoveIcon from '@mui/icons-material/Remove';
-import ErrorIcon from '@mui/icons-material/Error';
-import InfoIcon from '@mui/icons-material/Info';
+import { Icon, TextStyle } from '@castoredc/matter';
 
 interface StatusProps {
     status: keyof typeof DistributionGenerationStatus;
@@ -12,28 +9,28 @@ interface StatusProps {
 const StatusComponent: React.FC<StatusProps> = ({ status }) => {
     const message = DistributionGenerationStatus[status];
 
-    let icon = <InfoIcon />;
+    let icon = <Icon type="info" />;
     let variation: 'information' | 'success' | 'quiet' | 'error' | 'warning' = 'information';
 
     if (status === 'success') {
         variation = 'success';
-        icon = <CheckIcon />;
+        icon = <Icon type="tickCircledSkinny" />;
     } else if (status === 'not_updated') {
-        icon = <RemoveIcon />;
+        icon = <Icon type="minusSkinny" />;
         variation = 'quiet';
     } else if (status === 'error') {
         variation = 'error';
-        icon = <ErrorIcon />;
+        icon = <Icon type="errorCircled" />;
     } else if (status === 'partially') {
         variation = 'warning';
-        icon = <ErrorIcon />;
+        icon = <Icon type="errorCircled" />;
     }
 
     return (
-        <div>
+        <TextStyle variation={variation}>
             {icon} &nbsp;
             <span>{message}</span>
-        </div>
+        </TextStyle>
     );
 };
 

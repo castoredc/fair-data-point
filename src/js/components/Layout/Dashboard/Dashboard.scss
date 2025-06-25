@@ -1,15 +1,18 @@
-//.DashboardBody {
-//  flex: 1;
-//  overflow: hidden;
-//  height: calc(100vh - $navbarHeight - $pagePadding);
-//  padding: 0 3.2rem $pagePadding 3.2rem;
-//  display: flex;
-//  flex-direction: column;
-//}
-//
-//.DashboardHeader {
-//  .HeaderTitle {
-//    //border-bottom: 1px solid $neutral-40;
-//    margin-bottom: 10px;
-//  }
-//}
+@import '../../../scss/const';
+@import '../../../scss/colors';
+
+.DashboardBody {
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - $navbarHeight - $pagePadding);
+    padding: 0 3.2rem $pagePadding 3.2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.DashboardHeader {
+    .HeaderTitle {
+        //border-bottom: 1px solid $neutral-40;
+        margin-bottom: 10px;
+    }
+}

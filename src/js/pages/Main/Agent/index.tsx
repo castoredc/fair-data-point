@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../../../components/Layout/Header';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
@@ -10,9 +12,8 @@ import DistributionList from '../../../components/List/DistributionList';
 import { apiClient } from 'src/js/network';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { GenericAgentType } from 'types/AgentListType';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface AgentProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface AgentProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
     type: string;
 }
@@ -30,7 +31,7 @@ interface AgentData extends GenericAgentType {
     };
 }
 
-class Agent extends Component<AgentProps, AgentState> {
+export default class Agent extends Component<AgentProps, AgentState> {
     constructor(props: AgentProps) {
         super(props);
         this.state = {
@@ -45,7 +46,7 @@ class Agent extends Component<AgentProps, AgentState> {
     }
 
     getAgent = () => {
-        const { match, notifications } = this.props;
+        const { match } = this.props;
 
         apiClient
             .get(`/api/agent/details/${match.params.slug}`)
@@ -65,7 +66,7 @@ class Agent extends Component<AgentProps, AgentState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the details';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -84,20 +85,20 @@ class Agent extends Component<AgentProps, AgentState> {
         const breadcrumbs = getBreadCrumbs(location, { agent });
 
         return (
-            <Layout embedded={embedded}>
+            <Layout className="Agent" embedded={embedded}>
                 <Header user={user} embedded={embedded} title={title} />
 
                 <MainBody isLoading={isLoading}>
                     {agent && currentItem && (
                         <>
-                            <AssociatedItemsBar items={agent.count} current={currentItem}
-                                                onClick={this.handleItemChange} />
+                            <AssociatedItemsBar items={agent.count} current={currentItem} onClick={this.handleItemChange} />
 
                             <CatalogList
                                 visible={currentItem === 'catalog'}
                                 agent={agent}
                                 state={breadcrumbs.current ? breadcrumbs.current.state : null}
                                 embedded={embedded}
+                                className="MainCol"
                             />
 
                             <DatasetList
@@ -105,6 +106,7 @@ class Agent extends Component<AgentProps, AgentState> {
                                 agent={agent}
                                 state={breadcrumbs.current ? breadcrumbs.current.state : null}
                                 embedded={embedded}
+                                className="MainCol"
                             />
 
                             <DistributionList
@@ -112,6 +114,7 @@ class Agent extends Component<AgentProps, AgentState> {
                                 agent={agent}
                                 state={breadcrumbs.current ? breadcrumbs.current.state : null}
                                 embedded={embedded}
+                                className="MainCol"
                             />
                         </>
                     )}
@@ -120,5 +123,3 @@ class Agent extends Component<AgentProps, AgentState> {
         );
     }
 }
-
-export default withNotifications(Agent);

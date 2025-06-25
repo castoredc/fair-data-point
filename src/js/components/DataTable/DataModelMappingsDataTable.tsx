@@ -1,12 +1,11 @@
-import React, { Component, createRef } from 'react';
-import LoadingOverlay from 'components/LoadingOverlay';
+import React, { Component, RefObject } from 'react';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { CellText, DataGrid, Icon, IconCell, LoadingOverlay, TextStyle } from '@castoredc/matter';
 import { DataType, ValueType } from '../MetadataItem/EnumMappings';
 import DataGridHelper from './DataGridHelper';
+import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
-import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import CheckIcon from '@mui/icons-material/Check';
-import ErrorIcon from '@mui/icons-material/Error';
 
 interface Mapping {
     node?: {
@@ -31,10 +30,9 @@ interface Mapping {
 interface Pagination {
     currentPage: number;
     perPage: number;
-    totalResults: number;
 }
 
-interface DataModelMappingsDataTableProps extends ComponentWithNotifications {
+interface DataModelMappingsDataTableProps {
     type: 'node' | 'module';
     dataset: string;
     distribution: { slug: string };
@@ -50,8 +48,8 @@ interface DataModelMappingsDataTableState {
     pagination: Pagination;
 }
 
-class DataModelMappingsDataTable extends Component<DataModelMappingsDataTableProps, DataModelMappingsDataTableState> {
-    private tableRef: React.RefObject<HTMLDivElement>;
+export default class DataModelMappingsDataTable extends Component<DataModelMappingsDataTableProps, DataModelMappingsDataTableState> {
+    private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DataModelMappingsDataTableProps) {
         super(props);
@@ -62,7 +60,7 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
             pagination: DataGridHelper.getDefaultState(25),
         };
 
-        this.tableRef = createRef<HTMLDivElement>();
+        this.tableRef = React.createRef();
     }
 
     componentDidMount() {
@@ -71,19 +69,16 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
     }
 
     componentDidUpdate(prevProps: DataModelMappingsDataTableProps) {
-        const { versionId, type } = this.props;
+        const { lastHandledMapping, versionId, type } = this.props;
 
-        // Only refresh the mappings if the version or type changes
-        // Removed lastHandledMapping check to prevent continuous updates
-        if (type !== prevProps.type || versionId !== prevProps.versionId) {
-            console.log('updated');
+        if (type !== prevProps.type || versionId !== prevProps.versionId || lastHandledMapping !== prevProps.lastHandledMapping) {
             this.getMappings(type);
         }
     }
 
     getMappings = (type: 'node' | 'module') => {
         const { pagination } = this.state;
-        const { dataset, distribution, versionId, notifications } = this.props;
+        const { dataset, distribution, versionId } = this.props;
 
         this.setState({
             isLoadingMappings: true,
@@ -115,34 +110,32 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the mappings';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
-    handlePagination = (model: { page: number; pageSize: number }) => {
+    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
         const { pagination } = this.state;
-        const newPage = model.page + 1; // Convert 0-based to 1-based
 
-        // Only update if values actually changed
-        if (pagination.currentPage !== newPage || pagination.perPage !== model.pageSize) {
-            this.setState(
-                prevState => ({
-                    pagination: {
-                        ...prevState.pagination,
-                        currentPage: newPage,
-                        perPage: model.pageSize,
-                    },
-                }),
-                () => this.getMappings(this.props.type),
-            );
-        }
+        this.setState(
+            {
+                pagination: {
+                    ...pagination,
+                    currentPage: paginationCount.currentPage + 1,
+                    perPage: paginationCount.pageSize,
+                },
+            },
+            () => {
+                this.getMappings(this.props.type);
+            }
+        );
     };
 
-    handleClick = (params: GridRowParams) => {
+    handleClick = (rowId: string) => {
         const { mappings } = this.state;
         const { onClick } = this.props;
 
-        const mapping = mappings[parseInt(params.id as string)];
+        const mapping = mappings[rowId];
         onClick(mapping);
     };
 
@@ -162,119 +155,103 @@ class DataModelMappingsDataTable extends Component<DataModelMappingsDataTablePro
                 const dataType = item.node?.value.dataType ? DataType[item.node?.value.dataType] : '';
 
                 return {
-                    id: String(index),
-                    mapped: !!item.elements,
-                    title: item.node?.title,
-                    valueType: valueType,
-                    dataType: dataType,
-                    repeated: item.node?.repeated ?? false,
+                    mapped: !item.elements ? <IconCell key={index} icon={{ type: 'errorCircledInverted' }} /> : undefined,
+                    title: <CellText key={index}>{item.node?.title}</CellText>,
+                    valueType: <CellText key={index}>{valueType}</CellText>,
+                    dataType: <CellText key={index}>{dataType}</CellText>,
+                    repeated: item.node?.repeated ? <IconCell key={index} icon={{ type: 'tickSmall' }} /> : undefined,
                     ...(item.transformed && {
-                        mappedElement: 'Transformed value',
+                        mappedElement: (
+                            <CellText key={index}>
+                                <TextStyle variation="italic">Transformed value</TextStyle>
+                            </CellText>
+                        ),
                     }),
                     ...(!item.transformed && {
-                        mappedElement: item.elements ? item.elements[0].label : '',
+                        mappedElement: <CellText key={index}>{item.elements ? item.elements[0].label : ''}</CellText>,
                     }),
                 };
             });
         } else if (type === 'module') {
             rows = mappings.map((item, index) => ({
-                id: String(index),
-                mapped: !!item.element,
-                title: item.module?.displayName,
-                mappedElement: item.element ? item.element.label : '',
-                mappedElementType: item.element ? item.element.structureType : '',
+                mapped: !item.element ? <IconCell key={index} icon={{ type: 'errorCircledInverted' }} /> : undefined,
+                title: <CellText key={index}>{item.module?.displayName}</CellText>,
+                mappedElement: <CellText key={index}>{item.element ? item.element.label : ''}</CellText>,
+                mappedElementType: <CellText key={index}>{item.element ? item.element.structureType : ''}</CellText>,
             }));
         } else {
             return null;
         }
 
         return (
-            <div className="DataTableContainer">
-                <div className="TableCol">
-                    <div ref={this.tableRef}>
-                        <DataGrid
-                            disableRowSelectionOnClick
-                            getRowId={(row) => row.id}
-                            onRowClick={this.handleClick}
-                            rows={rows}
-                            columns={columns[type]}
-                            paginationMode="server"
-                            rowCount={pagination.totalResults}
-                            loading={isLoadingMappings}
-                            pageSizeOptions={[10, 25, 50]}
-                            paginationModel={{
-                                page: pagination.currentPage - 1, // Convert 1-based to 0-based
-                                pageSize: pagination.perPage,
-                            }}
-                            onPaginationModelChange={this.handlePagination}
-                        />
-                    </div>
-                </div>
-            </div>
+            <DataGridContainer
+                pagination={pagination}
+                handlePageChange={this.handlePagination}
+                fullHeight
+                isLoading={isLoadingMappings}
+                forwardRef={this.tableRef}
+            >
+                <DataGrid
+                    accessibleName="Mappings"
+                    emptyStateContent="No mappings found"
+                    onClick={this.handleClick}
+                    rows={rows}
+                    columns={columns[type]}
+                />
+            </DataGridContainer>
         );
     }
 }
 
-const columns: { [key: string]: GridColDef[] } = {
+const columns = {
     node: [
         {
-            headerName: '',
-            field: 'mapped',
-            resizable: false,
+            Header: '',
+            accessor: 'mapped',
+            disableResizing: true,
             width: 32,
-            renderCell: (params) => {
-                return params.row.mapped ? '' : <ErrorIcon />;
-            },
         },
         {
-            headerName: 'Title',
-            field: 'title',
+            Header: 'Title',
+            accessor: 'title',
         },
         {
-            headerName: 'Value type',
-            field: 'valueType',
+            Header: 'Value type',
+            accessor: 'valueType',
         },
         {
-            headerName: 'Data type',
-            field: 'dataType',
+            Header: 'Data type',
+            accessor: 'dataType',
         },
         {
-            headerName: 'Repeated',
-            field: 'repeated',
-            resizable: false,
+            Header: <Icon description="Repeated" type="copy" />,
+            accessor: 'repeated',
+            disableResizing: true,
             width: 32,
-            renderCell: (params) => {
-                return params.row.repeated ? <CheckIcon /> : '';
-            },
         },
         {
-            headerName: 'Mapped field',
-            field: 'mappedElement',
+            Header: 'Mapped field',
+            accessor: 'mappedElement',
         },
     ],
     module: [
         {
-            headerName: '',
-            field: 'mapped',
-            resizable: false,
+            Header: '',
+            accessor: 'mapped',
+            disableResizing: true,
             width: 32,
-            renderCell: (params) => {
-                return params.row.mapped ? '' : <ErrorIcon />;
-            },
         },
         {
-            headerName: 'Title',
-            field: 'title',
+            Header: 'Title',
+            accessor: 'title',
         },
         {
-            headerName: 'Mapped',
-            field: 'mappedElement',
+            Header: 'Mapped',
+            accessor: 'mappedElement',
         },
         {
-            headerName: 'Type',
-            field: 'mappedElementType',
+            Header: 'Type',
+            accessor: 'mappedElementType',
         },
     ],
 };
-
-export default withNotifications(DataModelMappingsDataTable);

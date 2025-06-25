@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import Button from '@mui/material/Button';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import { localizedText } from '../../../util';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
 import SelectPage from 'components/SelectPage';
-import Stack from '@mui/material/Stack';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import NoResults from 'components/NoResults';
 
-interface AddStudyProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
-}
+interface AddStudyProps extends AuthorizedRouteComponentProps {}
 
 interface AddStudyState {
     studies: any;
@@ -21,7 +18,7 @@ interface AddStudyState {
     submitDisabled: boolean;
 }
 
-class AddStudy extends Component<AddStudyProps, AddStudyState> {
+export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     constructor(props) {
         super(props);
 
@@ -35,7 +32,7 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
     }
 
     getCatalog = () => {
-        const { match, notifications } = this.props;
+        const { match } = this.props;
 
         apiClient
             .get('/api/catalog/' + match.params.catalog)
@@ -44,7 +41,7 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     {
                         catalog: response.data,
                     },
-                    this.getStudies,
+                    this.getStudies
                 );
             })
             .catch(error => {
@@ -53,16 +50,14 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred while retrieving information about the catalog', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred while retrieving information about the catalog" />);
                 }
             });
     };
 
     getStudies = () => {
-        const { notifications } = this.props;
-
         apiClient
             .get('/api/castor/studies')
             .then(response => {
@@ -77,9 +72,9 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -97,7 +92,7 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
     };
 
     importStudy = () => {
-        const { history, match, notifications } = this.props;
+        const { history, match } = this.props;
         const { selectedStudyId } = this.state;
 
         this.setState({
@@ -116,12 +111,12 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     this.setState({
                         submitDisabled: false,
                     });
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else if (error.response && typeof error.response.data.error !== 'undefined') {
                     this.setState({
                         submitDisabled: false,
                     });
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 }
             });
     };
@@ -142,7 +137,7 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     title="Add a study"
                     description={`Please choose an item from your list of studies that you’d like to include in the ${localizedText(
                         catalog.metadata.title,
-                        'en',
+                        'en'
                     )}.`}
                     backButton={{
                         to: () => this.handleStudySelect(null),
@@ -151,11 +146,10 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     history={history}
                 >
                     <div>
-                        <ListItem key={selectedStudy.sourceId} title={selectedStudy.name}
-                                  active={true} icon="study" />
+                        <ListItem key={selectedStudy.sourceId} title={selectedStudy.name} selectable={true} active={true} icon="study" />
 
-                        <Stack direction="row" sx={{ justifyContent: 'flex-end', mt: 2 }}>
-                            <Button disabled={submitDisabled} onClick={this.importStudy} variant="contained">
+                        <Stack distribution="center">
+                            <Button disabled={submitDisabled} onClick={this.importStudy}>
                                 Next
                             </Button>
                         </Stack>
@@ -169,7 +163,7 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 title="Add a study"
                 description={`Please choose an item from your list of studies that you’d like to include in the ${localizedText(
                     catalog.metadata.title,
-                    'en',
+                    'en'
                 )}.`}
                 backButton={{
                     to: '/dashboard/studies/add',
@@ -183,17 +177,16 @@ class AddStudy extends Component<AddStudyProps, AddStudyState> {
                             <ListItem
                                 key={study.sourceId}
                                 title={study.name}
+                                selectable={true}
                                 onClick={() => this.handleStudySelect(study.sourceId)}
                                 icon="study"
                             />
                         );
                     })
                 ) : (
-                    <NoResults>No studies found.</NoResults>
+                    <div className="NoResults">No studies found.</div>
                 )}
             </SelectPage>
         );
     }
 }
-
-export default withNotifications(AddStudy);

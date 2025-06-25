@@ -3,10 +3,9 @@ import DataModelForm from 'components/Form/DataSpecification/DataModelForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import SelectPage from 'components/SelectPage';
 
-interface AddDataModelProps extends AuthorizedRouteComponentProps {
-}
+interface AddDataModelProps extends AuthorizedRouteComponentProps {}
 
-class AddDataModel extends Component<AddDataModelProps> {
+export default class AddDataModel extends Component<AddDataModelProps> {
     render() {
         const { history } = this.props;
         return (
@@ -23,5 +22,3 @@ class AddDataModel extends Component<AddDataModelProps> {
         );
     }
 }
-
-export default AddDataModel;

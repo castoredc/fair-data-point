@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { ActionsCell, Button, CellText, DataGrid, Stack, ToastMessage } from '@castoredc/matter';
 import OptionGroupModal from 'modals/DataSpecification/OptionGroupModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import DataGridContainer from 'components/DataTable/DataGridContainer';
@@ -6,15 +9,8 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import { getType } from '../../../util';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
-import DataGrid from 'components/DataTable/DataGrid';
-import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
-import { GridColDef } from '@mui/x-data-grid';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface OptionGroupsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface OptionGroupsProps extends AuthorizedRouteComponentProps {
     type: string;
     optionGroups: any;
     getOptionGroups: () => void;
@@ -27,7 +23,7 @@ interface OptionGroupsState {
     optionGroupModalData: any;
 }
 
-class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
+export default class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
     private tableRef: React.RefObject<unknown>;
 
     constructor(props) {
@@ -73,21 +69,20 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
     };
 
     removeOptionGroup = () => {
-        const { type, dataSpecification, version, notifications } = this.props;
+        const { type, dataSpecification, version } = this.props;
         const { optionGroupModalData } = this.state;
 
         apiClient
             .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/option-group/' + optionGroupModalData.id)
             .then(() => {
-                notifications.show(`The option group was successfully removed`, {
-                    variant: 'success',
-
+                toast.success(<ToastMessage type="success" title={`The option group was successfully removed`} />, {
+                    position: 'top-right',
                 });
 
                 this.onSaved('remove');
             })
             .catch(error => {
-                notifications.show('An error occurred', { variant: 'error' });
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -95,38 +90,20 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
         const { showModal, optionGroupModalData } = this.state;
         const { type, dataSpecification, optionGroups, version } = this.props;
 
-        const columns: GridColDef[] = [
+        const columns = [
             {
-                headerName: 'Name',
-                field: 'title',
+                Header: 'Name',
+                accessor: 'title',
             },
             {
-                field: 'actions',
-                headerName: '',
-                flex: 1,
-                sortable: false,
-                disableColumnMenu: true,
-                align: 'right',
-                cellClassName: 'actionsCell',
-                renderCell: (params) => {
-                    return <RowActionsMenu
-                        row={params.row}
-                        items={[
-                            {
-                                destination: () => {
-                                    this.openModal('add', params.row.data);
-                                },
-                                label: 'Edit option group',
-                            },
-                            {
-                                destination: () => {
-                                    this.openModal('remove', params.row.data);
-                                },
-                                label: 'Delete option group',
-                            },
-                        ]}
-                    />;
-                },
+                accessor: 'menu',
+                disableGroupBy: true,
+                disableResizing: true,
+                isInteractive: true,
+                isSticky: true,
+                maxWidth: 34,
+                minWidth: 34,
+                width: 34,
             },
         ];
 
@@ -139,9 +116,25 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
             };
 
             return {
-                id: item.id,
-                title: item.title,
-                data: data,
+                title: <CellText>{item.title}</CellText>,
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', data);
+                                },
+                                label: 'Edit option group',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', data);
+                                },
+                                label: 'Delete option group',
+                            },
+                        ]}
+                    />
+                ),
             };
         });
 
@@ -165,8 +158,7 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
                     <ConfirmModal
                         title="Delete option group"
                         action="Delete option group"
-                        variant="contained"
-                        color="error"
+                        variant="danger"
                         onConfirm={this.removeOptionGroup}
                         onCancel={() => {
                             this.closeModal('remove');
@@ -178,13 +170,12 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
                 )}
 
                 <div className="PageButtons">
-                    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                    <Stack distribution="trailing" alignment="end">
                         <Button
-                            startIcon={<AddIcon />}
+                            icon="add"
                             onClick={() => {
                                 this.openModal('add', null);
                             }}
-                            variant="contained"
                         >
                             Add option group
                         </Button>
@@ -193,9 +184,8 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
 
                 <DataGridContainer fullHeight forwardRef={this.tableRef}>
                     <DataGrid
-                        disableRowSelectionOnClick
                         accessibleName="OptionGroups"
-                        // anchorRightColumns={1}
+                        anchorRightColumns={1}
                         emptyStateContent={`This ${getType(type)} does not have option groups`}
                         rows={rows}
                         columns={columns}
@@ -205,5 +195,3 @@ class OptionGroups extends Component<OptionGroupsProps, OptionGroupsState> {
         );
     }
 }
-
-export default withNotifications(OptionGroups);

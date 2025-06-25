@@ -1,0 +1,282 @@
+@import '../../scss/const';
+@import '../../scss/colors';
+
+.FullHeightForm {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.NotLoaded,
+.WaitingOnInput {
+    opacity: 0.5;
+}
+
+.CannotFind {
+    float: right;
+    padding: 0 !important;
+}
+
+.StudyLink {
+    border: 1px solid $neutral-50;
+    border-radius: 4px;
+    padding: 16px;
+    max-width: 40rem;
+    display: flex;
+
+    .StudyIcon {
+        margin-right: 16px;
+        margin-top: 5px;
+
+        svg path {
+            fill: $neutral-300;
+        }
+    }
+
+    .StudyDetails {
+        flex: 1;
+    }
+
+    .StudyName {
+        margin-bottom: 10px;
+
+        dl {
+            margin: 0;
+
+            dt {
+                float: left;
+                width: 100px;
+                font-weight: 600;
+                margin: 0;
+                padding: 0 16px 0 0;
+            }
+
+            dd {
+                margin: 0 0 0 100px;
+                padding: 0 0 8px;
+                word-break: break-all;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+.FormButtons {
+    padding-top: 25px;
+    margin-top: 25px;
+    border-top: 1px solid $neutral-30;
+
+    & > div:nth-child(2) {
+        text-align: right;
+    }
+}
+
+.FormContent {
+    height: 100%;
+    flex: 1;
+    overflow: auto;
+
+    & > div {
+        margin-bottom: 20px;
+    }
+}
+
+.FormLoader {
+    margin: auto;
+}
+
+.FormItem {
+    margin: 20px 0;
+
+    .FormItemDetails {
+        color: rgb(71, 84, 109);
+        margin: -0.4rem 0 0.8rem 0;
+    }
+
+    &.Hidden,
+    .Hidden {
+        display: none;
+    }
+
+    &.Inline {
+        .FormItemLabel {
+            margin-right: 10px;
+        }
+
+        label {
+            margin-bottom: 0;
+        }
+
+        &.AlignLeft,
+        &.AlignCenter,
+        &.AlignRight {
+            display: flex;
+            align-items: center;
+        }
+
+        &.AlignLeft {
+            justify-content: flex-start;
+        }
+
+        &.AlignCenter {
+            justify-content: center;
+        }
+
+        &.AlignRight {
+            justify-content: flex-end;
+        }
+
+        .FormItemContent {
+            overflow: auto;
+        }
+    }
+
+    .Select {
+        width: 100%;
+        z-index: 101;
+
+        & > div,
+        & > div > div {
+            max-width: 100%;
+
+            *::after {
+                box-sizing: initial;
+            }
+        }
+    }
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    .RequiredIndicator {
+        color: $red-400;
+        margin-left: 2px;
+    }
+}
+
+.FormHeading {
+    h2 {
+        font-size: 16px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: $neutral-800;
+    }
+}
+
+.FormGroup {
+    padding: 20px 0;
+
+    .FormHeading {
+        border-bottom: 1px solid $neutral-40;
+        margin-bottom: 10px;
+
+        h2 {
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.AgentPicker {
+    .Name {
+        width: 234px;
+        margin-right: 16px;
+    }
+    .Type {
+        width: 100px;
+        margin-right: 16px;
+    }
+    .AdditionalInformation {
+        width: 200px;
+        margin-right: 16px;
+    }
+    .AddButton {
+        text-align: right;
+        margin-top: 5px;
+
+        button {
+            padding: 0;
+        }
+    }
+}
+
+.OntologyConceptFormBlock,
+.AgentPicker {
+    border: 1px solid $neutral-50;
+    border-radius: 3px;
+    width: 610px;
+    padding: 5px 15px;
+    position: relative;
+
+    .Header {
+        color: $neutral-600;
+        font-weight: 700;
+    }
+
+    .AddNew {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-bottom: none !important;
+    }
+
+    .Row {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid $neutral-50;
+
+        .Ontology {
+            width: 160px;
+            margin-right: 16px;
+        }
+
+        .Concept {
+            flex: 1;
+        }
+
+        .ConceptCode {
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .RemoveButton svg {
+            width: 12px;
+            height: 12px;
+            margin: 0;
+        }
+    }
+}
+
+.Affiliations {
+    .AffiliationForm {
+        margin-bottom: 15px;
+        border: 1px solid $neutral-50;
+        border-radius: 3px;
+        padding: 15px;
+
+        .AffiliationAvatar {
+            width: 48px;
+            margin-right: 10px;
+        }
+    }
+
+    .BlankAvatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 100%;
+        background-color: $blue-50;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+
+        .Icon {
+            margin: auto;
+
+            path {
+                fill: $blue-700;
+            }
+        }
+    }
+}

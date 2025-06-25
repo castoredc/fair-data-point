@@ -14,8 +14,7 @@ interface DistributionLogsProps {
 const DistributionLogs: React.FC<DistributionLogsProps> = ({ dataset, study, catalog, distribution, history }) => {
     return (
         <PageBody>
-            <DistributionLogsDataTable history={history} catalog={catalog} study={study} dataset={dataset}
-                                       distribution={distribution} />
+            <DistributionLogsDataTable history={history} catalog={catalog} study={study} dataset={dataset} distribution={distribution} />
         </PageBody>
     );
 };

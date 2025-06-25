@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import ListItem from 'components/ListItem';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import * as H from 'history';
 import { localizedText } from '../../../../util';
+import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
-import Stack from '@mui/material/Stack';
-import { Box } from '@mui/material';
-import DataGrid from 'components/DataTable/DataGrid';
-import { GridColDef } from '@mui/x-data-grid';
-import NoResults from 'components/NoResults';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DatasetsProps extends ComponentWithNotifications {
+interface DatasetsProps {
     studyId: string;
     history: H.History;
 }
@@ -25,7 +21,7 @@ interface DatasetsState {
     pagination: any;
 }
 
-class Datasets extends Component<DatasetsProps, DatasetsState> {
+export default class Datasets extends Component<DatasetsProps, DatasetsState> {
     constructor(props) {
         super(props);
 
@@ -41,7 +37,7 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
     }
 
     getDatasets = () => {
-        const { studyId, notifications } = this.props;
+        const { studyId } = this.props;
         this.setState({
             isLoading: true,
         });
@@ -64,12 +60,12 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the datasets';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     handleCreate = () => {
-        const { studyId, history, notifications } = this.props;
+        const { studyId, history } = this.props;
 
         this.setState({
             isLoading: true,
@@ -93,59 +89,46 @@ class Datasets extends Component<DatasetsProps, DatasetsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while creating a new dataset';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
     render() {
         const { isLoading, datasets } = this.state;
-        const { studyId, history } = this.props;
-
-        const columns: GridColDef[] = [
-            {
-                headerName: 'Title',
-                field: 'title',
-                flex: 1,
-                minWidth: 200,
-            },
-        ];
-
-        const rows = datasets.map(dataset => ({
-            id: dataset.id,
-            title: dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') || 'Untitled dataset' : 'Untitled dataset',
-            slug: dataset.slug,
-        }));
+        const { studyId } = this.props;
 
         return (
             <PageBody>
-                {isLoading && <LoadingOverlay accessibleLabel="Loading datasets" />}
+                {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
 
-                <Stack direction="row" justifyContent="flex-end" mb={2}>
-                    <Button
-                        startIcon={<AddIcon />}
-                        disabled={isLoading}
-                        onClick={this.handleCreate}
-                        variant="contained"
-                    >
+                <Stack distribution="trailing" alignment="end">
+                    <Button icon="add" className="AddButton" disabled={isLoading} onClick={this.handleCreate}>
                         New dataset
                     </Button>
                 </Stack>
 
-                <Box height={400} width="100%">
-                    <DataGrid
-                        disableRowSelectionOnClick
-                        rows={rows}
-                        columns={columns}
-                        accessibleName="Datasets"
-                        emptyStateContent={() => <NoResults>This study does not have datasets.</NoResults>}
-                        onRowClick={(params) => {
-                            history.push(`/dashboard/studies/${studyId}/datasets/${params.row.slug}`);
-                        }}
-                    />
-                </Box>
+                <div>
+                    {datasets.length === 0 && <div className="NoResults">This study does not have datasets.</div>}
+
+                    {datasets.map(dataset => {
+                        let title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
+
+                        if(title === '') {
+                            title = 'Untitled dataset'
+                        }
+
+                        return (
+                            <ListItem
+                                key={dataset.id}
+                                selectable={false}
+                                disabled={!isGranted('edit', dataset.permissions)}
+                                link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`}
+                                title={title}
+                            />
+                        );
+                    })}
+                </div>
             </PageBody>
         );
     }
 }
-
-export default withNotifications(Datasets);

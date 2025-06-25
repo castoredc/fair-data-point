@@ -1,17 +1,17 @@
 export const View = {
-    label: 'View',
+    labelText: 'View',
     value: 'view',
 };
 export const Edit = {
-    label: 'Edit',
+    labelText: 'Edit',
     value: 'edit',
 };
 export const Manage = {
-    label: 'Manage',
+    labelText: 'Manage',
     value: 'manage',
 };
 export const AccessData = {
-    label: 'Access data',
+    labelText: 'Access data',
     value: 'access_data',
 };
 export const Permissions = {

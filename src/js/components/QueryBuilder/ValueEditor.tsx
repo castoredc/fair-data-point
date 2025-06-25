@@ -2,26 +2,16 @@ import React from 'react';
 import { ValueEditorProps as QueryBuilderValueEditorProps } from 'react-querybuilder/types/types';
 import { PrefixType } from 'types/PrefixType';
 import { InstituteType } from 'types/InstituteType';
+import { Dropdown, TextInput } from '@castoredc/matter';
 import MaskedInput from 'react-text-mask';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { TextField } from '@mui/material';
+import { findOptionByValue } from '../../util';
 
 interface ValueEditorProps extends QueryBuilderValueEditorProps {
     prefixes: PrefixType[];
     institutes: InstituteType[];
 }
 
-export const ValueEditor: React.FC<ValueEditorProps> = ({
-                                                            field,
-                                                            fieldData,
-                                                            operator,
-                                                            handleOnChange,
-                                                            value,
-                                                            values,
-                                                            prefixes,
-                                                            institutes,
-                                                        }) => {
+export const ValueEditor: React.FC<ValueEditorProps> = ({ field, fieldData, operator, handleOnChange, value, values, prefixes, institutes }) => {
     const handleUrlChange = (value, prefixes) => {
         let newValue = value;
         const regex = /^([^:]*):(.*)/;
@@ -47,26 +37,24 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
 
     if (typeof field !== 'undefined') {
         if (fieldData.valueType === 'institute') {
+            const parsedInstitutes = institutes.map(institute => {
+                return { value: institute.id, label: institute.name };
+            });
+            const selectedValue = findOptionByValue(value, parsedInstitutes);
+
             return (
-                <Select
-                    value={value}
-                    onChange={e => handleOnChange(e.target.value)}
-                    fullWidth
-                >
-                    {institutes.map(institute => {
-                        return <MenuItem key={institute.id} value={institute.id}>{institute.name}</MenuItem>;
-                    })}
-                </Select>
+                <Dropdown
+                    value={selectedValue}
+                    onChange={e => handleOnChange(e.value)}
+                    menuPosition="fixed"
+                    width="tiny"
+                    options={parsedInstitutes}
+                />
             );
         }
 
         if (fieldData.valueType === 'annotated') {
-            return <TextField
-                className="ValueEditor"
-                value={value}
-                onChange={e => handleUrlChange(e.target.value, prefixes)}
-                fullWidth
-            />;
+            return <TextInput className="ValueEditor" value={value} onChange={e => handleUrlChange(e.target.value, prefixes)} inputSize="20rem" />;
         }
 
         if (fieldData.dataType === 'date' || fieldData.dataType === 'dateTime' || fieldData.dataType === 'time') {
@@ -94,17 +82,11 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
                     }}
                     value={value}
                     onChange={e => handleOnChange(e.target.value)}
-                    render={(ref, props) => <TextField forwardRef={ref} {...props} width="20rem"
-                                                       placeholder={placeholder} />}
+                    render={(ref, props) => <TextInput forwardRef={ref} {...props} inputSize="20rem" placeholder={placeholder} />}
                 />
             );
         }
     }
 
-    return <TextField
-        className="ValueEditor"
-        value={value}
-        onChange={e => handleOnChange(e.target.value)}
-        fullWidth
-    />;
+    return <TextInput className="ValueEditor" value={value} onChange={e => handleOnChange(e.target.value)} inputSize="20rem" />;
 };

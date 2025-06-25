@@ -1,6 +1,10 @@
 import React, { FC, useState } from 'react';
+import { classNames } from '../../util';
+import './SideTabs.scss';
+import { Icon, Stack, Tooltip } from '@castoredc/matter';
+import ScrollShadow from '../ScrollShadow';
+import type { MatterIcon } from '@castoredc/matter-icons';
 import { useHistory } from 'react-router-dom';
-import { Box, Chip, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 
 type Tab = {
     type?: 'separator';
@@ -8,6 +12,7 @@ type Tab = {
     title: string;
     badge?: React.ReactNode;
     content: React.ReactNode;
+    icons?: Array<{ title: string; icon: MatterIcon }>;
     tag?: string;
     id?: string;
 };
@@ -22,15 +27,7 @@ type SideTabsProps = {
     url?: string;
 };
 
-const SideTabs: FC<SideTabsProps> = ({
-                                         tabs,
-                                         hasButtons = false,
-                                         hasTabs = false,
-                                         title,
-                                         actions,
-                                         initialTab,
-                                         url,
-                                     }) => {
+const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false, title, actions, initialTab, url }) => {
     const [activeTab, setActiveTab] = useState(initialTab ?? 0);
     let history = useHistory();
 
@@ -43,100 +40,53 @@ const SideTabs: FC<SideTabsProps> = ({
     };
 
     return (
-        <Box sx={{ display: 'flex', height: '100%', overflow: 'auto' }}>
-            <Paper
-                elevation={0}
-                sx={{
-                    width: 240,
-                    flexShrink: 0,
-                    mr: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderRight: 1,
-                    borderColor: 'divider',
-                }}
-            >
+        <div className={classNames('SideTabs', hasButtons && 'HasButtons', title && 'HasTitle', hasTabs && 'HasTabs')}>
+            <div className="SideTabsNav">
                 {(title || actions) && (
-                    <Box sx={{ p: 1, mb: 1, borderBottom: 1, borderColor: 'divider' }}>
-                        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                            {title && (
-                                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-                                    {title}
-                                </Typography>
-                            )}
-                            {actions && <Box>{actions}</Box>}
+                    <div className="SideTabsHeader">
+                        <Stack distribution="equalSpacing">
+                            {title && <div className="SideTabsHeaderTitle">{title}</div>}
+                            {actions && <div className="SideTabsHeaderActions">{actions}</div>}
                         </Stack>
-                    </Box>
+                    </div>
                 )}
-                <Tabs
-                    orientation="vertical"
-                    value={activeTab}
-                    onChange={(_, value) => changeTab(value)}
-                    sx={{
-                        borderRight: 1,
-                        borderColor: 'divider',
-                        '& .MuiTab-root': {
-                            minHeight: 48,
-                            alignItems: 'flex-start',
-                            textAlign: 'left',
-                            px: 2,
-                        },
-                    }}
-                >
+                <ScrollShadow className="SideTabsScrollable">
                     {tabs.map((tab, index) => {
-                        if (typeof tab.type !== 'undefined' && tab.type === 'separator') {
-                            return <Box key={`sidetabs-${index}`}
-                                        sx={{ my: 1, borderTop: 1, borderColor: 'divider' }} />;
+                        if (typeof tab.type !== 'undefined') {
+                            if (tab.type === 'separator') {
+                                return <hr key={`sidetabs-${index}`} />;
+                            }
                         } else {
                             return (
-                                <Tab
+                                <button
+                                    onClick={() => changeTab(index)}
+                                    type="button"
+                                    className={classNames('SideTabsNavItem', activeTab === index && 'Active')}
                                     key={`sidetabs-${index}`}
-                                    value={index}
-                                    label={
-                                        <Stack direction="row" spacing={1} alignItems="center" sx={{ width: '100%' }}>
-                                            {tab.number && (
-                                                <Typography variant="body2" component="span">
-                                                    {tab.number}
-                                                </Typography>
-                                            )}
-                                            <Typography
-                                                variant="body2"
-                                                component="span"
-                                                sx={{
-                                                    flex: 1,
-                                                    textAlign: 'left',
-                                                    whiteSpace: 'normal',
-                                                    wordBreak: 'break-word',
-                                                }}
-                                            >
-                                                {tab.title}
-                                            </Typography>
-                                            {tab.badge && (
-                                                <Chip
-                                                    size="small"
-                                                    sx={{
-                                                        textTransform: 'uppercase',
-                                                        fontSize: '0.5rem',
-                                                    }}
-                                                    label={tab.badge}
-                                                />
-                                            )}
-                                        </Stack>
-                                    }
-                                    sx={{
-                                        width: '100%',
-                                        justifyContent: 'flex-start',
-                                    }}
-                                />
+                                >
+                                    {tab.number && <span className="SideTabsNavItemNumber">{tab.number}</span>}
+                                    <span className="SideTabsNavItemTitle">{tab.title}</span>
+
+                                    {tab.badge && <span className="SideTabsNavItemBadge">{tab.badge}</span>}
+                                    {tab.icons && tab.icons.length > 0 && (
+                                        <span className="SideTabsNavItemIcons">
+                                            {tab.icons.map((icon, key) => (
+                                                <span key={key} className="SideTabsNavItemIcon">
+                                                    <Tooltip content={icon.title} hideOnBlur>
+                                                        <Icon type={icon.icon} key={`sidetabs-icon-${index}`} width="12px" height="12px" />
+                                                    </Tooltip>
+                                                </span>
+                                            ))}
+                                        </span>
+                                    )}
+                                </button>
                             );
                         }
                     })}
-                </Tabs>
-            </Paper>
-            <Box sx={{ flex: 1, overflow: 'auto' }}>
-                {tabs[activeTab] !== undefined && tabs[activeTab].content}
-            </Box>
-        </Box>
+                </ScrollShadow>
+            </div>
+            <div className="SideTabsContent">{tabs[activeTab].content}</div>
+        </div>
     );
 };
 

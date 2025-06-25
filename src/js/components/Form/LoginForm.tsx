@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { localizedText } from '../../util';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Button, CastorNest } from '@castoredc/matter';
 import { LoginViews } from 'components/MetadataItem/EnumMappings';
+import './LoginForm.scss';
 import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';
 import { Field, Form, Formik } from 'formik';
@@ -19,15 +20,15 @@ interface LoginFormProps {
 }
 
 const LoginForm: FC<LoginFormProps> = ({
-                                           catalog,
-                                           path,
-                                           servers,
-                                           selectedServerId,
-                                           serverLocked = false,
-                                           modal = false,
-                                           brand = 'FAIR Data Point',
-                                           view,
-                                       }) => {
+    catalog,
+    path,
+    servers,
+    selectedServerId,
+    serverLocked = false,
+    modal = false,
+    brand = 'FAIR Data Point',
+    view,
+}) => {
     const serverIds = servers.map(server => server.id);
     const defaultServer = servers.filter(server => server.default)[0].id;
 
@@ -45,118 +46,65 @@ const LoginForm: FC<LoginFormProps> = ({
 
                 return (
                     <Form>
-                        <Stack spacing={4}>
+                        <div className="LoginForm">
                             {catalog ? (
-                                <Box>
-                                    {!modal && (
-                                        <Typography
-                                            variant="h4"
-                                            component="h1"
-                                            sx={{
-                                                mb: 3,
-                                                fontWeight: 500,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            {localizedText(catalog.name, 'en')}
-                                        </Typography>
-                                    )}
+                                <div className="LoginBrand">
+                                    {!modal && <h1>{localizedText(catalog.name, 'en')}</h1>}
 
-                                    <Stack spacing={2}>
-                                        <Typography>
-                                            To enter your study in the {localizedText(catalog.name, 'en')} you must be a
-                                            registered user.
-                                        </Typography>
-                                        <Typography>
-                                            Please log in with your account and allow the application to
-                                            access your information.
-                                        </Typography>
+                                    <div className="LoginText">
+                                        <p>
+                                            To enter your study in the {localizedText(catalog.name, 'en')} you must be a registered Castor EDC user.
+                                        </p>
+                                        <p>Please log in with your Castor CDMS account and allow the application to access your information.</p>
                                         {!catalog.accessingData && (
-                                            <Typography>
-                                                The application only accesses high-level information from your study and
-                                                will not download nor upload any data to your study.
-                                            </Typography>
+                                            <p>
+                                                The application only accesses high-level information from your study and will not download nor upload
+                                                any data to your study.
+                                            </p>
                                         )}
-                                    </Stack>
-                                </Box>
+                                    </div>
+                                </div>
                             ) : (
-                                <Box>
-                                    {!modal && (
-                                        <Typography
-                                            variant="h4"
-                                            component="h1"
-                                            sx={{
-                                                mb: 3,
-                                                fontWeight: 500,
-                                                color: 'text.primary',
-                                            }}
-                                        >
-                                            {brand}
-                                        </Typography>
-                                    )}
+                                <div>
+                                    {!modal && <h1>{brand}</h1>}
 
-                                    <Stack spacing={2}>
-                                        {!modal && (
-                                            <Typography>
-                                                You need to be a registered user in order to access this {viewName}.
-                                            </Typography>
-                                        )}
+                                    <div className="LoginText">
+                                        {!modal && <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>}
                                         {modal && view !== 'generic' && view !== null && (
-                                            <Typography>
-                                                You need to be a registered user in order to access this {viewName}.
-                                            </Typography>
+                                            <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>
                                         )}
-                                        <Typography>
-                                            Please log in with your account and allow the application to
-                                            access your information.
-                                        </Typography>
-                                    </Stack>
-                                </Box>
+
+                                        <p>Please log in with your Castor CDMS account and allow the application to access your information.</p>
+                                    </div>
+                                </div>
                             )}
 
                             {!serverLocked && (
-                                <Box
-                                    sx={{
-                                        bgcolor: 'background.paper',
-                                        borderRadius: 1,
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            mb: 2,
-                                            fontWeight: 500,
-                                            color: 'text.primary',
-                                        }}
-                                    >
-                                        My study is located on a Castor server in
-                                    </Typography>
-                                    <Field
-                                        component={SelectableListItems}
-                                        name="server"
-                                        options={servers.map(server => ({
-                                            title: server.name,
-                                            value: server.id,
-                                            customIcon: 'flag' + server.flag.toUpperCase(),
-                                        }))}
-                                    />
-                                </Box>
+                                <div className="Servers">
+                                    <div className="ServerText">My study is located on a Castor server in</div>
+                                    <div className="ServersList">
+                                        <Field
+                                            component={SelectableListItems}
+                                            name="server"
+                                            options={servers.map(server => {
+                                                return {
+                                                    title: server.name,
+                                                    value: server.id,
+                                                    customIcon: 'flag' + server.flag.toUpperCase(),
+                                                };
+                                            })}
+                                        />
+                                    </div>
+                                </div>
                             )}
 
-                            <Box sx={{ textAlign: 'center' }}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    size="large"
-                                    disabled={values.server === null}
-                                    sx={{
-                                        minWidth: 200,
-                                        py: 1.5,
-                                    }}
-                                >
+                            <div className="LoginButton">
+                                <Button type="submit" disabled={values.server === null}>
+                                    <CastorNest className="LoginButtonLogo" />
                                     Log in with Castor
                                 </Button>
-                            </Box>
-                        </Stack>
+                            </div>
+                        </div>
                     </Form>
                 );
             }}

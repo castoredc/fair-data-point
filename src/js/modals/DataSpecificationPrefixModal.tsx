@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import Button from '@mui/material/Button';
-import Modal from 'components/Modal';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, Modal } from '@castoredc/matter';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import { apiClient } from '../network';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DataSpecificationPrefixModalProps extends ComponentWithNotifications {
+type DataSpecificationPrefixModalProps = {
     type: string;
     show: boolean;
     handleClose: () => void;
@@ -23,7 +23,7 @@ type DataSpecificationPrefixModalState = {
     initialValues: any;
 };
 
-class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModalProps, DataSpecificationPrefixModalState> {
+export default class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModalProps, DataSpecificationPrefixModalState> {
     constructor(props) {
         super(props);
 
@@ -44,7 +44,7 @@ class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModa
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { type, modelId, versionId, onSaved, notifications } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
             .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/prefix' + (values.id ? '/' + values.id : ''), {
@@ -62,7 +62,7 @@ class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModa
                         validation: error.response.data.fields,
                     });
                 } else {
-                    notifications.show('An error occurred', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);
@@ -79,20 +79,9 @@ class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModa
         const title = initialValues.id ? 'Edit prefix' : 'Add prefix';
 
         return (
-            <Modal open={show} onClose={handleClose} title={title}>
-                <Formik initialValues={initialValues} validationSchema={PrefixSchema} onSubmit={this.handleSubmit}
-                        enableReinitialize>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
-                          setValues,
-                          setFieldValue,
-                      }) => {
+            <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
+                <Formik initialValues={initialValues} validationSchema={PrefixSchema} onSubmit={this.handleSubmit} enableReinitialize>
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         return (
                             <Form>
                                 <FormItem label="Prefix">
@@ -103,11 +92,7 @@ class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModa
                                     <Field component={Input} name="uri" serverError={validation} />
                                 </FormItem>
 
-                                <Button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    variant="contained"
-                                >
+                                <Button type="submit" disabled={isSubmitting}>
                                     {values.id ? 'Edit prefix' : 'Add prefix'}
                                 </Button>
                             </Form>
@@ -128,5 +113,3 @@ const PrefixSchema = Yup.object().shape({
     prefix: Yup.string().required('Please enter a prefix'),
     uri: Yup.string().url('Please enter a valid URI').required('Please enter a valid URI'),
 });
-
-export default withNotifications(DataSpecificationPrefixModal);

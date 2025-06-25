@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { LanguageType } from 'types/LanguageType';
-import { useNotifications } from 'components/WithNotifications';
 
 const useGetLanguage = (code: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [language, setLanguage] = useState<LanguageType | null>(null);
-    const notifications = useNotifications();
 
     useEffect(() => {
         const getLanguage = async () => {
@@ -16,7 +16,7 @@ const useGetLanguage = (code: string) => {
                 setIsLoading(false);
             } catch (error) {
                 setIsLoading(false);
-                notifications.show('Could not load language information.', { variant: 'error' });
+                toast.error(<ToastItem type="error" title="Could not load language information." />);
             }
         };
 

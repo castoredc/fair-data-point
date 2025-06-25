@@ -16,8 +16,7 @@ const DistributionList: React.FC<CommonListProps> = props => {
         noResultsText = 'This dataset does not have any associated distributions.';
     }
 
-    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata}
-                 noResultsText={noResultsText} />;
+    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata} noResultsText={noResultsText} />;
 };
 
 export default DistributionList;

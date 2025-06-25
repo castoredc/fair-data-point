@@ -1,4 +1,7 @@
+import React from 'react';
 import axios, { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 
 /**
  * TODO:
@@ -27,6 +30,7 @@ apiClient.interceptors.response.use(
 
             // Redirect the user to login page if the authorization fails
             if (error.response.status === 401) {
+                toast.error(<ToastItem type="error" title="Session timed out. Please login again to continue." />);
                 window.location.href = '/login?path=' + encodeURIComponent(window.location.pathname);
             }
         } else {
@@ -34,7 +38,7 @@ apiClient.interceptors.response.use(
             isLocalEnv && console.error('Error Message:', error.message);
         }
         return Promise.reject(error);
-    },
+    }
 );
 
 export { apiClient };

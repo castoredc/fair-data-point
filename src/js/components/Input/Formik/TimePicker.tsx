@@ -2,8 +2,7 @@ import React, { ChangeEvent, FC } from 'react';
 
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { LocalizationProvider, TimePicker as MuiTimePicker } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { TimePicker as CastorTimePicker } from '@castoredc/matter';
 
 interface TimePickerProps extends FieldProps {
     readOnly?: boolean;
@@ -19,18 +18,20 @@ const TimePicker: FC<TimePickerProps> = ({ field, form, meta, readOnly, onChange
     const value = field.value !== '' && field.value !== null ? field.value : undefined;
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-            <MuiTimePicker
+        <>
+            <CastorTimePicker
                 name={field.name}
-                value={value}
+                selected={value}
                 onChange={(date, event) => {
                     field.onChange({ target: { name: field.name, value: date } });
                 }}
+                onBlur={field.onBlur}
+                invalid={touched && !!errors}
                 readOnly={readOnly}
             />
 
             <FieldErrors field={field} serverErrors={serverErrors} />
-        </LocalizationProvider>
+        </>
     );
 };
 

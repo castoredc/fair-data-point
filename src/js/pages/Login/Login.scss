@@ -1,0 +1,69 @@
+@import '../../scss/colors';
+
+.Login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: inherit;
+
+    .LoginContainer {
+        max-width: 550px;
+        margin: 40px auto;
+
+        .LoginLogo,
+        h1 {
+            text-align: center;
+        }
+
+        .LoginLogo {
+            .Logo {
+                height: 32px;
+                width: auto;
+
+                path {
+                    fill: $azul;
+                }
+            }
+
+            margin-bottom: 64px;
+        }
+
+        h1 {
+            font-size: 32px;
+            line-height: 1.5;
+            color: $neutral-800;
+            margin-bottom: 32px;
+        }
+
+        .LoginText {
+            padding: 16px 24px;
+            background: $blue-30;
+            color: $neutral-800;
+            font-weight: 600;
+            line-height: 1.57;
+
+            p:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 1259px) {
+    .Login .LoginContainer {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 767px) {
+    .Login {
+        position: initial;
+        top: initial;
+        left: initial;
+        -ms-transform: initial;
+        transform: initial;
+        margin: 40px;
+    }
+}

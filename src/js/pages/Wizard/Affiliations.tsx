@@ -3,17 +3,14 @@ import Emoji from 'components/Emoji';
 import queryString from 'query-string';
 import AffiliationsForm from 'components/Form/Agent/AffiliationsForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import { WizardHeader } from 'components/Layout/WizardLayout';
-import { Box } from '@mui/material';
 
-interface AffiliationsProps extends AuthorizedRouteComponentProps {
-}
+interface AffiliationsProps extends AuthorizedRouteComponentProps {}
 
 interface AffiliationsState {
     isSaved: boolean;
 }
 
-class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
+export default class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
     constructor(props) {
         super(props);
 
@@ -43,21 +40,16 @@ class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
 
         return (
             <>
-                <WizardHeader
-                    title={
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Emoji symbol="🏥" />
-                            <Box component="span" sx={{ ml: 1 }}>
-                                Where do you work, {user.details.firstName}?
-                            </Box>
-                        </Box>
-                    }
-                    description="Please add your affiliation(s) below."
-                />
+                <header>
+                    <h1>
+                        <Emoji symbol="🏥" />
+                        &nbsp; Where do you work, {user.details.firstName}?
+                    </h1>
+                    <div className="Description">Please add your affiliation(s) below.</div>
+                </header>
+
                 <AffiliationsForm user={user} onSaved={this.handleSave} />
             </>
         );
     }
 }
-
-export default Affiliations;

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import Highlight from '../Highlight';
+import { Banner } from '@castoredc/matter';
 import ScrollShadow from '../ScrollShadow';
 import VisNetwork from '../Visualization/Network';
-import AltRouteIcon from '@mui/icons-material/AltRoute';
+import { CopyIcon, DecisionIcon } from '@castoredc/matter-icons';
 import PageTabs from 'components/PageTabs';
 import { DependenciesType, DependencyDescription, DependencyGroupType } from 'types/ModuleType';
-import { Alert } from '@mui/material';
-import NoResults from 'components/NoResults';
-
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 type Visualization = {
     nodes: Node[];
@@ -90,19 +87,19 @@ const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, 
     const alerts = (
         <div className="DataModelModuleAlerts">
             {repeated && (
-                <Alert severity="info" icon={<ContentCopyIcon />}>
-                    This group is repeated for every instance of a specific
-                    survey or report</Alert>
+                <Banner compact customIcon={<CopyIcon />} description="This group is repeated for every instance of a specific survey or report" />
             )}
             {dependent && (
-                <Alert
-                    severity="info"
-                    icon={<AltRouteIcon />}
-                >
-                    This group is dependent and will only be rendered when:
-                    <div
-                        className="DependencyDescription">{dependencies && renderDependencies(dependencies.description)}</div>
-                </Alert>
+                <Banner
+                    compact
+                    customIcon={<DecisionIcon />}
+                    description={
+                        <>
+                            This group is dependent and will only be rendered when:
+                            <div className="DependencyDescription">{dependencies && renderDependencies(dependencies.description)}</div>
+                        </>
+                    }
+                />
             )}
         </div>
     );
@@ -176,7 +173,7 @@ const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, 
                             {rdf !== '' ? (
                                 <VisNetwork className="FullHeightNetwork" nodes={nodes} edges={edges} />
                             ) : (
-                                <NoResults>There is no preview available.</NoResults>
+                                <div className="NoResults">There is no preview available.</div>
                             )}
                         </div>
                     ),
@@ -191,7 +188,7 @@ const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, 
                                     <Highlight content={rdf} />
                                 </ScrollShadow>
                             ) : (
-                                <NoResults>There is no preview available.</NoResults>
+                                <div className="NoResults">There is no preview available.</div>
                             )}
                         </>
                     ),

@@ -1,93 +1,47 @@
-import Button from '@mui/material/Button';
+import { Button, DataGrid, FormLabel, Space, Stack } from '@castoredc/matter';
 import React from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
-import DataGrid from 'components/DataTable/DataGrid';
-import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
-import { FormLabel } from '@mui/material';
 
 interface MetadataDisplaySettingProps {
     position: string;
-    label: string;
     items: any;
-    openModal: (type, data, position) => void;
+    openModal: () => void;
 }
 
-const MetadataDisplaySetting: React.FC<MetadataDisplaySettingProps> = ({ position, label, items, openModal }) => {
+const MetadataDisplaySetting: React.FC<MetadataDisplaySettingProps> = ({ position, items, openModal }) => {
     return (
         <div>
-            <FormLabel>{label}</FormLabel>
+            <FormLabel>{position}</FormLabel>
+
+            <Space bottom="default" />
 
             {items.length > 0 ? (
                 <DataGrid
-                    disableRowSelectionOnClick
                     accessibleName="Title"
                     emptyStateContent={`This position does not have items`}
                     rows={items}
+                    anchorRightColumns={1}
                     columns={[
                         {
-                            headerName: 'Title',
-                            field: 'title',
+                            Header: 'Title',
+                            accessor: 'title',
                         },
                         {
-                            headerName: 'Node',
-                            field: 'node',
+                            Header: 'Node',
+                            accessor: 'node',
                         },
                         {
-                            headerName: 'Display type',
-                            field: 'type',
+                            Header: 'Display type',
+                            accessor: 'type',
                         },
                         {
-                            field: 'actions',
-                            headerName: '',
-                            flex: 1,
-                            sortable: false,
-                            disableColumnMenu: true,
-                            align: 'right',
-                            cellClassName: 'actionsCell',
-                            renderCell: (params) => {
-                                return <RowActionsMenu
-                                    row={params.row}
-                                    items={[
-                                        {
-                                            destination: () => {
-                                                openModal(
-                                                    'add',
-                                                    {
-                                                        id: params.row.data.id,
-                                                        title: params.row.data.title,
-                                                        node: params.row.data.node,
-                                                        order: params.row.data.order,
-                                                        displayType: params.row.data.type,
-                                                        position: params.row.data.position,
-                                                        resourceType: params.row.data.resourceType,
-                                                    },
-                                                    position,
-                                                );
-                                            },
-                                            label: 'Edit item',
-                                        },
-                                        {
-                                            destination: () => {
-                                                openModal(
-                                                    'remove',
-                                                    {
-                                                        id: params.row.data.id,
-                                                        title: params.row.data.title,
-                                                        node: params.row.data.node,
-                                                        order: params.row.data.order,
-                                                        displayType: params.row.data.type,
-                                                        position: params.row.data.position,
-                                                        resourceType: params.row.data.resourceType,
-                                                    },
-                                                    position,
-                                                );
-                                            },
-                                            label: 'Delete item',
-                                        },
-                                    ]}
-                                />;
-                            },
+                            accessor: 'menu',
+                            disableGroupBy: true,
+                            disableResizing: true,
+                            isInteractive: true,
+                            isSticky: true,
+                            maxWidth: 34,
+                            minWidth: 34,
+                            width: 34,
                         },
                     ]}
                 />
@@ -95,11 +49,10 @@ const MetadataDisplaySetting: React.FC<MetadataDisplaySettingProps> = ({ positio
                 <div>This position does not have items</div>
             )}
 
-            <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-                <Button
-                    startIcon={<AddIcon />}
-                    onClick={() => openModal('add', null, position)}
-                >
+            <Space bottom="default" />
+
+            <Stack distribution="trailing" alignment="end">
+                <Button icon="add" onClick={openModal}>
                     Add item
                 </Button>
             </Stack>

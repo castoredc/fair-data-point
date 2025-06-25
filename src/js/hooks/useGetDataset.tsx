@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { Dataset } from 'types/Resources';
-import { useNotifications } from 'components/WithNotifications';
 
 const useGetDataset = (slug: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [dataset, setDataset] = useState<Dataset | null>(null);
-    const notifications = useNotifications();
 
     useEffect(() => {
         const getDataset = async () => {
@@ -20,7 +20,7 @@ const useGetDataset = (slug: string) => {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the dataset information';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             }
         };
 

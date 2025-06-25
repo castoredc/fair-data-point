@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Button from '@mui/material/Button';
-import LoadingOverlay from 'components/LoadingOverlay';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay } from '@castoredc/matter';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../../util';
@@ -18,22 +19,11 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import Permissions from 'pages/Dashboard/Dataset/Distribution/Permissions';
 import NoPermission from 'pages/ErrorPages/NoPermission';
-import NoResults from 'components/NoResults';
 import { apiClient } from 'src/js/network';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
-import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import DescriptionIcon from '@mui/icons-material/Description';
-import GroupsIcon from '@mui/icons-material/Groups';
-import FileOpenIcon from '@mui/icons-material/FileOpen';
-import HighlightAltIcon from '@mui/icons-material/HighlightAlt';
-import SyncAltIcon from '@mui/icons-material/SyncAlt';
-import ListIcon from '@mui/icons-material/List';
-import NotesIcon from '@mui/icons-material/Notes';
 
-interface DistributionProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+interface DistributionProps extends AuthorizedRouteComponentProps {
     dataset: any;
 }
 
@@ -43,7 +33,7 @@ interface DistributionState {
     isLoading: boolean;
 }
 
-class Distribution extends Component<DistributionProps, DistributionState> {
+export default class Distribution extends Component<DistributionProps, DistributionState> {
     constructor(props) {
         super(props);
 
@@ -59,7 +49,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
             isLoading: true,
         });
 
-        const { match, notifications } = this.props;
+        const { match } = this.props;
 
         apiClient
             .get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution)
@@ -68,7 +58,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                     {
                         distribution: response.data,
                     },
-                    this.getContents,
+                    this.getContents
                 );
             })
             .catch(error => {
@@ -77,15 +67,15 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    notifications.show(error.response.data.error, { variant: 'error' });
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    notifications.show('An error occurred while loading your distribution', { variant: 'error' });
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your distribution" />);
                 }
             });
     };
 
     getContents = () => {
-        const { match, notifications } = this.props;
+        const { match } = this.props;
 
         apiClient
             .get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution + '/contents')
@@ -105,7 +95,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -131,8 +121,8 @@ class Distribution extends Component<DistributionProps, DistributionState> {
 
         let title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
 
-        if (title === '') {
-            title = 'Untitled distribution';
+        if(title === '') {
+            title = 'Untitled distribution'
         }
 
         const mainUrl = match.params.study
@@ -144,29 +134,29 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                 to: mainUrl + '/distributions/' + distribution.slug,
                 exact: true,
                 title: 'Distribution',
-                icon: <FileOpenIcon />,
+                customIcon: 'distribution',
             },
             {
                 to: mainUrl + '/distributions/' + distribution.slug + '/metadata',
                 exact: true,
                 title: 'Metadata',
-                icon: <DescriptionIcon />,
+                customIcon: 'metadata',
             },
             ...(isGranted('manage', distribution.permissions)
                 ? [
-                    {
-                        to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
-                        exact: true,
-                        title: 'Permissions',
-                        icon: <GroupsIcon />,
-                    },
-                ]
+                      {
+                          to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
+                          exact: true,
+                          title: 'Permissions',
+                          icon: 'usersLight',
+                      },
+                  ]
                 : []),
             {
                 to: mainUrl + '/distributions/' + distribution.slug + '/subset',
                 exact: true,
                 title: 'Subset',
-                icon: <HighlightAltIcon />,
+                icon: 'selectList',
             },
             {
                 type: 'separator',
@@ -178,7 +168,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                 to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                 exact: true,
                 title: 'Mappings',
-                icon: <SyncAltIcon />,
+                icon: 'order',
             });
 
             if (distribution.cached) {
@@ -186,7 +176,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                     to: mainUrl + '/distributions/' + distribution.slug + '/log',
                     exact: true,
                     title: 'Log',
-                    icon: <NotesIcon />,
+                    icon: 'summary',
                 });
             }
         } else if (distribution.type === 'csv') {
@@ -194,12 +184,12 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                 to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                 exact: true,
                 title: 'Contents',
-                icon: <ListIcon />,
+                icon: 'order',
             });
         }
 
         return (
-            <DashboardPage>
+            <>
                 <DocumentTitle title={title} />
 
                 <SideBar
@@ -210,14 +200,13 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                     location={location}
                     items={sidebarItems}
                     history={history}
-                    user={user}
                 />
 
                 <Body>
                     <Header title={title} fullWidth={true}>
                         <Button
-                            variant="text"
-                            startIcon={<OpenInNewIcon />}
+                            buttonType="contentOnly"
+                            icon="openNewWindow"
                             href={`/fdp/dataset/${dataset}/distribution/${distribution.slug}`}
                             target="_blank"
                         >
@@ -233,8 +222,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                             ]}
                             exact
                             render={props => (
-                                <Details {...props} user={user} catalog={catalog} study={study} dataset={dataset}
-                                         distribution={distribution} />
+                                <Details {...props} user={user} catalog={catalog} study={study} dataset={dataset} distribution={distribution} />
                             )}
                         />
 
@@ -263,8 +251,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                             ]}
                             exact
                             render={() => (
-                                <Permissions contents={contents} distribution={distribution}
-                                             getDistribution={this.getDistribution} user={user} />
+                                <Permissions contents={contents} distribution={distribution} getDistribution={this.getDistribution} user={user} />
                             )}
                         />
 
@@ -288,7 +275,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                                     return <DistributionContentsRdf dataset={dataset} distribution={distribution} />;
                                 }
 
-                                return <NoResults>This distribution does not have contents.</NoResults>;
+                                return <div className="NoResults">This distribution does not have contents.</div>;
                             }}
                         />
 
@@ -298,8 +285,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                                 '/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log/:log',
                             ]}
                             exact
-                            render={props => <DistributionLog {...props} dataset={dataset}
-                                                              distribution={distribution} />}
+                            render={props => <DistributionLog {...props} dataset={dataset} distribution={distribution} />}
                         />
 
                         <Route
@@ -309,8 +295,7 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                             ]}
                             exact
                             render={props => (
-                                <DistributionLogs {...props} catalog={catalog} study={study} dataset={dataset}
-                                                  distribution={distribution} />
+                                <DistributionLogs {...props} catalog={catalog} study={study} dataset={dataset} distribution={distribution} />
                             )}
                         />
 
@@ -320,16 +305,13 @@ class Distribution extends Component<DistributionProps, DistributionState> {
                                 '/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/subset',
                             ]}
                             exact
-                            render={props => <DistributionSubset {...props} dataset={dataset}
-                                                                 distribution={distribution} />}
+                            render={props => <DistributionSubset {...props} dataset={dataset} distribution={distribution} />}
                         />
 
                         <Route component={NotFound} />
                     </Switch>
                 </Body>
-            </DashboardPage>
+            </>
         );
     }
 }
-
-export default withNotifications(Distribution);

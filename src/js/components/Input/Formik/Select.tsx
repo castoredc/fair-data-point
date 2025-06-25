@@ -1,66 +1,54 @@
 import React, { FC } from 'react';
 
+import { DefaultOptionType, Dropdown, Icon, ReactSelectTypes } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { Autocomplete, TextField } from '@mui/material';
-import { DefaultOptionType, MultiValue, SingleValue } from 'types/DefaultOptionType';
-import SearchIcon from '@mui/icons-material/Search';
 
 type IsMulti = boolean;
 
-interface SelectProps extends FieldProps {
+interface SelectProps extends FieldProps, Omit<ReactSelectTypes.Props, 'form'> {
     readOnly?: boolean;
     autoFocus?: boolean;
     serverError?: any;
-    onChange?: (event: any, newValue: SingleValue | MultiValue) => void;
-    options: DefaultOptionType[];
 }
 
 interface AsyncSelectProps extends SelectProps {
-    cachedOptions: DefaultOptionType[];
-    filterOptions?: (options: DefaultOptionType[], state: any) => DefaultOptionType[];
+    cachedOptions: ReactSelectTypes.Options<DefaultOptionType>;
 }
 
+type MultiValue<DefaultOptionType> = readonly DefaultOptionType[];
+type SingleValue<DefaultOptionType> = DefaultOptionType;
+
 export function isMultipleOption<DefaultOptionType>(
-    arg: MultiValue | SingleValue,
-): arg is MultiValue {
+    arg: MultiValue<DefaultOptionType> | SingleValue<DefaultOptionType>
+): arg is MultiValue<DefaultOptionType> {
     return Array.isArray(arg);
 }
 
-const Select: FC<SelectProps> = ({
-                                     field,
-                                     form,
-                                     meta,
-                                     readOnly,
-                                     onChange,
-                                     autoFocus,
-                                     serverError,
-                                     options,
-                                     ...rest
-                                 }) => {
+const Select: FC<SelectProps> = ({ field, form, meta, readOnly, onChange, autoFocus, serverError, options, ...rest }) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
     return (
         <>
-            <Autocomplete
+            <Dropdown
                 value={options && options.find((option: DefaultOptionType) => field.value === option.value)}
-                renderInput={(params) => <TextField {...params} size="small" />}
-                onChange={(event: any, newValue: SingleValue | MultiValue) => {
-                    const returnValue = newValue && (isMultipleOption(newValue) ? newValue.map(rawValue => rawValue.value) : newValue.value);
+                onChange={(
+                    value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>,
+                    action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                ) => {
+                    const returnValue = value && (isMultipleOption(value) ? value.map(rawValue => rawValue.value) : value.value);
 
                     if (onChange) {
-                        onChange(event, newValue);
+                        onChange(value, action);
                     }
 
                     field.onChange({ target: { name: field.name, value: returnValue } });
                 }}
                 onBlur={field.onBlur}
-                // invalid={touched && !!errors}
+                invalid={touched && !!errors}
                 options={options}
-                disableClearable={true}
-                sx={{ width: 400 }}
                 {...rest}
             />
 
@@ -70,43 +58,43 @@ const Select: FC<SelectProps> = ({
 };
 
 export const AsyncSelect: FC<AsyncSelectProps> = ({
-                                                      field,
-                                                      form,
-                                                      meta,
-                                                      readOnly,
-                                                      onChange,
-                                                      autoFocus,
-                                                      serverError,
-                                                      cachedOptions,
-                                                      options,
-                                                      filterOptions,
-                                                      ...rest
-                                                  }) => {
+    field,
+    form,
+    meta,
+    readOnly,
+    onChange,
+    autoFocus,
+    serverError,
+    loadOptions,
+    cachedOptions,
+    options,
+    ...rest
+}) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
     const serverErrors = serverError[field.name];
 
     return (
         <div className="Select">
-            <Autocomplete
-                filterOptions={filterOptions}
+            <Dropdown
+                loadOptions={loadOptions}
                 options={cachedOptions}
-                openOnFocus={true}
-                renderInput={(params) => <TextField {...params} size="small" />}
+                openMenuOnClick={false}
+                components={{ DropdownIndicator: AsyncDropdownIndicator }}
+                placeholder=""
                 value={field.value}
-                onChange={(event: any, newValue: SingleValue | MultiValue) => {
-                    const returnValue = newValue && (isMultipleOption(newValue) ? newValue.map(rawValue => rawValue.value) : newValue.value);
-
+                onChange={(
+                    value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>,
+                    action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                ) => {
                     if (onChange) {
-                        onChange(event, newValue);
+                        onChange(value, action);
                     }
-
-                    field.onChange({ target: { name: field.name, value: returnValue } });
+                    field.onChange({ target: { name: field.name, value: value } });
                 }}
                 onBlur={field.onBlur}
-                disableClearable={true}
-                // invalid={touched && !!errors}
-                sx={{ width: 400 }}
+                invalid={touched && !!errors}
+                defaultOptions
                 {...rest}
             />
 
@@ -118,7 +106,7 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
 export const AsyncDropdownIndicator = props => {
     return (
         <div>
-            <SearchIcon />
+            <Icon type="search" />
         </div>
     );
 };

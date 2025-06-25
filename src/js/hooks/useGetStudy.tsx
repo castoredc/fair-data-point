@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import { Study } from 'types/Resources';
-import { useNotifications } from 'components/WithNotifications';
 
 const useGetStudy = (slug: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [study, setStudy] = useState<Study | null>(null);
-    const notifications = useNotifications();
 
     useEffect(() => {
         const getStudy = async () => {
@@ -20,7 +20,7 @@ const useGetStudy = (slug: string) => {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the study';
-                notifications.show(message, { variant: 'error' });
+                toast.error(<ToastItem type="error" title={message} />);
             }
         };
 
