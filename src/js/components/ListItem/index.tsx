@@ -1,10 +1,8 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { classNames, isURL } from '../../util';
-import Tags from '../Tags';
+import { isURL } from '../../util';
 import { LocationState } from 'history';
 import ListItemButton from '@mui/material/ListItemButton';
-import { Divider } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 

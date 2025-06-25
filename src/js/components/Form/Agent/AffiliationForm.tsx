@@ -4,7 +4,6 @@ import FormItem from '../FormItem';
 import Button from '@mui/material/Button';
 
 import { AffiliationType } from 'types/AffiliationType';
-import CustomIcon from 'components/Icon/CustomIcon';
 import Avatar from 'react-avatar';
 import { Field } from 'formik';
 import Select from 'components/Input/Formik/Select';

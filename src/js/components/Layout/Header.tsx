@@ -6,17 +6,7 @@ import Breadcrumbs from '../Breadcrumbs';
 import LoginModal from '../../modals/LoginModal';
 import { BreadcrumbsType } from 'types/BreadcrumbType';
 import { UserType } from 'types/UserType';
-import {
-    AppBar,
-    Box,
-    Button,
-    Container,
-    IconButton,
-    Stack,
-    Toolbar,
-    Tooltip,
-    Typography,
-} from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DropdownButton from '../Button/DropdownButton';

@@ -1,4 +1,4 @@
-import { createTheme, alpha } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 import { svgIconClasses } from '@mui/material/SvgIcon';
 import { typographyClasses } from '@mui/material/Typography';
 import { buttonBaseClasses } from '@mui/material/ButtonBase';
@@ -10,7 +10,6 @@ import { tablePaginationClasses } from '@mui/material/TablePagination';
 import { menuItemClasses } from '@mui/material/MenuItem';
 import { listClasses } from '@mui/material/List';
 import { paperClasses } from '@mui/material/Paper';
-import { Components } from '@mui/material/styles';
 
 // Augment the theme components to include MUI X DataGrid
 declare module '@mui/material/styles' {

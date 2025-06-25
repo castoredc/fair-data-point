@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Stack, Typography, Tabs, Tab, Paper, Chip } from '@mui/material';
+import { Box, Chip, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 
 type Tab = {
     type?: 'separator';

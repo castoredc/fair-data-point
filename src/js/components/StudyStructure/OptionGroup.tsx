@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton } from '@mui/material';
+import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Annotations from '../Annotations';
 import NoResults from 'components/NoResults';
 import AddAnnotationModal from '../../modals/AddAnnotationModal';

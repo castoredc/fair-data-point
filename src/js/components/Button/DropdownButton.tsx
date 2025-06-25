@@ -1,11 +1,11 @@
-import React, { FC, useState, MouseEvent } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import {
     Button,
     IconButton,
-    Menu,
-    MenuItem,
     ListItemIcon,
     ListItemText,
+    Menu,
+    MenuItem,
     useMediaQuery,
     useTheme,
 } from '@mui/material';

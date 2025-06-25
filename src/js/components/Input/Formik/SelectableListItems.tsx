@@ -1,5 +1,4 @@
 import React, { FC, FormEvent, InputHTMLAttributes } from 'react';
-import { classNames } from '../../../util';
 import CustomIcon from 'components/Icon/CustomIcon';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';

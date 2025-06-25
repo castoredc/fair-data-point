@@ -1,7 +1,6 @@
 import React, { Component, createRef } from 'react';
 import LoadingOverlay from 'components/LoadingOverlay';
 import DataGridHelper from './DataGridHelper';
-import DataGridContainer from './DataGridContainer';
 import { apiClient } from 'src/js/network';
 import { localizedText } from '../../util';
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';

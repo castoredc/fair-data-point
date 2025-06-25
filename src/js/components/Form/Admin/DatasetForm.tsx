@@ -15,7 +15,7 @@ import LoadingOverlay from 'components/LoadingOverlay';
 import WithNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Card, CardContent, Avatar, Box, Grid, Typography, Stack } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Stack, Typography } from '@mui/material';
 
 interface DatasetFormProps extends ComponentWithNotifications {
     dataset?: any;

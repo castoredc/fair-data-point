@@ -2,11 +2,10 @@ import React, { ChangeEvent, FC } from 'react';
 
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { format, setHours, setMinutes, setSeconds, parseISO } from 'date-fns';
+import { format, setHours, setMinutes, setSeconds } from 'date-fns';
 import Stack from '@mui/material/Stack';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import moment from 'moment';
 
 interface DateAndTimePickerProps extends FieldProps {

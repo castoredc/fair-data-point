@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import LoadingOverlay from 'components/LoadingOverlay';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
-import FormHeading from '../FormHeading';
 import { Field, Form, Formik } from 'formik';
 import Choice from 'components/Input/Formik/Choice';
 import Select from 'components/Input/Formik/Select';
@@ -14,7 +13,7 @@ import * as H from 'history';
 import { apiClient } from 'src/js/network';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Alert, CardContent, Card, Divider, Typography } from '@mui/material';
+import { Alert, Card, CardContent, Typography } from '@mui/material';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
 interface DistributionFormProps extends ComponentWithNotifications {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
 import LoadingOverlay from 'components/LoadingOverlay';
 import ListItem from 'components/ListItem';

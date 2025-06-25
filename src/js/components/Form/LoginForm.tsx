@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { localizedText } from '../../util';
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { LoginViews } from 'components/MetadataItem/EnumMappings';
 import { CatalogBrandType } from 'types/CatalogType';
 import { ServerType } from 'types/ServerType';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { classNames, localizedText } from '../../util';
+import { localizedText } from '../../util';
 import Pagination from '@mui/material/Pagination';
 import LoadingOverlay from 'components/LoadingOverlay';
 import DataGridHelper from '../DataTable/DataGridHelper';

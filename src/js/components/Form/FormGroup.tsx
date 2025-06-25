@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 type FormGroupProps = {
     label: string;

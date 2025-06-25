@@ -5,7 +5,6 @@ import LoadingOverlay from 'components/LoadingOverlay';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import * as H from 'history';
 import { localizedText } from '../../../../util';
-import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import Stack from '@mui/material/Stack';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip, Stack } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
 
 type TagsProps = {
     className?: string;

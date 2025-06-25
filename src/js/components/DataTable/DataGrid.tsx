@@ -1,5 +1,5 @@
 import { DataGrid as MuiDataGrid, DataGridProps as MuiDataGridProps, GridOverlay } from '@mui/x-data-grid';
-import { Alert, Box, CircularProgress, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import React from 'react';
 
 interface DataGridProps extends Omit<MuiDataGridProps, 'slots'> {

@@ -14,7 +14,7 @@ import Header from 'components/Layout/Dashboard/Header';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import AddIcon from '@mui/icons-material/Add';
 import DataGrid from 'components/DataTable/DataGrid';
-import { GridColDef, GridValueGetter } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
 
 interface Study {

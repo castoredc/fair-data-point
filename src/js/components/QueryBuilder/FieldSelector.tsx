@@ -1,4 +1,3 @@
-import { findOptionByValue } from '../../util';
 import React, { FC } from 'react';
 import { Field } from 'react-querybuilder';
 import Select from '@mui/material/Select';

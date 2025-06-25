@@ -11,7 +11,6 @@ import { DataSpecificationOptionGroupType } from 'types/DataSpecificationOptionG
 import { getInitialValues, getSchema } from 'utils/MetadataFormHelper';
 import Stack from '@mui/material/Stack';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { Box } from '@mui/material';
 import NoResults from 'components/NoResults';
 
 interface MetadataFormProps extends ComponentWithNotifications {

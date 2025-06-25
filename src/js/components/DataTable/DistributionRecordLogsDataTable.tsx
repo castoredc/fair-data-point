@@ -11,7 +11,6 @@ import { Typography } from '@mui/material';
 import DataGrid from 'components/DataTable/DataGrid';
 import { GridColDef, GridRowParams } from '@mui/x-data-grid';
 import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
-import { Box } from '@mui/material';
 import NoResults from 'components/NoResults';
 
 interface Log {

@@ -2,10 +2,8 @@ import React, { ChangeEvent, FC } from 'react';
 
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers';
-import { format } from 'date-fns';
+import { DatePicker as MuiDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import moment from 'moment';
 
 interface DatePickerProps extends FieldProps {
