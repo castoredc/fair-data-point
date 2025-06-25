@@ -1,194 +1,192 @@
-@import '../../scss/colors';
-
-.StudyStructure {
-    flex: 1;
-    overflow: hidden;
-
-    .StudyStructureType {
-        display: flex;
-        overflow: auto;
-        height: 100%;
-    }
-
-    .StudyStructureNavigator {
-        width: 250px;
-        flex: 0 0 250px;
-        height: 100%;
-        overflow: auto;
-    }
-
-    .StudyStructureContents {
-        display: flex;
-        flex: 1;
-        overflow: auto;
-        margin-left: 32px;
-        height: 100%;
-    }
-
-    .StructureElement {
-        margin-bottom: 15px;
-        border-radius: 3px;
-        overflow: hidden;
-        background: $neutral-20;
-
-        &:last-child {
-            padding-bottom: 0;
-            margin-bottom: 0;
-            border-bottom: none;
-        }
-
-        .StructureElementName {
-            padding: 6px 10px;
-            color: $generic-white;
-            background: $mid-blue;
-        }
-
-        .Steps {
-            margin: 3px 10px 10px 10px;
-
-            .Step {
-                display: block;
-                color: $neutral-500;
-                text-decoration: none;
-                text-align: left;
-                width: 100%;
-                border: none;
-                padding: 7px 5px;
-                background: none;
-                position: relative;
-                border-radius: 3px;
-                margin: 3px 0;
-
-                &.active,
-                &:hover {
-                    color: $azul;
-                }
-
-                &:hover {
-                    background: $neutral-30;
-                }
-            }
-        }
-    }
-
-    .Fields {
-        width: 100%;
-
-        .FieldCheckbox {
-            margin-right: 5px;
-            min-width: 22px;
-        }
-
-        .FieldIcon {
-            margin-right: 10px;
-            width: 16px;
-
-            .FieldIcon path {
-                fill: black !important;
-            }
-        }
-
-        .FieldNumber {
-            min-width: 35px;
-            font-size: 12px;
-            color: $neutral-100;
-            border-radius: 7px;
-            border: 1px solid $neutral-40;
-            text-align: center;
-            margin-right: 10px;
-        }
-
-        .FieldLabel {
-            color: $neutral-800;
-        }
-
-        .FieldVariableName {
-            font-size: 12px;
-            line-height: 11px;
-            color: $neutral-90;
-        }
-    }
-}
-
-.StudyStructureFooter {
-    border-top: 1px solid $neutral-40;
-    margin-top: 40px;
-    padding-top: 20px;
-
-    .SaveButton {
-        text-align: right;
-
-        .FieldCount {
-            color: $neutral-300;
-            margin-right: 10px;
-        }
-    }
-}
-
-.OptionGroupTable {
-    .OptionGroupTableHeader,
-    .OptionGroupItem {
-        display: flex;
-        flex-wrap: wrap;
-
-        border-bottom: solid 1px $neutral-40;
-        width: 100%;
-
-        .OptionGroupTableOption,
-        .OptionGroupTableValue,
-        .OptionGroupTableAnnotations {
-            padding: 0 0.8rem;
-        }
-
-        .OptionGroupTableOption {
-            width: 200px;
-            flex: 0 0 200px;
-        }
-
-        .OptionGroupTableValue {
-            width: 200px;
-            flex: 0 0 200px;
-        }
-
-        .OptionGroupTableAnnotations {
-            flex: 1;
-        }
-
-        .DeleteAnnotation {
-            width: 34px;
-            flex: 0 0 34px;
-            margin-left: 5px;
-        }
-    }
-
-    .OptionGroupTableHeader {
-        font-weight: bold;
-        background-color: $pale-grey;
-        border-bottom: 0.2rem solid $neutral-40;
-        padding: 0.8rem 0;
-    }
-
-    .OptionGroupItem {
-        padding-top: 10px;
-
-        &:hover {
-            background: $neutral-20;
-        }
-
-        &:last-child::after {
-            border-bottom: none;
-        }
-    }
-
-    .OptionGroupItem,
-    .OptionGroupTableHeader {
-        color: $neutral-800;
-    }
-}
-
-.MappingInterface {
-    width: 50%;
-    min-width: 650px;
-    display: flex;
-    flex-direction: column;
-}
+//.StudyStructure {
+//  flex: 1;
+//  overflow: hidden;
+//
+//  .StudyStructureType {
+//    display: flex;
+//    overflow: auto;
+//    height: 100%;
+//  }
+//
+//  .StudyStructureNavigator {
+//    width: 250px;
+//    flex: 0 0 250px;
+//    height: 100%;
+//    overflow: auto;
+//  }
+//
+//  .StudyStructureContents {
+//    display: flex;
+//    flex: 1;
+//    overflow: auto;
+//    margin-left: 32px;
+//    height: 100%;
+//  }
+//
+//  .StructureElement {
+//    margin-bottom: 15px;
+//    border-radius: 3px;
+//    overflow: hidden;
+//    background: $neutral-20;
+//
+//    &:last-child {
+//      padding-bottom: 0;
+//      margin-bottom: 0;
+//      border-bottom: none;
+//    }
+//
+//    .StructureElementName {
+//      padding: 6px 10px;
+//      color: $generic-white;
+//      background: $mid-blue;
+//    }
+//
+//    .Steps {
+//      margin: 3px 10px 10px 10px;
+//
+//      .Step {
+//        display: block;
+//        color: $neutral-500;
+//        text-decoration: none;
+//        text-align: left;
+//        width: 100%;
+//        border: none;
+//        padding: 7px 5px;
+//        background: none;
+//        position: relative;
+//        border-radius: 3px;
+//        margin: 3px 0;
+//
+//        &.active,
+//        &:hover {
+//          color: $azul;
+//        }
+//
+//        &:hover {
+//          background: $neutral-30;
+//        }
+//      }
+//    }
+//  }
+//
+//  .Fields {
+//    width: 100%;
+//
+//    .FieldCheckbox {
+//      margin-right: 5px;
+//      min-width: 22px;
+//    }
+//
+//    .FieldIcon {
+//      margin-right: 10px;
+//      width: 16px;
+//
+//      .FieldIcon path {
+//        fill: black !important;
+//      }
+//    }
+//
+//    .FieldNumber {
+//      min-width: 35px;
+//      font-size: 12px;
+//      color: $neutral-100;
+//      border-radius: 7px;
+//      border: 1px solid $neutral-40;
+//      text-align: center;
+//      margin-right: 10px;
+//    }
+//
+//    .FieldLabel {
+//      color: $neutral-800;
+//    }
+//
+//    .FieldVariableName {
+//      font-size: 12px;
+//      line-height: 11px;
+//      color: $neutral-90;
+//    }
+//  }
+//}
+//
+//.StudyStructureFooter {
+//  border-top: 1px solid $neutral-40;
+//  margin-top: 40px;
+//  padding-top: 20px;
+//
+//  .SaveButton {
+//    text-align: right;
+//
+//    .FieldCount {
+//      color: $neutral-300;
+//      margin-right: 10px;
+//    }
+//  }
+//}
+//
+//.OptionGroupTable {
+//  .OptionGroupTableHeader,
+//  .OptionGroupItem {
+//    display: flex;
+//    flex-wrap: wrap;
+//
+//    border-bottom: solid 1px $neutral-40;
+//    width: 100%;
+//
+//    .OptionGroupTableOption,
+//    .OptionGroupTableValue,
+//    .OptionGroupTableAnnotations {
+//      padding: 0 0.8rem;
+//    }
+//
+//    .OptionGroupTableOption {
+//      width: 200px;
+//      flex: 0 0 200px;
+//    }
+//
+//    .OptionGroupTableValue {
+//      width: 200px;
+//      flex: 0 0 200px;
+//    }
+//
+//    .OptionGroupTableAnnotations {
+//      flex: 1;
+//    }
+//
+//    .DeleteAnnotation {
+//      width: 34px;
+//      flex: 0 0 34px;
+//      margin-left: 5px;
+//    }
+//  }
+//
+//  .OptionGroupTableHeader {
+//    font-weight: bold;
+//    background-color: $pale-grey;
+//    border-bottom: 0.2rem solid $neutral-40;
+//    padding: 0.8rem 0;
+//  }
+//
+//  .OptionGroupItem {
+//    padding-top: 10px;
+//
+//    &:hover {
+//      background: $neutral-20;
+//    }
+//
+//    &:last-child::after {
+//      border-bottom: none;
+//    }
+//  }
+//
+//  .OptionGroupItem,
+//  .OptionGroupTableHeader {
+//    color: $neutral-800;
+//  }
+//}
+//
+//.MappingInterface {
+//  width: 50%;
+//  min-width: 650px;
+//  display: flex;
+//  flex-direction: column;
+//}

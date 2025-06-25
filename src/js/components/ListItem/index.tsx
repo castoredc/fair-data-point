@@ -1,20 +1,17 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import './ListItem.scss';
-import { classNames, isURL } from '../../util';
-import Tags from '../Tags';
-import { Icon } from '@castoredc/matter';
-import CustomIcon from '../Icon/CustomIcon';
-import { MatterIcon } from '@castoredc/matter-icons';
+import { isURL } from '../../util';
 import { LocationState } from 'history';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 type ListItemProps = {
     title: string;
     description?: string;
     link?: string;
     state?: LocationState;
-    icon?: MatterIcon;
-    customIcon?: string;
+    icon?: React.ReactNode;
     smallIcon?: boolean;
     fill?: boolean;
     newWindow?: boolean;
@@ -28,91 +25,66 @@ type ListItemProps = {
 };
 
 const ListItem: FC<ListItemProps> = ({
-    title,
-    description,
-    link,
-    state,
-    icon,
-    customIcon,
-    smallIcon,
-    fill,
-    newWindow,
-    selectable = false,
-    active,
-    className,
-    onClick,
-    badge,
-    tags = [],
-    disabled = false,
-}) => {
-    if (selectable && onClick) {
-        return (
-            <a
-                href="#"
-                className={classNames('ListItem', 'Selectable', active && 'Active', className)}
-                onClick={e => {
-                    e.preventDefault();
-                    onClick(e);
-                }}
-            >
-                {icon && (
-                    <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                        <Icon type={icon} />
-                    </span>
-                )}
-                {customIcon && (
-                    <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                        <CustomIcon type={customIcon} />
-                    </span>
-                )}
-                <span className="ListItemTitle">{title}</span>
-                <span className="ListItemDescription">{description}</span>
-            </a>
-        );
-    }
-
+                                         title,
+                                         description,
+                                         link,
+                                         state,
+                                         icon,
+                                         smallIcon = false,
+                                         fill = true,
+                                         newWindow = false,
+                                         selectable = false,
+                                         active = false,
+                                         className,
+                                         onClick,
+                                         badge,
+                                         tags = [],
+                                         disabled = false,
+                                     }) => {
     const children = (
-        <span>
-            <span className="ListItemHeader">
-                <span className="ListItemTitle">{title}</span>
-                {icon && smallIcon && (
-                    <span className="ListItemSmallIcon">
-                        <Icon type={icon} />
-                    </span>
-                )}
-                {badge && <span className="ListItemBadge">{badge}</span>}
-            </span>
-            <span className="ListItemDescription">{description}</span>
-            {tags.length > 0 && <Tags tags={tags} className="ListItemTags" />}
-        </span>
+        <>
+            <ListItemText
+                primary={title}
+                secondary={description}
+            />
+
+            {icon && smallIcon && (
+                <ListItemIcon>
+                    {icon}
+                </ListItemIcon>
+            )}
+            {/*{badge && <span className="ListItemBadge">{badge}</span>}*/}
+            {/*{tags.length > 0 && <Tags tags={tags} className="ListItemTags" /> */}
+        </>
     );
 
     if (disabled) {
         return <div className="ListItem Disabled">{children}</div>;
     }
 
+    let button: React.ReactElement | null = null;
+
     if (isURL(link) || newWindow) {
-        return (
-            <a href={link} onClick={onClick} target="_blank" className="ListItem">
-                {children}
-            </a>
-        );
+        button = <ListItemButton
+            component="a"
+            href={link}
+            onClick={onClick}
+            target="_blank"
+        >
+            {children}
+        </ListItemButton>;
+    } else {
+        button = <ListItemButton
+            component={Link}
+            to={{ pathname: link, state: state }}
+            // className="ListItem"
+            onClick={onClick}>
+            {children}
+        </ListItemButton>;
     }
 
     // @ts-ignore
-    return (
-        <Link to={{ pathname: link, state: state }} className="ListItem" onClick={onClick}>
-            {children}
-        </Link>
-    );
-};
-
-ListItem.defaultProps = {
-    fill: true,
-    newWindow: false,
-    selectable: false,
-    smallIcon: false,
-    active: false,
+    return button;
 };
 
 export default ListItem;

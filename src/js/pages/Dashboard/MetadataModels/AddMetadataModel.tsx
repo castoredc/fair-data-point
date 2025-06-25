@@ -3,9 +3,10 @@ import MetadataModelForm from 'components/Form/DataSpecification/MetadataModelFo
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import SelectPage from 'components/SelectPage';
 
-interface AddMetadataModelProps extends AuthorizedRouteComponentProps {}
+interface AddMetadataModelProps extends AuthorizedRouteComponentProps {
+}
 
-export default class AddMetadataModel extends Component<AddMetadataModelProps> {
+class AddMetadataModel extends Component<AddMetadataModelProps> {
     render() {
         const { history } = this.props;
         return (
@@ -22,3 +23,5 @@ export default class AddMetadataModel extends Component<AddMetadataModelProps> {
         );
     }
 }
+
+export default AddMetadataModel;

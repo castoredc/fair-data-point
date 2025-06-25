@@ -1,11 +1,11 @@
 import React, { FC, FormEvent, InputHTMLAttributes } from 'react';
-import { classNames } from '../../../util';
-import { Icon } from '@castoredc/matter';
-import { MatterIcon } from '@castoredc/matter-icons';
 import CustomIcon from 'components/Icon/CustomIcon';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import _ from 'lodash';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 interface SelectableListItemsProps extends FieldProps {
     readOnly?: boolean;
@@ -19,14 +19,21 @@ interface ListItemProps extends InputHTMLAttributes<HTMLInputElement> {
     title: string;
     description?: string;
     value: string;
-    icon?: MatterIcon;
+    icon?: React.ReactNode;
     customIcon?: string;
     fill?: boolean;
     active?: boolean;
     handleChange: () => void;
 }
 
-const SelectableListItems: FC<SelectableListItemsProps> = ({ field, readOnly, onChange, options, serverError, multiple }) => {
+const SelectableListItems: FC<SelectableListItemsProps> = ({
+                                                               field,
+                                                               readOnly,
+                                                               onChange,
+                                                               options,
+                                                               serverError,
+                                                               multiple,
+                                                           }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
     return (
@@ -58,22 +65,32 @@ const SelectableListItems: FC<SelectableListItemsProps> = ({ field, readOnly, on
     );
 };
 
-const SelectableListItem: FC<ListItemProps> = ({ title, description, icon, customIcon, fill, active, handleChange, role }) => {
+const SelectableListItem: FC<ListItemProps> = ({
+                                                   title,
+                                                   description,
+                                                   icon,
+                                                   customIcon,
+                                                   fill,
+                                                   active,
+                                                   handleChange,
+                                                   role,
+                                               }) => {
     return (
-        <div className={classNames('ListItem', 'Selectable', active && 'Active')} role={role} onClick={handleChange}>
-            {icon && (
-                <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                    <Icon type={icon} />
-                </span>
-            )}
-            {customIcon && (
-                <span className={classNames('ListItemLeftIcon', fill && 'Fill')}>
-                    <CustomIcon type={customIcon} />
-                </span>
-            )}
-            <span className="ListItemTitle">{title}</span>
-            <span className="ListItemDescription">{description}</span>
-        </div>
+        <ListItemButton
+            selected={active}
+            onClick={handleChange}
+        >
+            {icon && <ListItemIcon>
+                {icon}
+            </ListItemIcon>}
+            {customIcon && <ListItemIcon>
+                <CustomIcon type={customIcon} />
+            </ListItemIcon>}
+            <ListItemText
+                primary={title}
+                secondary={description}
+            />
+        </ListItemButton>
     );
 };
 

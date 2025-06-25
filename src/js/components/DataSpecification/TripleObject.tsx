@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { ActionMenu } from '@castoredc/matter';
 import { TripleObjectProps } from './types';
 import { Node } from './Node';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
+import Box from '@mui/material/Box';
 
 const TripleObject: React.FC<TripleObjectProps> = props => {
     const { tripleId, id, type, title, repeated, value, openTripleModal, data, openRemoveTripleModal } = props;
@@ -15,13 +16,19 @@ const TripleObject: React.FC<TripleObjectProps> = props => {
     };
 
     return (
-        <div className="DataSpecificationObject">
-            {Node(title, type, value, repeated)}
+        <Box
+            className="DataSpecificationObject"
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+            }}
+        >
+            <div>{Node(title, type, value, repeated)}</div>
 
             <div className="DataSpecificationTripleActions" ref={ref}>
-                <ActionMenu
-                    accessibleLabel="Contextual menu"
-                    container={ref.current !== null ? ref.current : undefined}
+                <RowActionsMenu
                     items={[
                         {
                             destination: () => {
@@ -38,7 +45,7 @@ const TripleObject: React.FC<TripleObjectProps> = props => {
                     ]}
                 />
             </div>
-        </div>
+        </Box>
     );
 };
 

@@ -1,5 +1,5 @@
 const DataGridHelper = {
-    getDefaultState: function (perPage) {
+    getDefaultState: function(perPage) {
         return {
             currentPage: 0,
             start: 1,
@@ -9,7 +9,7 @@ const DataGridHelper = {
         };
     },
 
-    parseResults: function (data) {
+    parseResults: function(data) {
         return {
             currentPage: data.currentPage,
             perPage: data.perPage,

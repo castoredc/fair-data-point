@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, Modal, Space, Stack, ValidationMessage } from '@castoredc/matter';
+import Button from '@mui/material/Button';
 import ConfirmModal from 'modals/ConfirmModal';
 import { classNames, getType } from '../util';
 import DependencyModal from 'modals/DependencyModal';
@@ -15,8 +13,13 @@ import { PrefixType } from 'types/PrefixType';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
 import { ResourceType } from 'components/MetadataItem/EnumMappings';
+import Stack from '@mui/material/Stack';
+import Modal from 'components/Modal';
+import AltRouteIcon from '@mui/icons-material/AltRoute';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { Alert } from '@mui/material';
 
-type DataModelModuleModalProps = {
+interface DataModelModuleModalProps extends ComponentWithNotifications {
     show: boolean;
     data: any;
     orderOptions: any;
@@ -35,7 +38,7 @@ type DataModelModuleModalState = {
     showDependencyModal: boolean;
 };
 
-export default class DataSpecificationModuleModal extends Component<DataModelModuleModalProps, DataModelModuleModalState> {
+class DataSpecificationModuleModal extends Component<DataModelModuleModalProps, DataModelModuleModalState> {
     constructor(props) {
         super(props);
 
@@ -75,7 +78,7 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { type, modelId, versionId, onSaved } = this.props;
+        const { type, modelId, versionId, onSaved, notifications } = this.props;
 
         apiClient
             .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/module' + (values.id ? '/' + values.id : ''), values)
@@ -89,14 +92,14 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
                 setSubmitting(false);
             });
     };
 
     handleDelete = (id, callback) => {
-        const { type, modelId, versionId, onSaved } = this.props;
+        const { type, modelId, versionId, onSaved, notifications } = this.props;
 
         apiClient
             .delete('/api/' + type + '/' + modelId + '/v/' + versionId + '/module/' + id)
@@ -105,7 +108,7 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                 onSaved();
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
@@ -131,9 +134,19 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
         const showDependencies = type === 'metadata-model' || (type === 'data-model' && valueNodes.length > 0);
 
         return (
-            <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
+            <Modal open={show} onClose={handleClose} title={title}>
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={schema}>
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         return (
                             <Form>
                                 <DependencyModal
@@ -157,7 +170,8 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                 </FormItem>
 
                                 <FormItem label="Position">
-                                    <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
+                                    <Field component={Select} options={orderOptions} name="order"
+                                           serverError={validation} />
                                 </FormItem>
 
                                 {type === 'metadata-model' && (
@@ -168,7 +182,7 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                                 options={resourceTypes}
                                                 name="resourceType"
                                                 serverError={validation}
-                                                menuPosition="fixed"
+
                                             />
                                         </FormItem>
                                     </>
@@ -179,7 +193,7 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                         <FormItem>
                                             <Field
                                                 component={SingleChoice}
-                                                labelText="Repeated"
+                                                label="Repeated"
                                                 name="repeated"
                                                 serverError={validation}
                                                 details="This group should be repeated for every instance of a specific survey or report"
@@ -190,17 +204,15 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
 
                                 <FormItem>
                                     {!showDependencies ? (
-                                        <ValidationMessage type="warning">
-                                            <>
-                                                There are no value nodes added to this {getType(type)}. <br />
-                                                Please add a value node in order to set up dependencies.
-                                            </>
-                                        </ValidationMessage>
+                                        <Alert severity="warning">
+                                            There are no value nodes added to this {getType(type)}. <br />
+                                            Please add a value node in order to set up dependencies.
+                                        </Alert>
                                     ) : (
                                         <>
                                             <Field
                                                 component={SingleChoice}
-                                                labelText="Dependent"
+                                                label="Dependent"
                                                 name="dependent"
                                                 serverError={validation}
                                                 details="This group will only be rendered when certain criteria are met"
@@ -208,8 +220,8 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
 
                                             {values.dependent && (
                                                 <>
-                                                    <Space bottom="default" />
-                                                    <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">
+                                                    <Button variant="outlined" onClick={this.openDependencyModal}
+                                                            startIcon={<AltRouteIcon />}>
                                                         Edit dependencies
                                                     </Button>
                                                 </>
@@ -219,20 +231,26 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                 </FormItem>
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>
-                                    <Stack alignment="normal" distribution="equalSpacing">
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                         {values.id && (
                                             <ConfirmModal
                                                 title="Delete group"
                                                 action="Delete group"
-                                                variant="danger"
+                                                variant="contained"
+                                                color="error"
                                                 onConfirm={callback => this.handleDelete(values.id, callback)}
                                                 includeButton={true}
                                             >
-                                                Are you sure you want to delete group <strong>{values.title}</strong>?<br />
+                                                Are you sure you want to delete
+                                                group <strong>{values.title}</strong>?<br />
                                                 This will also delete all associated triples.
                                             </ConfirmModal>
                                         )}
-                                        <Button type="submit" disabled={isSubmitting}>
+                                        <Button
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                            variant="contained"
+                                        >
                                             {values.id ? 'Edit group' : 'Add group'}
                                         </Button>
                                     </Stack>
@@ -285,3 +303,5 @@ const resourceTypes = [
     { value: 'distribution', label: ResourceType.distribution },
     { value: 'study', label: ResourceType.study },
 ];
+
+export default withNotifications(DataSpecificationModuleModal);

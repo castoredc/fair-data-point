@@ -1,110 +1,114 @@
-import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
-import ListItem from 'components/ListItem';
-import DataGridHelper from 'components/DataTable/DataGridHelper';
+import React, { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
 import * as H from 'history';
 import { localizedText } from '../../../../util';
 import { isGranted } from 'utils/PermissionHelper';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import AddIcon from '@mui/icons-material/Add';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 
-interface DatasetsProps {
+interface Dataset {
+    id: string;
+    slug: string;
+    hasMetadata: boolean;
+    metadata?: {
+        title: {
+            [key: string]: string;
+        };
+    };
+    permissions: string[];
+}
+
+interface DatasetsProps extends ComponentWithNotifications {
     catalog: string;
     history: H.History;
 }
 
-interface DatasetsState {
-    datasets: any;
-    isLoading: boolean;
-    pagination: any;
-}
+const Datasets: React.FC<DatasetsProps> = ({ catalog, history, notifications }) => {
+    const [datasets, setDatasets] = useState<Dataset[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-export default class Datasets extends Component<DatasetsProps, DatasetsState> {
-    constructor(props) {
-        super(props);
+    const getDatasets = async () => {
+        setLoading(true);
+        setError(null);
 
-        this.state = {
-            isLoading: true,
-            datasets: [],
-            pagination: DataGridHelper.getDefaultState(25),
-        };
-    }
-
-    componentDidMount() {
-        this.getDatasets();
-    }
-
-    getDatasets = () => {
-        const { catalog } = this.props;
-        this.setState({
-            isLoading: true,
-        });
-
-        apiClient
-            .get('/api/catalog/' + catalog + '/dataset')
-            .then(response => {
-                this.setState({
-                    datasets: response.data.results,
-                    pagination: DataGridHelper.parseResults(response.data),
-                    isLoading: false,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while loading the datasets';
-                toast.error(<ToastItem type="error" title={message} />);
-            });
+        try {
+            const response = await apiClient.get(`/api/catalog/${catalog}/dataset`);
+            setDatasets(response.data.results);
+        } catch (error: any) {
+            const message = error.response?.data?.error || 'An error occurred while loading the datasets';
+            setError(message);
+            notifications.show(message, { variant: 'error' });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    render() {
-        const { isLoading, datasets } = this.state;
-        const { catalog, history } = this.props;
+    useEffect(() => {
+        getDatasets();
+    }, [catalog]);
 
-        return (
-            <PageBody>
-                {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
+    const columns: GridColDef<Dataset>[] = [
+        {
+            field: 'displayTitle',
+            headerName: 'Title',
+            flex: 1,
+        },
+    ];
 
-                <Stack distribution="trailing" alignment="end">
-                    <Button
-                        icon="add"
-                        buttonType="primary"
-                        disabled={isLoading}
-                        onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}
-                    >
-                        Add dataset
-                    </Button>
-                </Stack>
+    const rows = datasets.map(dataset => ({
+        ...dataset,
+        displayTitle: dataset.hasMetadata && dataset.metadata?.title
+            ? localizedText(dataset.metadata.title, 'en') || 'Untitled dataset'
+            : 'Untitled dataset',
+    }));
 
-                <div>
-                    {datasets.length === 0 && <div className="NoResults">This study does not have datasets.</div>}
+    return (
+        <PageBody>
+            <Stack direction="row" sx={{ justifyContent: 'flex-end', mb: 2 }}>
+                <Button
+                    startIcon={<AddIcon />}
+                    disabled={loading}
+                    onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}
+                    variant="contained"
+                >
+                    Add dataset
+                </Button>
+            </Stack>
 
-                    {datasets.map(dataset => {
-                        let title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
-
-                        if(title === '') {
-                            title = 'Untitled dataset'
+            <Box sx={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    loading={loading}
+                    error={error}
+                    disableRowSelectionOnClick
+                    emptyStateContent="This study does not have datasets"
+                    onRowClick={(params) => {
+                        if (isGranted('edit', params.row.permissions)) {
+                            history.push(`/dashboard/catalogs/${catalog}/datasets/${params.row.slug}`);
                         }
+                    }}
+                    sx={{
+                        cursor: 'pointer',
+                        '& .MuiDataGrid-row': {
+                            opacity: (theme) => {
+                                const rowId = theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900];
+                                const row = rows.find(r => r.id === rowId);
+                                return row ? (isGranted('edit', row.permissions) ? 1 : 0.5) : 1;
+                            },
+                        },
+                    }}
+                />
+            </Box>
+        </PageBody>
+    );
+};
 
-                        return (
-                            <ListItem
-                                key={dataset.id}
-                                selectable={false}
-                                disabled={!isGranted('edit', dataset.permissions)}
-                                link={`/dashboard/catalogs/${catalog}/datasets/${dataset.slug}`}
-                                title={title}
-                            />
-                        );
-                    })}
-                </div>
-            </PageBody>
-        );
-    }
-}
+export default withNotifications(Datasets);

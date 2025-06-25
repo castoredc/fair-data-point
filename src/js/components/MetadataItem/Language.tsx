@@ -1,6 +1,5 @@
 import React from 'react';
 
-import './MetadataItem.scss';
 import useGetLanguage from '../../hooks/useGetLanguage';
 
 interface LanguageProps {

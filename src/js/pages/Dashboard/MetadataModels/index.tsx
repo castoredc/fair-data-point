@@ -1,90 +1,104 @@
-import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Space } from '@castoredc/matter';
-import ListItem from 'components/ListItem';
+import React, { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
 import DocumentTitle from 'components/DocumentTitle';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
 import { apiClient } from 'src/js/network';
-import DashboardTab from 'components/Layout/DashboardTab';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import Body from 'components/Layout/Dashboard/Body';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import AddIcon from '@mui/icons-material/Add';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 
-interface MetadataModelsProps extends AuthorizedRouteComponentProps {}
-
-interface MetadataModelsState {
-    metadataModels: any;
-    isLoading: boolean;
+interface MetadataModel {
+    id: string;
+    title: string;
+    permissions: string[];
 }
 
-export default class MetadataModels extends Component<MetadataModelsProps, MetadataModelsState> {
-    constructor(props) {
-        super(props);
+interface MetadataModelsProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
-        this.state = {
-            metadataModels: [],
-            isLoading: false,
-        };
-    }
+const MetadataModels: React.FC<MetadataModelsProps> = ({ history, location, user, notifications }) => {
+    const [metadataModels, setMetadataModels] = useState<MetadataModel[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    getMetadataModels = () => {
-        this.setState({
-            isLoading: true,
-        });
+    const columns: GridColDef<MetadataModel>[] = [
+        {
+            field: 'title',
+            headerName: 'Title',
+            flex: 1,
+        },
+    ];
 
-        apiClient
-            .get('/api/metadata-model/my')
-            .then(response => {
-                this.setState({
-                    metadataModels: response.data.results.filter(model => model.permissions.includes('edit')),
-                    isLoading: false,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false,
-                });
+    const getMetadataModels = async () => {
+        setLoading(true);
+        setError(null);
 
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your metadata models" />);
-                }
-            });
+        try {
+            const response = await apiClient.get('/api/metadata-model/my');
+            const mappedModels: MetadataModel[] = response.data.results
+                .filter((model: any) => model.permissions.includes('edit'))
+                .map((model: any) => ({
+                    id: model.id,
+                    title: model.title || 'Untitled model',
+                    permissions: model.permissions,
+                }));
+            setMetadataModels(mappedModels);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.error || 'An error occurred while loading your metadata models';
+            setError(errorMessage);
+            notifications.show(errorMessage, { variant: 'error' });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    componentDidMount() {
-        this.getMetadataModels();
-    }
+    useEffect(() => {
+        getMetadataModels();
+    }, []);
 
-    render() {
-        const { history, user } = this.props;
-        const { isLoading, metadataModels } = this.state;
+    return (
+        <DashboardPage>
+            <DocumentTitle title="Metadata models" />
+            <DashboardSideBar location={location} history={history} user={user} />
 
-        return (
-            <DashboardTab>
-                <DocumentTitle title="Metadata models" />
-
-                {isLoading && <LoadingOverlay accessibleLabel="Loading metadata models" />}
-
-                <Space bottom="comfortable" />
-
-                <DashboardTabHeader title="My metadata models" type="Section">
+            <Body>
+                <Header title="My metadata models">
                     {isAdmin(user) && (
-                        <Button buttonType="primary" onClick={() => history.push('/dashboard/metadata-models/add')}>
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => history.push('/dashboard/metadata-models/add')}
+                            variant="contained"
+                        >
                             Add metadata model
                         </Button>
                     )}
-                </DashboardTabHeader>
+                </Header>
 
-                <div>
-                    {metadataModels.map(model => {
-                        return <ListItem selectable={false} link={`/dashboard/metadata-models/${model.id}`} title={model.title} />;
-                    })}
+                <PageBody>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={metadataModels}
+                            columns={columns}
+                            loading={loading}
+                            error={error}
+                            disableRowSelectionOnClick
+                            emptyStateContent="No metadata models found"
+                            onRowClick={(params) => history.push(`/dashboard/metadata-models/${params.row.id}`)}
+                            sx={{ cursor: 'pointer' }}
+                        />
+                    </Box>
+                </PageBody>
+            </Body>
+        </DashboardPage>
+    );
+};
 
-                    {metadataModels.length == 0 && <div className="NoResults">No metadata models found.</div>}
-                </div>
-            </DashboardTab>
-        );
-    }
-}
+export default withNotifications(MetadataModels);

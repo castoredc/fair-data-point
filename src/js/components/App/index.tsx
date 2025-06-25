@@ -2,22 +2,22 @@ import React, { Component } from 'react';
 
 import Routes from '../../Routes';
 
-import '../../scss/index.scss';
-import './App.scss';
-import { toast, ToastContainer } from 'react-toastify';
-import { LoadingOverlay } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import queryString from 'query-string';
 import { classNames } from '../../util';
 import { UserType } from 'types/UserType';
 import { apiClient } from 'src/js/network';
-import ToastItem from 'components/ToastItem';
+import WithNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { theme } from '../../theme';
 
 interface AppState {
     isLoading: boolean;
     user: UserType | null;
 }
 
-class App extends Component<{}, AppState> {
+class App extends Component<ComponentWithNotifications, AppState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,6 +31,8 @@ class App extends Component<{}, AppState> {
     }
 
     getUser = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/user')
             .then(response => {
@@ -50,7 +52,7 @@ class App extends Component<{}, AppState> {
                     isLoading: false,
                 });
 
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
@@ -61,22 +63,15 @@ class App extends Component<{}, AppState> {
         const embedded = typeof params.embed !== 'undefined';
 
         return (
-            <div className={classNames('App', embedded && 'Embedded')}>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={10000}
-                    hideProgressBar={true}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    draggable={false}
-                    pauseOnHover
-                    icon={false}
-                />
-                {isLoading ? <LoadingOverlay accessibleLabel="Loading" /> : <Routes user={user} embedded={embedded} />}
-            </div>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <div className={classNames('App', embedded && 'Embedded')}>
+                    {isLoading ? <LoadingOverlay accessibleLabel="Loading" /> :
+                        <Routes user={user} embedded={embedded} />}
+                </div>
+            </ThemeProvider>
         );
     }
 }
 
-export default App;
+export default WithNotifications(App);

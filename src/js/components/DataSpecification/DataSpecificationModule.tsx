@@ -1,6 +1,12 @@
 import React from 'react';
 import TripleGroup from './TripleGroup';
-import { Button, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import NoResults from 'components/NoResults';
+
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import Stack from '@mui/material/Stack';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 type Triple = {
     id: string;
@@ -20,20 +26,21 @@ type DataSpecificationModuleProps = {
 };
 
 const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
-    groupedTriples,
-    openModuleModal,
-    openTripleModal,
-    openRemoveTripleModal,
-}) => {
+                                                                             groupedTriples,
+                                                                             openModuleModal,
+                                                                             openTripleModal,
+                                                                             openRemoveTripleModal,
+                                                                         }) => {
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
-                <Stack distribution="trailing">
-                    <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
+                <Stack direction="row" sx={{ justifyContent: 'flex-end', pb: 2 }} spacing={1}>
+                    <Button startIcon={<EditIcon />} variant="outlined" onClick={openModuleModal}>
                         Edit group
                     </Button>
                     <Button
-                        icon="add"
+                        variant="contained"
+                        startIcon={<AddIcon />}
                         onClick={() => {
                             openTripleModal(null);
                         }}
@@ -43,39 +50,40 @@ const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
                 </Stack>
             </div>
 
-            <div className="DataSpecificationTable LargeTable">
-                <div className="DataSpecificationTableHeader TableHeader">
-                    <div>
-                        <div>Subject</div>
-                    </div>
-                    <div>
-                        <div>Predicate</div>
-                    </div>
-                    <div>
-                        <div>Object</div>
-                    </div>
-                </div>
-
-                {groupedTriples.length === 0 ? (
-                    <div className="NoResults">This group does not contain triples.</div>
-                ) : (
-                    <div className="DataSpecificationTableBody TableBody">
-                        {groupedTriples.map(element => (
-                            <TripleGroup
-                                key={element.id}
-                                id={element.id}
-                                type={element.type}
-                                title={element.title}
-                                repeated={element.repeated}
-                                value={element.value}
-                                predicates={element.predicates}
-                                openTripleModal={openTripleModal}
-                                openRemoveTripleModal={openRemoveTripleModal}
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
+            <TableContainer component={Paper} className="DataSpecificationTable LargeTable">
+                <Table>
+                    <TableHead>
+                        <TableRow className="DataSpecificationTableHeader TableHeader">
+                            <TableCell sx={{ width: '33.33%' }}>Subject</TableCell>
+                            <TableCell sx={{ width: '33.33%' }}>Predicate</TableCell>
+                            <TableCell sx={{ width: '33.33%' }}>Object</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody className="DataSpecificationTableBody TableBody">
+                        {groupedTriples.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={3}>
+                                    <NoResults>This group does not contain triples.</NoResults>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            groupedTriples.map(element => (
+                                <TripleGroup
+                                    key={element.id}
+                                    id={element.id}
+                                    type={element.type}
+                                    title={element.title}
+                                    repeated={element.repeated}
+                                    value={element.value}
+                                    predicates={element.predicates}
+                                    openTripleModal={openTripleModal}
+                                    openRemoveTripleModal={openRemoveTripleModal}
+                                />
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 };

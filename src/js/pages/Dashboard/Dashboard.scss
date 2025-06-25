@@ -1,55 +1,52 @@
-@import '../../scss/const';
-@import '../../scss/colors';
-
-.Dashboard {
-    .Main {
-        display: flex;
-        overflow: hidden;
-        min-height: calc(-48px + 100vh);
-        position: fixed;
-        top: 48px;
-        left: 0;
-        right: 0;
-
-        .Back {
-            padding: 0 1.6rem;
-        }
-
-        .DashboardTabs {
-            margin-left: auto;
-            margin-right: auto;
-            overflow: auto;
-            width: 960px;
-            max-width: 100%;
-            padding: $pagePadding 3.2rem $pagePadding 3.2rem;
-            display: flex;
-        }
-    }
-
-    .LargeTable {
-        display: flex;
-        flex-flow: column;
-        height: 100%;
-
-        //* {
-        //    box-sizing: border-box;
-        //}
-
-        .TableHeader {
-            padding: 10px 0;
-            background-color: $pale-grey;
-            border-bottom: 0.2rem solid $neutral-50 !important;
-            scrollbar-gutter: stable;
-            overflow: hidden;
-
-            div div {
-                padding: 0 10px;
-            }
-        }
-
-        .TableBody {
-            flex: 1;
-            overflow: auto;
-        }
-    }
-}
+//.Dashboard {
+//    .Main {
+//        display: flex;
+//        overflow: hidden;
+//        min-height: calc(-48px + 100vh);
+//        position: fixed;
+//        top: 48px;
+//        left: 0;
+//        right: 0;
+//
+//        .Back {
+//            padding: 0 1.6rem;
+//        }
+//
+//        .DashboardTabs {
+//            margin-left: auto;
+//            margin-right: auto;
+//            overflow: auto;
+//            width: 960px;
+//            max-width: 100%;
+//            padding: $pagePadding 3.2rem $pagePadding 3.2rem;
+//            display: flex;
+//        }
+//    }
+//
+//    .LargeTable {
+//        display: flex;
+//        flex-flow: column;
+//        height: 100%;
+//
+//        //* {
+//        //    box-sizing: border-box;
+//        //}
+//
+//        .TableHeader {
+//            padding: 10px 0;
+//            background-color: $pale-grey;
+//            border-bottom: 0.2rem solid $neutral-50 !important;
+//            scrollbar-gutter: stable;
+//            overflow: hidden;
+//
+//            div div {
+//                padding: 0 10px;
+//            }
+//        }
+//
+//        .TableBody {
+//            flex: 1;
+//            overflow: auto;
+//        }
+//    }
+//}

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './StudyStructure.scss';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { LoadingOverlay, Tabs } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import FieldListItem from '../ListItem/FieldListItem';
 import StudyStructureNavigator from './StudyStructureNavigator';
 import { apiClient } from 'src/js/network';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import PageTabs from 'components/PageTabs';
+import NoResults from 'components/NoResults';
 
-interface StudyStructureProps {
+interface StudyStructureProps extends ComponentWithNotifications {
     studyId: string;
     types?: string[];
     selectable?: boolean;
@@ -29,7 +30,7 @@ interface StudyStructureState {
     selectableTypes: string[];
 }
 
-export default class StudyStructure extends Component<StudyStructureProps, StudyStructureState> {
+class StudyStructure extends Component<StudyStructureProps, StudyStructureState> {
     constructor(props: StudyStructureProps) {
         super(props);
         this.state = {
@@ -60,7 +61,7 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
     }
 
     getStructure = () => {
-        const { studyId } = this.props;
+        const { studyId, notifications } = this.props;
         const { selectedType } = this.state;
 
         this.setState({ isLoadingStructure: true });
@@ -76,12 +77,12 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
                     () => {
                         this.parseTypes();
                         this.handleStepSwitch(response.data[selectedType][0].steps[0]);
-                    }
+                    },
                 );
             })
             .catch(error => {
                 const errorMessage = error.response?.data?.error || 'An error occurred';
-                toast.error(<ToastItem type="error" title={errorMessage} />);
+                notifications.show(errorMessage, { variant: 'error' });
 
                 this.setState({ isLoadingStructure: false });
             });
@@ -113,7 +114,7 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
     };
 
     handleStepSwitch = (step: any) => {
-        const { studyId } = this.props;
+        const { studyId, notifications } = this.props;
 
         this.setState({
             isLoadingFields: true,
@@ -130,7 +131,7 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
             })
             .catch(error => {
                 const errorMessage = error.response?.data?.error || 'An error occurred';
-                toast.error(<ToastItem type="error" title={errorMessage} />);
+                notifications.show(errorMessage, { variant: 'error' });
 
                 this.setState({
                     isLoadingFields: false,
@@ -140,7 +141,15 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
 
     render() {
         const { selectable, selection, onSelect, dataFormat, dataType, dataTransformation } = this.props;
-        const { structure, isLoadingFields, fields, selectedStep, selectedType, isLoadingStructure, selectableTypes } = this.state;
+        const {
+            structure,
+            isLoadingFields,
+            fields,
+            selectedStep,
+            selectedType,
+            isLoadingStructure,
+            selectableTypes,
+        } = this.state;
 
         if (isLoadingStructure) {
             return <LoadingOverlay accessibleLabel="Loading structure" />;
@@ -148,13 +157,14 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
 
         const cannotBeSelected = (
             <div className="StudyStructureType">
-                <div className="NoResults">This type cannot be selected.</div>
+                <NoResults>This type cannot be selected.</NoResults>
             </div>
         );
 
         const tabContent = (
             <div className="StudyStructureType">
-                <StudyStructureNavigator contents={structure[selectedType]} selectedStep={selectedStep} handleStepSwitch={this.handleStepSwitch} />
+                <StudyStructureNavigator contents={structure[selectedType]} selectedStep={selectedStep}
+                                         handleStepSwitch={this.handleStepSwitch} />
                 <div className="StudyStructureContents">
                     <div className="Fields">
                         {isLoadingFields ? (
@@ -188,7 +198,7 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
 
         return (
             <div className="StudyStructure PageTabs">
-                <Tabs
+                <PageTabs
                     onChange={this.changeType}
                     selected={selectedType}
                     tabs={{
@@ -210,3 +220,5 @@ export default class StudyStructure extends Component<StudyStructureProps, Study
         );
     }
 }
+
+export default withNotifications(StudyStructure);

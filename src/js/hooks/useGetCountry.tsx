@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiClient } from '../network';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { CountryType } from 'types/CountryType';
+import { useNotifications } from 'components/WithNotifications';
 
 const useGetCountry = (code: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [country, setCountry] = useState<CountryType | null>(null);
+    const notifications = useNotifications();
 
     useEffect(() => {
         const getCountry = async () => {
@@ -16,7 +16,7 @@ const useGetCountry = (code: string) => {
                 setIsLoading(false);
             } catch (error) {
                 setIsLoading(false);
-                toast.error(<ToastItem type="error" title="Could not load country information." />);
+                notifications.show('Could not load country information.', { variant: 'error' });
             }
         };
 

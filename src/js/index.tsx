@@ -2,22 +2,23 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AppProvider } from '@castoredc/matter';
 import App from './components/App';
-import { edcTheme } from '@castoredc/matter-utils';
 import TagManager from 'react-gtm-module';
+import { SnackbarProvider } from 'notistack';
 
 TagManager.initialize({
     gtmId: 'GTM-MPCWGSR',
 });
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+
+root.render(
     <Router>
-        <AppProvider theme={edcTheme}>
+        <SnackbarProvider
+            autoHideDuration={5000}
+        >
             <App />
-        </AppProvider>
-    </Router>,
-    document.getElementById('root')
-);
+        </SnackbarProvider>
+    </Router>);

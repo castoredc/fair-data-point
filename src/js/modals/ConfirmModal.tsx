@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { Button, ButtonVariants, Modal } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Modal from 'components/Modal';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 type ConfirmModalProps = {
     show?: boolean;
     title: string;
     action: string;
-    variant: ButtonVariants;
+    variant: 'text' | 'contained' | 'outlined';
+    color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
     onCancel?: () => void;
     onConfirm: (callback?: () => void) => void;
+    children?: React.ReactNode
 };
 
 type ShowProps = { includeButton: true } | { includeButton?: false; show: boolean };
@@ -16,7 +21,7 @@ type ConfirmModalState = {
     showCancelModal: boolean;
 };
 
-export default class ConfirmModal extends Component<ConfirmModalProps & ShowProps, ConfirmModalState> {
+class ConfirmModal extends Component<ConfirmModalProps & ShowProps, ConfirmModalState> {
     constructor(props) {
         super(props);
 
@@ -52,7 +57,7 @@ export default class ConfirmModal extends Component<ConfirmModalProps & ShowProp
                 if (onCancel) {
                     onCancel();
                 }
-            }
+            },
         );
     };
 
@@ -67,35 +72,34 @@ export default class ConfirmModal extends Component<ConfirmModalProps & ShowProp
     };
 
     render() {
-        const { title, children, action, variant, includeButton = false } = this.props;
+        const { title, children, action, variant, color, includeButton = false } = this.props;
         const { showCancelModal } = this.state;
 
         const modal = (
             <Modal
                 open={showCancelModal}
                 title={title}
-                accessibleName={title}
                 onClose={this.handleCancel}
-                primaryAction={{
-                    label: action,
-                    onClick: this.handleConfirm,
-                }}
-                secondaryActions={[
-                    {
-                        label: 'Cancel',
-                        onClick: this.handleCancel,
-                        buttonType: 'contentOnly',
-                    },
-                ]}
             >
                 {children}
+
+                <Box sx={{ mt: 2 }}>
+                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                        <Button variant={variant ? variant : 'contained'} color={color} onClick={this.handleConfirm}>
+                            {action}
+                        </Button>
+                        <Button variant="outlined" onClick={this.handleCancel}>
+                            Cancel
+                        </Button>
+                    </Stack>
+                </Box>
             </Modal>
         );
 
         if (includeButton) {
             return (
                 <div className="Confirm">
-                    <Button buttonType={variant ? variant : 'primary'} onClick={this.handleClick}>
+                    <Button variant={variant ? variant : 'contained'} color={color} onClick={this.handleClick}>
                         {action}
                     </Button>
                     {modal}
@@ -106,3 +110,5 @@ export default class ConfirmModal extends Component<ConfirmModalProps & ShowProp
         }
     }
 }
+
+export default ConfirmModal;

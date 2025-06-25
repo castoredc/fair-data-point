@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 
-import '../Form.scss';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { FieldArray, Form, Formik } from 'formik';
 import AffiliationForm from 'components/Form/Agent/AffiliationForm';
 import * as Yup from 'yup';
 import { UserType } from 'types/UserType';
 import { apiClient } from 'src/js/network';
+import AddIcon from '@mui/icons-material/Add';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface AffiliationsFormProps {
+interface AffiliationsFormProps extends ComponentWithNotifications {
     user: UserType;
     onSaved: () => void;
 }
@@ -22,7 +23,7 @@ interface AffiliationsFormState {
     affiliations: any;
 }
 
-export default class AffiliationsForm extends Component<AffiliationsFormProps, AffiliationsFormState> {
+class AffiliationsForm extends Component<AffiliationsFormProps, AffiliationsFormState> {
     constructor(props) {
         super(props);
 
@@ -35,6 +36,8 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
     }
 
     getCountries = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/countries')
             .then(response => {
@@ -45,9 +48,9 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -57,7 +60,7 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
     }
 
     handleSubmit = values => {
-        const { onSaved } = this.props;
+        const { onSaved, notifications } = this.props;
 
         this.setState({
             isLoading: true,
@@ -72,7 +75,7 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                     },
                     () => {
                         onSaved();
-                    }
+                    },
                 );
             })
             .catch(error => {
@@ -81,7 +84,7 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while updating your affiliations" />);
+                    notifications.show('An error occurred while updating your affiliations', { variant: 'error' });
                 }
                 this.setState({
                     isLoading: false,
@@ -103,11 +106,21 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
         return (
             <>
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={AffiliationSchema}>
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         return (
                             <Form>
                                 {isLoading && <LoadingOverlay accessibleLabel="Submitting affiliations" />}
-                                <div className="FormContent">
+                                <div>
                                     {/* @ts-ignore */}
                                     <FieldArray
                                         name="affiliations"
@@ -127,8 +140,12 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                                                         />
                                                     ))}
                                                 </div>
-                                                <Stack distribution="trailing" alignment="end">
-                                                    <Button buttonType="secondary" icon="add" onClick={() => arrayHelpers.push(defaultData)}>
+                                                <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+                                                    <Button
+                                                        variant="outlined"
+                                                        startIcon={<AddIcon />}
+                                                        onClick={() => arrayHelpers.push(defaultData)}
+                                                    >
                                                         Add another affiliation
                                                     </Button>
                                                 </Stack>
@@ -137,9 +154,9 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                                     />
                                 </div>
 
-                                <div className="FormButtons">
-                                    <Stack distribution="trailing">
-                                        <Button type="submit" disabled={isLoading}>
+                                <div>
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                                        <Button type="submit" disabled={isLoading} variant="contained">
                                             Save details
                                         </Button>
                                     </Stack>
@@ -214,8 +231,10 @@ const AffiliationSchema = Yup.object().shape({
                         }),
                 }),
                 position: Yup.string().required('Please enter your position'),
-            })
+            }),
         )
         .required('Please add an affiliation') // these constraints are shown if and only if inner constraints are satisfied
         .min(1, 'Please add an affiliation'),
 });
+
+export default withNotifications(AffiliationsForm);

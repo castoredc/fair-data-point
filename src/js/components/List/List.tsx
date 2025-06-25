@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { classNames, localizedText } from '../../util';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { LoadingOverlay, Pagination } from '@castoredc/matter';
+import { localizedText } from '../../util';
+import Pagination from '@mui/material/Pagination';
+import LoadingOverlay from 'components/LoadingOverlay';
 import DataGridHelper from '../DataTable/DataGridHelper';
 import ListItem from 'components/ListItem';
 import { apiClient } from 'src/js/network';
 import { CommonListProps } from 'components/List/types';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { List as MuiList } from '@mui/material';
+import NoResults from 'components/NoResults';
 
 export interface Item {
     id: string;
@@ -35,13 +37,13 @@ export interface CommonListState {
     pagination: PaginationState;
 }
 
-interface ListProps extends CommonListProps {
+interface ListProps extends CommonListProps, ComponentWithNotifications {
     apiEndpoint: string;
     filterFunction?: (item: Item) => boolean;
     noResultsText: string;
 }
 
-export default class List extends Component<ListProps, CommonListState> {
+class List extends Component<ListProps, CommonListState> {
     constructor(props: ListProps) {
         super(props);
 
@@ -58,7 +60,7 @@ export default class List extends Component<ListProps, CommonListState> {
 
     getItems = () => {
         const { pagination } = this.state;
-        const { agent, apiEndpoint, filterFunction } = this.props;
+        const { agent, apiEndpoint, filterFunction, notifications } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -88,22 +90,22 @@ export default class List extends Component<ListProps, CommonListState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the items';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
-    handlePagination = paginationCount => {
+    handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: value,
+                    perPage: pagination.perPage,
                 },
             },
-            this.getItems
+            this.getItems,
         );
     };
 
@@ -116,11 +118,11 @@ export default class List extends Component<ListProps, CommonListState> {
         }
 
         if (items === null) {
-            return <LoadingOverlay accessibleLabel="Loading items" content="" />;
+            return <LoadingOverlay accessibleLabel="Loading items" />;
         }
 
         return (
-            <div className={classNames('Items', className)}>
+            <MuiList sx={{ width: '100%' }}>
                 {items.length > 0 ? (
                     <>
                         {items.map(item => (
@@ -134,17 +136,17 @@ export default class List extends Component<ListProps, CommonListState> {
                             />
                         ))}
                         <Pagination
-                            accessibleName="Pagination"
                             onChange={this.handlePagination}
-                            pageSize={pagination.perPage}
-                            currentPage={pagination.currentPage - 1}
-                            totalItems={pagination.totalResults}
+                            page={pagination.currentPage}
+                            count={pagination.totalResults}
                         />
                     </>
                 ) : (
-                    <div className="NoResults">{noResultsText}</div>
+                    <NoResults>{noResultsText}</NoResults>
                 )}
-            </div>
+            </MuiList>
         );
     }
 }
+
+export default withNotifications(List);

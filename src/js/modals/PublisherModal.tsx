@@ -1,17 +1,20 @@
 import React, { FC, useState } from 'react';
-import { Choice, Modal } from '@castoredc/matter';
 import PersonForm from 'components/Form/Agent/PersonForm';
 import OrganizationForm from 'components/Form/Agent/OrganizationForm';
 import { CountryType } from 'types/CountryType';
+import Modal from 'components/Modal';
+import RadioGroup from 'components/RadioGroup';
+import { FormLabel } from '@mui/material';
 
 type PublisherModalProps = {
     open: boolean;
     onClose: () => void;
     handleSave: (publisher) => void;
     countries: CountryType[];
+    label: string,
 };
 
-const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, countries }) => {
+const PublisherModal: FC<PublisherModalProps> = ({ open, label, onClose, handleSave, countries }) => {
     const [type, setType] = useState('person');
 
     const handleSubmit = (values, { setSubmitting }) => {
@@ -42,26 +45,26 @@ const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, co
         }
     };
 
-    const title = 'Add publisher';
+    const title = `Add ${label}`;
 
     return (
-        <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
-            <Choice
-                labelText="Type"
+        <Modal open={open} title={title} onClose={onClose}>
+            <FormLabel>Type</FormLabel>
+
+            <RadioGroup
                 options={[
                     {
-                        labelText: 'Person',
+                        label: 'Person',
                         value: 'person',
-                        checked: type === 'person',
                     },
                     {
-                        labelText: 'Organization',
+                        label: 'Organization',
                         value: 'organization',
-                        checked: type === 'organization',
                     },
                 ]}
                 name="type"
                 collapse={true}
+                value={type}
                 onChange={e => setType('value' in e.target ? (e.target.value as string) : '')}
             />
 

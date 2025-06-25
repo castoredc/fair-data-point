@@ -10,6 +10,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import useGetStudy from '../../../hooks/useGetStudy';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 import MetadataSideBar from 'components/MetadataSideBar';
+import Grid from '@mui/material/Grid';
 
 interface StudyProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -21,27 +22,29 @@ const Study: React.FC<StudyProps> = ({ user, embedded, location, match }) => {
     const breadcrumbs = getBreadCrumbs(location, { study });
     let title = study ? localizedText(study.metadata.title, 'en') : 'Untitled study';
 
-    if(title === '') {
-        title = 'Untitled study'
+    if (title === '') {
+        title = 'Untitled study';
     }
 
     return (
-        <Layout className="Study" embedded={embedded}>
+        <Layout embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoadingStudy}>
                 {study && (
                     <>
-                        <div className="MainCol">
-                            <MetadataDescription metadata={study.metadata} />
-                        </div>
-                        <div className="SideCol">
-                            <MetadataSideBar metadata={study.metadata} title={title} />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid size={8}>
+                                <MetadataDescription metadata={study.metadata} />
+                            </Grid>
+                            <Grid size={4}>
+                                <MetadataSideBar metadata={study.metadata} title={title} />
+                            </Grid>
+                        </Grid>
 
                         <AssociatedItemsBar items={study.count} current="dataset" />
 
-                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} className="MainCol" />
+                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
                     </>
                 )}
             </MainBody>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import LoadingOverlay from 'components/LoadingOverlay';
 import MetadataVersionModal from '../../../modals/MetadataVersionModal';
 import { Form, Formik } from 'formik';
 import { apiClient } from 'src/js/network';
@@ -9,8 +9,11 @@ import { RenderedMetadataFormType } from 'types/RenderedMetadataFormType';
 import RenderedForm from 'components/Form/Metadata/RenderedForm';
 import { DataSpecificationOptionGroupType } from 'types/DataSpecificationOptionGroupType';
 import { getInitialValues, getSchema } from 'utils/MetadataFormHelper';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
-type MetadataFormProps = {
+interface MetadataFormProps extends ComponentWithNotifications {
     object: any;
     type: any;
     onCreate: () => void;
@@ -30,7 +33,7 @@ type MetadataFormState = {
     optionGroups: DataSpecificationOptionGroupType[];
 };
 
-export default class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
+class MetadataForm extends Component<MetadataFormProps, MetadataFormState> {
     constructor(props) {
         super(props);
 
@@ -67,6 +70,8 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
     }
 
     getMetadataModels = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/metadata-model/my')
             .then(response => {
@@ -85,12 +90,12 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getForms = () => {
-        const { object } = this.props;
+        const { object, notifications } = this.props;
 
         apiClient
             .get('/api/metadata/form/' + object.metadata.id)
@@ -100,13 +105,12 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getOptionGroups = () => {
-        const { object } = this.props;
-        const { type } = this.props;
+        const { object, notifications } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -122,11 +126,13 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the option groups';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
     getLanguages = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/languages')
             .then(response => {
@@ -135,11 +141,13 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getLicenses = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/licenses')
             .then(response => {
@@ -148,11 +156,13 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getCountries = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/countries')
             .then(response => {
@@ -162,9 +172,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -185,7 +195,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { object, type, onSave } = this.props;
+        const { object, type, onSave, notifications } = this.props;
 
         this.setState({
             isLoading: true,
@@ -198,8 +208,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
 
                 setSubmitting(false);
 
-                toast.success(<ToastItem type="success" title="The metadata are saved successfully" />, {
-                    position: 'top-right',
+                notifications.show('The metadata are saved successfully', {
+                    variant: 'success',
+
                 });
 
                 onSave();
@@ -210,9 +221,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 this.setState({ isLoading: false });
@@ -222,7 +233,17 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
     };
 
     render() {
-        const { validation, languages, licenses, countries, currentVersion, showModal, metadataModels, forms, optionGroups } = this.state;
+        const {
+            validation,
+            languages,
+            licenses,
+            countries,
+            currentVersion,
+            showModal,
+            metadataModels,
+            forms,
+            optionGroups,
+        } = this.state;
         const { type, object } = this.props;
 
         if (metadataModels === undefined) {
@@ -242,15 +263,18 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                         type={type}
                         objectId={object.id}
                     />
-
-                    <div className="NoResults">
+                    <NoResults>
                         This {type} does not have any metadata yet.
                         <br />
                         <br />
-                        <Button icon="add" onClick={() => this.showModal()}>
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => this.showModal()}
+                            variant="contained"
+                        >
                             Add metadata
                         </Button>
-                    </div>
+                    </NoResults>
                 </>
             );
         }
@@ -276,30 +300,40 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 />
 
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={schema}>
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         return (
                             <Form>
-                                <div className="FormContent">
-                                    {forms.map(form => {
-                                        return (
-                                            <RenderedForm
-                                                key={form.id}
-                                                form={form}
-                                                validation={validation}
-                                                optionGroups={optionGroups}
-                                                languages={languages}
-                                                licenses={licenses}
-                                                countries={countries}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                                <div className="FormButtons">
-                                    <Stack distribution="space-between">
-                                        <Button buttonType="secondary" icon="add" onClick={() => this.showModal()}>
+                                <div>
+                                    {forms.map(form => (
+                                        <RenderedForm
+                                            key={form.id}
+                                            form={form}
+                                            validation={validation}
+                                            optionGroups={optionGroups}
+                                            languages={languages}
+                                            licenses={licenses}
+                                            countries={countries}
+                                        />
+                                    ))}
+                                    <Stack direction="row" sx={{ justifyContent: 'space-between', mt: 2 }}>
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<AddIcon />}
+                                            onClick={() => this.showModal()}
+                                        >
                                             New metadata version
                                         </Button>
-                                        <Button buttonType="primary" type="submit" disabled={isSubmitting}>
+                                        <Button type="submit" disabled={isSubmitting} variant="contained">
                                             Save
                                         </Button>
                                     </Stack>
@@ -312,3 +346,5 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         );
     }
 }
+
+export default withNotifications(MetadataForm);

@@ -1,5 +1,6 @@
 import React, { FC, useRef } from 'react';
-import { ActionMenu } from '@castoredc/matter';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
+import Box from '@mui/material/Box';
 
 interface AnnotationProps {
     conceptCode: string;
@@ -12,23 +13,19 @@ const Annotation: FC<AnnotationProps> = ({ conceptCode, displayName, ontology, h
     const ref = useRef<HTMLDivElement>(null);
 
     return (
-        <div className="Annotation">
-            <div className="OntologyName">{ontology}</div>
-            <div className="ConceptDisplayName">{displayName}</div>
-            <div className="ConceptCode">{conceptCode}</div>
-            <div className="DeleteAnnotation" ref={ref}>
-                <ActionMenu
-                    accessibleLabel="Contextual menu"
-                    container={ref.current !== null ? ref.current : undefined}
-                    items={[
-                        {
-                            destination: () => handleRemove(),
-                            label: 'Delete annotation',
-                        },
-                    ]}
-                />
-            </div>
-        </div>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <Box flex={1}>{ontology}</Box>
+            <Box flex={2}>{displayName}</Box>
+            <Box flex={1}>{conceptCode}</Box>
+            <RowActionsMenu
+                items={[
+                    {
+                        destination: () => handleRemove(),
+                        label: 'Delete annotation',
+                    },
+                ]}
+            />
+        </Box>
     );
 };
 export default Annotation;

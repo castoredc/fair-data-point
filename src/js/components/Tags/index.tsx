@@ -1,21 +1,40 @@
 import React from 'react';
-import './Tags.scss';
-import { classNames } from '../../util';
+import { Chip, Stack } from '@mui/material';
 
 type TagsProps = {
     className?: string;
     tags: string[];
 };
 
-const Tags: React.FC<TagsProps> = ({ className, tags }) => {
+const Tags: React.FC<TagsProps> = ({ tags }) => {
     return (
-        <span className={classNames(className, 'Tags')}>
+        <Stack
+            direction="row"
+            spacing={1.5}
+            flexWrap="wrap"
+            sx={{
+                '& > *': {
+                    mb: 0.75,
+                },
+            }}
+        >
             {tags.map((tag, index) => (
-                <span className="Tag" key={index}>
-                    {tag}
-                </span>
+                <Chip
+                    key={index}
+                    label={tag}
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                        fontWeight: 600,
+                        color: 'text.primary',
+                        borderColor: 'divider',
+                        '&:hover': {
+                            bgcolor: 'action.hover',
+                        },
+                    }}
+                />
             ))}
-        </span>
+        </Stack>
     );
 };
 

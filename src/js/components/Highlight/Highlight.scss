@@ -1,26 +1,25 @@
-@import '../../scss/const';
-@import '../../scss/colors';
 
 .Highlight {
-    font-family: 'Fira Code', monospace;
-    white-space: pre-wrap;
+  font-family: 'Fira Code', monospace;
+  white-space: pre-wrap;
+  font-size: 12px;
 }
 
 .Variable,
 .Record {
-    background: currentColor;
+  background: currentColor;
 
-    span {
-        color: white;
-    }
+  span {
+    color: white;
+  }
 }
 
 .Variable,
 .Record,
 .Instance {
-    padding: 0 4px;
-    margin-top: 2px;
-    display: inline-block;
-    border-radius: 3px;
-    border: 1px solid currentColor;
+  padding: 0 4px;
+  margin-top: 2px;
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid currentColor;
 }

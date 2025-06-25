@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, Modal } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Modal from 'components/Modal';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import Select from 'components/Input/Formik/Select';
 import { apiClient } from '../network';
 import { Types } from 'types/Types';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type DisplaySettingModalProps = {
+interface DisplaySettingModalProps extends ComponentWithNotifications {
     open: boolean;
     onClose: () => void;
     data: any;
@@ -29,7 +29,7 @@ type DisplaySettingModalState = {
     initialValues: any;
 };
 
-export default class DisplaySettingModal extends Component<DisplaySettingModalProps, DisplaySettingModalState> {
+class DisplaySettingModal extends Component<DisplaySettingModalProps, DisplaySettingModalState> {
     constructor(props) {
         super(props);
 
@@ -102,7 +102,7 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { modelId, versionId, onSaved, data, resourceType } = this.props;
+        const { modelId, versionId, onSaved, data, resourceType, notifications } = this.props;
 
         apiClient
             .post('/api/metadata-model/' + modelId + '/v/' + versionId + '/display' + (data ? `/${data.id}` : ''), values)
@@ -117,9 +117,9 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 setSubmitting(false);
@@ -133,9 +133,20 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
         const title = data ? `Edit setting` : `Add setting`;
 
         return (
-            <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
-                <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+            <Modal open={open} title={title} onClose={onClose}>
+                <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit}
+                        enableReinitialize>
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         const isPlainValue = values.nodeData && values.nodeData.value === 'plain';
                         const isAnnotatedValue = values.nodeData && values.nodeData.value === 'annotated';
                         const orderOptions = this.getOrderOptions();
@@ -148,7 +159,7 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
                             displayTypes = types.displayTypes.annotated;
                         }
 
-                        displayTypes = displayTypes.sort(function (a, b) {
+                        displayTypes = displayTypes.sort(function(a, b) {
                             return a.label.localeCompare(b.label);
                         });
 
@@ -166,7 +177,8 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
                                 </FormItem>
 
                                 <FormItem label="Position">
-                                    <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
+                                    <Field component={Select} options={orderOptions} name="order"
+                                           serverError={validation} />
                                 </FormItem>
 
                                 <FormItem label="Node">
@@ -186,10 +198,11 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
                                 </FormItem>
 
                                 <FormItem label="Display type">
-                                    <Field component={Select} options={displayTypes} serverError={validation} name="displayType" />
+                                    <Field component={Select} options={displayTypes} serverError={validation}
+                                           name="displayType" />
                                 </FormItem>
 
-                                <Button buttonType="primary" type="submit" disabled={isSubmitting}>
+                                <Button type="submit" variant="contained" disabled={isSubmitting}>
                                     {title}
                                 </Button>
                             </Form>
@@ -216,3 +229,5 @@ const NodeSchema = Yup.object().shape({
     node: Yup.string().required('Please select a node'),
     displayType: Yup.string().required('Please select a display type'),
 });
+
+export default withNotifications(DisplaySettingModal);

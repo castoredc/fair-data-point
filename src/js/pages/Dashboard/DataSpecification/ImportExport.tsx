@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Heading, Stack } from '@castoredc/matter';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
+import Button from '@mui/material/Button';
 import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -11,8 +9,13 @@ import * as Yup from 'yup';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
+import Stack from '@mui/material/Stack';
+import DownloadIcon from '@mui/icons-material/Download';
+import UploadIcon from '@mui/icons-material/Upload';
+import { Typography } from '@mui/material';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface ImportExportProps extends AuthorizedRouteComponentProps {
+interface ImportExportProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     type: string;
     dataSpecification: any;
     version: string;
@@ -23,7 +26,7 @@ interface ImportExportState {
     isExporting: boolean;
 }
 
-export default class ImportExport extends Component<ImportExportProps, ImportExportState> {
+class ImportExport extends Component<ImportExportProps, ImportExportState> {
     constructor(props) {
         super(props);
 
@@ -53,6 +56,8 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
     };
 
     parseFile = (value: FileList | null, setFieldValue) => {
+        const { notifications } = this.props;
+
         if (value !== null && value.length > 0) {
             const file = value.item(0);
 
@@ -69,10 +74,10 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                         if ('model' in json) {
                             setFieldValue('version', json.version.version);
                         } else {
-                            toast.error(<ToastItem type="error" title="Please upload a valid model export." />);
+                            notifications.show('Please upload a valid model export.', { variant: 'error' });
                         }
                     } else {
-                        toast.error(<ToastItem type="error" title="Please upload a valid model export." />);
+                        notifications.show('Please upload a valid model export.', { variant: 'error' });
                     }
                 };
             }
@@ -80,7 +85,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
     };
 
     import = (values, { setSubmitting }) => {
-        const { type, dataSpecification, history, getDataSpecification } = this.props;
+        const { type, dataSpecification, history, getDataSpecification, notifications } = this.props;
 
         const formData = new FormData();
 
@@ -96,8 +101,9 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
             .then(response => {
                 setSubmitting(false);
 
-                toast.success(<ToastItem type="success" title="The model was successfully imported." />, {
-                    position: 'top-right',
+                notifications.show('The model was successfully imported.', {
+                    variant: 'success',
+
                 });
 
                 getDataSpecification(() => {
@@ -108,9 +114,9 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                 setSubmitting(false);
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while importing the model." />);
+                    notifications.show('An error occurred while importing the model.', { variant: 'error' });
                 }
             });
     };
@@ -122,7 +128,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
         const ImportSchema = Yup.object().shape({
             file: Yup.mixed().required('Please upload a file'),
             version: Yup.string()
-                .required()
+                .required('Please enter a valid version number (X.X.X)')
                 .test('isValidVersion', 'Please enter a valid version number (X.X.X)', value => {
                     if (value === undefined) {
                         return false;
@@ -142,7 +148,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
 
         return (
             <PageBody>
-                <Stack>
+                <Stack direction="row">
                     <div>
                         <Formik
                             initialValues={{
@@ -152,10 +158,22 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                             onSubmit={this.import}
                             validationSchema={ImportSchema}
                         >
-                            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                            {({
+                                  values,
+                                  errors,
+                                  touched,
+                                  handleChange,
+                                  handleBlur,
+                                  handleSubmit,
+                                  isSubmitting,
+                                  setValues,
+                                  setFieldValue,
+                              }) => {
                                 return (
                                     <Form>
-                                        <Heading type="Subsection">Import model</Heading>
+                                        <Typography variant="h4" sx={{ mb: 2 }}>
+                                            Import model
+                                        </Typography>
 
                                         <Field
                                             component={File}
@@ -168,7 +186,10 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                                             <Field component={Input} name="version" value={values.version} />
                                         </FormItem>
 
-                                        <Button type="submit" icon="upload" disabled={values.file === null || isSubmitting}>
+                                        <Button
+                                            type="submit" startIcon={<UploadIcon />}
+                                            disabled={values.file === null || isSubmitting}
+                                        >
                                             Import model
                                         </Button>
                                     </Form>
@@ -177,9 +198,12 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                         </Formik>
                     </div>
                     <div>
-                        <Heading type="Subsection">Export model</Heading>
+                        <Typography variant="h4" sx={{ mb: 2 }}>
+                            Export model
+                        </Typography>
 
-                        <Button onClick={this.export} icon="download" disabled={isExporting}>
+                        <Button onClick={this.export} variant="outlined" startIcon={<DownloadIcon />}
+                                disabled={isExporting}>
                             Export model
                         </Button>
                     </div>
@@ -188,3 +212,5 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
         );
     }
 }
+
+export default withNotifications(ImportExport);

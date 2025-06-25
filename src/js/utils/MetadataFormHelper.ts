@@ -12,7 +12,7 @@ const LocaleFieldTypeMappings = {
                 Yup.object().shape({
                     text: Yup.string().required('Please enter text'),
                     language: Yup.string().nullable().required('Please select a language'),
-                })
+                }),
             )
             .nullable(),
         textareaLocale: Yup.array()
@@ -20,7 +20,7 @@ const LocaleFieldTypeMappings = {
                 Yup.object().shape({
                     text: Yup.string().required('Please enter text'),
                     language: Yup.string().nullable().required('Please select a language'),
-                })
+                }),
             )
             .nullable(),
     },
@@ -30,7 +30,7 @@ const LocaleFieldTypeMappings = {
                 Yup.object().shape({
                     text: Yup.string(),
                     language: Yup.string().nullable(),
-                })
+                }),
             )
             .nullable(),
         textareaLocale: Yup.array()
@@ -38,7 +38,7 @@ const LocaleFieldTypeMappings = {
                 Yup.object().shape({
                     text: Yup.string(),
                     language: Yup.string().nullable(),
-                })
+                }),
             )
             .nullable(),
     },
@@ -53,7 +53,7 @@ const YupFieldTypeMappings = {
                 code: Yup.string().required('This concept cannot be added'),
                 url: Yup.string().required('This concept cannot be added'),
                 displayName: Yup.string().required('This concept cannot be added'),
-            })
+            }),
         )
         .nullable(),
     datePicker: Yup.string(),
@@ -70,7 +70,7 @@ const YupFieldTypeMappings = {
         .of(
             Yup.object().shape({
                 type: Yup.string().required('Please select a type'),
-            })
+            }),
         )
         .nullable(),
 };
@@ -83,7 +83,7 @@ export const getInitialValues = (forms: RenderedMetadataFormType[]) => {
     return Object.fromEntries(
         getFields(forms).map(field => {
             return [field.id, field.value];
-        })
+        }),
     );
 };
 
@@ -107,7 +107,7 @@ export const getSchema = (forms: RenderedMetadataFormType[]) => {
             }
 
             return [field.id, fieldSchema];
-        })
+        }),
     );
 
     return Yup.object().shape(schema);

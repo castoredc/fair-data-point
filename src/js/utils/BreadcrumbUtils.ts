@@ -13,68 +13,68 @@ export const getBreadCrumbs = (location, data): BreadcrumbsType => {
     let crumbs = [
         fdp
             ? {
-                  type: 'fdp',
-                  title: fdp.hasMetadata ? fdp.metadata.title : 'FAIR Data Point',
-                  data: fdp,
-                  path: '/fdp',
-                  state: { fdp },
-              }
+                type: 'fdp',
+                title: fdp.hasMetadata ? fdp.metadata.title : 'FAIR Data Point',
+                data: fdp,
+                path: '/fdp',
+                state: { fdp },
+            }
             : {
-                  type: 'fdp',
-                  title: 'FAIR Data Point',
-                  data: {
-                      title: 'FAIR Data Point',
-                  },
-                  path: '/fdp',
-                  state: {},
-              },
+                type: 'fdp',
+                title: 'FAIR Data Point',
+                data: {
+                    title: 'FAIR Data Point',
+                },
+                path: '/fdp',
+                state: {},
+            },
         catalog
             ? {
-                  type: 'catalog',
-                  title: catalog.hasMetadata ? localizedText(catalog.metadata.title) : 'Catalog',
-                  data: catalog,
-                  path: catalog.relativeUrl,
-                  state: { fdp, catalog },
-              }
+                type: 'catalog',
+                title: catalog.hasMetadata ? localizedText(catalog.metadata.title) : 'Catalog',
+                data: catalog,
+                path: catalog.relativeUrl,
+                state: { fdp, catalog },
+            }
             : null,
         study
             ? {
-                  type: 'study',
-                  title: study.hasMetadata ? localizedText(study.metadata.title) : 'Study',
-                  data: study,
-                  path: `/study/${study.slug}`,
-                  state: { fdp, catalog, study },
-              }
+                type: 'study',
+                title: study.hasMetadata ? localizedText(study.metadata.title) : 'Study',
+                data: study,
+                path: `/study/${study.slug}`,
+                state: { fdp, catalog, study },
+            }
             : null,
         dataset
             ? {
-                  type: 'dataset',
-                  title: dataset.hasMetadata ? localizedText(dataset.metadata.title) : 'Dataset',
-                  data: dataset,
-                  path: dataset.relativeUrl,
-                  state: { fdp, catalog, study, dataset },
-              }
+                type: 'dataset',
+                title: dataset.hasMetadata ? localizedText(dataset.metadata.title) : 'Dataset',
+                data: dataset,
+                path: dataset.relativeUrl,
+                state: { fdp, catalog, study, dataset },
+            }
             : null,
         distribution
             ? {
-                  type: 'distribution',
-                  title: distribution.hasMetadata ? localizedText(distribution.metadata.title) : 'Distribution',
-                  data: distribution,
-                  path: distribution.relativeUrl,
-                  state: { fdp, catalog, study, dataset, distribution },
-              }
+                type: 'distribution',
+                title: distribution.hasMetadata ? localizedText(distribution.metadata.title) : 'Distribution',
+                data: distribution,
+                path: distribution.relativeUrl,
+                state: { fdp, catalog, study, dataset, distribution },
+            }
             : null,
         query
             ? {
-                  type: 'query',
-                  title: 'Query',
-                  path: distribution ? `${distribution.relativeUrl}/query` : '/query',
-                  state: { fdp, catalog, study, dataset, query },
-              }
+                type: 'query',
+                title: 'Query',
+                path: distribution ? `${distribution.relativeUrl}/query` : '/query',
+                state: { fdp, catalog, study, dataset, query },
+            }
             : null,
     ];
 
-    crumbs = crumbs.filter(function (el) {
+    crumbs = crumbs.filter(function(el) {
         return el != null;
     });
 
