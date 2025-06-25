@@ -64,12 +64,12 @@ export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules 
     const finalCombinator = combinator || 'and';
 
     return (
-        <Card 
-            variant="outlined" 
-            sx={{ 
+        <Card
+            variant="outlined"
+            sx={{
                 mb: 2,
-            }} 
-            data-rule-group-id={id} 
+            }}
+            data-rule-group-id={id}
             data-level={level}
         >
             <CardHeader

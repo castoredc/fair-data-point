@@ -17,7 +17,7 @@ const CombinatorSelector: FC<CombinatorSelectorProps> = ({ options, value, handl
             onChange={handleOnChange}
         >
             {options.map((option: NameLabelPair) => {
-                return <MenuItem value={option.name}>{option.label}</MenuItem>
+                return <MenuItem key={option.name} value={option.name}>{option.label}</MenuItem>;
             })}
         </Select>
     );

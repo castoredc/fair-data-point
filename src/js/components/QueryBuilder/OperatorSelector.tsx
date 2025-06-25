@@ -19,7 +19,7 @@ const OperatorSelector: FC<OperatorSelectorProps> = ({ options, value, handleOnC
             sx={{ width: '120px' }}
         >
             {options.map((option: NameLabelPair) => {
-                return <MenuItem value={option.name}>{option.label}</MenuItem>
+                return <MenuItem key={option.name} value={option.name}>{option.label}</MenuItem>;
             })}
         </Select>
     );

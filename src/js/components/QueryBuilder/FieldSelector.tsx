@@ -13,26 +13,25 @@ interface FieldSelectorProps {
 }
 
 const FieldSelector: FC<FieldSelectorProps> = ({ options, value, handleOnChange }) => {
-
     return <Select
         value={value}
         onChange={handleOnChange}
         sx={{ width: '160px' }}
+        defaultValue=""
     >
         {options.map(field => {
             if (field.options) {
-                return <>
-                    <ListSubheader>{field.label}</ListSubheader>
-                    {field.options.map((option: any) => {
-                        console.log(option);
-                        return <MenuItem value={option.value}>{option.label}</MenuItem>
-                    })}
-                </>
+                return [
+                    <ListSubheader>{field.label}</ListSubheader>,
+                    ...field.options.map((option: any) => (
+                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    )),
+                ];
             } else {
-                return <MenuItem value={field.value}>{field.label}</MenuItem>
+                return <MenuItem key={field.name} value={field.name}>{field.label}</MenuItem>;
             }
         })}
-    </Select>
+    </Select>;
 };
 
 export default FieldSelector;

@@ -54,15 +54,15 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
                     fullWidth
                 >
                     {institutes.map(institute => {
-                        return <MenuItem value={institute.id}>{institute.name}</MenuItem>
+                        return <MenuItem key={institute.id} value={institute.id}>{institute.name}</MenuItem>;
                     })}
                 </Select>
             );
         }
 
         if (fieldData.valueType === 'annotated') {
-            return <TextField 
-                className="ValueEditor" 
+            return <TextField
+                className="ValueEditor"
                 value={value}
                 onChange={e => handleUrlChange(e.target.value, prefixes)}
                 fullWidth
@@ -101,9 +101,9 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
         }
     }
 
-    return <TextField 
-        className="ValueEditor" 
-        value={value} 
+    return <TextField
+        className="ValueEditor"
+        value={value}
         onChange={e => handleOnChange(e.target.value)}
         fullWidth
     />;
