@@ -8,7 +8,7 @@ interface OperatorSelectorProps {
     options: Field[];
     value?: string;
 
-    handleOnChange(value: any): void;
+    handleOnChange(event: any): void;
 }
 
 const OperatorSelector: FC<OperatorSelectorProps> = ({ options, value, handleOnChange }) => {
@@ -16,6 +16,7 @@ const OperatorSelector: FC<OperatorSelectorProps> = ({ options, value, handleOnC
         <Select
             value={value}
             onChange={handleOnChange}
+            sx={{ width: '120px' }}
         >
             {options.map((option: NameLabelPair) => {
                 return <MenuItem value={option.name}>{option.label}</MenuItem>

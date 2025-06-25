@@ -50,7 +50,8 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
             return (
                 <Select
                     value={value}
-                    onChange={handleOnChange}
+                    onChange={e => handleOnChange(e.target.value)}
+                    fullWidth
                 >
                     {institutes.map(institute => {
                         return <MenuItem value={institute.id}>{institute.name}</MenuItem>
@@ -60,8 +61,12 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
         }
 
         if (fieldData.valueType === 'annotated') {
-            return <TextField className="ValueEditor" value={value}
-                              onChange={e => handleUrlChange(e.target.value, prefixes)} />;
+            return <TextField 
+                className="ValueEditor" 
+                value={value}
+                onChange={e => handleUrlChange(e.target.value, prefixes)}
+                fullWidth
+            />;
         }
 
         if (fieldData.dataType === 'date' || fieldData.dataType === 'dateTime' || fieldData.dataType === 'time') {
@@ -96,5 +101,10 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({
         }
     }
 
-    return <TextField className="ValueEditor" value={value} onChange={e => handleOnChange(e.target.value)} />;
+    return <TextField 
+        className="ValueEditor" 
+        value={value} 
+        onChange={e => handleOnChange(e.target.value)}
+        fullWidth
+    />;
 };

@@ -43,7 +43,6 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, his
         <Drawer
             variant="permanent"
             sx={{
-                display: { xs: 'none', md: 'block' },
                 [`& .${drawerClasses.paper}`]: {
                     backgroundColor: 'grey.50',
                 },

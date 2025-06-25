@@ -15,21 +15,18 @@ const DistributionContentsCsv: React.FC<DistributionContentsCsvProps> = ({
                                                                              distribution,
                                                                              dataset,
                                                                          }) => {
-    return (
-        <div className="PageContainer">
-            {distribution.includeAllData ? (
-                <NoResults>This distribution contains all fields.</NoResults>
-            ) : (
-                <CSVStudyStructure
-                    studyId={distribution.study.id}
-                    distributionContents={contents}
-                    catalog={catalog}
-                    dataset={dataset}
-                    distribution={distribution.slug}
-                />
-            )}
-        </div>
-    );
+
+    if (distribution.includeAllData) {
+        return <NoResults>This distribution contains all fields.</NoResults>;
+    }
+
+    return <CSVStudyStructure
+        studyId={distribution.study.id}
+        distributionContents={contents}
+        catalog={catalog}
+        dataset={dataset}
+        distribution={distribution.slug}
+    />;
 };
 
 export default DistributionContentsCsv;

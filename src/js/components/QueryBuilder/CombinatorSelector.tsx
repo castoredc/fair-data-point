@@ -7,7 +7,7 @@ interface CombinatorSelectorProps {
     options: NameLabelPair[];
     value?: string;
 
-    handleOnChange(value: any): void;
+    handleOnChange(event: any): void;
 }
 
 const CombinatorSelector: FC<CombinatorSelectorProps> = ({ options, value, handleOnChange }) => {
