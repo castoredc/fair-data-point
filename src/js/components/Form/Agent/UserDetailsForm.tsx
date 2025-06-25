@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
 
-import '../Form.scss';
 import FormItem from '../FormItem';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button } from '@castoredc/matter';
-import { PersonType } from 'types/PersonType';
+import Button from '@mui/material/Button';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import * as Yup from 'yup';
-import { FormikHelpers } from 'formik/dist/types';
 import { apiClient } from 'src/js/network';
 import { UserType } from 'types/UserType';
 import * as H from 'history';
 import queryString from 'query-string';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type PersonFormProps = {
+interface PersonFormProps extends ComponentWithNotifications {
     user: UserType;
     history: H.History;
 };
@@ -24,7 +20,7 @@ type PersonFormState = {
     validation: any;
 };
 
-export default class PersonForm extends Component<PersonFormProps, PersonFormState> {
+class PersonForm extends Component<PersonFormProps, PersonFormState> {
     constructor(props) {
         super(props);
 
@@ -57,7 +53,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { history } = this.props;
+        const { history, notifications } = this.props;
 
         apiClient
             .post('/api/user', values)
@@ -76,7 +72,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while updating your details" />);
+                    notifications.show('An error occurred while updating your details', { variant: 'error' });
                 }
 
                 setSubmitting(false);
@@ -125,7 +121,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                                 </FormItem>
                             )}
 
-                            <Button buttonType="primary" type="submit" disabled={isSubmitting}>
+                            <Button type="submit" disabled={isSubmitting} variant="contained">
                                 Save details
                             </Button>
                         </Form>
@@ -135,3 +131,5 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
         );
     }
 }
+
+export default withNotifications(PersonForm);

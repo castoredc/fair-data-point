@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { ActionsCell, CellText, LoadingOverlay, Separator, ToastMessage } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import ConfirmModal from 'modals/ConfirmModal';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
@@ -11,8 +9,10 @@ import { MetadataDisplayType, ResourceType } from 'components/MetadataItem/EnumM
 import MetadataDisplaySetting from 'components/Form/DataSpecification/MetadataDisplaySetting';
 import { Types } from 'types/Types';
 import DisplaySettingModal from 'modals/DisplaySettingModal';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { Divider } from '@mui/material';
 
-interface DisplayProps extends AuthorizedRouteComponentProps {
+interface DisplayProps extends AuthorizedRouteComponentProps, ComponentWithNotifications, ComponentWithNotifications {
     type: string;
     nodes: any;
     displaySettings: any;
@@ -27,7 +27,7 @@ interface DisplayState {
     modalData: any;
 }
 
-export default class Display extends Component<DisplayProps, DisplayState> {
+class Display extends Component<DisplayProps, DisplayState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,25 +71,26 @@ export default class Display extends Component<DisplayProps, DisplayState> {
     };
 
     removeItem = () => {
-        const { type, dataSpecification, version } = this.props;
+        const { type, dataSpecification, version, notifications } = this.props;
         const { modalData } = this.state;
 
         apiClient
             .delete('/api/metadata-model/' + dataSpecification.id + '/v/' + version.value + '/display' + `/${modalData.id}`)
             .then(() => {
-                toast.success(<ToastMessage type="success" title={`The item was successfully removed`} />, {
-                    position: 'top-right',
+                notifications.show(`The item was successfully removed`, {
+                    variant: 'success',
+
                 });
 
                 this.onSaved('remove');
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
 
                     this.onSaved('remove');
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
             });
     };
@@ -112,51 +113,11 @@ export default class Display extends Component<DisplayProps, DisplayState> {
                     const node = nodes.value.find(node => node.id === item.node);
 
                     return {
-                        title: <CellText>{item.title}</CellText>,
-                        node: <CellText>{node.title}</CellText>,
-                        type: <CellText>{MetadataDisplayType[item.type]}</CellText>,
-                        menu: (
-                            <ActionsCell
-                                items={[
-                                    {
-                                        destination: () => {
-                                            this.openModal(
-                                                'add',
-                                                {
-                                                    id: item.id,
-                                                    title: item.title,
-                                                    node: item.node,
-                                                    order: item.order,
-                                                    displayType: item.type,
-                                                    position: item.position,
-                                                    resourceType: item.resourceType,
-                                                },
-                                                position
-                                            );
-                                        },
-                                        label: 'Edit item',
-                                    },
-                                    {
-                                        destination: () => {
-                                            this.openModal(
-                                                'remove',
-                                                {
-                                                    id: item.id,
-                                                    title: item.title,
-                                                    node: item.node,
-                                                    order: item.order,
-                                                    displayType: item.type,
-                                                    position: item.position,
-                                                    resourceType: item.resourceType,
-                                                },
-                                                position
-                                            );
-                                        },
-                                        label: 'Delete item',
-                                    },
-                                ]}
-                            />
-                        ),
+                        id: item.id,
+                        title: item.title,
+                        node: node.title,
+                        type: MetadataDisplayType[item.type],
+                        data: item,
                     };
                 });
             });
@@ -170,27 +131,37 @@ export default class Display extends Component<DisplayProps, DisplayState> {
                 content: (
                     <div>
                         <MetadataDisplaySetting
-                            position="Title"
+                            position="title"
+                            label="Title"
                             items={rows[resourceType].title}
-                            openModal={() => this.openModal('add', null, 'title')}
+                            openModal={this.openModal}
                         />
-                        <Separator spacing="comfortable" />
+
+                        <Divider />
+
                         <MetadataDisplaySetting
-                            position="Description"
+                            position="description"
+                            label="Description"
                             items={rows[resourceType].description}
-                            openModal={() => this.openModal('add', null, 'description')}
+                            openModal={this.openModal}
                         />
-                        <Separator spacing="comfortable" />
+
+                        <Divider />
+
                         <MetadataDisplaySetting
-                            position="Sidebar"
+                            position="sidebar"
+                            label="Sidebar"
                             items={rows[resourceType].sidebar}
-                            openModal={() => this.openModal('add', null, 'sidebar')}
+                            openModal={this.openModal}
                         />
-                        <Separator spacing="comfortable" />
+
+                        <Divider />
+
                         <MetadataDisplaySetting
-                            position="Modal"
+                            position="modal"
+                            label="Modal"
                             items={rows[resourceType].modal}
-                            openModal={() => this.openModal('add', null, 'modal')}
+                            openModal={this.openModal}
                         />
                     </div>
                 ),
@@ -219,7 +190,8 @@ export default class Display extends Component<DisplayProps, DisplayState> {
                     <ConfirmModal
                         title="Delete item"
                         action="Delete item"
-                        variant="danger"
+                        variant="contained"
+                        color="error"
                         onConfirm={this.removeItem}
                         onCancel={() => {
                             this.closeModal('remove');
@@ -242,3 +214,5 @@ export default class Display extends Component<DisplayProps, DisplayState> {
         );
     }
 }
+
+export default withNotifications(Display);

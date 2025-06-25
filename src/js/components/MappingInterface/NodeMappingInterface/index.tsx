@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { ChoiceOption, Heading, List, ListItem, Stack } from '@castoredc/matter';
 import StudyStructure from '../../StudyStructure';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import NodeMappingInterfaceFooter from './NodeMappingInterfaceFooter';
 import TwigEditor from '../../Input/CodeEditor/TwigEditor';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import { Checkbox, FormControlLabel, Typography } from '@mui/material';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface NodeMappingInterfaceProps {
+interface NodeMappingInterfaceProps extends ComponentWithNotifications {
     studyId: string;
     dataset: string;
     distribution: any;
@@ -24,7 +24,7 @@ interface NodeMappingInterfaceState {
     isLoading: boolean;
 }
 
-export default class NodeMappingInterface extends Component<NodeMappingInterfaceProps, NodeMappingInterfaceState> {
+class NodeMappingInterface extends Component<NodeMappingInterfaceProps, NodeMappingInterfaceState> {
     constructor(props: NodeMappingInterfaceProps) {
         super(props);
         this.state = {
@@ -93,7 +93,7 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
 
     handleSubmit = () => {
         const { selectedElements, dataTransformation, transformSyntax } = this.state;
-        const { mapping, dataset, distribution, versionId, onSave } = this.props;
+        const { mapping, dataset, distribution, versionId, onSave, notifications } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -107,8 +107,9 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
             })
             .then(() => {
                 this.setState({ isLoading: false }, () => {
-                    toast.success(<ToastItem type="success" title="The mapping was successfully saved." />, {
-                        position: 'top-right',
+                    notifications.show('The mapping was successfully saved.', {
+                        variant: 'success',
+
                     });
                     onSave();
                 });
@@ -117,7 +118,7 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
                 this.setState({ isLoading: false });
 
                 const message = error.response?.data?.error || 'An error occurred while saving the mapping';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
@@ -145,12 +146,21 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
 
         return (
             <>
-                <Stack distribution="equalSpacing">
-                    <Heading type="Panel">{`${mapping.elements ? 'Edit' : 'Add'} mapping for ${mapping.node.title}`}</Heading>
+                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                    <Typography variant="h5">
+                        {`${mapping.elements ? 'Edit' : 'Add'} mapping for ${mapping.node.title}`}
+                    </Typography>
 
                     {step === 'elements' && (
                         <div className="CheckboxFormGroup HeadingCheckboxFormGroup">
-                            <ChoiceOption labelText="Transform data" checked={dataTransformation} onChange={this.handleChange} />
+                            <FormControlLabel
+                                control={<Checkbox
+                                    name="includeIndividuals"
+                                    onChange={this.handleChange}
+                                    checked={dataTransformation}
+                                />}
+                                label="Transform data"
+                            />
                         </div>
                     )}
                 </Stack>
@@ -184,11 +194,11 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
                         The data will be transformed to <b>{valueDescription}</b>.
                     </span>
 
-                    <List>
+                    <ul>
                         {variables.map(variable => (
-                            <ListItem key={variable}>{variable}</ListItem>
+                            <li key={variable}>{variable}</li>
                         ))}
-                    </List>
+                    </ul>
 
                     <TwigEditor label="Twig template" value={transformSyntax} onChange={this.handleSyntaxChange} />
                 </div>
@@ -207,3 +217,5 @@ export default class NodeMappingInterface extends Component<NodeMappingInterface
         );
     }
 }
+
+export default withNotifications(NodeMappingInterface);

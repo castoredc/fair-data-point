@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import ConfirmModal from '../../../../modals/ConfirmModal';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import DatasetsDataTable from 'components/DataTable/DatasetsDataTable';
 import { localizedText } from '../../../../util';
 import * as H from 'history';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface AddDatasetProps {
+interface AddDatasetProps extends ComponentWithNotifications {
     catalog: string;
     history: H.History;
 }
@@ -19,7 +18,7 @@ interface AddDatasetState {
     addedDataset: any;
 }
 
-export default class AddDataset extends Component<AddDatasetProps, AddDatasetState> {
+class AddDataset extends Component<AddDatasetProps, AddDatasetState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -61,12 +60,12 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
             },
             () => {
                 this.openModal('confirm');
-            }
+            },
         );
     };
 
     handleAdd = () => {
-        const { catalog } = this.props;
+        const { catalog, notifications } = this.props;
         const { selectedDataset } = this.state;
 
         apiClient
@@ -74,8 +73,9 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                 datasetId: selectedDataset.id,
             })
             .then(response => {
-                toast.success(<ToastItem type="success" title="The dataset was successfully added to the catalog" />, {
-                    position: 'top-right',
+                notifications.show('The dataset was successfully added to the catalog', {
+                    variant: 'success',
+
                 });
 
                 this.closeModal('confirm');
@@ -89,7 +89,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while adding the dataset to the catalog';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
@@ -103,7 +103,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                     <ConfirmModal
                         title="Add dataset"
                         action="Add dataset"
-                        variant="primary"
+                        variant="contained"
                         onConfirm={this.handleAdd}
                         onCancel={() => {
                             this.closeModal('confirm');
@@ -111,13 +111,17 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                         show={showModal.confirm}
                     >
                         Are you sure you want to add{' '}
-                        {selectedDataset.hasMetadata ? <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to
+                        {selectedDataset.hasMetadata ?
+                            <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to
                         this catalog?
                     </ConfirmModal>
                 )}
 
-                <DatasetsDataTable onClick={this.handleDatasetClick} hideCatalog={catalog} lastHandledDataset={addedDataset} />
+                <DatasetsDataTable onClick={this.handleDatasetClick} hideCatalog={catalog}
+                                   lastHandledDataset={addedDataset} />
             </PageBody>
         );
     }
 }
+
+export default withNotifications(AddDataset);

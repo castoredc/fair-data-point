@@ -1,38 +1,27 @@
-import { findOptionByValue } from '../../util';
-import { Dropdown } from '@castoredc/matter';
 import React, { FC } from 'react';
 import { Field } from 'react-querybuilder';
+import { NameLabelPair } from 'react-querybuilder/types/types';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 interface OperatorSelectorProps {
     options: Field[];
     value?: string;
-    handleOnChange(value: any): void;
+
+    handleOnChange(event: any): void;
 }
 
 const OperatorSelector: FC<OperatorSelectorProps> = ({ options, value, handleOnChange }) => {
-    const parsedOptions = options.map(option => ({
-        value: option.name,
-        label: option.label,
-        name: option.name,
-    }));
-
-    const selectedValue = findOptionByValue(value, parsedOptions);
-
     return (
-        <Dropdown
-            value={
-                value
-                    ? {
-                          value: selectedValue.name,
-                          label: selectedValue.label,
-                      }
-                    : null
-            }
-            onChange={e => handleOnChange(e ? e.value : '')}
-            menuPosition="fixed"
-            width="minimum"
-            options={parsedOptions}
-        />
+        <Select
+            value={value}
+            onChange={handleOnChange}
+            sx={{ width: '120px' }}
+        >
+            {options.map((option: NameLabelPair) => {
+                return <MenuItem key={option.name} value={option.name}>{option.label}</MenuItem>;
+            })}
+        </Select>
     );
 };
 

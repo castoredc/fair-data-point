@@ -1,192 +1,278 @@
-import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import debounce from 'lodash/debounce';
-import { Button, Modal } from '@castoredc/matter';
-import FormItem from 'components/Form/FormItem';
-import { Field, Form, Formik } from 'formik';
-import Select, { AsyncSelect } from 'components/Input/Formik/Select';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import Choice from 'components/Input/Formik/Choice';
-import { apiClient } from '../network';
+import debounce from 'lodash/debounce';
 
-type AddAnnotationModalProps = {
+// MUI Components
+import { Autocomplete, Box, Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+
+// Custom Components
+import Modal from 'components/Modal';
+import FormItem from 'components/Form/FormItem';
+
+// Hooks and Utils
+import { useNotifications } from 'components/WithNotifications';
+import { apiClient } from 'src/js/network';
+
+// Types
+import { OntologyType } from 'types/OntologyType';
+
+interface Entity {
+    type: string;
+    id: string;
+    parent: string;
+    title: string;
+}
+
+interface OntologyConceptType {
+    code: string;
+    label: string;
+    type: string;
+}
+
+interface FormValues {
+    ontology: OntologyType | null;
+    concept: OntologyConceptType | null;
+    includeIndividuals: boolean;
+}
+
+interface AddAnnotationModalProps {
     open: boolean;
+    entity: Entity;
     onClose: () => void;
-    entity: any;
-    onSaved: () => void;
     studyId: string;
+    onSaved: () => void;
+}
+
+const initialValues: FormValues = {
+    ontology: null,
+    concept: null,
+    includeIndividuals: false,
 };
 
-type AddAnnotationModalState = {
-    ontologies: any;
-    validation: any;
-};
+const validationSchema = Yup.object({
+    ontology: Yup.object().nullable().required('Please select an ontology'),
+    concept: Yup.object().nullable().required('Please select a concept'),
+});
 
-export default class AddAnnotationModal extends Component<AddAnnotationModalProps, AddAnnotationModalState> {
-    constructor(props) {
-        super(props);
+const AddAnnotationModal: FC<AddAnnotationModalProps> = ({ open, onClose, entity, studyId, onSaved }) => {
+    if (!entity) return null;
 
-        this.state = {
-            ontologies: [],
-            validation: {},
-        };
-    }
+    // Notifications
+    const notifications = useNotifications();
+    const notificationsRef = useRef(notifications);
 
-    componentDidMount() {
-        this.getOntologies();
-    }
+    // Ontology state
+    const [ontologies, setOntologies] = useState<OntologyType[]>([]);
+    const [selectedOntology, setSelectedOntology] = useState<OntologyType | null>(null);
 
-    getOntologies = () => {
-        apiClient
-            .get('/api/terminology/ontologies')
-            .then(response => {
-                this.setState({
-                    ontologies: response.data,
-                });
-            })
-            .catch(error => {
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
-                }
-            });
-    };
+    // Concept state
+    const [conceptSearchValue, setConceptSearchValue] = useState<string>('');
+    const [conceptOptions, setConceptOptions] = useState<OntologyConceptType[]>([]);
+    const [loadingConcepts, setLoadingConcepts] = useState<boolean>(false);
+    const [selectedConcept, setSelectedConcept] = useState<OntologyConceptType | null>(null);
 
-    loadConcepts = debounce((ontology, includeIndividuals, inputValue, callback) => {
-        if (ontology === null) {
-            return null;
+    // Form state
+    const [includeIndividuals, setIncludeIndividuals] = useState<boolean>(false);
+
+    // Error handling
+    useEffect(() => {
+        notificationsRef.current = notifications;
+    });
+
+    const showError = useCallback((error: any) => {
+        if (error?.response?.data?.error) {
+            notificationsRef.current.show(error.response.data.error, { variant: 'error' });
+        } else {
+            notificationsRef.current.show('An error occurred', { variant: 'error' });
         }
+    }, []);
 
-        apiClient
-            .get('/api/terminology/concepts', {
-                params: {
-                    ontology: ontology,
-                    query: inputValue,
-                    includeIndividuals: includeIndividuals,
-                },
-            })
-            .then(response => {
-                callback(response.data);
-            })
-            .catch(error => {
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+    // Load ontologies on mount
+    useEffect(() => {
+        const getOntologies = async () => {
+            try {
+                const response = await apiClient.get('/api/terminology/ontologies');
+                setOntologies(response.data);
+            } catch (error: any) {
+                showError(error);
+            }
+        };
+
+        getOntologies();
+    }, [showError]);
+
+    // Concept search handling
+    const fetchConceptsDebounced = React.useMemo(
+        () =>
+            debounce(async (searchValue: string) => {
+                if (!selectedOntology || !searchValue) {
+                    setConceptOptions([]);
+                    return;
                 }
 
-                callback(null);
-            });
-    }, 300);
+                setLoadingConcepts(true);
 
-    handleSubmit = (values, { setSubmitting }) => {
-        const { entity, onSaved, studyId } = this.props;
+                try {
+                    const response = await apiClient.get('/api/terminology/concepts', {
+                        params: {
+                            ontology: selectedOntology.id,
+                            query: searchValue,
+                            includeIndividuals,
+                        },
+                    });
+                    setConceptOptions(response.data ?? []);
+                } catch (error: any) {
+                    showError(error);
+                    setConceptOptions([]);
+                } finally {
+                    setLoadingConcepts(false);
+                }
+            }, 300),
+        [selectedOntology, includeIndividuals, showError],
+    );
 
-        apiClient
-            .post('/api/study/' + studyId + '/annotations/add', {
+    // Cleanup debounced search on unmount
+    useEffect(() => {
+        return () => {
+            fetchConceptsDebounced.cancel();
+        };
+    }, [fetchConceptsDebounced]);
+
+    // Form handlers
+    const handleSubmit = async (values: FormValues, { setSubmitting }: {
+        setSubmitting: (isSubmitting: boolean) => void
+    }) => {
+        try {
+            if (!values.ontology || !values.concept) {
+                showError(new Error('Please select both ontology and concept'));
+                return;
+            }
+
+            await apiClient.post(`/api/study/${studyId}/annotations/add`, {
                 entityType: entity.type,
                 entityId: entity.id,
                 entityParent: entity.parent,
-                ontology: values.ontology,
-                concept: values.concept.value,
+                ontology: values.ontology.id,
+                concept: values.concept.code,
                 conceptType: values.concept.type,
-            })
-            .then(() => {
-                setSubmitting(false);
-                onSaved();
-            })
-            .catch(error => {
-                if (error.response && error.response.status === 400) {
-                    this.setState({
-                        validation: error.response.data.fields,
-                    });
-                } else if (error.response) {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
-                }
-
-                setSubmitting(false);
+                includeIndividuals: values.includeIndividuals,
             });
+            onSaved();
+            onClose();
+        } catch (error: any) {
+            showError(error);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
-    render() {
-        const { open, onClose, entity } = this.props;
-        const { ontologies, validation } = this.state;
+    const handleOntologyChange = useCallback((ontology: OntologyType | null) => {
+        setSelectedOntology(ontology);
+        setConceptSearchValue('');
+        setConceptOptions([]);
+        setSelectedConcept(null);
+    }, []);
 
-        const options = ontologies.map(ontology => {
-            return { value: ontology.id, label: ontology.name };
-        });
+    const handleConceptSearchInputChange = useCallback(
+        (_event: React.SyntheticEvent<Element, Event>, newValue: string) => {
+            setConceptSearchValue(newValue);
+            fetchConceptsDebounced(newValue);
+        },
+        [fetchConceptsDebounced],
+    );
 
-        if (!entity) {
-            return null;
-        }
+    return (
+        <Modal open={open} title={`Add annotation for ${entity.title}`} onClose={onClose}>
+            <Formik
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+                validationSchema={validationSchema}
+                enableReinitialize
+            >
+                {({ isSubmitting, setFieldValue, values }) => (
+                    <Form>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {/* Ontology Selection */}
+                            <FormItem label="Ontology" isRequired>
+                                <Autocomplete
+                                    options={ontologies}
+                                    value={values.ontology}
+                                    onChange={(_event: any, newValue: OntologyType | null) => {
+                                        handleOntologyChange(newValue);
+                                        setFieldValue('ontology', newValue);
+                                        setFieldValue('concept', null);
+                                    }}
+                                    getOptionLabel={(option: OntologyType) => option.name}
+                                    isOptionEqualToValue={(option, value) => option.id === value?.id}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            size="small"
+                                            placeholder="Select ontology"
+                                            required
+                                        />
+                                    )}
+                                />
+                            </FormItem>
 
-        return (
-            <Modal accessibleName="Test" open={open} title={`Add annotation for ${entity.title}`} onClose={onClose}>
-                <Formik
-                    initialValues={{
-                        ontology: null,
-                        concept: null,
-                        includeIndividuals: [],
-                    }}
-                    validationSchema={Yup.object().shape({
-                        ontology: Yup.string().required('Please select an ontology'),
-                        concept: Yup.object()
-                            .shape({
-                                value: Yup.string(),
-                                type: Yup.string().required(),
-                            })
-                            .required('Please select a concept'),
-                    })}
-                    onSubmit={this.handleSubmit}
-                >
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                        return (
-                            <Form>
-                                <FormItem label="Ontology">
-                                    <Field
-                                        component={Select}
-                                        options={options}
-                                        name="ontology"
-                                        onChange={() => setFieldValue('concept', null)}
-                                        menuPosition="fixed"
-                                        serverError={validation}
+                            {/* Concept Selection */}
+                            <FormItem label="Concept" isRequired>
+                                <Autocomplete
+                                    disabled={!values.ontology}
+                                    options={conceptOptions}
+                                    value={values.concept}
+                                    onInputChange={handleConceptSearchInputChange}
+                                    onChange={(_event: any, newValue: OntologyConceptType | null) => {
+                                        setSelectedConcept(newValue);
+                                        setFieldValue('concept', newValue);
+                                    }}
+                                    getOptionLabel={(option: OntologyConceptType) => option.label}
+                                    isOptionEqualToValue={(option, value) => option.code === value?.code}
+                                    loading={loadingConcepts}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            size="small"
+                                            placeholder="Search for a concept"
+                                            required
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+
+                            {/* Include Individuals */}
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={values.includeIndividuals}
+                                        onChange={(e) => {
+                                            setIncludeIndividuals(e.target.checked);
+                                            setFieldValue('includeIndividuals', e.target.checked);
+                                        }}
+                                        size="small"
                                     />
-                                </FormItem>
-                                <FormItem label="Concept">
-                                    <Field
-                                        component={AsyncSelect}
-                                        name="concept"
-                                        async
-                                        loadOptions={(inputValue, callback) =>
-                                            this.loadConcepts(values.ontology, values.includeIndividuals, inputValue, callback)
-                                        }
-                                        // onChange={this.handleConceptChange}
-                                        isDisabled={values.ontology === null}
-                                        menuPosition="fixed"
-                                        serverError={validation}
-                                    />
+                                }
+                                label="Include individuals"
+                            />
 
-                                    <Field
-                                        component={Choice}
-                                        multiple={true}
-                                        options={[{ value: '1', labelText: 'Include individuals' }]}
-                                        name="includeIndividuals"
-                                        serverError={validation}
-                                    />
-                                </FormItem>
-
-                                <Button type="submit" disabled={values.ontology === null || isSubmitting}>
+                            {/* Actions */}
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={isSubmitting || !values.ontology || !values.concept}
+                                >
                                     Add annotation
                                 </Button>
-                            </Form>
-                        );
-                    }}
-                </Formik>
-            </Modal>
-        );
-    }
-}
+                            </Box>
+                        </Box>
+                    </Form>
+                )}
+            </Formik>
+        </Modal>
+    );
+};
+
+export default AddAnnotationModal;

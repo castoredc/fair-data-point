@@ -1,35 +1,47 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, DefaultOptionType, Dropdown, Stack, TextInput } from '@castoredc/matter';
+import Button from '@mui/material/Button';
 import FormItem from 'components/Form/FormItem';
 import { FieldProps } from 'formik';
-import { AsyncDropdownIndicator } from 'components/Input/Formik/Select';
 import debounce from 'lodash/debounce';
-import { OptionsType } from 'react-select/src/types';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import { Autocomplete, CircularProgress, TextField } from '@mui/material';
 
-interface OrganizationSelectProps extends FieldProps {
+interface OrganizationSelectProps extends FieldProps, ComponentWithNotifications {
     country: string;
     departmentField: string;
 }
 
+interface OrganizationOption {
+    label: string;
+    value: string;
+    source: string;
+    data: {
+        city: string;
+    };
+}
+
 type OrganizationSelectState = {
-    cachedOptions: OptionsType<DefaultOptionType>;
+    cachedOptions: OrganizationOption[];
+    loading: boolean;
+    inputValue: string;
 };
 
-export default class OrganizationSelect extends Component<OrganizationSelectProps, OrganizationSelectState> {
+class OrganizationSelect extends Component<OrganizationSelectProps, OrganizationSelectState> {
     constructor(props) {
         super(props);
 
         this.state = {
             cachedOptions: [],
+            loading: false,
+            inputValue: '',
         };
     }
 
     loadOrganizations = debounce((input: string, callback: (options) => void) => {
-        const { country } = this.props;
+        const { country, notifications } = this.props;
 
         apiClient
             .get('/api/agent/organization', {
@@ -45,14 +57,14 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
                     },
                     () => {
                         callback(response.data);
-                    }
+                    },
                 );
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 callback(null);
@@ -98,38 +110,69 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
 
         return (
             <div>
-                <Stack>
+                <Stack direction="row">
                     {!manual && (
                         <FormItem label="Organization / Institution">
-                            <Dropdown
-                                name="organization"
-                                loadOptions={this.loadOrganizations}
+                            <Autocomplete
                                 options={cachedOptions}
-                                menuPosition="fixed"
-                                isDisabled={disabled}
-                                onChange={this.handleOrganizationSelect}
-                                components={{ DropdownIndicator: AsyncDropdownIndicator }}
-                                getOptionLabel={({ label }) => label}
-                                getOptionValue={({ value }) => value}
-                                openMenuOnClick={false}
-                                value={{
-                                    source: value.source,
-                                    value: value.id,
+                                loading={this.state.loading}
+                                disabled={disabled}
+                                noOptionsText={this.state.inputValue ? 'No results found' : 'Type to search'}
+                                value={value.id ? {
                                     label: value.name,
-                                    city: value.city,
+                                    value: value.id,
+                                    source: value.source,
+                                    data: { city: value.city },
+                                } : undefined}
+                                onChange={(event, newValue) => {
+                                    if (newValue) {
+                                        this.handleOrganizationSelect(newValue);
+                                    }
                                 }}
+                                onInputChange={(event, newInputValue) => {
+                                    this.setState({ inputValue: newInputValue });
+                                    if (newInputValue) {
+                                        this.setState({ loading: true });
+                                        this.loadOrganizations(newInputValue, (options) => {
+                                            this.setState({ loading: false });
+                                        });
+                                    }
+                                }}
+                                getOptionLabel={(option) => option.label}
+                                isOptionEqualToValue={(option, value) => option.value === value.value}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        placeholder="Search for an organization"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {this.state.loading ?
+                                                        <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                        size="small"
+                                    />
+                                )}
+                                disableClearable={true}
+                                sx={{ width: 400 }}
                             />
 
-                            <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
+                            <Button variant="text" className="CannotFind" onClick={this.toggleManual}
+                                    disabled={disabled}>
                                 I cannot find my organization
                             </Button>
                         </FormItem>
                     )}
 
                     {manual && (
-                        <>
+                        <Stack direction="column" spacing={2}>
                             <FormItem label="Organization / Institution Name">
-                                <TextInput
+                                <TextField
                                     value={value.name}
                                     onChange={event => {
                                         form.setFieldValue(field.name, {
@@ -138,14 +181,11 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
                                         });
                                     }}
                                     autoFocus
+                                    sx={{ width: 400 }}
                                 />
-
-                                <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
-                                    Search for an organization
-                                </Button>
                             </FormItem>
                             <FormItem label="City">
-                                <TextInput
+                                <TextField
                                     value={value.city}
                                     onChange={event => {
                                         form.setFieldValue(field.name, {
@@ -153,9 +193,15 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
                                             city: event.target.value,
                                         });
                                     }}
+                                    sx={{ width: 400 }}
                                 />
                             </FormItem>
-                        </>
+
+                            <Button variant="text" className="CannotFind" onClick={this.toggleManual}
+                                    disabled={disabled}>
+                                Search for an organization
+                            </Button>
+                        </Stack>
                     )}
                 </Stack>
 
@@ -171,3 +217,5 @@ const defaultData = {
     source: '',
     city: '',
 };
+
+export default withNotifications(OrganizationSelect);

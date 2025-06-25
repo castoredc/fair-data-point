@@ -1,10 +1,13 @@
 import React, { FC } from 'react';
 
-import { Button, TextInput } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { replaceAt } from '../../../util';
 import { FormikProps } from 'formik/dist/types';
+import ClearIcon from '@mui/icons-material/Clear';
+import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material';
 
 interface OptionGroupOptionInputProps extends FieldProps {
     serverError?: any;
@@ -38,64 +41,79 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 
 const OptionGroupOptionInput: FC<OptionGroupOptionInputProps> = ({ field, form, multiline, serverError }) => {
     const serverErrors = serverError[field.name];
-
     const value = field.value ? field.value : [defaultData];
 
     return (
         <div className="Input OptionGroupOptionInput">
-            <div className="OptionGroupOptionInputItems">
-                <div className="OptionGroupOptionInputItem">
-                    <div className="OptionGroupOptionInputTitle">Name</div>
-                    <div className="OptionGroupOptionInputValue">Value</div>
-                </div>
-                {value.map((option, index) => {
-                    const first = index === 0;
+            <Paper elevation={0}>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Value</TableCell>
+                            <TableCell width={48} /> {/* Column for action buttons */}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {value.map((option, index) => {
+                            const first = index === 0;
 
-                    return (
-                        <React.Fragment key={`${field.name}-${index}`}>
-                            <div className="OptionGroupOptionInputItem">
-                                <div className="OptionGroupOptionInputTitle">
-                                    <TextInput
-                                        name="title"
-                                        onChange={e => {
-                                            handleChange(field, form, index, 'title', e.target.value);
-                                        }}
-                                        value={option.title}
-                                        inputSize="20rem"
-                                    />
-                                </div>
-                                <div className="OptionGroupOptionInputValue">
-                                    <TextInput
-                                        name="value"
-                                        onChange={e => {
-                                            handleChange(field, form, index, 'value', e.target.value);
-                                        }}
-                                        value={option.value}
-                                        inputSize="18.5rem"
-                                    />
-                                </div>
-                                <div className="OptionGroupOptionInputButtons">
-                                    <div className="OptionGroupOptionInputButton">
-                                        {!first && (
-                                            <Button
-                                                icon="cross"
-                                                className="RemoveButton"
-                                                buttonType="contentOnly"
-                                                onClick={() => handleRemove(field, form, index)}
-                                                iconDescription="Remove option"
+                            return (
+                                <React.Fragment key={`${field.name}-${index}`}>
+                                    <TableRow>
+                                        <TableCell>
+                                            <TextField
+                                                fullWidth
+                                                size="small"
+                                                name="title"
+                                                onChange={e => {
+                                                    handleChange(field, form, index, 'title', e.target.value);
+                                                }}
+                                                value={option.title}
                                             />
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                            <FieldErrors field={field} serverErrors={serverErrors} index={index} />
-                        </React.Fragment>
-                    );
-                })}
-            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                fullWidth
+                                                size="small"
+                                                name="value"
+                                                onChange={e => {
+                                                    handleChange(field, form, index, 'value', e.target.value);
+                                                }}
+                                                value={option.value}
+                                            />
+                                        </TableCell>
+                                        <TableCell padding="none">
+                                            {!first && (
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => handleRemove(field, form, index)}
+                                                >
+                                                    <ClearIcon />
+                                                </IconButton>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                    {serverErrors && (
+                                        <TableRow>
+                                            <TableCell colSpan={3}>
+                                                <FieldErrors field={field} serverErrors={serverErrors} index={index} />
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </Paper>
 
-            <div className="OptionGroupOptionInputAddButton">
-                <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>
+            <div style={{ marginTop: '16px' }}>
+                <Button
+                    startIcon={<AddIcon />}
+                    variant="text"
+                    onClick={() => handleAdd(field, form)}
+                >
                     Add new
                 </Button>
             </div>

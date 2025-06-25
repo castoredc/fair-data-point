@@ -1,218 +1,226 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'components/DocumentTitle';
-import DashboardTab from 'components/Layout/DashboardTab';
-import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from '../../../network';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay } from '@castoredc/matter';
 import { isAdmin } from 'utils/PermissionHelper';
 import { AddEDCServerModal } from 'modals/AddEDCServerModal';
 import { UpdateEDCServerModal } from 'modals/UpdateEDCServerModal';
 import ConfirmModal from 'modals/ConfirmModal';
+import Button from '@mui/material/Button';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import DashboardSideBar from 'components/SideBar/DashboardSideBar';
+import Body from 'components/Layout/Dashboard/Body';
+import DataGrid from 'components/DataTable/DataGrid';
+import { RowActionsMenu } from 'components/DataTable/RowActionsMenu';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import Header from 'components/Layout/Dashboard/Header';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import AddIcon from '@mui/icons-material/Add';
+import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 
-interface EDCServersProps extends AuthorizedRouteComponentProps {}
-
-interface EDCServersState {
-    edcServers: any;
-    showModal: any;
-    selectedServer: any;
-    isLoading: boolean;
+interface EDCServer {
+    id: string;
+    name: string;
+    url: string;
+    flag: string;
+    default: boolean;
 }
 
-export default class EDCServers extends Component<EDCServersProps, EDCServersState> {
-    constructor(props) {
-        super(props);
+interface EDCServersProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
+}
 
-        this.state = {
-            edcServers: [],
-            showModal: {
-                add: false,
-                update: false,
-                remove: false,
-            },
-            selectedServer: null,
-            isLoading: false,
-        };
-    }
+type ModalType = 'add' | 'update' | 'remove';
 
-    openModal = type => {
-        const { showModal } = this.state;
+const EDCServers: React.FC<EDCServersProps> = ({ history, location, user, notifications }): JSX.Element => {
+    const [edcServers, setEDCServers] = useState<EDCServer[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedServer, setSelectedServer] = useState<EDCServer | null>(null);
+    const [showModal, setShowModal] = useState({
+        add: false,
+        update: false,
+        remove: false,
+    });
 
-        this.setState({
-            showModal: {
-                ...showModal,
-                [type]: true,
-            },
-        });
-    };
-
-    closeModals = () => {
-        this.setState({
-            showModal: {
-                add: false,
-                update: false,
-                remove: false,
-            },
-        });
-    };
-
-    getEDCServers = () => {
-        this.setState({
-            isLoading: true,
-        });
-
-        apiClient
-            .get('/api/castor/servers')
-            .then(response => {
-                this.setState({
-                    isLoading: false,
-                    edcServers: response.data,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading the EDC Servers information" />);
-                }
-            });
-    };
-
-    handleDelete = () => {
-        const { selectedServer } = this.state;
-
-        apiClient
-            .delete('/api/castor/servers/' + selectedServer.id)
-            .then(response => {
-                const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`;
-                toast.success(<ToastItem type="success" title={message} />, {
-                    position: 'top-right',
-                });
-
-                this.getEDCServers();
-            })
-            .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
-            });
-
-        this.closeModals();
-    };
-
-    handleUpdate = () => {
-        this.getEDCServers();
-        this.closeModals();
-    };
-
-    openServerModal = (type, existingServer) => {
-        this.openModal(type);
-        this.setState({
-            selectedServer: existingServer,
-        });
-    };
-
-    componentDidMount() {
-        this.getEDCServers();
-    }
-
-    render() {
-        const { history, user } = this.props;
-        const { isLoading, selectedServer, edcServers, showModal } = this.state;
-
-        const serverRows = edcServers.map((edcServer, index) => ({
-            id: <CellText>{edcServer.id}</CellText>,
-            name: <CellText>{edcServer.name}</CellText>,
-            url: <CellText>{edcServer.url}</CellText>,
-            flag: <CellText>{edcServer.flag}</CellText>,
-            defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
-            menu: (
-                <ActionsCell
-                    items={[
-                        { destination: () => this.openServerModal('update', edcServer), label: 'Edit server' },
-                        { destination: () => this.openServerModal('remove', edcServer), label: 'Remove server' },
-                    ]}
-                />
-            ),
+    const openModal = (type: ModalType) => {
+        setShowModal(prev => ({
+            ...prev,
+            [type]: true,
         }));
+    };
 
-        return (
-            <DashboardTab>
-                <AddEDCServerModal open={showModal.add} onClose={this.closeModals} handleSave={this.handleUpdate} />
-                <UpdateEDCServerModal open={showModal.update} onClose={this.closeModals} handleSave={this.handleUpdate} data={selectedServer} />
+    const closeModals = () => {
+        setShowModal({
+            add: false,
+            update: false,
+            remove: false,
+        });
+        setSelectedServer(null);
+    };
 
-                <ConfirmModal
-                    title="Remove server"
-                    action="Remove server"
-                    variant="primary"
-                    onConfirm={this.handleDelete}
-                    onCancel={this.closeModals}
-                    show={showModal.remove}
-                >
-                    Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server list?
-                </ConfirmModal>
+    const getEDCServers = async () => {
+        setLoading(true);
+        setError(null);
 
-                <DocumentTitle title="EDC Servers overview" />
+        try {
+            const response = await apiClient.get('/api/castor/servers');
+            setEDCServers(response.data);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.error || 'An error occurred while loading the EDC Servers information';
+            setError(errorMessage);
+            notifications.show(errorMessage, { variant: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                {isLoading && <LoadingOverlay accessibleLabel="Loading servers" />}
+    const handleDelete = async () => {
+        if (!selectedServer) return;
 
-                <DashboardTabHeader title="EDC Servers overview" type="Section">
+        try {
+            await apiClient.delete(`/api/castor/servers/${selectedServer.id}`);
+            const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`;
+            notifications.show(message, { variant: 'success' });
+            await getEDCServers();
+        } catch (error: any) {
+            notifications.show('An error occurred', { variant: 'error' });
+        }
+
+        closeModals();
+    };
+
+    const handleUpdate = async () => {
+        await getEDCServers();
+        closeModals();
+    };
+
+    const openServerModal = (type: ModalType, server: EDCServer) => {
+        setSelectedServer(server);
+        openModal(type);
+    };
+
+    useEffect(() => {
+        getEDCServers();
+    }, []);
+
+    const columns: GridColDef<EDCServer>[] = [
+        {
+            headerName: 'ID',
+            field: 'id',
+            width: 40,
+            maxWidth: 40,
+        },
+        {
+            headerName: 'Name',
+            field: 'name',
+            flex: 1,
+        },
+        {
+            headerName: 'URL',
+            field: 'url',
+            minWidth: 200,
+            width: 300,
+        },
+        {
+            headerName: 'Location',
+            field: 'flag',
+            width: 100,
+        },
+        {
+            headerName: 'Default server?',
+            field: 'default',
+            width: 150,
+            type: 'boolean',
+            valueFormatter: ({ value }) => value ? 'Yes' : 'No',
+        },
+        {
+            field: 'actions',
+            headerName: '',
+            flex: 1,
+            sortable: false,
+            disableColumnMenu: true,
+            align: 'right',
+            cellClassName: 'actionsCell',
+            renderCell: (params) => {
+                const row = params.row as EDCServer;
+                return (
+                    <RowActionsMenu
+                        row={row}
+                        items={[
+                            {
+                                destination: () => openServerModal('update', row),
+                                label: 'Edit server',
+                            },
+                            {
+                                destination: () => openServerModal('remove', row),
+                                label: 'Remove server',
+                            },
+                        ]}
+                    />
+                );
+            },
+        },
+    ];
+
+    return (
+        <DashboardPage>
+            <AddEDCServerModal
+                open={showModal.add}
+                onClose={closeModals}
+                handleSave={handleUpdate}
+            />
+            <UpdateEDCServerModal
+                open={showModal.update}
+                onClose={closeModals}
+                handleSave={handleUpdate}
+                data={selectedServer}
+            />
+
+            <ConfirmModal
+                title="Remove server"
+                action="Remove server"
+                variant="contained"
+                onConfirm={handleDelete}
+                onCancel={closeModals}
+                show={showModal.remove}
+            >
+                Are you sure you want remove <strong>{selectedServer?.name}</strong> from the
+                server list?
+            </ConfirmModal>
+
+            <DocumentTitle title="EDC Servers overview" />
+            <DashboardSideBar location={location} history={history} user={user} />
+
+            <Body>
+                <Header title="EDC Servers overview">
                     {isAdmin(user) && (
-                        <Button buttonType="primary" onClick={() => this.openModal('add')}>
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => openModal('add')}
+                            variant="contained"
+                        >
                             Add new server
                         </Button>
                     )}
-                </DashboardTabHeader>
+                </Header>
 
-                <DataGrid
-                    accessibleName="EDC Servers"
-                    emptyStateContent="No servers available"
-                    rows={serverRows}
-                    anchorRightColumns={1}
-                    columns={[
-                        {
-                            Header: 'ID',
-                            accessor: 'id',
-                            width: 40,
-                            maxWidth: 40,
-                        },
-                        {
-                            Header: 'Name',
-                            accessor: 'name',
-                        },
-                        {
-                            Header: 'URL',
-                            accessor: 'url',
-                            minWidth: 200,
-                            width: 300,
-                        },
-                        {
-                            Header: 'Location',
-                            accessor: 'flag',
-                            width: 100,
-                        },
-                        {
-                            Header: 'Default server?',
-                            accessor: 'defaultServer',
-                            width: 150,
-                        },
-                        {
-                            accessor: 'menu',
-                            disableGroupBy: true,
-                            disableResizing: true,
-                            isInteractive: true,
-                            isSticky: true,
-                            maxWidth: 34,
-                            minWidth: 34,
-                            width: 34,
-                        },
-                    ]}
-                />
-            </DashboardTab>
-        );
-    }
-}
+                <PageBody>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={edcServers}
+                            columns={columns}
+                            loading={loading}
+                            error={error}
+                            disableRowSelectionOnClick
+                            emptyStateContent="No servers available"
+                            sx={{ '& .actionsCell': { pr: 1 } }}
+                        />
+                    </Box>
+                </PageBody>
+            </Body>
+        </DashboardPage>
+    );
+};
+
+export default withNotifications(EDCServers);

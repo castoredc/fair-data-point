@@ -20,7 +20,11 @@ interface StudyStructureNavigatorProps {
     handleStepSwitch: (step: Step) => void;
 }
 
-export const StudyStructureNavigator: React.FC<StudyStructureNavigatorProps> = ({ contents, selectedStep, handleStepSwitch }) => {
+export const StudyStructureNavigator: React.FC<StudyStructureNavigatorProps> = ({
+                                                                                    contents,
+                                                                                    selectedStep,
+                                                                                    handleStepSwitch,
+                                                                                }) => {
     return (
         <div className="StudyStructureNavigator">
             <ScrollShadow>

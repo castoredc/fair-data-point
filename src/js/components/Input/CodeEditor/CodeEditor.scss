@@ -1,21 +1,18 @@
-@import '../../../scss/const';
-@import '../../../scss/colors';
-
 @import '~codemirror/lib/codemirror.css';
-
-.CodeMirror {
-    font-family: 'Fira Code', monospace;
-    background: $neutral-10;
-    border: 1px solid $neutral-50;
-    border-radius: 0.3rem;
-    font-size: 1.6rem;
-
-    &.CodeMirror-focused {
-        background: $generic-white;
-    }
-
-    &.CodeMirror-focused,
-    &:hover {
-        border-color: $primary-main;
-    }
-}
+//
+//.CodeMirror {
+//  font-family: 'Fira Code', monospace;
+//  //background: $neutral-10;
+//  //border: 1px solid $neutral-50;
+//  border-radius: 0.3rem;
+//  font-size: 1.6rem;
+//
+//  &.CodeMirror-focused {
+//    //background: $generic-white;
+//  }
+//
+//  &.CodeMirror-focused,
+//  &:hover {
+//    border-color: $primary-main;
+//  }
+//}

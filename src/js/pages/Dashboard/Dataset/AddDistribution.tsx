@@ -3,9 +3,10 @@ import DistributionForm from 'components/Form/Admin/DistributionForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 
-interface AddDistributionProps extends AuthorizedRouteComponentProps {}
+interface AddDistributionProps extends AuthorizedRouteComponentProps {
+}
 
-export default class AddDistribution extends Component<AddDistributionProps> {
+class AddDistribution extends Component<AddDistributionProps> {
     constructor(props) {
         super(props);
 
@@ -26,3 +27,5 @@ export default class AddDistribution extends Component<AddDistributionProps> {
         );
     }
 }
+
+export default AddDistribution;

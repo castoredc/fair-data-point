@@ -2,8 +2,11 @@ import React, { ChangeEvent, FC } from 'react';
 
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { DatePicker as CastorDatePicker, Stack, TimePicker as CastorTimePicker } from '@castoredc/matter';
 import { format, setHours, setMinutes, setSeconds } from 'date-fns';
+import Stack from '@mui/material/Stack';
+import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import moment from 'moment';
 
 interface DateAndTimePickerProps extends FieldProps {
     readOnly?: boolean;
@@ -24,36 +27,35 @@ const DateAndTimePicker: FC<DateAndTimePickerProps> = ({ field, form, meta, read
     };
 
     return (
-        <>
-            <Stack>
-                <CastorDatePicker
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+            <Stack direction="row">
+                <DatePicker
                     name={`${field.name}_date`}
-                    selected={date !== '' ? new Date(date) : null}
-                    dateFormat="dd-MM-yyyy"
-                    onChange={(date, event) => {
-                        const formattedDate = format(date, 'yyyy-MM-dd');
-                        field.onChange({ target: { name: field.name, value: `${formattedDate};${time}` } });
+                    value={date ? moment(date) : null}
+                    onChange={(newDate) => {
+                        if (newDate) {
+                            const formattedDate = format(newDate.toDate(), 'yyyy-MM-dd');
+                            field.onChange({ target: { name: field.name, value: `${formattedDate};${time}` } });
+                        }
                     }}
-                    onBlur={field.onBlur}
-                    invalid={touched && !!errors}
                     readOnly={readOnly}
                 />
 
-                <CastorTimePicker
+                <TimePicker
                     name={`${field.name}_time`}
-                    selected={time !== '' && setSeconds(setMinutes(setHours(new Date(), Number(time.split(':')[0])), Number(time.split(':')[1])), 0)}
-                    onChange={(time, event) => {
-                        const formattedTime = format(time, 'HH:mm');
-                        field.onChange({ target: { name: field.name, value: `${date};${formattedTime}` } });
+                    value={time ? moment(setSeconds(setMinutes(setHours(new Date(), Number(time.split(':')[0])), Number(time.split(':')[1])), 0)) : null}
+                    onChange={(newTime) => {
+                        if (newTime) {
+                            const formattedTime = format(newTime.toDate(), 'HH:mm');
+                            field.onChange({ target: { name: field.name, value: `${date};${formattedTime}` } });
+                        }
                     }}
-                    onBlur={field.onBlur}
-                    invalid={touched && !!errors}
                     readOnly={readOnly}
                 />
             </Stack>
 
             <FieldErrors field={field} serverErrors={serverErrors} />
-        </>
+        </LocalizationProvider>
     );
 };
 

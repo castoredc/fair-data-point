@@ -1,7 +1,4 @@
 import React, { Component, RefObject } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { CellText, DataGrid, Heading, LoadingOverlay } from '@castoredc/matter';
 import moment from 'moment/moment';
 import DistributionGenerationStatus from '../Status/DistributionGenerationStatus';
 import FormItem from '../Form/FormItem';
@@ -9,8 +6,15 @@ import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
 import Split from 'components/Layout/Split';
 import { apiClient } from 'src/js/network';
+import LoadingOverlay from 'components/LoadingOverlay';
+import { Typography } from '@mui/material';
+import DataGrid from 'components/DataTable/DataGrid';
+import { GridColDef, GridRowParams } from '@mui/x-data-grid';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import NoResults from 'components/NoResults';
 
 interface Log {
+    id: string;
     record: { id: string };
     status: 'error' | 'success' | 'not_updated' | 'partially';
     createdAt: string;
@@ -22,7 +26,7 @@ interface Pagination {
     perPage: number;
 }
 
-interface DistributionRecordLogsDataTableProps {
+interface DistributionRecordLogsDataTableProps extends ComponentWithNotifications {
     dataset: string;
     distribution: { slug: string };
     log: string;
@@ -37,7 +41,7 @@ interface DistributionRecordLogsDataTableState {
     selectedLog: Log | null;
 }
 
-export default class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDataTableProps, DistributionRecordLogsDataTableState> {
+class DistributionRecordLogsDataTable extends Component<DistributionRecordLogsDataTableProps, DistributionRecordLogsDataTableState> {
     private tableRef: RefObject<HTMLDivElement>;
 
     constructor(props: DistributionRecordLogsDataTableProps) {
@@ -67,7 +71,7 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
 
     getLogs = () => {
         const { pagination, hasLoadedLogs } = this.state;
-        const { dataset, distribution, log } = this.props;
+        const { dataset, distribution, log, notifications } = this.props;
 
         this.setState({
             isLoadingLogs: true,
@@ -101,30 +105,30 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the logs';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
-    handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
+    handlePagination = (currentPage: number, pageSize: number) => {
         const { pagination } = this.state;
 
         this.setState(
             {
                 pagination: {
                     ...pagination,
-                    currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageSize,
+                    currentPage: currentPage + 1,
+                    perPage: pageSize,
                 },
             },
             () => {
                 this.getLogs();
-            }
+            },
         );
     };
 
-    handleClick = (rowId: string) => {
+    handleClick = (params: GridRowParams) => {
         const { logs } = this.state;
-        const log = logs[rowId];
+        const log = logs[params.id];
 
         this.setState({ selectedLog: log });
     };
@@ -140,29 +144,26 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
         const selectedLogItemHasErrors =
             selectedLogItem !== null && selectedLogItem.errors !== null && Array.isArray(selectedLogItem.errors) && selectedLogItem.errors.length > 0;
 
-        const columns = [
+        const columns: GridColDef[] = [
             {
-                Header: 'Record',
-                accessor: 'record',
+                headerName: 'Record',
+                field: 'record',
             },
             {
-                Header: 'Status',
-                accessor: 'status',
+                headerName: 'Status',
+                field: 'status',
             },
             {
-                Header: 'Date and time',
-                accessor: 'createdAt',
+                headerName: 'Date and time',
+                field: 'createdAt',
             },
         ];
 
         const rows = logs.map((log, index) => ({
-            record: <CellText key={`record-${index}`}>{log.record.id}</CellText>,
-            status: (
-                <CellText key={`status-${index}`}>
-                    <DistributionGenerationStatus status={log.status} />
-                </CellText>
-            ),
-            createdAt: <CellText key={`createdAt-${index}`}>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
+            id: log.id,
+            record: log.record.id,
+            status: <DistributionGenerationStatus status={log.status} />,
+            createdAt: moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
         }));
 
         return (
@@ -177,9 +178,10 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
                         inFlexContainer
                     >
                         <DataGrid
+                            disableRowSelectionOnClick
                             accessibleName="Log items"
                             emptyStateContent="No logs found"
-                            onClick={this.handleClick}
+                            onRowClick={this.handleClick}
                             rows={rows}
                             columns={columns}
                         />
@@ -188,14 +190,18 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
                     <div className="RecordLogsDetails">
                         {selectedLogItem !== null ? (
                             <div>
-                                <Heading type="Subsection">Record details</Heading>
+                                <Typography variant="h4">
+                                    Record details
+                                </Typography>
+
                                 <FormItem label="Record ID">{selectedLogItem.record.id}</FormItem>
 
                                 <FormItem label="Status">
                                     <DistributionGenerationStatus status={selectedLogItem.status} />
                                 </FormItem>
 
-                                <FormItem label="Date and time">{moment(selectedLogItem.createdAt).format('DD-MM-YYYY HH:mm:ss')}</FormItem>
+                                <FormItem
+                                    label="Date and time">{moment(selectedLogItem.createdAt).format('DD-MM-YYYY HH:mm:ss')}</FormItem>
 
                                 <FormItem label="Errors" className="ErrorLog">
                                     {selectedLogItemHasErrors && selectedLogItem.errors ? (
@@ -207,12 +213,12 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="NoResults">No errors occurred while generating this record</div>
+                                        <NoResults>No errors occurred while generating this record</NoResults>
                                     )}
                                 </FormItem>
                             </div>
                         ) : (
-                            <div className="NoResults">Select a log entry</div>
+                            <NoResults>Select a log entry</NoResults>
                         )}
                     </div>
                 </Split>
@@ -220,3 +226,5 @@ export default class DistributionRecordLogsDataTable extends Component<Distribut
         );
     }
 }
+
+export default withNotifications(DistributionRecordLogsDataTable);

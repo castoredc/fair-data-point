@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 
-import '../Form.scss';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Banner, Button, LoadingOverlay, Separator, Stack } from '@castoredc/matter';
+import LoadingOverlay from 'components/LoadingOverlay';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
-import FormHeading from '../FormHeading';
 import { Field, Form, Formik } from 'formik';
 import Choice from 'components/Input/Formik/Choice';
 import Select from 'components/Input/Formik/Select';
@@ -15,8 +11,12 @@ import * as Yup from 'yup';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import * as H from 'history';
 import { apiClient } from 'src/js/network';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { Alert, Card, CardContent, Typography } from '@mui/material';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DistributionFormProps {
+interface DistributionFormProps extends ComponentWithNotifications {
     distribution?: any;
     dataset?: any;
     history: H.History;
@@ -38,7 +38,7 @@ interface DistributionFormState {
     validation?: any;
 }
 
-export default class DistributionForm extends Component<DistributionFormProps, DistributionFormState> {
+class DistributionForm extends Component<DistributionFormProps, DistributionFormState> {
     constructor(props) {
         super(props);
 
@@ -81,6 +81,8 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     }
 
     getLanguages = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/languages')
             .then(response => {
@@ -90,11 +92,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getLicenses = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/licenses')
             .then(response => {
@@ -104,11 +108,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     getDataModels = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/data-model/my')
             .then(response => {
@@ -128,10 +134,13 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
+
     getMetadataModels = () => {
+        const { notifications } = this.props;
+
         apiClient
             .get('/api/metadata-model/my')
             .then(response => {
@@ -151,12 +160,12 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
             });
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { dataset, distribution, mainUrl, history } = this.props;
+        const { dataset, distribution, mainUrl, history, notifications } = this.props;
 
         const url = '/api/dataset/' + dataset + '/distribution' + (distribution ? '/' + distribution.slug : '');
 
@@ -169,8 +178,9 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
                 if (distribution) {
                     history.push(mainUrl + '/distributions/' + values.slug);
-                    toast.success(<ToastItem type="success" title="The distribution details are saved successfully" />, {
-                        position: 'top-right',
+                    notifications.show('The distribution details are saved successfully', {
+                        variant: 'success',
+
                     });
                 } else {
                     history.push(mainUrl + '/distributions/' + response.data.slug + '/metadata');
@@ -184,7 +194,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                    notifications.show('An error occurred', { variant: 'error' });
                 }
 
                 setSubmitting(false);
@@ -210,61 +220,27 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
         return (
             <Formik initialValues={initialValues} onSubmit={this.handleSubmit}>
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting,
+                      setValues,
+                      setFieldValue,
+                  }) => {
                     const currentDataModel = dataModels.find(({ value }) => value === values.dataModel);
 
                     return (
                         <Form>
-                            <div className="FormContent">
-                                <FormItem label="Distribution type">
-                                    <Field component={Choice} options={distributionTypes} name="type" />
-                                </FormItem>
-
-                                <Separator />
-
-                                {values.type === 'csv' && (
-                                    <>
-                                        <FormHeading label="CSV Distribution" />
-                                        <FormItem>
-                                            <Field
-                                                component={SingleChoice}
-                                                labelText="Include all data"
-                                                name="includeAllData"
-                                                details="Rather than using a pre-defined data dictionary, all data from the study will be included in the distribution"
-                                            />
+                            <Card variant="outlined" sx={{ mb: 2 }}>
+                                <CardContent>
+                                    <div>
+                                        <FormItem label="Distribution type">
+                                            <Field component={Choice} options={distributionTypes} name="type" />
                                         </FormItem>
-                                    </>
-                                )}
-
-                                {values.type === 'rdf' && (
-                                    <>
-                                        <FormHeading label="RDF Distribution" />
-                                        <Stack>
-                                            <FormItem label="Data model">
-                                                <Field
-                                                    component={Select}
-                                                    options={dataModels}
-                                                    name="dataModel"
-                                                    details="The pre-defined semantic data model describing all relations between data elements"
-                                                />
-                                            </FormItem>
-                                            <FormItem label="Data model version">
-                                                {currentDataModel && (
-                                                    <Field
-                                                        component={Select}
-                                                        options={currentDataModel.versions}
-                                                        name="dataModelVersion"
-                                                        // value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
-                                                    />
-                                                )}
-                                            </FormItem>
-                                        </Stack>
-                                    </>
-                                )}
-
-                                {values.type !== '' && (
-                                    <>
-                                        <Separator />
 
                                         <FormItem
                                             label="Slug"
@@ -278,99 +254,168 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                 component={Select}
                                                 options={metadataModels}
                                                 name="defaultMetadataModel"
-                                                menuPosition="fixed"
-                                                menuPlacement="auto"
+
+
                                                 details="Please select which semantic metadata model you want to use as default"
                                             />
                                         </FormItem>
 
-                                        <FormItem label="License" details="The reference to the usage license of the distribution">
-                                            <Field component={Select} options={licenses} name="license" menuPosition="fixed" menuPlacement="auto" />
+                                        <FormItem label="License"
+                                                  details="The reference to the usage license of the distribution">
+                                            <Field component={Select} options={licenses} name="license" />
                                         </FormItem>
 
-                                        {distribution && (
-                                            <>
-                                                <FormItem
-                                                    label="Publish distribution metadata"
-                                                    details="When enabled, the metadata of this distribution will be publicly accessible on the internet"
-                                                >
+                                        <FormItem
+                                            label="Publish distribution metadata"
+                                            details="When enabled, the metadata of this distribution will be publicly accessible on the internet"
+                                        >
+                                            <Field
+                                                component={Choice}
+                                                options={[
+                                                    {
+                                                        label: 'Yes',
+                                                        value: true,
+                                                    },
+                                                    {
+                                                        label: 'No',
+                                                        value: false,
+                                                    },
+                                                ]}
+                                                collapse
+                                                name="published"
+                                            />
+                                        </FormItem>
+
+
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            {values.type === 'csv' && (
+                                <Card variant="outlined" sx={{ mb: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            CSV Distribution
+                                        </Typography>
+
+                                        <div>
+                                            <FormItem>
+                                                <Field
+                                                    component={SingleChoice}
+                                                    label="Include all data"
+                                                    name="includeAllData"
+                                                    details="Rather than using a pre-defined data dictionary, all data from the study will be included in the distribution"
+                                                />
+                                            </FormItem>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+
+                            {values.type === 'rdf' && (
+                                <Card variant="outlined" sx={{ mb: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            RDF Distribution
+                                        </Typography>
+
+                                        <div>
+                                            <Stack direction="row">
+                                                <FormItem label="Data model">
                                                     <Field
-                                                        component={Choice}
-                                                        options={[
-                                                            {
-                                                                labelText: 'Yes',
-                                                                value: true,
-                                                            },
-                                                            {
-                                                                labelText: 'No',
-                                                                value: false,
-                                                            },
-                                                        ]}
-                                                        collapse
-                                                        name="published"
+                                                        component={Select}
+                                                        options={dataModels}
+                                                        name="dataModel"
+                                                        details="The pre-defined semantic data model describing all relations between data elements"
                                                     />
                                                 </FormItem>
-
-                                                <FormHeading label="Data" />
-
-                                                <FormItem
-                                                    label="Publish distribution data"
-                                                    details="When enabled, the data of this distribution will be publicly accessible on the internet"
-                                                >
-                                                    <Field
-                                                        component={Choice}
-                                                        options={[
-                                                            {
-                                                                labelText: 'Yes',
-                                                                value: true,
-                                                            },
-                                                            {
-                                                                labelText: 'No',
-                                                                value: false,
-                                                            },
-                                                        ]}
-                                                        collapse
-                                                        name="public"
-                                                    />
+                                                <FormItem label="Data model version">
+                                                    {currentDataModel && (
+                                                        <Field
+                                                            component={Select}
+                                                            options={currentDataModel.versions}
+                                                            name="dataModelVersion"
+                                                            // value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
+                                                        />
+                                                    )}
                                                 </FormItem>
+                                            </Stack>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                                {values.public === true && (
-                                                    <Banner
-                                                        type="information"
-                                                        description="Please note that this enables data access to everyone, without any access control."
-                                                        customWidth="400px"
-                                                    />
-                                                )}
+                            <Card variant="outlined" sx={{ mb: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        Data
+                                    </Typography>
 
-                                                <FormItem
-                                                    label="Cache distribution data"
-                                                    details="When enabled, the data of this distribution will be cached to enable querying and faster downloading"
-                                                >
-                                                    <Field
-                                                        component={Choice}
-                                                        options={[
-                                                            {
-                                                                labelText: 'Yes',
-                                                                value: true,
-                                                            },
-                                                            {
-                                                                labelText: 'No',
-                                                                value: false,
-                                                            },
-                                                        ]}
-                                                        collapse
-                                                        name="cached"
-                                                    />
-                                                </FormItem>
-                                            </>
+                                    <div>
+                                        <FormItem
+                                            label="Publish distribution data"
+                                            details="When enabled, the data of this distribution will be publicly accessible on the internet"
+                                        >
+                                            <Field
+                                                component={Choice}
+                                                options={[
+                                                    {
+                                                        label: 'Yes',
+                                                        value: true,
+                                                    },
+                                                    {
+                                                        label: 'No',
+                                                        value: false,
+                                                    },
+                                                ]}
+                                                collapse
+                                                name="public"
+                                            />
+                                        </FormItem>
+
+                                        {values.public === true && (
+                                            <Alert severity="info">
+                                                Please note that this enables data access to everyone,
+                                                without
+                                                any access control.
+                                            </Alert>
                                         )}
 
-                                        <FormHeading label="Castor EDC API Credentials" />
+                                        <FormItem
+                                            label="Cache distribution data"
+                                            details="When enabled, the data of this distribution will be cached to enable querying and faster downloading"
+                                        >
+                                            <Field
+                                                component={Choice}
+                                                options={[
+                                                    {
+                                                        label: 'Yes',
+                                                        value: true,
+                                                    },
+                                                    {
+                                                        label: 'No',
+                                                        value: false,
+                                                    },
+                                                ]}
+                                                collapse
+                                                name="cached"
+                                            />
+                                        </FormItem>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card variant="outlined" sx={{ mb: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        Castor EDC API Credentials
+                                    </Typography>
+
+                                    <div>
 
                                         <FormItem>
                                             <Field
                                                 component={SingleChoice}
-                                                labelText="Use API User"
+                                                label="Use API User"
                                                 name="useApiUser"
                                                 details="An external user (which should be added to the study) will be used to access the data, required for cached distributions"
                                             />
@@ -380,9 +425,11 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                             <div>
                                                 {values.apiUserEncrypted ? (
                                                     <div>
-                                                        <p>The API Credentials for this distribution are encrypted.</p>
+                                                        <p>The API Credentials for this distribution are
+                                                            encrypted.</p>
 
-                                                        <Button buttonType="danger" onClick={() => setFieldValue('apiUserEncrypted', false)}>
+                                                        <Button color="error"
+                                                                onClick={() => setFieldValue('apiUserEncrypted', false)}>
                                                             Change API Credentials
                                                         </Button>
                                                     </div>
@@ -392,31 +439,40 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                             <Field component={Input} name="apiUser" />
                                                         </FormItem>
 
-                                                        <Stack>
+                                                        <Stack direction="row">
                                                             <FormItem label="Client ID">
                                                                 <Field component={Input} name="clientId" />
                                                             </FormItem>
 
                                                             <FormItem label="Client Secret">
-                                                                <Field component={Input} name="clientSecret" />
+                                                                <Field component={Input}
+                                                                       name="clientSecret" />
                                                             </FormItem>
                                                         </Stack>
                                                     </div>
                                                 )}
                                             </div>
                                         )}
-                                    </>
-                                )}
-                            </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
 
-                            <div className="FormButtons">
-                                <Stack distribution="trailing">
+                            <div>
+                                <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                                     {distribution ? (
-                                        <Button disabled={isSubmitting} type="submit">
+                                        <Button
+                                            disabled={isSubmitting}
+                                            type="submit"
+                                            variant="contained"
+                                        >
                                             Update distribution
                                         </Button>
                                     ) : (
-                                        <Button disabled={isSubmitting} type="submit">
+                                        <Button
+                                            disabled={isSubmitting}
+                                            type="submit"
+                                            variant="contained"
+                                        >
                                             Add distribution
                                         </Button>
                                     )}
@@ -433,12 +489,12 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 export const distributionTypes = [
     {
         value: 'csv',
-        labelText: 'CSV Distribution',
+        label: 'CSV Distribution',
         details: 'CSV distributions contain tabulated data, where every column represents a variable collected in your study',
     },
     {
         value: 'rdf',
-        labelText: 'RDF Distribution',
+        label: 'RDF Distribution',
         details: 'RDF distributions contain linked data, where the data is modeled using a pre-defined semantic data model',
     },
 ];
@@ -498,3 +554,5 @@ const DistributionSchema = Yup.object().shape({
     cached: Yup.boolean().required('Please select if this distribution should be cached'),
     public: Yup.boolean().required('Please select if the data in this distribution should be publicly available'),
 });
+
+export default withNotifications(DistributionForm);

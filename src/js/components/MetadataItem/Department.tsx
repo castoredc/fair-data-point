@@ -1,6 +1,9 @@
 import React from 'react';
+import { DepartmentType } from 'types/DepartmentType';
 
-const Department = ({ name: string }) => {
+type DepartmentProps = DepartmentType;
+
+const Department: React.FC<DepartmentProps> = ({ name }) => {
     return <span className="Department">{name}</span>;
 };
 

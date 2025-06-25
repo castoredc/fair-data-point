@@ -1,10 +1,14 @@
 import React, { FC, Fragment } from 'react';
 
-import { Button, DefaultOptionType, Dropdown, TextInput } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { replaceAt } from '../../../util';
 import { FormikProps } from 'formik/dist/types';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Autocomplete, IconButton, TextField } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 interface LocalizedTextInputProps extends FieldProps {
     languages: any;
@@ -50,45 +54,42 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
 
                     return (
                         <Fragment key={`${field.name}-${index}`}>
-                            <div className="LocalizedTextInputItem">
-                                <div className="LocalizedTextInputText">
-                                    <TextInput
-                                        name="text"
-                                        onChange={e => {
-                                            handleChange(field, form, index, 'text', e.target.value);
-                                        }}
-                                        value={localizedTextItem.text}
-                                        multiline={multiline}
-                                        // rows={rows}
-                                    />
-                                </div>
-                                <div className="LocalizedTextInputLanguage">
-                                    <Dropdown
-                                        options={languages}
-                                        menuPlacement={'auto'}
-                                        getOptionLabel={({ label }) => label}
-                                        getOptionValue={({ value }) => value}
-                                        onChange={(option: DefaultOptionType) => {
-                                            handleChange(field, form, index, 'language', option.value);
-                                        }}
-                                        value={languages.find(language => language.value === localizedTextItem.language)}
-                                        width="minimum"
-                                    />
-                                </div>
+                            <Stack direction="row" spacing={2}>
+                                <TextField
+                                    name="text"
+                                    variant="outlined"
+                                    onChange={e => {
+                                        handleChange(field, form, index, 'text', e.target.value);
+                                    }}
+                                    value={localizedTextItem.text}
+                                    multiline={multiline}
+                                    minRows={multiline ? 3 : undefined}
+                                    sx={{ width: 400 }}
+                                    // rows={rows}
+                                />
+                                <Autocomplete
+                                    options={languages}
+                                    renderInput={(params) => <TextField {...params} size="small" />}
+                                    onChange={(event: any, newValue) => {
+                                        handleChange(field, form, index, 'language', newValue.value);
+                                    }}
+                                    value={languages.find(language => language.value === localizedTextItem.language) ?? null}
+                                    disableClearable={true}
+                                    sx={{ width: 140 }}
+                                />
                                 <div className="LocalizedTextInputButtons">
                                     <div className="LocalizedTextInputButton">
                                         {!first && (
-                                            <Button
-                                                icon="cross"
+                                            <IconButton
                                                 className="RemoveButton"
-                                                buttonType="contentOnly"
                                                 onClick={() => handleRemove(field, form, index)}
-                                                iconDescription="Remove text"
-                                            />
+                                            >
+                                                <ClearIcon />
+                                            </IconButton>
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </Stack>
                             <FieldErrors field={field} serverErrors={serverErrors} index={index} />
                         </Fragment>
                     );
@@ -96,7 +97,12 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
             </div>
 
             <div className="LocalizedTextInputAddButton">
-                <Button icon="add" className="AddButton" buttonType="bare" onClick={() => handleAdd(field, form)}>
+                <Button
+                    startIcon={<AddIcon />}
+                    className="AddButton"
+                    variant="text"
+                    onClick={() => handleAdd(field, form)}
+                >
                     Add new
                 </Button>
             </div>

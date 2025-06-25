@@ -13,7 +13,8 @@ const CatalogList: React.FC<CommonListProps> = props => {
         noResultsText = 'This agent does not have any associated catalogs.';
     }
 
-    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata} noResultsText={noResultsText} />;
+    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata}
+                 noResultsText={noResultsText} />;
 };
 
 export default CatalogList;

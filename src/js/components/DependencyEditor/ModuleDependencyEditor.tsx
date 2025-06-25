@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import './DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
 import { RuleGroup } from '../QueryBuilder/RuleGroup';
@@ -12,6 +13,7 @@ import { ValueEditor } from 'components/QueryBuilder/ValueEditor';
 import CombinatorSelector from 'components/QueryBuilder/CombinatorSelector';
 import FieldSelector from 'components/QueryBuilder/FieldSelector';
 import OperatorSelector from 'components/QueryBuilder/OperatorSelector';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type ModuleDependencyEditorProps = {
     modelType: string;
@@ -26,7 +28,7 @@ type ModuleDependencyEditorState = {
     fields: { name: string; label: string; dataType: NodeValueType['dataType']; valueType: NodeValueType['value'] }[];
 };
 
-export default class ModuleDependencyEditor extends Component<ModuleDependencyEditorProps, ModuleDependencyEditorState> {
+class ModuleDependencyEditor extends Component<ModuleDependencyEditorProps, ModuleDependencyEditorState> {
     constructor(props) {
         super(props);
 
@@ -70,20 +72,20 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
                         onQueryChange={handleChange}
                         controlElements={{
                             addGroupAction: props => (
-                                <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
+                                <Button startIcon={<AddIcon />} onClick={props.handleOnClick}>
                                     Group
                                 </Button>
                             ),
                             removeGroupAction: props => (
-                                <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete group" />
+                                <Button startIcon={<DeleteIcon />} color="error" onClick={props.handleOnClick} />
                             ),
                             addRuleAction: props => (
-                                <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
+                                <Button startIcon={<AddIcon />} onClick={props.handleOnClick}>
                                     Condition
                                 </Button>
                             ),
                             removeRuleAction: props => (
-                                <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete condition" />
+                                <Button startIcon={<DeleteIcon />} color="error" onClick={props.handleOnClick} />
                             ),
                             combinatorSelector: props => {
                                 return (
@@ -145,3 +147,5 @@ const operators = [
     { name: 'null', label: 'is empty', types: ['plain', 'annotated'] },
     { name: 'notNull', label: 'is not empty', types: ['plain', 'annotated'] },
 ];
+
+export default ModuleDependencyEditor;

@@ -17,12 +17,17 @@ interface MainProps {
 const Main: FC<MainProps> = ({ user, embedded }) => {
     return (
         <Switch>
-            <Route path="/fdp" exact render={props => <FAIRDataPointMain {...props} embedded={embedded} user={user} />} />
+            <Route path="/fdp" exact
+                   render={props => <FAIRDataPointMain {...props} embedded={embedded} user={user} />} />
             <Route path="/study/:study" exact render={props => <Study {...props} embedded={embedded} user={user} />} />
-            <Route path="/fdp/person/:slug" exact render={props => <Agent {...props} type="person" embedded={embedded} user={user} />} />
-            <Route path="/fdp/organization/:slug" exact render={props => <Agent {...props} type="organization" embedded={embedded} user={user} />} />
-            <Route path="/fdp/catalog/:catalog" render={props => <Catalog {...props} embedded={embedded} user={user} />} />
-            <Route path="/fdp/dataset/:dataset" exact render={props => <Dataset {...props} embedded={embedded} user={user} />} />
+            <Route path="/fdp/person/:slug" exact
+                   render={props => <Agent {...props} type="person" embedded={embedded} user={user} />} />
+            <Route path="/fdp/organization/:slug" exact
+                   render={props => <Agent {...props} type="organization" embedded={embedded} user={user} />} />
+            <Route path="/fdp/catalog/:catalog"
+                   render={props => <Catalog {...props} embedded={embedded} user={user} />} />
+            <Route path="/fdp/dataset/:dataset" exact
+                   render={props => <Dataset {...props} embedded={embedded} user={user} />} />
             <Route
                 path="/fdp/dataset/:dataset/distribution/:distribution"
                 exact

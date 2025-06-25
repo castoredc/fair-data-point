@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import DistributionRecordLogsDataTable from 'components/DataTable/DistributionRecordLogsDataTable';
-import { Heading, LoadingOverlay } from '@castoredc/matter';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import PageTabs from 'components/PageTabs';
 import * as H from 'history';
+import LoadingOverlay from 'components/LoadingOverlay';
+import Typography from '@mui/material/Typography';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-interface DistributionLogProps {
+interface DistributionLogProps extends ComponentWithNotifications {
     dataset: string;
     distribution: any;
     match: { params: { log: string } };
@@ -23,7 +23,7 @@ interface DistributionLogState {
     selectedTab: string;
 }
 
-export default class DistributionLog extends Component<DistributionLogProps, DistributionLogState> {
+class DistributionLog extends Component<DistributionLogProps, DistributionLogState> {
     constructor(props: DistributionLogProps) {
         super(props);
         this.state = {
@@ -40,7 +40,7 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
     }
 
     getLog = () => {
-        const { dataset, distribution, match } = this.props;
+        const { dataset, distribution, match, notifications } = this.props;
 
         this.setState({
             isLoadingLog: true,
@@ -61,7 +61,7 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
                 });
 
                 const message = error.response?.data?.error || 'An error occurred while loading the log';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
@@ -84,7 +84,8 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
         let tabs: { [key: string]: { title: string; content: JSX.Element } } = {
             records: {
                 title: 'Record logs',
-                content: <DistributionRecordLogsDataTable dataset={dataset} distribution={distribution} log={match.params.log} />,
+                content: <DistributionRecordLogsDataTable dataset={dataset} distribution={distribution}
+                                                          log={match.params.log} />,
             },
         };
 
@@ -95,7 +96,7 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
                     <div>
                         {log.errors.map((error: any, index: number) => (
                             <div className="ErrorLogItem" key={index}>
-                                <Heading type="Panel">{error.exception}</Heading>
+                                <Typography variant="h5">{error.exception}</Typography>
                                 <div>{error.message}</div>
                             </div>
                         ))}
@@ -111,3 +112,5 @@ export default class DistributionLog extends Component<DistributionLogProps, Dis
         );
     }
 }
+
+export default withNotifications(DistributionLog);

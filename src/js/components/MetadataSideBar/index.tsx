@@ -1,10 +1,14 @@
 import { Metadata } from 'types/Metadata';
 import React, { useState } from 'react';
-import { Button, Modal, Separator, Tooltip } from '@castoredc/matter';
+import Button from '@mui/material/Button';
 import moment from 'moment/moment';
 import MetadataItemContainer from 'components/MetadataItem/MetadataItemContainer';
 import MetadataItem from 'components/MetadataItem';
 import './MetadataSideBar.scss';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Modal from 'components/Modal';
+import Tooltip from '@mui/material/Tooltip';
+import { Divider } from '@mui/material';
 
 interface MetadataSideBarProps {
     metadata: Metadata;
@@ -17,14 +21,20 @@ const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) =>
     return (
         <div className="MetadataSideBar">
             {metadata.contents.sidebar.map(item => {
-                return <MetadataItem title={item.title} type={item.type} dataType={item.dataType} value={item.value} />;
+                return <MetadataItem
+                    key={`sidebar-${item.order}`}
+                    title={item.title}
+                    type={item.type}
+                    dataType={item.dataType}
+                    value={item.value}
+                />;
             })}
 
-            <Button icon="openNewWindow" buttonType="bare" onClick={() => setOpen(true)} className="ViewMetadata">
+            <Button startIcon={<OpenInNewIcon />} variant="text" onClick={() => setOpen(true)} className="ViewMetadata">
                 View metadata
             </Button>
 
-            <Modal accessibleName="Test" open={isOpen} title={`Metadata for ${title}`} onClose={() => setOpen(false)}>
+            <Modal open={isOpen} title={`Metadata for ${title}`} onClose={() => setOpen(false)}>
                 {metadata.contents.modal.map(item => {
                     return (
                         <MetadataItem
@@ -38,20 +48,20 @@ const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) =>
                     );
                 })}
 
-                {metadata.contents.modal.length > 0 && <Separator spacing="comfortable" />}
+                {metadata.contents.modal.length > 0 && <Divider />}
 
                 <MetadataItemContainer label="Metadata version" table>
                     {metadata.version}
                 </MetadataItemContainer>
 
                 <MetadataItemContainer label="Created" table>
-                    <Tooltip content={moment(metadata.createdAt).format('DD-MM-YYYY HH:mm:ss')}>
-                        {moment(metadata.createdAt).format('DD-MM-YYYY')}
+                    <Tooltip title={moment(metadata.createdAt).format('DD-MM-YYYY HH:mm:ss')}>
+                        <span>{moment(metadata.createdAt).format('DD-MM-YYYY')}</span>
                     </Tooltip>
                 </MetadataItemContainer>
                 <MetadataItemContainer label="Modified" table>
-                    <Tooltip content={moment(metadata.modifiedAt).format('DD-MM-YYYY HH:mm:ss')}>
-                        {moment(metadata.modifiedAt).format('DD-MM-YYYY')}
+                    <Tooltip title={moment(metadata.modifiedAt).format('DD-MM-YYYY HH:mm:ss')}>
+                        <span>{moment(metadata.modifiedAt).format('DD-MM-YYYY')}</span>
                     </Tooltip>
                 </MetadataItemContainer>
             </Modal>

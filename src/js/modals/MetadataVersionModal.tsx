@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Modal } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import Modal from 'components/Modal';
 import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
 import Choice from 'components/Input/Formik/Choice';
 import Select from 'components/Input/Formik/Select';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
 
-type MetadataVersionModalProps = {
+interface MetadataVersionModalProps extends ComponentWithNotifications {
     currentVersion: string;
     defaultMetadataModel: string | null;
     open: boolean;
@@ -20,7 +20,7 @@ type MetadataVersionModalProps = {
     objectId: string;
 };
 
-export default class MetadataVersionModal extends Component<MetadataVersionModalProps> {
+class MetadataVersionModal extends Component<MetadataVersionModalProps> {
     generateVersionNumber = versionType => {
         const { currentVersion } = this.props;
 
@@ -45,21 +45,22 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { objectId, type, handleSave } = this.props;
+        const { objectId, type, handleSave, notifications } = this.props;
 
         apiClient
             .post('/api/metadata/' + type + (type === 'fdp' ? '' : '/' + objectId), values)
             .then(response => {
                 setSubmitting(false);
 
-                toast.success(<ToastItem type="success" title="The metadata are saved successfully" />, {
-                    position: 'top-right',
+                notifications.show('The metadata are saved successfully', {
+                    variant: 'success',
+
                 });
 
                 handleSave(values.newVersion);
             })
             .catch(error => {
-                toast.error(<ToastItem type="error" title="An error occurred" />);
+                notifications.show('An error occurred', { variant: 'error' });
 
                 setSubmitting(false);
             });
@@ -71,7 +72,7 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
         const title = currentVersion ? 'New metadata version' : 'Add metadata';
 
         return (
-            <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
+            <Modal open={open} title={title} onClose={onClose}>
                 <Formik
                     initialValues={{
                         versionType: currentVersion ? '' : 'patch',
@@ -82,20 +83,31 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                     onSubmit={this.handleSubmit}
                     validationSchema={VersionSchema}
                 >
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         const model = values.model ? metadataModels.find(metadataModel => metadataModel.value === values.model) : null;
                         const versions = model ? model.versions : [];
 
                         return (
                             <Form style={{ width: 400 }}>
                                 {currentVersion && (
-                                    <FormItem label="Please indicate to what extent you are going to make changes to the metadata, in order to generate a version number">
+                                    <FormItem
+                                        label="Please indicate to what extent you are going to make changes to the metadata, in order to generate a version number">
                                         <Field
                                             component={Choice}
                                             options={[
-                                                { value: 'major', labelText: 'Major changes' },
-                                                { value: 'minor', labelText: 'Minor changes' },
-                                                { value: 'patch', labelText: 'Patch' },
+                                                { value: 'major', label: 'Major changes' },
+                                                { value: 'minor', label: 'Minor changes' },
+                                                { value: 'patch', label: 'Patch' },
                                             ]}
                                             onChange={e => {
                                                 setFieldValue('versionType', e.target.value);
@@ -111,8 +123,8 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                                         component={Select}
                                         options={metadataModels}
                                         name="model"
-                                        menuPosition="fixed"
-                                        menuPlacement="auto"
+
+
                                         onChange={e => {
                                             setFieldValue('model', e.value);
                                             setFieldValue('modelVersion', '');
@@ -121,14 +133,19 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                                 </FormItem>
 
                                 <FormItem label="Metadata model version">
-                                    <Field component={Select} options={versions} name="modelVersion" menuPosition="fixed" menuPlacement="auto" />
+                                    <Field component={Select} options={versions} name="modelVersion" />
                                 </FormItem>
 
                                 {currentVersion && <FormItem label="Current version">{currentVersion}</FormItem>}
 
-                                {values.newVersion !== '' && <FormItem label="New version">{values.newVersion}</FormItem>}
+                                {values.newVersion !== '' &&
+                                    <FormItem label="New version">{values.newVersion}</FormItem>}
 
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    variant="contained"
+                                >
                                     {currentVersion ? 'Create new version' : 'Add metadata'}
                                 </Button>
                             </Form>
@@ -145,3 +162,5 @@ const VersionSchema = Yup.object().shape({
     model: Yup.string().required('Please select a metadata model'),
     modelVersion: Yup.string().required('Please select a metadata model version'),
 });
+
+export default withNotifications(MetadataVersionModal);

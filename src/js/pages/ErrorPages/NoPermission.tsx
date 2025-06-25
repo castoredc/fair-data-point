@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import DocumentTitle from 'components/DocumentTitle';
-import { Banner, Stack, StackItem } from '@castoredc/matter';
-import { toRem } from '@castoredc/matter-utils';
 import BackButton from 'components/BackButton';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 
 interface NoPermissionProps {
     text: string;
@@ -13,12 +13,14 @@ const NoPermission: FC<NoPermissionProps> = ({ text }) => {
         <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
             <DocumentTitle title="Unauthorized" />
 
-            <Stack distribution="center">
-                <StackItem style={{ width: toRem(480), marginTop: '3.2rem' }}>
+            <Stack direction="row" sx={{ justifyContent: 'center' }}>
+                <div style={{ width: '48rem', marginTop: '3.2rem' }}>
                     <BackButton returnButton>Back to previous page</BackButton>
 
-                    <Banner type="error" title={text} />
-                </StackItem>
+                    <Alert severity="error">
+                        {text}
+                    </Alert>
+                </div>
             </Stack>
         </div>
     );

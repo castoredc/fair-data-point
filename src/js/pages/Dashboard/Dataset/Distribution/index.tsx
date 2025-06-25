@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay } from '@castoredc/matter';
+import Button from '@mui/material/Button';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../../util';
@@ -19,11 +18,22 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import Permissions from 'pages/Dashboard/Dataset/Distribution/Permissions';
 import NoPermission from 'pages/ErrorPages/NoPermission';
+import NoResults from 'components/NoResults';
 import { apiClient } from 'src/js/network';
 import MetadataForm from 'components/Form/Metadata/MetadataForm';
 import PageBody from 'components/Layout/Dashboard/PageBody';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DashboardPage from 'components/Layout/Dashboard/DashboardPage';
+import withNotifications, { ComponentWithNotifications } from 'components/WithNotifications';
+import DescriptionIcon from '@mui/icons-material/Description';
+import GroupsIcon from '@mui/icons-material/Groups';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
+import HighlightAltIcon from '@mui/icons-material/HighlightAlt';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import ListIcon from '@mui/icons-material/List';
+import NotesIcon from '@mui/icons-material/Notes';
 
-interface DistributionProps extends AuthorizedRouteComponentProps {
+interface DistributionProps extends AuthorizedRouteComponentProps, ComponentWithNotifications {
     dataset: any;
 }
 
@@ -33,7 +43,7 @@ interface DistributionState {
     isLoading: boolean;
 }
 
-export default class Distribution extends Component<DistributionProps, DistributionState> {
+class Distribution extends Component<DistributionProps, DistributionState> {
     constructor(props) {
         super(props);
 
@@ -49,7 +59,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
             isLoading: true,
         });
 
-        const { match } = this.props;
+        const { match, notifications } = this.props;
 
         apiClient
             .get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution)
@@ -58,7 +68,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     {
                         distribution: response.data,
                     },
-                    this.getContents
+                    this.getContents,
                 );
             })
             .catch(error => {
@@ -67,15 +77,15 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                    notifications.show(error.response.data.error, { variant: 'error' });
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your distribution" />);
+                    notifications.show('An error occurred while loading your distribution', { variant: 'error' });
                 }
             });
     };
 
     getContents = () => {
-        const { match } = this.props;
+        const { match, notifications } = this.props;
 
         apiClient
             .get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution + '/contents')
@@ -95,7 +105,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastItem type="error" title={message} />);
+                notifications.show(message, { variant: 'error' });
             });
     };
 
@@ -121,8 +131,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
         let title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
 
-        if(title === '') {
-            title = 'Untitled distribution'
+        if (title === '') {
+            title = 'Untitled distribution';
         }
 
         const mainUrl = match.params.study
@@ -134,29 +144,29 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 to: mainUrl + '/distributions/' + distribution.slug,
                 exact: true,
                 title: 'Distribution',
-                customIcon: 'distribution',
+                icon: <FileOpenIcon />,
             },
             {
                 to: mainUrl + '/distributions/' + distribution.slug + '/metadata',
                 exact: true,
                 title: 'Metadata',
-                customIcon: 'metadata',
+                icon: <DescriptionIcon />,
             },
             ...(isGranted('manage', distribution.permissions)
                 ? [
-                      {
-                          to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
-                          exact: true,
-                          title: 'Permissions',
-                          icon: 'usersLight',
-                      },
-                  ]
+                    {
+                        to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
+                        exact: true,
+                        title: 'Permissions',
+                        icon: <GroupsIcon />,
+                    },
+                ]
                 : []),
             {
                 to: mainUrl + '/distributions/' + distribution.slug + '/subset',
                 exact: true,
                 title: 'Subset',
-                icon: 'selectList',
+                icon: <HighlightAltIcon />,
             },
             {
                 type: 'separator',
@@ -168,7 +178,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                 exact: true,
                 title: 'Mappings',
-                icon: 'order',
+                icon: <SyncAltIcon />,
             });
 
             if (distribution.cached) {
@@ -176,7 +186,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     to: mainUrl + '/distributions/' + distribution.slug + '/log',
                     exact: true,
                     title: 'Log',
-                    icon: 'summary',
+                    icon: <NotesIcon />,
                 });
             }
         } else if (distribution.type === 'csv') {
@@ -184,12 +194,12 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                 exact: true,
                 title: 'Contents',
-                icon: 'order',
+                icon: <ListIcon />,
             });
         }
 
         return (
-            <>
+            <DashboardPage>
                 <DocumentTitle title={title} />
 
                 <SideBar
@@ -200,13 +210,14 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     location={location}
                     items={sidebarItems}
                     history={history}
+                    user={user}
                 />
 
                 <Body>
                     <Header title={title} fullWidth={true}>
                         <Button
-                            buttonType="contentOnly"
-                            icon="openNewWindow"
+                            variant="text"
+                            startIcon={<OpenInNewIcon />}
                             href={`/fdp/dataset/${dataset}/distribution/${distribution.slug}`}
                             target="_blank"
                         >
@@ -222,7 +233,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                             ]}
                             exact
                             render={props => (
-                                <Details {...props} user={user} catalog={catalog} study={study} dataset={dataset} distribution={distribution} />
+                                <Details {...props} user={user} catalog={catalog} study={study} dataset={dataset}
+                                         distribution={distribution} />
                             )}
                         />
 
@@ -251,7 +263,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                             ]}
                             exact
                             render={() => (
-                                <Permissions contents={contents} distribution={distribution} getDistribution={this.getDistribution} user={user} />
+                                <Permissions contents={contents} distribution={distribution}
+                                             getDistribution={this.getDistribution} user={user} />
                             )}
                         />
 
@@ -275,7 +288,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                     return <DistributionContentsRdf dataset={dataset} distribution={distribution} />;
                                 }
 
-                                return <div className="NoResults">This distribution does not have contents.</div>;
+                                return <NoResults>This distribution does not have contents.</NoResults>;
                             }}
                         />
 
@@ -285,7 +298,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                 '/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log/:log',
                             ]}
                             exact
-                            render={props => <DistributionLog {...props} dataset={dataset} distribution={distribution} />}
+                            render={props => <DistributionLog {...props} dataset={dataset}
+                                                              distribution={distribution} />}
                         />
 
                         <Route
@@ -295,7 +309,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                             ]}
                             exact
                             render={props => (
-                                <DistributionLogs {...props} catalog={catalog} study={study} dataset={dataset} distribution={distribution} />
+                                <DistributionLogs {...props} catalog={catalog} study={study} dataset={dataset}
+                                                  distribution={distribution} />
                             )}
                         />
 
@@ -305,13 +320,16 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                 '/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/subset',
                             ]}
                             exact
-                            render={props => <DistributionSubset {...props} dataset={dataset} distribution={distribution} />}
+                            render={props => <DistributionSubset {...props} dataset={dataset}
+                                                                 distribution={distribution} />}
                         />
 
                         <Route component={NotFound} />
                     </Switch>
                 </Body>
-            </>
+            </DashboardPage>
         );
     }
 }
+
+export default withNotifications(Distribution);

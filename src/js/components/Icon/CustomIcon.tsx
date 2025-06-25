@@ -14,10 +14,11 @@ type CustomIconProps = {
     role?: string;
 };
 
-const CustomIcon: FC<CustomIconProps> = ({ className, type, width = SIZE, height = SIZE, onClick, role }) => {
+const CustomIcon: FC<CustomIconProps> = ({ className, type, width, height, onClick, role }) => {
     const CustomIcon = icons[type];
 
-    return <CustomIcon className={classNames('Icon', className, type)} width={width} height={height} onClick={onClick} role={role} />;
+    return <CustomIcon className={classNames('Icon', className, type)} width={width ?? SIZE} height={height ?? SIZE}
+                       onClick={onClick} role={role} />;
 };
 
 export default CustomIcon;
