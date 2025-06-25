@@ -26,13 +26,6 @@ To be able to run the FAIR Data Point application locally you need to have the f
     ```
     127.0.0.1       fdp.castoredc.local
     ```
-- Create a .npmrc file at the root of the project directory and paste the below code in it.
-  Also replace the GITHUB_TOKEN with your actual github token.
-
-    ```
-    @castoredc:registry=https://npm.pkg.github.com/
-    //npm.pkg.github.com/:_authToken=GITHUB_TOKEN
-    ```
 
 ### Managing the local environment
 To boot the application locally run:
@@ -42,10 +35,6 @@ yarn build-docker
 ```
 
 You can now access the FAIR Data Point via <https://fdp.castoredc.local>.
-
-**Stardog** (triple store) is running at <http://fdp.castoredc.local:8080>.\
-The **Stardog Studio** interface (used to manage the database server and databases) can be accessed 
-via <http://fdp.castoredc.local:8081>.
 
 To stop the environment run:
 
@@ -71,11 +60,6 @@ To build the UI for production use, run:
 
 ```bash
 yarn build
-```
-
-To upgrade Matter (Castor's Design System), run:
-```bash
-yarn upmatter
 ```
 
 ### Common errors
