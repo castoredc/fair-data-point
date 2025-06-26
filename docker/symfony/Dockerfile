@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-alpine@sha256:a16bc43404e602adb0f8f9662a1319f83d85daf23110bf7e02152a8a0e3d7e5e
 
-COPY --from=composer:latest@sha256:8008ba4d8723edf5f3566bd94e9330a5cdff3d6125ed34a8502718f8d2289515 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest@sha256:9f2a31e610b009bbf38cbc378384f74b60295dbe44ac0dd6077b5f74391dd15e /usr/bin/composer /usr/bin/composer
 
 # Install DB driver for PHP => pdo pdo_mysql
 RUN set -xe \
