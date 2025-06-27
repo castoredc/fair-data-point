@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine@sha256:71c7edad4a5d9e02e43758205d3c9750957b1e9337f124a6aa3cdae547ca507f
+FROM php:8.4-fpm-alpine@sha256:c35dcefe9f20ce4f9ec797a5f260109f92d71792550b91955662d00bca2a72f8
 
 COPY --from=composer:latest@sha256:9f2a31e610b009bbf38cbc378384f74b60295dbe44ac0dd6077b5f74391dd15e /usr/bin/composer /usr/bin/composer
 
