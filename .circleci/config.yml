@@ -3,7 +3,7 @@ version: 2.1
 executors:
   php-only:
     docker:
-      - image: cimg/php:8.2@sha256:4dcea15d834bc83f5e136bd6b65e0e1ac6035506291c4fa1621fa1212c2e7783
+      - image: cimg/php:8.2@sha256:03d6f667c4186cf0dc3a27497c4e26495c689f9987adb92ca63310ded4d25b7c
 
 
 jobs:
