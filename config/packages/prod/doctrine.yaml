@@ -1,4 +1,4 @@
 doctrine:
     dbal:
         options:
-            1009: '/etc/ssl/certs/ca-certificates.crt'
+            1009: '%kernel.project_dir%/certs/DigiCertGlobalRootG2.crt.pem'
