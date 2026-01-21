@@ -45,7 +45,7 @@
     "formik": "^2.2.9",
     "history": "^4.10.1",
     "jsonld": "^8.3.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "moment": "^2.29.4",
     "notistack": "^3.0.2",
     "prismjs": "^1.27.0",
