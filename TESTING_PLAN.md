@@ -128,6 +128,40 @@ Priority order, chosen by (risk × dependency-upgrade exposure ÷ effort):
 
 Estimated effort: 2–3 weeks for the first six categories; command handlers are ongoing.
 
+### Phase 1 status (June 2026)
+
+Items 1–6 are largely done: 536 new unit tests across voters (all 7, full decision matrix), RDF snapshot tests (18 golden fixtures for the GraphResources and both render helpers, refresh via `UPDATE_RDF_SNAPSHOTS=1`), 11 API request classes, all 21 custom Doctrine types (discovery-driven, self-guarding), all 10 validators, and entity behavior (`User::getRoles()`, `getPermissionsForUser()`, `MetadataFieldType`, `Iri`/`Version`).
+Still open in this phase:
+
+- [ ] Command handler unit tests (§5.7, top ~20 by complexity) — not started.
+- [ ] RDF snapshot coverage for annotated-value paths (option groups, country/license/language/ontology pickers) and repeated groups — deferred until the metadata-domain entity graph helpers exist.
+- [ ] `MetadataValuesApiRequest` — constraints are built dynamically from `MetadataModelVersion`; needs the metadata factories.
+
+### Findings from Phase 1 tests (tracked for review; tests pin current behavior)
+
+Authorization (needs a security review):
+
+- [ ] `Catalog::isPublic()` is hardcoded `true`, so every catalog is publicly viewable and the unpublished-catalog branch in `CatalogVoter` is unreachable.
+- [ ] `CatalogVoter` denies add/edit/manage to non-Castor users even with a manage permission; `DatasetVoter`/`DistributionVoter` have no such gate — inconsistent.
+- [ ] `DataSpecificationVoter`'s `add` attribute is only ever grantable to `ROLE_ADMIN`, never via permissions (likely an oversight).
+- [ ] `DistributionVoter` denies `access_data` even to admins when contents are null (short-circuit precedes the admin check).
+- [ ] `DistributionContentsVoter` ignores the contents' own permission entities and can null-dereference when a dataset has no study.
+- [ ] `StudyVoter`'s admin bypass covers `edit` but not `edit_source_system`.
+
+API robustness (clients get 500s where 400s are intended):
+
+- [ ] Non-nullable typed request properties throw `TypeError` in `parse()` on missing/null/empty/wrong-type input before validation runs, making many `NotBlank`/`Type` constraints dead code.
+- [ ] `DistributionApiRequest::parse()` never reads `dataDictionary`/`dataDictionaryVersion`, so the `csv` validation group can never pass.
+- [ ] `getGroupSequence()` in the distribution requests builds enums from raw strings, so an unknown `type` crashes during validation instead of failing the `Choice` constraint.
+- [ ] `boolval()` coercion: `'false'` becomes `true`, and missing flags silently become `false` (bypassing `NotNull`).
+- [ ] `MetadataFilterApiRequest::$hideParents` is never assigned in `parse()`.
+
+Smaller code-quality findings:
+
+- [ ] `Version`'s regex uses the `/m` flag, so multi-line strings containing one valid version line are accepted; `new Version(null)` leaves typed properties uninitialized (getters throw `Error`).
+- [ ] `MetadataFieldType::DROPDOWN` maps to the `paragraph` display type while checkboxes/radio map to `list`; the `TYPE_PLAIN`/`TYPE_ANNOTATED` constants are constructible via `fromString()` but crash the mapping methods.
+- [ ] `SlugValidator` queries the repository even for forbidden slugs and has no null guard; `OptionGroupOptions` declares message properties its validator never uses; `User::EMAILS` is an empty const making its admin-override branch dead code.
+
 ## 6. Phase 2 — Backend integration and API tests
 
 **Outcome: every API domain has request-to-database coverage, which is what actually validates Symfony, Doctrine, and Messenger upgrades.**
@@ -221,7 +255,8 @@ Process for each dependency PR: green pipeline → merge minor/patch updates wit
 
 Absolute coverage percentages are a poor goal for a 961-file codebase starting near zero; use a ratchet instead:
 
-1. After Phase 1, record the baseline coverage from a local coverage run (`pcov`).
+1. After Phase 1, record the baseline coverage from a local coverage run.
+   Measured June 2026 after the first Phase 1 pass (`composer test:coverage`): **8.87% lines** (1361/15343), 13.07% methods, up from ~1% before Phase 0.
 2. Once GitHub Actions exists, add a check that fails if line coverage of `src/` drops more than 0.5 points below the recorded baseline; bump the baseline as it grows.
 3. Indicative milestones (not gates): ~25% backend lines after Phase 1, ~45% after Phase 2 with the API domains covered, and near-100% for the named critical classes (voters, RDF helpers, `ApiClient`, custom types).
 
