@@ -2,6 +2,8 @@ doctrine:
     dbal:
         driver: 'pdo_mysql'
         server_version: '5.7'
+        # Required by dama/doctrine-test-bundle (test env) for nested transactions.
+        use_savepoints: true
         charset: utf8
         default_table_options:
             charset: utf8mb4
