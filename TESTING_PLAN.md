@@ -83,6 +83,25 @@ Tooling rationale:
 
 Estimated effort: 3–5 days.
 
+### Phase 0 status: completed (June 2026)
+
+All items above are merged on `add-test-harness`.
+Two pre-existing bugs were found and fixed along the way: a 2024 migration that failed on every fresh database (stray columns from the generating DB), and PHPUnit booting the dev kernel because the symfony container exports `APP_ENV=dev` into `$_ENV`.
+
+### Tracked leftovers from Phase 0
+
+- [ ] **Schema drift cleanup migration**: the database still has `created_by`/`updated_by` audit columns (plus their FKs/indexes) that the entities no longer map — all nullable, so harmless for tests.
+  Generate a cleanup migration so `doctrine:schema:validate` can run *without* `--skip-sync` (see §6.4).
+- [ ] **Security advisory backlog**: `composer audit` reports 34 advisories across 12 packages.
+  Work through these once the harness gives enough coverage to upgrade safely; the Guzzle 6 → 7 major is the riskiest and now has `ApiClient` test coverage.
+- [ ] **Guzzle 6 deprecation noise**: the unit suite reports one PHP deprecation from Guzzle 6's `MockHandler` on PHP 8.2; it disappears with the Guzzle 7 upgrade.
+- [ ] **`MetadataModelVersionFactory`**: deferred because it requires the whole DataSpecification aggregate; add it together with the metadata tests (§5 item 2 / §6 item 2).
+- [ ] **PHPStan baseline contains 6 intentional entries** for live classes that still inject the deprecated `TripleStoreBasedDistributionService`; remove them together with the Stardog code removal.
+- [ ] **Stardog code removal**: everything is marked `@deprecated` (§4.7); actual deletion (code, `STARDOG_*` env vars, services.yaml wiring, `RDFDistributionDatabaseType::STARDOG`) is a separate cleanup task.
+- [ ] **Broken `php-xdebug` wrapper**: `docker/symfony/php-xdebug` sets Xdebug config but never loads the extension (its ini was renamed to `.off` at build time), so it silently runs without Xdebug.
+  Not needed for coverage (`composer test:coverage` loads the extension explicitly), but fix or remove it to avoid confusion.
+- [ ] **Port 3306 collisions**: developers who also run the edc stack locally need a `docker-compose.override.yml` remapping this project's MySQL host port; consider committing a documented `docker-compose.override.yml.dist`.
+
 ## 5. Phase 1 — Backend unit tests
 
 **Outcome: the pure-logic core of the application is covered without needing a database.**
@@ -166,15 +185,15 @@ CircleCI is no longer in use, so the existing `.circleci/config.yml` is dead con
 Because every suite is a one-command wrapper (§3), the migration is thin: each job below just checks out, installs, and runs the same command a developer runs locally.
 The CircleCI-specific pieces to carry over are the Composer auth for `satis.castoredc.net` (as an Actions secret) and dependency caching.
 
-| Job                                 | Contents                                                             | Trigger                          |
-|-------------------------------------|----------------------------------------------------------------------|----------------------------------|
-| `unit-tests`                        | `composer test:unit`                                                 | Every PR                         |
+| Job                                 | Contents                                                            | Trigger                          |
+|-------------------------------------|---------------------------------------------------------------------|----------------------------------|
+| `unit-tests`                        | `composer test:unit`                                                | Every PR                         |
 | `integration-tests`                 | MySQL 8.0 service container → migrate → `composer test:integration` | Every PR                         |
-| `phpstan` / `phpcs` / `orm-mapping` | Same commands as the CircleCI jobs                                   | Every PR                         |
-| `frontend-typecheck`                | `yarn typecheck`                                                     | Every PR                         |
-| `frontend-tests`                    | `yarn test --ci` with coverage artifact                              | Every PR                         |
-| `frontend-build`                    | `yarn build` (catches Encore/Webpack/loader upgrade breakage)        | Every PR                         |
-| `e2e`                               | Docker Compose up → Playwright                                       | Nightly + manual/label-triggered |
+| `phpstan` / `phpcs` / `orm-mapping` | Same commands as the CircleCI jobs                                  | Every PR                         |
+| `frontend-typecheck`                | `yarn typecheck`                                                    | Every PR                         |
+| `frontend-tests`                    | `yarn test --ci` with coverage artifact                             | Every PR                         |
+| `frontend-build`                    | `yarn build` (catches Encore/Webpack/loader upgrade breakage)       | Every PR                         |
+| `e2e`                               | Docker Compose up → Playwright                                      | Nightly + manual/label-triggered |
 
 Delete `.circleci/config.yml` once the Actions workflows are green, so Dependabot PRs are not gated on a CI system that never runs.
 
