@@ -25,6 +25,9 @@
     "build-docker": "docker-compose up --build -d",
     "stop-docker": "docker-compose stop",
     "destroy-docker": "docker-compose down",
+    "test-php": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test",
+    "test-php-unit": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test:unit",
+    "test-php-integration": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test:integration",
     "format": "prettier --write 'src/js/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
