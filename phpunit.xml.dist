@@ -24,7 +24,14 @@
     <php>
         <ini name="display_errors" value="1"/>
         <ini name="error_reporting" value="-1"/>
+        <!-- Both server and env are forced: the symfony container exports APP_ENV=dev,
+             which would otherwise win in $_ENV when the test kernel resolves its environment. -->
         <server name="APP_ENV" value="test" force="true"/>
+        <env name="APP_ENV" value="test" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
     </php>
+    <extensions>
+        <!-- Wraps every test in a database transaction that is rolled back afterwards. -->
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+    </extensions>
 </phpunit>
