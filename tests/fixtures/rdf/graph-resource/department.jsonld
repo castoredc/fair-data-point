@@ -1,0 +1,24 @@
+[
+    {
+        "@id": "http://xmlns.com/foaf/0.1/Organization"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/country/NL"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/organization/example-hospital",
+        "@type": [
+            "http://xmlns.com/foaf/0.1/Organization"
+        ],
+        "http://xmlns.com/foaf/0.1/name": [
+            {
+                "@value": "Example Hospital"
+            }
+        ],
+        "http://purl.org/dc/terms/spacial": [
+            {
+                "@id": "https://fdp.example.com/fdp/country/NL"
+            }
+        ]
+    }
+]

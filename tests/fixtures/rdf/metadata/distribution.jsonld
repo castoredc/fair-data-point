@@ -1,0 +1,29 @@
+[
+    {
+        "@id": "http://www.w3.org/ns/dcat#Distribution"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution",
+        "http://purl.org/dc/terms/identifier": [
+            {
+                "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution"
+            }
+        ],
+        "@type": [
+            "http://www.w3.org/ns/dcat#Distribution"
+        ],
+        "http://www.w3.org/ns/dcat#accessURL": [
+            {
+                "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf"
+            }
+        ],
+        "http://www.w3.org/ns/dcat#mediaType": [
+            {
+                "@value": "test/turtle"
+            }
+        ]
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf"
+    }
+]

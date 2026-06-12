@@ -1,0 +1,9 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution>
+  dc:identifier <https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution> ;
+  a dcat:Distribution ;
+  dcat:accessURL <https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf> ;
+  dcat:mediaType "test/turtle"^^xsd:string .

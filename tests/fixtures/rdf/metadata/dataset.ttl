@@ -1,0 +1,14 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+<https://fdp.example.com/fdp/dataset/cardiology-trial>
+  dc:hasVersion "1.0.0"^^xsd:string ;
+  dc:identifier <https://fdp.example.com/fdp/dataset/cardiology-trial/identifier> ;
+  dc:issued "2024-05-01T12:30:00"^^xsd:dateTime ;
+  dc:license <https://creativecommons.org/licenses/by/4.0/> ;
+  dc:modified "2024-06-15T08:45:30"^^xsd:dateTime ;
+  dc:title "Cardiology Trial"@en, "Cardiologie Studie"@nl ;
+  a dcat:Dataset ;
+  dcat:catalog <https://fdp.example.com/fdp/catalog/main-catalog> ;
+  dcat:distribution <https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution> .

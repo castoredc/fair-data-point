@@ -1,0 +1,5 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<https://orcid.org/0000-0002-1825-0097>
+  a foaf:Person ;
+  foaf:name "Ada Lovelace" .
