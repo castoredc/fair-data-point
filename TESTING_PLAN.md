@@ -78,7 +78,7 @@ Tooling rationale:
    These files get no test coverage; anything that touches `SparqlClient` in a test gets a stub.
    Actual removal is a separate cleanup task outside this plan.
 8. **Refactor `ApiClient` to accept a Guzzle `ClientInterface` via the constructor** so tests can inject a `MockHandler`. This is the single most important refactor in the plan; without it the 694-line Castor integration layer is untestable.
-9. Add coverage tooling (`pcov` in the symfony container image, dev stage only) so `composer test:unit -- --coverage-html` works locally. No threshold yet — measure first.
+9. Add coverage tooling: the symfony image already ships Xdebug (disabled by default), so `composer test:coverage` loads it with `xdebug.mode=coverage` for an HTML + text report in `var/coverage`. Switch to `pcov` later if coverage runs become too slow. No threshold yet — measure first.
 10. Create Foundry factories for the core entity graph: `User`, `Person`, `CastorUser`, `Catalog`, `Dataset`, `Distribution`, `Study`/`CastorStudy`, the four `*Permission` entities, and `MetadataModelVersion`.
 
 Estimated effort: 3–5 days.

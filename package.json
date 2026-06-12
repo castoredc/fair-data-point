@@ -28,6 +28,7 @@
     "test-php": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test",
     "test-php-unit": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test:unit",
     "test-php-integration": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test:integration",
+    "test-php-coverage": "docker compose exec symfony php /usr/bin/composer -d /home/castor/fdp test:coverage",
     "format": "prettier --write 'src/js/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {

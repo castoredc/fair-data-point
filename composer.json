@@ -92,6 +92,7 @@
         ],
         "test:unit": "phpunit --testsuite unit",
         "test:integration": "phpunit --testsuite integration",
+        "test:coverage": "php -d zend_extension=xdebug.so -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html var/coverage --coverage-text",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
