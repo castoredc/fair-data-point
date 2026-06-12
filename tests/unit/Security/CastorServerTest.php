@@ -55,7 +55,7 @@ final class CastorServerTest extends TestCase
     }
 
     /** @return array<array<string>> */
-    public function invalidUrls(): array
+    public static function invalidUrls(): array
     {
         return [
             ['some random text'],
