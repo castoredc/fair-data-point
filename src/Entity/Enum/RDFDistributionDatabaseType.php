@@ -14,5 +14,7 @@ namespace App\Entity\Enum;
 class RDFDistributionDatabaseType extends Enum
 {
     public const MYSQL = 'mysql';
+
+    /** @deprecated Stardog support was a proof of concept and is no longer in use. */
     public const STARDOG = 'stardog';
 }

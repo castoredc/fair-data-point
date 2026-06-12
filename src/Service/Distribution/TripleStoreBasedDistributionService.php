@@ -14,6 +14,11 @@ use App\Service\EncryptionService;
 use EasyRdf\Graph;
 use Throwable;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 class TripleStoreBasedDistributionService implements DistributionService
 {
     private DatabaseApiClient $client;

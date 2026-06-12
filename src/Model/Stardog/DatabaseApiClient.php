@@ -13,6 +13,11 @@ use function implode;
 use function sprintf;
 use function urlencode;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 class DatabaseApiClient extends BaseApiClient
 {
     public function __construct(protected ?string $database, string $host, string $user, string $pass, int $port)

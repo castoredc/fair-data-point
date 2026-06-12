@@ -21,6 +21,11 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 use function assert;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 #[AsMessageHandler]
 class RunFederatedQueryAgainstDistributionSparqlEndpointsCommandHandler
 {

@@ -23,6 +23,10 @@ use function strtoupper;
 /**
  * Class for making SPARQL queries, based on EasyRdf's Client
  * This client uses Guzzle instead of Zend and supports authentication
+ *
+ * @deprecated Only used by the Stardog (triplestore) code path, which was a proof of concept
+ *             and is no longer in use. Kept for reference, not covered by tests, and should
+ *             not be built upon. The live SPARQL path is MysqlBasedDistributionService (ARC2).
  */
 class SparqlClient
 {

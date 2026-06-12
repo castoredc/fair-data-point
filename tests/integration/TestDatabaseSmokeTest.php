@@ -36,9 +36,6 @@ final class TestDatabaseSmokeTest extends KernelTestCase
 
     private function getConnection(): Connection
     {
-        $connection = self::getContainer()->get(Connection::class);
-        self::assertInstanceOf(Connection::class, $connection);
-
-        return $connection;
+        return self::getContainer()->get(Connection::class);
     }
 }

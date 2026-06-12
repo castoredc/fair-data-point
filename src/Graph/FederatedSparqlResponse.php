@@ -11,6 +11,11 @@ use function assert;
 use function count;
 use function json_encode;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 class FederatedSparqlResponse
 {
     /** @var string[] */
