@@ -45,16 +45,18 @@ A standard pyramid, with one project-specific addition: **RDF snapshot tests**, 
 
 Every layer runs locally first; the "Cadence" column describes how often it should run once GitHub Actions exists, but nothing in this plan depends on CI being in place.
 
-| Layer                          | Tooling                                                                             | Local command (target)       | Cadence                            |
-|--------------------------------|-------------------------------------------------------------------------------------|------------------------------|------------------------------------|
-| Backend unit                   | PHPUnit 10.5 (existing)                                                             | `composer test:unit`         | Every change                       |
-| Backend integration (API + DB) | `symfony/test-pack` (WebTestCase), `dama/doctrine-test-bundle`, `zenstruck/foundry` | `composer test:integration`  | Every change                       |
-| RDF snapshot                   | PHPUnit golden-file comparisons of Turtle/JSON-LD output                            | part of unit/integration     | Every change                       |
-| Frontend unit + component      | Jest + `@testing-library/react` + `@testing-library/user-event` + MSW               | `yarn test`                  | Every change                       |
-| Frontend type check            | `tsc --noEmit`                                                                      | `yarn typecheck`             | Every change                       |
-| E2E                            | Playwright against the Docker Compose stack                                         | `yarn test:e2e`              | Nightly + risky dependency updates |
+| Layer                          | Tooling                                                                             | Local command (target)   | Cadence                            |
+|--------------------------------|-------------------------------------------------------------------------------------|--------------------------|------------------------------------|
+| Backend unit                   | PHPUnit 10.5 (existing)                                                             | `just test-unit`         | Every change                       |
+| Backend integration (API + DB) | `symfony/test-pack` (WebTestCase), `dama/doctrine-test-bundle`, `zenstruck/foundry` | `just test-integration`  | Every change                       |
+| RDF snapshot                   | PHPUnit golden-file comparisons of Turtle/JSON-LD output                            | part of `just test-unit` | Every change                       |
+| Frontend unit + component      | Jest + `@testing-library/react` + `@testing-library/user-event` + MSW               | `yarn test`              | Every change                       |
+| Frontend type check            | `tsc --noEmit`                                                                      | `yarn typecheck`         | Every change                       |
+| E2E                            | Playwright against the Docker Compose stack                                         | `yarn test:e2e`          | Nightly + risky dependency updates |
 
-The integration suite uses the MySQL service from `docker-compose.yml`; the backend commands run inside the `symfony` container.
+The canonical local interface is the **`Justfile`**: `just` lists every recipe, `just test` runs both backend suites, and `just check` runs the full local quality gate (unit + integration + PHPStan + PHPCS).
+Each recipe executes the PHP tooling inside the `symfony` container (so no PHP tooling goes through yarn), and the integration suite uses the MySQL service from `docker-compose.yml`.
+The underlying `composer test:*` scripts still exist for CI and non-`just` use.
 
 Tooling rationale:
 
@@ -71,7 +73,7 @@ Tooling rationale:
 2. Split `phpunit.xml.dist` into two suites: `unit` (`tests/unit`, no kernel, no DB) and `integration` (`tests/integration`, boots kernel, uses DB).
 3. **Local test database via docker-compose**: add a test database (e.g. `fdp_test`) on the existing MySQL 8.0 service (or a dedicated `mysql-test` service), created by the init container, with `bin/console doctrine:migrations:migrate -n --env=test` to set it up.
    Tests run inside the `symfony` container so PHP version and extensions match production.
-4. **One-command entry points**: composer scripts `test:unit` and `test:integration` (and a `yarn test-php`-style wrapper that executes them in the container), so "how do I run the tests" has exactly one answer.
+4. **One-command entry points**: a `Justfile` exposing `just test`, `just test-unit`, `just test-integration`, `just coverage`, and `just check` (plus `stan`/`cs`/`console`/`shell` helpers), each running the tooling inside the `symfony` container. Backed by composer scripts `test:unit`/`test:integration`/`test:coverage` so CI can call them without `just`. ("How do I run the tests" now has exactly one answer: `just test`.)
 5. Configure DAMA transaction rollback as a PHPUnit extension for the integration suite, so the test database is migrated once and stays clean.
 6. Define a test `DATABASE_URL` in `.env.test` and make `config/packages/test/doctrine.yaml` work against the local container (drop the production SSL CA requirement for the test env).
 7. **Mark Stardog code as deprecated**: add `@deprecated` annotations to the Stardog/SPARQL POC code (`src/Graph/SparqlClient.php`, `FederatedSparqlResponse`, `FederatedQueryResult`, `src/Controller/FAIRData/Data/FederatedSPARQLController.php`, and the `STARDOG_*` env vars in `.env.dist`).
@@ -101,6 +103,7 @@ Two pre-existing bugs were found and fixed along the way: a 2024 migration that 
 - [ ] **Broken `php-xdebug` wrapper**: `docker/symfony/php-xdebug` sets Xdebug config but never loads the extension (its ini was renamed to `.off` at build time), so it silently runs without Xdebug.
   Not needed for coverage (`composer test:coverage` loads the extension explicitly), but fix or remove it to avoid confusion.
 - [ ] **Port 3306 collisions**: developers who also run the edc stack locally need a `docker-compose.override.yml` remapping this project's MySQL host port; consider committing a documented `docker-compose.override.yml.dist`.
+- [ ] **Redundant `yarn test-php*` wrappers**: now superseded by the `Justfile` (the preferred local interface). Left in `package.json` so nothing breaks; remove once the team has moved to `just`.
 
 ## 5. Phase 1 — Backend unit tests
 
