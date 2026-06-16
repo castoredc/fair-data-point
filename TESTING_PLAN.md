@@ -133,10 +133,16 @@ Estimated effort: 2–3 weeks for the first six categories; command handlers are
 
 ### Phase 1 status (June 2026)
 
-Items 1–6 are largely done: 536 new unit tests across voters (all 7, full decision matrix), RDF snapshot tests (18 golden fixtures for the GraphResources and both render helpers, refresh via `UPDATE_RDF_SNAPSHOTS=1`), 11 API request classes, all 21 custom Doctrine types (discovery-driven, self-guarding), all 10 validators, and entity behavior (`User::getRoles()`, `getPermissionsForUser()`, `MetadataFieldType`, `Iri`/`Version`).
+All seven categories have had a first pass: **696 unit tests + 7 integration tests** (from 14 before Phase 0), line coverage **18%** (from ~1%), full PHPStan level 7 and PHPCS green.
+
+- Voters (all 7, full decision matrix), RDF snapshot tests (18 golden fixtures, refresh via `UPDATE_RDF_SNAPSHOTS=1`), 11 API request classes, all 21 custom Doctrine types (discovery-driven, self-guarding), all 10 validators, entity behavior (`User::getRoles()`, `getPermissionsForUser()`, `MetadataFieldType`, `Iri`/`Version`), and the `ApiClient` (Guzzle `MockHandler`).
+- **Command handlers (§5.7): ~30 handlers covered** across Metadata (incl. the 380-line `UpdateMetadataCommandHandler`), DataSpecification (MetadataModel/DataModel/DataDictionary), Study, Castor, FAIRData, Distribution, Agent, and Terminology — committed in four per-domain commits.
+
 Still open in this phase:
 
-- [ ] Command handler unit tests (§5.7, top ~20 by complexity) — not started.
+- [ ] RDF-rendering / RDF-preview command handlers (`GetDataModelRDFPreviewCommandHandler`, `GetMetadataModelRDFPreviewCommandHandler`, `RenderRDFMetadataCommandHandler` full path, `RenderRDFDistributionCommandHandler`, `RenderCSVDistributionCommandHandler`) — `new` their helpers internally and need a real graph/DB; move to Phase 2 integration tests.
+- [ ] `CreateDataModelNodeMappingCommandHandler` — heavy Castor-entity orchestration; better as an integration test.
+- [ ] `UpdateMetadataCommandHandler::parseAgents` path and `ImportMetadataModelVersionCommandHandler`'s `PHP_SAPI !== 'cli'`-guarded branches — not unit-reachable; cover via integration.
 - [ ] RDF snapshot coverage for annotated-value paths (option groups, country/license/language/ontology pickers) and repeated groups — deferred until the metadata-domain entity graph helpers exist.
 - [ ] `MetadataValuesApiRequest` — constraints are built dynamically from `MetadataModelVersion`; needs the metadata factories.
 
@@ -158,6 +164,17 @@ API robustness (clients get 500s where 400s are intended):
 - [ ] `getGroupSequence()` in the distribution requests builds enums from raw strings, so an unknown `type` crashes during validation instead of failing the `Choice` constraint.
 - [ ] `boolval()` coercion: `'false'` becomes `true`, and missing flags silently become `false` (bypassing `NotNull`).
 - [ ] `MetadataFilterApiRequest::$hideParents` is never assigned in `parse()`.
+
+Command handlers (data-integrity, found while writing §5.7 tests):
+
+- [ ] `CreateMetadataModelVersionCommandHandler::duplicateVersion` copies an option group into `$newOptionGroup` but then adds the *original* group to the new version — the copy is discarded (likely a copy-paste bug; duplicated versions may share option groups with the source).
+- [ ] `UpdateMetadataCommandHandler` does `$field = $fields[$fieldId]` with no existence check, so an unknown/stale field id raises a PHP error instead of a clean domain exception; `parseAgents` calls `$agent->hasId()` without null-guarding an unmatched agent type.
+- [ ] `CreateFAIRDataPointMetadataCommandHandler` uses `findAll()[0]` with no empty check.
+- [ ] `CreateRDFDistributionCommandHandler` asserts `getLatestVersion() instanceof DataModelVersion`, but the underlying `Collection::last()` returns `false` (not null) on an empty data model, so an empty model fails an assertion rather than a clean error.
+
+Test-helper gap (blocks future handler/entity tests):
+
+- [ ] `DoctrineEntityIdSetter` (`src/Tests/Helper/`) reflects on `$entity::class`, so it cannot set a private `id` declared on a parent class (e.g. `Study::$id` on a `CastorStudy`, `Element`/`Predicate` IDs on subclasses). Two agents had to work around it. Make the trait walk the class hierarchy.
 
 Smaller code-quality findings:
 
@@ -259,7 +276,7 @@ Process for each dependency PR: green pipeline → merge minor/patch updates wit
 Absolute coverage percentages are a poor goal for a 961-file codebase starting near zero; use a ratchet instead:
 
 1. After Phase 1, record the baseline coverage from a local coverage run.
-   Measured June 2026 after the first Phase 1 pass (`composer test:coverage`): **8.87% lines** (1361/15343), 13.07% methods, up from ~1% before Phase 0.
+   Measured June 2026 after Phase 1 (`just coverage`): **18.00% lines** (2762/15343), 22.68% methods, 10.69% classes — up from 8.87% after the first Phase 1 pass and ~1% before Phase 0.
 2. Once GitHub Actions exists, add a check that fails if line coverage of `src/` drops more than 0.5 points below the recorded baseline; bump the baseline as it grows.
 3. Indicative milestones (not gates): ~25% backend lines after Phase 1, ~45% after Phase 2 with the API domains covered, and near-100% for the named critical classes (voters, RDF helpers, `ApiClient`, custom types).
 
