@@ -1,5 +1,7 @@
 # Automated Testing Plan
 
+Tracked in Jira epic [FDP-255](https://castor.atlassian.net/browse/FDP-255).
+
 ## 1. Why this plan exists
 
 The core maintainer of this application has left the company.
@@ -69,6 +71,8 @@ Tooling rationale:
 
 **Outcome: every developer can run unit and database-backed integration tests locally with one command, using the Docker Compose stack.**
 
+Jira: FDP-256 (in review).
+
 1. Add dev dependencies: `symfony/test-pack`, `dama/doctrine-test-bundle`, `zenstruck/foundry`, `symfony/http-client` (test utilities only if needed).
 2. Split `phpunit.xml.dist` into two suites: `unit` (`tests/unit`, no kernel, no DB) and `integration` (`tests/integration`, boots kernel, uses DB).
 3. **Local test database via docker-compose**: add a test database (e.g. `fdp_test`) on the existing MySQL 8.0 service (or a dedicated `mysql-test` service), created by the init container, with `bin/console doctrine:migrations:migrate -n --env=test` to set it up.
@@ -92,22 +96,24 @@ Two pre-existing bugs were found and fixed along the way: a 2024 migration that 
 
 ### Tracked leftovers from Phase 0
 
-- [ ] **Schema drift cleanup migration**: the database still has `created_by`/`updated_by` audit columns (plus their FKs/indexes) that the entities no longer map — all nullable, so harmless for tests.
+- [ ] FDP-287: **Schema drift cleanup migration**: the database still has `created_by`/`updated_by` audit columns (plus their FKs/indexes) that the entities no longer map — all nullable, so harmless for tests.
   Generate a cleanup migration so `doctrine:schema:validate` can run *without* `--skip-sync` (see §6.4).
-- [ ] **Security advisory backlog**: `composer audit` reports 34 advisories across 12 packages.
+- [ ] FDP-288: **Security advisory backlog**: `composer audit` reports 34 advisories across 12 packages.
   Work through these once the harness gives enough coverage to upgrade safely; the Guzzle 6 → 7 major is the riskiest and now has `ApiClient` test coverage.
-- [ ] **Guzzle 6 deprecation noise**: the unit suite reports one PHP deprecation from Guzzle 6's `MockHandler` on PHP 8.2; it disappears with the Guzzle 7 upgrade.
-- [ ] **`MetadataModelVersionFactory`**: deferred because it requires the whole DataSpecification aggregate; add it together with the metadata tests (§5 item 2 / §6 item 2).
-- [ ] **PHPStan baseline contains 6 intentional entries** for live classes that still inject the deprecated `TripleStoreBasedDistributionService`; remove them together with the Stardog code removal.
-- [ ] **Stardog code removal**: everything is marked `@deprecated` (§4.7); actual deletion (code, `STARDOG_*` env vars, services.yaml wiring, `RDFDistributionDatabaseType::STARDOG`) is a separate cleanup task.
-- [ ] **Broken `php-xdebug` wrapper**: `docker/symfony/php-xdebug` sets Xdebug config but never loads the extension (its ini was renamed to `.off` at build time), so it silently runs without Xdebug.
+- [ ] FDP-288: **Guzzle 6 deprecation noise**: the unit suite reports one PHP deprecation from Guzzle 6's `MockHandler` on PHP 8.2; it disappears with the Guzzle 7 upgrade.
+- [ ] FDP-289: **`MetadataModelVersionFactory`**: deferred because it requires the whole DataSpecification aggregate; add it together with the metadata tests (§5 item 2 / §6 item 2).
+- [ ] FDP-290: **PHPStan baseline contains 6 intentional entries** for live classes that still inject the deprecated `TripleStoreBasedDistributionService`; remove them together with the Stardog code removal.
+- [ ] FDP-290: **Stardog code removal**: everything is marked `@deprecated` (§4.7); actual deletion (code, `STARDOG_*` env vars, services.yaml wiring, `RDFDistributionDatabaseType::STARDOG`) is a separate cleanup task.
+- [ ] FDP-291: **Broken `php-xdebug` wrapper**: `docker/symfony/php-xdebug` sets Xdebug config but never loads the extension (its ini was renamed to `.off` at build time), so it silently runs without Xdebug.
   Not needed for coverage (`composer test:coverage` loads the extension explicitly), but fix or remove it to avoid confusion.
-- [ ] **Port 3306 collisions**: developers who also run the edc stack locally need a `docker-compose.override.yml` remapping this project's MySQL host port; consider committing a documented `docker-compose.override.yml.dist`.
-- [ ] **Redundant `yarn test-php*` wrappers**: now superseded by the `Justfile` (the preferred local interface). Left in `package.json` so nothing breaks; remove once the team has moved to `just`.
+- [ ] FDP-292: **Port 3306 collisions**: developers who also run the edc stack locally need a `docker-compose.override.yml` remapping this project's MySQL host port; consider committing a documented `docker-compose.override.yml.dist`.
+- [ ] FDP-293: **Redundant `yarn test-php*` wrappers**: now superseded by the `Justfile` (the preferred local interface). Left in `package.json` so nothing breaks; remove once the team has moved to `just`.
 
 ## 5. Phase 1 — Backend unit tests
 
 **Outcome: the pure-logic core of the application is covered without needing a database.**
+
+Jira: FDP-257 (first pass, in review), FDP-270 (follow-ups).
 
 Priority order, chosen by (risk × dependency-upgrade exposure ÷ effort):
 
@@ -140,51 +146,53 @@ All seven categories have had a first pass: **696 unit tests + 7 integration tes
 
 Still open in this phase:
 
-- [ ] RDF-rendering / RDF-preview command handlers (`GetDataModelRDFPreviewCommandHandler`, `GetMetadataModelRDFPreviewCommandHandler`, `RenderRDFMetadataCommandHandler` full path, `RenderRDFDistributionCommandHandler`, `RenderCSVDistributionCommandHandler`) — `new` their helpers internally and need a real graph/DB; move to Phase 2 integration tests.
-- [ ] `CreateDataModelNodeMappingCommandHandler` — heavy Castor-entity orchestration; better as an integration test.
-- [ ] `UpdateMetadataCommandHandler::parseAgents` path and `ImportMetadataModelVersionCommandHandler`'s `PHP_SAPI !== 'cli'`-guarded branches — not unit-reachable; cover via integration.
-- [ ] RDF snapshot coverage for annotated-value paths (option groups, country/license/language/ontology pickers) and repeated groups — deferred until the metadata-domain entity graph helpers exist.
-- [ ] `MetadataValuesApiRequest` — constraints are built dynamically from `MetadataModelVersion`; needs the metadata factories.
+- [ ] FDP-274: RDF-rendering / RDF-preview command handlers (`GetDataModelRDFPreviewCommandHandler`, `GetMetadataModelRDFPreviewCommandHandler`, `RenderRDFMetadataCommandHandler` full path, `RenderRDFDistributionCommandHandler`, `RenderCSVDistributionCommandHandler`) — `new` their helpers internally and need a real graph/DB; move to Phase 2 integration tests.
+- [ ] FDP-274: `CreateDataModelNodeMappingCommandHandler` — heavy Castor-entity orchestration; better as an integration test.
+- [ ] FDP-274: `UpdateMetadataCommandHandler::parseAgents` path and `ImportMetadataModelVersionCommandHandler`'s `PHP_SAPI !== 'cli'`-guarded branches — not unit-reachable; cover via integration.
+- [ ] FDP-270: RDF snapshot coverage for annotated-value paths (option groups, country/license/language/ontology pickers) and repeated groups — deferred until the metadata-domain entity graph helpers exist.
+- [ ] FDP-270: `MetadataValuesApiRequest` — constraints are built dynamically from `MetadataModelVersion`; needs the metadata factories.
 
 ### Findings from Phase 1 tests (tracked for review; tests pin current behavior)
 
 Authorization (needs a security review):
 
-- [ ] `Catalog::isPublic()` is hardcoded `true`, so every catalog is publicly viewable and the unpublished-catalog branch in `CatalogVoter` is unreachable.
-- [ ] `CatalogVoter` denies add/edit/manage to non-Castor users even with a manage permission; `DatasetVoter`/`DistributionVoter` have no such gate — inconsistent.
-- [ ] `DataSpecificationVoter`'s `add` attribute is only ever grantable to `ROLE_ADMIN`, never via permissions (likely an oversight).
-- [ ] `DistributionVoter` denies `access_data` even to admins when contents are null (short-circuit precedes the admin check).
-- [ ] `DistributionContentsVoter` ignores the contents' own permission entities and can null-dereference when a dataset has no study.
-- [ ] `StudyVoter`'s admin bypass covers `edit` but not `edit_source_system`.
+- [ ] FDP-259: `Catalog::isPublic()` is hardcoded `true`, so every catalog is publicly viewable and the unpublished-catalog branch in `CatalogVoter` is unreachable.
+- [ ] FDP-260: `CatalogVoter` denies add/edit/manage to non-Castor users even with a manage permission; `DatasetVoter`/`DistributionVoter` have no such gate — inconsistent.
+- [ ] FDP-261: `DataSpecificationVoter`'s `add` attribute is only ever grantable to `ROLE_ADMIN`, never via permissions (likely an oversight).
+- [ ] FDP-262: `DistributionVoter` denies `access_data` even to admins when contents are null (short-circuit precedes the admin check).
+- [ ] FDP-263: `DistributionContentsVoter` ignores the contents' own permission entities and can null-dereference when a dataset has no study.
+- [ ] FDP-264: `StudyVoter`'s admin bypass covers `edit` but not `edit_source_system`.
 
 API robustness (clients get 500s where 400s are intended):
 
-- [ ] Non-nullable typed request properties throw `TypeError` in `parse()` on missing/null/empty/wrong-type input before validation runs, making many `NotBlank`/`Type` constraints dead code.
-- [ ] `DistributionApiRequest::parse()` never reads `dataDictionary`/`dataDictionaryVersion`, so the `csv` validation group can never pass.
-- [ ] `getGroupSequence()` in the distribution requests builds enums from raw strings, so an unknown `type` crashes during validation instead of failing the `Choice` constraint.
-- [ ] `boolval()` coercion: `'false'` becomes `true`, and missing flags silently become `false` (bypassing `NotNull`).
-- [ ] `MetadataFilterApiRequest::$hideParents` is never assigned in `parse()`.
+- [ ] FDP-265: Non-nullable typed request properties throw `TypeError` in `parse()` on missing/null/empty/wrong-type input before validation runs, making many `NotBlank`/`Type` constraints dead code.
+- [ ] FDP-266: `DistributionApiRequest::parse()` never reads `dataDictionary`/`dataDictionaryVersion`, so the `csv` validation group can never pass.
+- [ ] FDP-267: `getGroupSequence()` in the distribution requests builds enums from raw strings, so an unknown `type` crashes during validation instead of failing the `Choice` constraint.
+- [ ] FDP-268: `boolval()` coercion: `'false'` becomes `true`, and missing flags silently become `false` (bypassing `NotNull`).
+- [ ] FDP-269: `MetadataFilterApiRequest::$hideParents` is never assigned in `parse()`.
 
 Command handlers (data-integrity, found while writing §5.7 tests):
 
-- [ ] `CreateMetadataModelVersionCommandHandler::duplicateVersion` copies an option group into `$newOptionGroup` but then adds the *original* group to the new version — the copy is discarded (likely a copy-paste bug; duplicated versions may share option groups with the source).
-- [ ] `UpdateMetadataCommandHandler` does `$field = $fields[$fieldId]` with no existence check, so an unknown/stale field id raises a PHP error instead of a clean domain exception; `parseAgents` calls `$agent->hasId()` without null-guarding an unmatched agent type.
-- [ ] `CreateFAIRDataPointMetadataCommandHandler` uses `findAll()[0]` with no empty check.
-- [ ] `CreateRDFDistributionCommandHandler` asserts `getLatestVersion() instanceof DataModelVersion`, but the underlying `Collection::last()` returns `false` (not null) on an empty data model, so an empty model fails an assertion rather than a clean error.
+- [ ] FDP-258: `CreateMetadataModelVersionCommandHandler::duplicateVersion` copies an option group into `$newOptionGroup` but then adds the *original* group to the new version — the copy is discarded (likely a copy-paste bug; duplicated versions may share option groups with the source).
+- [ ] FDP-271: `UpdateMetadataCommandHandler` does `$field = $fields[$fieldId]` with no existence check, so an unknown/stale field id raises a PHP error instead of a clean domain exception; `parseAgents` calls `$agent->hasId()` without null-guarding an unmatched agent type.
+- [ ] FDP-273: `CreateFAIRDataPointMetadataCommandHandler` uses `findAll()[0]` with no empty check.
+- [ ] FDP-275: `CreateRDFDistributionCommandHandler` asserts `getLatestVersion() instanceof DataModelVersion`, but the underlying `Collection::last()` returns `false` (not null) on an empty data model, so an empty model fails an assertion rather than a clean error.
 
 Test-helper gap (blocks future handler/entity tests):
 
-- [ ] `DoctrineEntityIdSetter` (`src/Tests/Helper/`) reflects on `$entity::class`, so it cannot set a private `id` declared on a parent class (e.g. `Study::$id` on a `CastorStudy`, `Element`/`Predicate` IDs on subclasses). Two agents had to work around it. Make the trait walk the class hierarchy.
+- [ ] FDP-294: `DoctrineEntityIdSetter` (`src/Tests/Helper/`) reflects on `$entity::class`, so it cannot set a private `id` declared on a parent class (e.g. `Study::$id` on a `CastorStudy`, `Element`/`Predicate` IDs on subclasses). Two agents had to work around it. Make the trait walk the class hierarchy.
 
 Smaller code-quality findings:
 
-- [ ] `Version`'s regex uses the `/m` flag, so multi-line strings containing one valid version line are accepted; `new Version(null)` leaves typed properties uninitialized (getters throw `Error`).
-- [ ] `MetadataFieldType::DROPDOWN` maps to the `paragraph` display type while checkboxes/radio map to `list`; the `TYPE_PLAIN`/`TYPE_ANNOTATED` constants are constructible via `fromString()` but crash the mapping methods.
-- [ ] `SlugValidator` queries the repository even for forbidden slugs and has no null guard; `OptionGroupOptions` declares message properties its validator never uses; `User::EMAILS` is an empty const making its admin-override branch dead code.
+- [ ] FDP-279: `Version`'s regex uses the `/m` flag, so multi-line strings containing one valid version line are accepted; `new Version(null)` leaves typed properties uninitialized (getters throw `Error`).
+- [ ] FDP-280: `MetadataFieldType::DROPDOWN` maps to the `paragraph` display type while checkboxes/radio map to `list`; the `TYPE_PLAIN`/`TYPE_ANNOTATED` constants are constructible via `fromString()` but crash the mapping methods.
+- [ ] FDP-281, FDP-282: `SlugValidator` queries the repository even for forbidden slugs and has no null guard; `OptionGroupOptions` declares message properties its validator never uses; `User::EMAILS` is an empty const making its admin-override branch dead code.
 
 ## 6. Phase 2 — Backend integration and API tests
 
 **Outcome: every API domain has request-to-database coverage, which is what actually validates Symfony, Doctrine, and Messenger upgrades.**
+
+Jira: FDP-272 (public FDP endpoints, item 3), FDP-274 (`ApiTestCase` + domain tests, items 1–2), FDP-276 (migration check + repositories, items 4–5).
 
 1. **A base `ApiTestCase`** extending `WebTestCase` with helpers: `loginAs(User $user)` via Symfony's `loginUser()`, JSON request/assert helpers, and Foundry integration.
 2. **Per-domain API test classes** mirroring `src/Api/Controller/`: Catalog, Dataset, Distribution, Study, Metadata, DataSpecification, Security/Agents.
@@ -203,6 +211,8 @@ Estimated effort: 3–4 weeks for full domain coverage; the public FDP endpoint 
 
 **Outcome: utility logic, hooks, and the heavyweight forms are covered; TypeScript itself becomes a quality gate.**
 
+Jira: FDP-277 (`yarn typecheck`, item 2), FDP-278 (setup, utils, hooks, items 1, 3–4), FDP-283 (components, item 5).
+
 1. **Setup**: add `jest`, `babel-jest`, `@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`, `msw`, and `jest-environment-jsdom`; add `yarn test` and wire `tsconfig` path aliases into Jest's `moduleNameMapper`.
 2. **Add a `yarn typecheck` script (`tsc --noEmit`) immediately.**
    Today nothing type-checks the frontend (Encore builds transpile via Babel without type errors failing the build), so MUI/React/TypeScript upgrades can silently break types.
@@ -220,6 +230,8 @@ Estimated effort: 2–3 days setup + typecheck job; 2–3 weeks for items 3–5.
 
 **Outcome: a small smoke suite proving the assembled stack (containers, nginx, PHP-FPM, MySQL, built JS bundle) works.**
 
+Jira: FDP-284 (test-only authenticator), FDP-285 (Playwright suite).
+
 1. Run Playwright against the existing `docker-compose` stack (build images, migrate, seed via a fixture command, run tests) — locally first, scheduled in GitHub Actions later.
 2. **Authentication strategy**: Castor OAuth cannot run unattended.
    Add a test-environment-only authenticator (a firewall entry enabled solely when `APP_ENV=test`/a dedicated env flag) that logs in a seeded user, mirroring what `loginUser()` does in WebTestCase.
@@ -234,6 +246,8 @@ Estimated effort: 2–3 days setup + typecheck job; 2–3 weeks for items 3–5.
 Estimated effort: 1–2 weeks including the test authenticator.
 
 ## 9. CI — GitHub Actions migration (after the suites run locally)
+
+Jira: FDP-286 (also covers the §11 coverage ratchet).
 
 CircleCI is no longer in use, so the existing `.circleci/config.yml` is dead config; it gets replaced by GitHub Actions workflows once the local suites exist.
 Because every suite is a one-command wrapper (§3), the migration is thin: each job below just checks out, installs, and runs the same command a developer runs locally.
