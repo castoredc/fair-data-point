@@ -41,6 +41,7 @@
     },
     "require-dev": {
         "castor/coding-standard": "^9.0",
+        "dama/doctrine-test-bundle": "^8.2",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^1.8",
         "phpstan/phpstan-deprecation-rules": "^1.0",
@@ -50,7 +51,11 @@
         "phpstan/phpstan-symfony": "^1.2",
         "phpunit/phpunit": "^10.5",
         "rector/rector": "*",
-        "roave/security-advisories": "dev-master"
+        "roave/security-advisories": "dev-master",
+        "symfony/browser-kit": "7.1.*",
+        "symfony/css-selector": "7.1.*",
+        "symfony/phpunit-bridge": "^8.1",
+        "zenstruck/foundry": "^2.10"
     },
     "config": {
         "preferred-install": {
@@ -81,6 +86,13 @@
         "symfony/polyfill-php56": "*"
     },
     "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:unit": "phpunit --testsuite unit",
+        "test:integration": "phpunit --testsuite integration",
+        "test:coverage": "php -d zend_extension=xdebug.so -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html var/coverage --coverage-text",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"

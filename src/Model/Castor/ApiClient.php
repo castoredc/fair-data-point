@@ -40,6 +40,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Throwable;
 use function assert;
@@ -50,15 +51,16 @@ class ApiClient
 {
     private string $token = '';
 
-    private Client $client;
+    private ClientInterface $client;
 
     private string $server;
 
     private int $pageSize = 1000;
 
-    public function __construct(private RecordFactory $recordFactory, private InstituteFactory $instituteFactory, private CastorUserFactory $castorUserFactory)
+    public function __construct(private RecordFactory $recordFactory, private InstituteFactory $instituteFactory, private CastorUserFactory $castorUserFactory, ?ClientInterface $client = null)
     {
-        $this->client = new Client();
+        // The HTTP client can be injected so tests can replace it with a Guzzle MockHandler.
+        $this->client = $client ?? new Client();
     }
 
     public function setServer(string $server): void

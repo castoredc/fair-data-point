@@ -1,0 +1,17 @@
+[
+    {
+        "@id": "http://purl.org/dc/terms/Location"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/country/NL",
+        "@type": [
+            "http://purl.org/dc/terms/Location"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "Netherlands",
+                "@language": "en"
+            }
+        ]
+    }
+]

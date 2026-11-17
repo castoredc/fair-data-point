@@ -14,6 +14,11 @@ use function array_keys;
 use function array_map;
 use function json_decode;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 abstract class BaseApiClient
 {
     protected const METHOD_POST = 'POST';

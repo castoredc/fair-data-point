@@ -71,7 +71,16 @@ final class Version20240615103453 extends AbstractMigration
         $this->addSql('ALTER TABLE metadata_study DROP created_by, DROP updated_by, DROP updated_at, DROP version, DROP created_at');
         $this->addSql('INSERT INTO metadata (id, version, created_at, dtype) SELECT id, \'0.0.0\', NOW(), \'studymetadata\' FROM metadata_study');
         $this->addSql('ALTER TABLE metadata_study ADD CONSTRAINT FK_41C2F2BBF396750 FOREIGN KEY (id) REFERENCES metadata (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE ontology DROP `0454bc56-454b-48cd-9de3-b8b6c288db13`, DROP `http://purl.bioontology.org/ontology/PATO/`, DROP `Phenotypic Quality Ontology`, DROP `PATO`');
+        // These stray columns only existed on the database this migration was generated against;
+        // drop them only where they are present so the migration also runs on fresh databases.
+        $ontology = $schema->getTable('ontology');
+        foreach (['0454bc56-454b-48cd-9de3-b8b6c288db13', 'http://purl.bioontology.org/ontology/PATO/', 'Phenotypic Quality Ontology', 'PATO'] as $strayColumn) {
+            if (! $ontology->hasColumn($strayColumn)) {
+                continue;
+            }
+
+            $this->addSql(sprintf('ALTER TABLE ontology DROP `%s`', $strayColumn));
+        }
         $this->addSql('ALTER TABLE study ADD default_metadata_model_id CHAR(36) DEFAULT NULL COMMENT \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE study ADD CONSTRAINT FK_E67F97493F018586 FOREIGN KEY (default_metadata_model_id) REFERENCES metadata_model (id)');
         $this->addSql('CREATE INDEX IDX_E67F97493F018586 ON study (default_metadata_model_id)');
@@ -131,7 +140,8 @@ final class Version20240615103453 extends AbstractMigration
         $this->addSql('ALTER TABLE metadata_study ADD CONSTRAINT FK_41C2F2BDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
         $this->addSql('CREATE INDEX IDX_41C2F2BDE12AB56 ON metadata_study (created_by)');
         $this->addSql('CREATE INDEX IDX_41C2F2B16FE72E1 ON metadata_study (updated_by)');
-        $this->addSql('ALTER TABLE ontology ADD 0454bc56-454b-48cd-9de3-b8b6c288db13 VARCHAR(1024) DEFAULT NULL, ADD http://purl.bioontology VARCHAR(1024) DEFAULT NULL, ADD Phenotypic Quality Ontology VARCHAR(1024) DEFAULT NULL, ADD PATO VARCHAR(1024) DEFAULT NULL');
+        // Intentionally not re-adding the stray ontology columns that up() removes: they were
+        // accidental columns on the generating database, and the generated ADD statement was invalid SQL.
         $this->addSql('ALTER TABLE study DROP FOREIGN KEY FK_E67F97493F018586');
         $this->addSql('DROP INDEX IDX_E67F97493F018586 ON study');
         $this->addSql('ALTER TABLE study DROP default_metadata_model_id');

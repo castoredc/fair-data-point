@@ -12,6 +12,11 @@ use function array_diff;
 use function array_merge;
 use function count;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 class FederatedQueryResult implements Countable, IteratorAggregate
 {
     public const TYPE_BOOLEAN = 'boolean';

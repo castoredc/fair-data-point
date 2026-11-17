@@ -7,6 +7,11 @@ use App\Entity\Encryption\SensitiveDataString;
 use function json_encode;
 use function str_split;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 class AdminApiClient extends BaseApiClient
 {
     public function addUser(SensitiveDataString $username, SensitiveDataString $password): void

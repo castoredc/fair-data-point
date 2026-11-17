@@ -22,3 +22,7 @@ set -x
 
 # Run migrations
 /usr/local/bin/php ./bin/console doctrine:migrations:migrate --no-interaction
+
+# Create and migrate the test database (used by the integration test suite)
+APP_ENV=test /usr/local/bin/php ./bin/console doctrine:database:create --if-not-exists
+APP_ENV=test /usr/local/bin/php ./bin/console doctrine:migrations:migrate --no-interaction

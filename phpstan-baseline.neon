@@ -1,2 +1,61 @@
 parameters:
 	ignoreErrors:
+		-
+			message: """
+				#^Parameter \\$tripleStoreBasedDistributionService of method App\\\\CommandHandler\\\\Distribution\\\\CreateDistributionCommandHandler\\:\\:__construct\\(\\) has typehint with deprecated class App\\\\Service\\\\Distribution\\\\TripleStoreBasedDistributionService\\:
+				Stardog support was a proof of concept and is no longer in use\\.
+				            This Stardog\\-only code path is kept for reference, is not covered by tests,
+				            and should not be built upon\\.$#
+			"""
+			count: 1
+			path: src/CommandHandler/Distribution/CreateDistributionCommandHandler.php
+
+		-
+			message: """
+				#^Parameter \\$tripleStoreBasedDistributionService of method App\\\\CommandHandler\\\\Distribution\\\\RDF\\\\GetRDFFromStoreCommandHandler\\:\\:__construct\\(\\) has typehint with deprecated class App\\\\Service\\\\Distribution\\\\TripleStoreBasedDistributionService\\:
+				Stardog support was a proof of concept and is no longer in use\\.
+				            This Stardog\\-only code path is kept for reference, is not covered by tests,
+				            and should not be built upon\\.$#
+			"""
+			count: 1
+			path: src/CommandHandler/Distribution/RDF/GetRDFFromStoreCommandHandler.php
+
+		-
+			message: """
+				#^Parameter \\$tripleStoreBasedDistributionService of method App\\\\CommandHandler\\\\Distribution\\\\RDF\\\\RunQueryAgainstDistributionSparqlEndpointCommandHandler\\:\\:__construct\\(\\) has typehint with deprecated class App\\\\Service\\\\Distribution\\\\TripleStoreBasedDistributionService\\:
+				Stardog support was a proof of concept and is no longer in use\\.
+				            This Stardog\\-only code path is kept for reference, is not covered by tests,
+				            and should not be built upon\\.$#
+			"""
+			count: 1
+			path: src/CommandHandler/Distribution/RDF/RunQueryAgainstDistributionSparqlEndpointCommandHandler.php
+
+		-
+			message: """
+				#^Parameter \\$tripleStoreBasedDistributionService of method App\\\\Console\\\\GenerateRDFCommand\\:\\:__construct\\(\\) has typehint with deprecated class App\\\\Service\\\\Distribution\\\\TripleStoreBasedDistributionService\\:
+				Stardog support was a proof of concept and is no longer in use\\.
+				            This Stardog\\-only code path is kept for reference, is not covered by tests,
+				            and should not be built upon\\.$#
+			"""
+			count: 1
+			path: src/Console/GenerateRDFCommand.php
+
+		-
+			message: """
+				#^Class App\\\\Model\\\\Stardog\\\\AdminApiClient extends deprecated class App\\\\Model\\\\Stardog\\\\BaseApiClient\\:
+				Stardog support was a proof of concept and is no longer in use\\.
+				            This Stardog\\-only code path is kept for reference, is not covered by tests,
+				            and should not be built upon\\.$#
+			"""
+			count: 1
+			path: src/Model/Stardog/AdminApiClient.php
+
+		-
+			message: """
+				#^Class App\\\\Model\\\\Stardog\\\\DatabaseApiClient extends deprecated class App\\\\Model\\\\Stardog\\\\BaseApiClient\\:
+				Stardog support was a proof of concept and is no longer in use\\.
+				            This Stardog\\-only code path is kept for reference, is not covered by tests,
+				            and should not be built upon\\.$#
+			"""
+			count: 1
+			path: src/Model/Stardog/DatabaseApiClient.php

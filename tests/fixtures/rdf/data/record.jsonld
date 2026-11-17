@@ -1,0 +1,46 @@
+[
+    {
+        "@id": "http://purl.obolibrary.org/obo/NCIT_C16960"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf/110001",
+        "@type": [
+            "http://purl.obolibrary.org/obo/NCIT_C16960"
+        ],
+        "http://purl.org/dc/terms/identifier": [
+            {
+                "@value": "110001"
+            }
+        ],
+        "http://example.org/fdp/instituteName": [
+            {
+                "@value": "Example Hospital"
+            }
+        ],
+        "http://example.org/fdp/instituteCountry": [
+            {
+                "@value": "NL"
+            }
+        ],
+        "http://example.org/fdp/hasMeasurement": [
+            {
+                "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf/110001/measurement"
+            }
+        ],
+        "http://example.org/fdp/birthDate": [
+            {
+                "@value": "1985-05-15",
+                "@type": "http://www.w3.org/2001/XMLSchema#date"
+            }
+        ]
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf/110001/measurement",
+        "http://example.org/fdp/height": [
+            {
+                "@value": "182.5",
+                "@type": "http://www.w3.org/2001/XMLSchema#decimal"
+            }
+        ]
+    }
+]

@@ -1,0 +1,13 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns0: <http://example.org/fdp/> .
+
+<https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf/110001>
+  a <http://purl.obolibrary.org/obo/NCIT_C16960> ;
+  dc:identifier "110001"^^xsd:string ;
+  ns0:instituteName "Example Hospital"^^xsd:string ;
+  ns0:instituteCountry "NL"^^xsd:string ;
+  ns0:hasMeasurement <https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf/110001/measurement> ;
+  ns0:birthDate "1985-05-15"^^xsd:date .
+
+<https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution/rdf/110001/measurement> ns0:height 182.5 .

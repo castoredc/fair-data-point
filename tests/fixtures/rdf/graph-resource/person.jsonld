@@ -1,0 +1,16 @@
+[
+    {
+        "@id": "http://xmlns.com/foaf/0.1/Person"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/person/ada-lovelace",
+        "@type": [
+            "http://xmlns.com/foaf/0.1/Person"
+        ],
+        "http://xmlns.com/foaf/0.1/name": [
+            {
+                "@value": "Ada Lovelace"
+            }
+        ]
+    }
+]

@@ -1,0 +1,70 @@
+[
+    {
+        "@id": "http://www.w3.org/ns/dcat#Dataset"
+    },
+    {
+        "@id": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/catalog/main-catalog"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial",
+        "http://purl.org/dc/terms/hasVersion": [
+            {
+                "@value": "1.0.0"
+            }
+        ],
+        "http://purl.org/dc/terms/identifier": [
+            {
+                "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/identifier"
+            }
+        ],
+        "http://purl.org/dc/terms/issued": [
+            {
+                "@value": "2024-05-01T12:30:00",
+                "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+            }
+        ],
+        "http://purl.org/dc/terms/license": [
+            {
+                "@id": "https://creativecommons.org/licenses/by/4.0/"
+            }
+        ],
+        "http://purl.org/dc/terms/modified": [
+            {
+                "@value": "2024-06-15T08:45:30",
+                "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+            }
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "Cardiology Trial",
+                "@language": "en"
+            },
+            {
+                "@value": "Cardiologie Studie",
+                "@language": "nl"
+            }
+        ],
+        "@type": [
+            "http://www.w3.org/ns/dcat#Dataset"
+        ],
+        "http://www.w3.org/ns/dcat#catalog": [
+            {
+                "@id": "https://fdp.example.com/fdp/catalog/main-catalog"
+            }
+        ],
+        "http://www.w3.org/ns/dcat#distribution": [
+            {
+                "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution"
+            }
+        ]
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/distribution/rdf-distribution"
+    },
+    {
+        "@id": "https://fdp.example.com/fdp/dataset/cardiology-trial/identifier"
+    }
+]

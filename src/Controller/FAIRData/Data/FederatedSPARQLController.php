@@ -16,6 +16,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 class FederatedSPARQLController extends ApiController
 {
     #[Route(path: '/fdp/distributions/sparql', name: 'federated_sparql')]

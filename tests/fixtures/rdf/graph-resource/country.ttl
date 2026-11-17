@@ -1,0 +1,5 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+
+<https://fdp.example.com/fdp/country/NL>
+  a dc:Location ;
+  dc:title "Netherlands"@en .

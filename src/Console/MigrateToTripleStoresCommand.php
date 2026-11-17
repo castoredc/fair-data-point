@@ -17,6 +17,11 @@ use function random_bytes;
 use function sprintf;
 use function str_replace;
 
+/**
+ * @deprecated Stardog support was a proof of concept and is no longer in use.
+ *             This Stardog-only code path is kept for reference, is not covered by tests,
+ *             and should not be built upon.
+ */
 #[AsCommand(name: 'app:migrate-triplestores')]
 class MigrateToTripleStoresCommand extends Command
 {
